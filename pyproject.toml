@@ -2,12 +2,49 @@
 name = "decoimpact"
 version = "0.1.0"
 description = ""
-authors = ["Hidde Elzinga <Hidde.Elzinga@Deltares.nl>"]
+authors = ["Deltares"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
+pytest-cov = "^4.0.0"
+black = "^22.12.0"
+isort = "^5.11.4"
+flake8 = "^6.0.0"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | \.virtualenvs
+  )/
+)
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+
+[tool.pytest.ini_options]
+markers = [
+    "data_access: tests using the file system",
+]
 
 [build-system]
 requires = ["poetry-core"]
