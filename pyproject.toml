@@ -14,6 +14,7 @@ pytest-cov = "^4.0.0"
 black = "^22.12.0"
 isort = "^5.11.4"
 flake8 = "^6.0.0"
+pylint = "^2.15.10"
 
 [tool.black]
 line-length = 88
