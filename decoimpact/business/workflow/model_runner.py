@@ -7,6 +7,7 @@ Classes:
 """
 
 from decoimpact.business.entities.model_base import ModelBase, ModelStatus
+from decoimpact.crosscutting.logger_factory import Logger
 
 
 class ModelRunner:
@@ -20,6 +21,7 @@ class ModelRunner:
             model (ModelBase): model to run
         """
 
+        logger.log_info(f"Validating model \"{model.name}\"")
         ModelRunner._change_state(
             model.validate,
             model,
@@ -28,8 +30,10 @@ class ModelRunner:
             )
 
         if model.status == ModelStatus.FAILED:
+            logger.log_error(f"Validation of model \"{model.name}\" failed")
             return False
 
+        logger.log_info(f"Initializing model \"{model.name}\"")
         ModelRunner._change_state(
             model.initialize,
             model,
@@ -38,8 +42,10 @@ class ModelRunner:
             )
 
         if model.status == ModelStatus.FAILED:
+            logger.log_error(f"Initialization of model \"{model.name}\" failed")
             return False
 
+        logger.log_info(f"Executing model \"{model.name}\"")
         ModelRunner._change_state(
             model.execute,
             model,
@@ -48,8 +54,10 @@ class ModelRunner:
             )
 
         if model.status == ModelStatus.FAILED:
+            logger.log_error(f"Execution of model \"{model.name}\" failed")
             return False
 
+        logger.log_info(f"Finalizing model \"{model.name}\"")
         ModelRunner._change_state(
             model.finalize,
             model,
@@ -57,7 +65,12 @@ class ModelRunner:
             ModelStatus.FINALIZED
             )
 
-        return model.status == ModelStatus.FAILED
+        if model.status == ModelStatus.FAILED:
+            logger.log_error(f"Finalization of model \"{model.name}\" failed")
+            return False
+
+        logger.log_info(f"Model \"{model.name}\" has successfully finished running")
+        return True
 
     @staticmethod
     def _change_state(

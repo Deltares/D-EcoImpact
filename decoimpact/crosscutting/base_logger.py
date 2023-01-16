@@ -65,7 +65,7 @@ class BaseLogger(Logger):
         console.setLevel(_log.INFO)
 
         # set a format which is simpler for console use
-        formatter = _log.Formatter("%(levelname)-8s %(message)s")
+        formatter = _log.Formatter("%(asctime)s: %(levelname)-8s %(message)s")
 
         # tell the handler to use this format
         console.setFormatter(formatter)

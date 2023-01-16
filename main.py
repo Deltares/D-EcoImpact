@@ -11,7 +11,8 @@ from decoimpact.crosscutting.logger_factory import LoggerFactory
 def main():
     """Main function to execute when running via command-line"""
     logger = LoggerFactory.create_logger()
-    model = ModelFactory.create_rule_based_model()
+    model = ModelFactory.create_rule_based_model(logger)
+
     ModelRunner.run_model(model, logger)
 
 
