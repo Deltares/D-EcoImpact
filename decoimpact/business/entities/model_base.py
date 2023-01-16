@@ -31,12 +31,22 @@ class ModelBase(ABC):
         self._status = ModelStatus.CREATED
 
     @property
-    def rules(self) -> ModelStatus:
+    def name(self) -> str:
+        """Name of the model"""
+        return self._name
+
+    @name.setter
+    def name(self, name: str):
+        """Name of the model"""
+        self._name = name
+
+    @property
+    def status(self) -> ModelStatus:
         """Status of the model"""
         return self._status
 
-    @rules.setter
-    def rules(self, status: ModelStatus):
+    @status.setter
+    def status(self, status: ModelStatus):
         """Status of the model"""
         self._status = status
 

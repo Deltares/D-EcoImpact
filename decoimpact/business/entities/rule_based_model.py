@@ -15,8 +15,11 @@ class RuleBasedModel(ModelBase):
     """Model class for models based on rules"""
 
     def __init__(self) -> None:
-        self._rules = []
+
         super().__init__()
+
+        self._rules = []
+        self._name = "Rule-Based model"
 
     @property
     def rules(self) -> List[RuleBase]:
