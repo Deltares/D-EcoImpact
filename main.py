@@ -1,6 +1,4 @@
-"""
-Main script for running model using command-line
-"""
+"""Main script for running model using command-line"""
 
 
 from decoimpact.business.workflow.model_factory import ModelFactory

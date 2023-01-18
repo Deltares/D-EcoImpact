@@ -83,7 +83,12 @@ class ModelRunner:
         model.status = pre_status
 
         try:
-            action()
-            model.status = post_status
-        except Exception:
+            return_value = action()
+
+            if isinstance(return_value, bool) and return_value is False:
+                model.status = ModelStatus.FAILED
+            else:
+                model.status = post_status
+
+        except RuntimeError:
             model.status = ModelStatus.FAILED
