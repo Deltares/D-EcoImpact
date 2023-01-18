@@ -38,18 +38,18 @@ To install the dependencies of the project create a virtual environment either w
     ```
 		
 
-### Using pip directly
+### Pip
 Note: This installs the packages system wide, without the use of python environments.
 
 Windows PowerShell:
 - Install poetry
   ```powershell
-    $ pip3 install poetry
+    PS:\ pip3 install poetry
     ```
 - Install dependencies
   ```powershell
-    $ poetry install
-```
+    PS:\  poetry install
+    ```
 
 Linux:
 - Install poetry
