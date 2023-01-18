@@ -48,7 +48,7 @@ Windows PowerShell:
     ```
 - Install dependencies
   ```powershell
-    PS:\  poetry install
+    PS:\ poetry install
     ```
 
 Linux:
@@ -59,8 +59,8 @@ Linux:
 - Install dependencies
   ```sh
     $ poetry install
-```
+    ```
     
-### Remarks on use of poetry on Windows
+### Note concerning the use of poetry on Windows
 
 The poetry is not compatible with the python installation from the Microsoft Store. Instead, it is recommended to install python from https://www.python.org/downloads/.
