@@ -1,8 +1,8 @@
 """
-Module for BaseLogger class
+Module for LoggingLogger class
 
 Classes:
-    BaseLogger
+    LoggingLogger
 
 """
 
@@ -10,7 +10,7 @@ import logging as _log
 from decoimpact.crosscutting.logger import Logger
 
 
-class BaseLogger(Logger):
+class LoggingLogger(Logger):
     """Logger implementation based on default logging library"""
 
     def __init__(self) -> None:
@@ -55,7 +55,7 @@ class BaseLogger(Logger):
             level=_log.INFO,
             format="%(asctime)s: %(levelname)-8s %(message)s",
             datefmt="%m-%d %H:%M:%S",
-            filename="habitatGit.log",
+            filename="decoimpact.log",
             encoding="utf-8",  # Only for Python > 3.9
             filemode="w",
         )

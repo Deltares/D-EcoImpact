@@ -7,7 +7,7 @@ Classes:
 """
 
 
-from decoimpact.crosscutting.base_logger import BaseLogger
+from decoimpact.crosscutting.logging_logger import LoggingLogger
 from decoimpact.crosscutting.logger import Logger
 
 
@@ -21,4 +21,4 @@ class LoggerFactory:
         Returns:
             Logger: created logger
         """
-        return BaseLogger()
+        return LoggingLogger()
