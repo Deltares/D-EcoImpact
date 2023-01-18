@@ -1,6 +1,3 @@
-
-![Python versions](https://img.shields.io/badge/Python-3.9-blue)
-
 # D-EcoImpact
 
 This is a short or long textual description of the project.
@@ -14,11 +11,11 @@ Make sure to have Poetry and Python installations in your system.
 To install the dependencies of the project create a virtual environment either with pip or conda:
 
 	
-### CONDA:
+### Conda:
 
 - Create conda environment  
   ```sh
-    $ conda create -y -c conda-forge --name <env_name> python=3.9 poetry
+    $ conda create -y -c conda-forge --name <env_name> poetry
     ```
 - Activate conda environment
   ```sh
