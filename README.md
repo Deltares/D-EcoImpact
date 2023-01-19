@@ -1,63 +1,69 @@
 # D-EcoImpact
 
-This is a short or long textual description of the project.
+A Python based kernel to perform spatial (environmental) impact assessment. Based on knowledge rules applied to model output and/or measurements.
+The dependencies of the D-EcoImpact are declared, managed and installed with [Poetry](https://python-poetry.org/).
 
-## Getting Started
+## Prerequisites
 
-The dependencies of the D-EcoImpact are declared, managed and installed with [Poetry](https://python-poetry.org/). 
+- python 3.9 or higher
+- poetry 1.3 or higher ([installation instructions](https://python-poetry.org/docs/#installation))
 
-Make sure to have Poetry and Python installations in your system. 
+## Install
+To install the dependencies of the project create a virtual environment either with `venv` or `conda`.\
+Switch to this environment and use `poetry` to restore the package dependencies.
 
-To install the dependencies of the project create a virtual environment either with pip or conda:
+### Create environment
 
-	
-### Conda:
+#### Anaconda:
 
-- Create conda environment  
+- Create `conda` environment
   ```sh
-    $ conda create -y -c conda-forge --name <env_name> poetry
-    ```
-- Activate conda environment
+  $ conda create -y -c conda-forge --name <env_name> poetry
+  ```
+- Activate `conda` environment
   ```sh
-    $ conda activate <env_name> 
-    ```
-- Install dependencies
+  $ conda activate <env_name>
+  ```
+
+### venv:
+
+- Create `venv` virtual environment
   ```sh
-    $ poetry install
-    ```
-- Add a new dependency for developement
+  $ py -m venv <env_name>
+  ```
+
+- Activate `venv` environment
+  ```
+  $ .\env\Scripts\activate
+  ```
+
+(see
+    [Documentation](
+    https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment))
+
+### Add dependencies
+
+```sh
+$ poetry install
+```
+
+
+## Run
+
   ```sh
-    $ poetry add <package> --dev
-    ```
-- Add a new dependency 
-  ```sh
+  $ py main.py
+  ```
+
+## Development
+
+When adding a new dependency, do so using `poetry`
+
+ - Add a new dependency
+    ```sh
     $ poetry add <package>
     ```
-		
 
-### Pip
-Note: This installs the packages system wide, without the use of python environments.
-
-Windows PowerShell:
-- Install poetry
-  ```powershell
-    PS:\ pip3 install poetry
+- Add a new dependency for development
+    ```sh
+    $ poetry add <package> --dev
     ```
-- Install dependencies
-  ```powershell
-    PS:\ poetry install
-    ```
-
-Linux:
-- Install poetry
-  ```sh
-    $ pip3 install poetry
-    ```
-- Install dependencies
-  ```sh
-    $ poetry install
-    ```
-    
-### Note concerning the use of poetry on Windows
-
-The poetry is not compatible with the python installation from the Microsoft Store. Instead, it is recommended to install python from https://www.python.org/downloads/.
