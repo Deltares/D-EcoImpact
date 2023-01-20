@@ -12,15 +12,15 @@ from enum import IntEnum
 
 class ModelStatus(IntEnum):
     """Enum for the model status"""
-    CREATED = 1,
-    INITIALIZING = 2,
-    INITIALIZED = 3,
-    EXECUTING = 4,
-    EXECUTED = 5,
-    FINALIZING = 6,
-    FINALIZED = 7,
-    FAILED = 8,
-    VALIDATING = 9,
+    CREATED = 1
+    INITIALIZING = 2
+    INITIALIZED = 3
+    EXECUTING = 4
+    EXECUTED = 5
+    FINALIZING = 6
+    FINALIZED = 7
+    FAILED = 8
+    VALIDATING = 9
     VALIDATED = 10
 
 
