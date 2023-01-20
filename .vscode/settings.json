@@ -1,6 +1,7 @@
 {
     "python.testing.pytestArgs": [
-        "tests"
+        "--cov-report=xml",
+        "--cov=decoimpact"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
@@ -13,7 +14,8 @@
     "python.formatting.provider": "black",
     "python.linting.flake8Enabled": true,
     "python.linting.pylintEnabled": true,
-    "python.analysis.extraPaths": [
-        "./decoimpact/Enities/Rules"
+    "coverage-gutters.showLineCoverage": true,
+    "coverage-gutters.coverageFileNames": [
+        "coverage.xml"
     ]
 }

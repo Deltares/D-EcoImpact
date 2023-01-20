@@ -15,6 +15,7 @@ black = "^22.12.0"
 isort = "^5.11.4"
 flake8 = "^6.0.0"
 pylint = "^2.15.10"
+mock = "^5.0.1"
 
 [tool.black]
 line-length = 88
@@ -46,6 +47,11 @@ line_length = 88
 markers = [
     "data_access: tests using the file system",
 ]
+testpaths = ["tests/**/test_*.py"]
+junit_logging = "all"
+log_cli = "True"
+log_cli_level = "DEBUG"
+log_cli_format = "%(levelname)-8s %(message)s"
 
 [build-system]
 requires = ["poetry-core"]
