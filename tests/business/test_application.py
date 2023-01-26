@@ -8,7 +8,7 @@ from decoimpact.business.application import Application
 
 
 def test_running_application():
-    """Test creating a rule-based model via factory"""
+    """Test running application for test file"""
 
     # Arrange
     logger = Mock()

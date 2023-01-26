@@ -27,4 +27,3 @@ class IDataAccessLayer(ABC):
         Returns:
             IModelData: Data regarding model
         """
-
