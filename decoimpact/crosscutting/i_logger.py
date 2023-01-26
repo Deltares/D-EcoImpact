@@ -1,15 +1,15 @@
 """
-Module for Logger class
+Module for ILogger interface
 
-Classes:
-    Logger
+Interfaces:
+    ILogger
 
 """
 
 from abc import ABC, abstractmethod
 
 
-class Logger(ABC):
+class ILogger(ABC):
     """Interface for a Logger"""
 
     @abstractmethod

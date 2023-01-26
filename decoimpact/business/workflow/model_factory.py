@@ -8,14 +8,14 @@ Classes:
 
 
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
-from decoimpact.crosscutting.logger import Logger
+from decoimpact.crosscutting.i_logger import ILogger
 
 
 class ModelFactory:
     """Factory for creating models"""
 
     @ staticmethod
-    def create_rule_based_model(logger: Logger) -> RuleBasedModel:
+    def create_rule_based_model(logger: ILogger) -> RuleBasedModel:
         """Creates an RuleBasedModel
 
         Returns:
