@@ -1,9 +1,9 @@
 
 """
-Module for ModelBase class
+Module for IModel Interface
 
-Classes:
-    ModelBase
+Interfaces:
+    IModel
 
 """
 from abc import ABC, abstractmethod
@@ -24,8 +24,8 @@ class ModelStatus(IntEnum):
     VALIDATED = 10
 
 
-class ModelBase(ABC):
-    """Base class for models"""
+class IModel(ABC):
+    """Interface for models"""
 
     def __init__(self) -> None:
         self._status = ModelStatus.CREATED

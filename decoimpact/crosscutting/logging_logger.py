@@ -7,10 +7,10 @@ Classes:
 """
 
 import logging as _log
-from decoimpact.crosscutting.logger import Logger
+from decoimpact.crosscutting.i_logger import ILogger
 
 
-class LoggingLogger(Logger):
+class LoggingLogger(ILogger):
     """Logger implementation based on default logging library"""
 
     def __init__(self) -> None:

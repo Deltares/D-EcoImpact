@@ -17,5 +17,13 @@
     "coverage-gutters.showLineCoverage": true,
     "coverage-gutters.coverageFileNames": [
         "coverage.xml"
+    ],
+    "python.analysis.typeCheckingMode": "strict",
+    "python.analysis.completeFunctionParens": true,
+    "python.analysis.autoImportUserSymbols": true,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.diagnosticMode": "openFilesOnly",
+    "python.analysis.exclude": [
+        "tests/**/*"
     ]
 }

@@ -6,19 +6,20 @@ Classes:
 
 """
 
-from decoimpact.business.entities.model_base import ModelBase, ModelStatus
-from decoimpact.crosscutting.logger_factory import Logger
+from typing import Any, Callable
+from decoimpact.business.entities.i_model import IModel, ModelStatus
+from decoimpact.crosscutting.i_logger import ILogger
 
 
 class ModelRunner:
     """Runner for models"""
 
     @staticmethod
-    def run_model(model: ModelBase, logger: Logger) -> bool:
+    def run_model(model: IModel, logger: ILogger) -> bool:
         """Runs the provided model
 
         Args:
-            model (ModelBase): model to run
+            model (IModel): model to run
         """
 
         logger.log_info(f"Validating model \"{model.name}\"")
@@ -74,8 +75,8 @@ class ModelRunner:
 
     @staticmethod
     def _change_state(
-            action,
-            model: ModelBase,
+            action: Callable[[], Any],
+            model: IModel,
             pre_status: ModelStatus,
             post_status: ModelStatus
             ):

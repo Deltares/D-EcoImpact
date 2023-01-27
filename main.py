@@ -1,18 +1,28 @@
 """Main script for running model using command-line"""
 
 
-from decoimpact.business.workflow.model_factory import ModelFactory
-from decoimpact.business.workflow.model_runner import ModelRunner
+import sys
+from decoimpact.business.application import Application
+from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.crosscutting.logger_factory import LoggerFactory
+from decoimpact.data.entities.data_access_layer import DataAccessLayer, IDataAccessLayer
 
 
-def main():
-    """Main function to execute when running via command-line"""
-    logger = LoggerFactory.create_logger()
-    model = ModelFactory.create_rule_based_model(logger)
+def main(input_path: str):
+    """Main function to run the application when running via command-line
 
-    ModelRunner.run_model(model, logger)
+    Args:
+        input_path (str): path to the input file
+    """
+
+    # configure logger and data-access layer
+    logger: ILogger = LoggerFactory.create_logger()
+    da_layer: IDataAccessLayer = DataAccessLayer(logger)
+
+    # create and run application
+    application = Application(logger, da_layer)
+    application.run(input_path)
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[0])

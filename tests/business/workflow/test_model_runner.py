@@ -4,7 +4,7 @@ Tests for ModelRunner class
 
 from unittest.mock import Mock
 import pytest
-from decoimpact.business.entities.model_base import ModelStatus
+from decoimpact.business.entities.i_model import ModelStatus
 from decoimpact.business.workflow.model_runner import ModelRunner
 
 

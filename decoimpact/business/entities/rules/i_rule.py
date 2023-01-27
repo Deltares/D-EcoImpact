@@ -1,16 +1,16 @@
 """
-Module for RuleBase class
+Module for IRule interface
 
-Classes:
-    RuleBase
+Interfaces:
+    IRule
 
 """
 
 from abc import ABC
 
 
-class RuleBase(ABC):
-    """Base class for rules"""
+class IRule(ABC):
+    """Interface for rules"""
 
     def __init__(self, name: str):
         self._name = name

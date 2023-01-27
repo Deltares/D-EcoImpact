@@ -13,14 +13,17 @@ def test_create_rule_based_model():
 
     # Arrange
     logger = Mock()
+    model_data = Mock()
+
+    model_data.name = "Test model"
 
     # Act
-    model = ModelFactory.create_rule_based_model(logger)
+    model = ModelFactory.create_model(logger, model_data)
 
     # Assert
 
     assert isinstance(model, RuleBasedModel)
-    assert model.name == "Rule-Based model"
+    assert model.name == "Test model"
 
     # logs info about model creation
     logger.log_info.assert_called_once()

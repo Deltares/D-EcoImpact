@@ -7,15 +7,17 @@ Classes:
 """
 
 
+from decoimpact.business.entities.i_model import IModel
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
-from decoimpact.crosscutting.logger import Logger
+from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.entities.data_access_layer import IModelData
 
 
 class ModelFactory:
     """Factory for creating models"""
 
     @ staticmethod
-    def create_rule_based_model(logger: Logger) -> RuleBasedModel:
+    def create_model(logger: ILogger, model_data: IModelData) -> IModel:
         """Creates an RuleBasedModel
 
         Returns:
@@ -23,5 +25,7 @@ class ModelFactory:
         """
 
         logger.log_info("Creating rule-based model")
+        model: IModel = RuleBasedModel()
+        model.name = model_data.name
 
-        return RuleBasedModel()
+        return model
