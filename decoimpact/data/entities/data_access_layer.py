@@ -6,6 +6,9 @@ Classes:
 
 """
 
+from typing import Any
+import ruamel.yaml as yaml
+
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_model_data import IModelData
@@ -28,4 +31,11 @@ class DataAccessLayer(IDataAccessLayer):
             IModelData: Data regarding model
         """
         self._logger.log_info(f"Creating model data based on yaml file {path}")
-        return YamlModelData()
+
+        with open(path, "r", encoding="utf-8") as stream:
+
+            contents: dict[str, Any] = yaml.load(stream)
+
+            model_data = YamlModelData("Model 1", contents)
+
+            return model_data
