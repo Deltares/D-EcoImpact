@@ -14,14 +14,15 @@ def test_data_access_layer_provides_yaml_model_data_for_yaml_file():
     """The DataAccessLayer should provide a YamlModelData
     for a yaml file"""
 
-    # Arrange & Act
+    # Arrange
     logger = LoggerFactory.create_logger()
-
     path = get_test_data_path() + "/test.yaml"
 
-    # Assert
+    # Act
     da_layer = DataAccessLayer(logger)
     model_data = da_layer.read_input_file(path)
+
+    # Assert
 
     # implements interface
     assert isinstance(model_data, IModelData)

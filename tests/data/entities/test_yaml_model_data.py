@@ -11,8 +11,11 @@ def test_yaml_model_data_default_settings_and_type():
     """Test if the YamlModelData implements the IModelData
     interface and gives the right default settings"""
 
+    # Arrange
+    yaml_contents = {"input-data": [], "rules": []}
+
     # Act
-    model_data = YamlModelData("Model 1", {})
+    model_data = YamlModelData("Model 1", yaml_contents)
 
     # Assert
 
