@@ -6,6 +6,7 @@ Tests for DatasetData class
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.entities.dataset_data import DatasetData
 
+
 def test_dataset_data_creation_logic():
     """The DatasetData should parse the provided dictionary
     to correctly initialize itself during creation"""

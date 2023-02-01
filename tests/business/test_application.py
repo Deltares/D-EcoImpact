@@ -3,10 +3,9 @@ Tests for Application class
 """
 
 
-from unittest.mock import MagicMock, Mock
+from unittest.mock import Mock
 from decoimpact.business.application import Application
 from decoimpact.business.entities.i_model import IModel
-from decoimpact.business.workflow.model_factory import ModelFactory
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 
@@ -21,9 +20,7 @@ def test_running_application():
 
     model.name = "Test model"
 
-    # override create_model method to return mocked model
-    ModelFactory.create_model = MagicMock(return_value=model)
-    application = Application(logger, data_layer)
+    application = Application(logger, data_layer, (lambda log, md: model))
 
     # Act
     application.run("Test.yaml")
