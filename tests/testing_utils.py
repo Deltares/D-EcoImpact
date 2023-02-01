@@ -2,6 +2,7 @@
 Helper module for test utilities
 """
 
+from os import getenv
 from logging import LogRecord
 from pytest import LogCaptureFixture
 
@@ -26,3 +27,13 @@ def find_log_message_by_level(captured_log: LogCaptureFixture, level: str) -> Lo
     assert len(records) == 1
 
     return records[0]
+
+
+def get_test_data_path() -> str:
+    """Creates default test data folder path based on current test path
+
+    Returns:
+        str: path to the default test data folder
+    """
+    test_info: str = getenv('PYTEST_CURRENT_TEST', "")
+    return test_info.split(".py::")[0] + "_data"

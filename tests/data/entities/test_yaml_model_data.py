@@ -12,7 +12,7 @@ def test_yaml_model_data_default_settings_and_type():
     interface and gives the right default settings"""
 
     # Act
-    model_data = YamlModelData()
+    model_data = YamlModelData("Model 1", {})
 
     # Assert
 

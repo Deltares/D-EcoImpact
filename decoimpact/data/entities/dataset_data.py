@@ -7,6 +7,7 @@ Classes:
 """
 
 from typing import Any
+import xarray as _xr
 
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.dictionary_utils import get_dict_element as _get_dict_element
@@ -34,3 +35,25 @@ class DatasetData(IDatasetData):
     def mapping(self) -> dict[str, str]:
         """Variable name mapping (source to target)"""
         return self._mapping
+
+    def get_input_dataset(self) -> _xr.Dataset:
+        """XArray dataset for read from the specified path"""
+
+        return self._get_original_dataset()
+
+    def _get_original_dataset(self) -> _xr.Dataset:
+        if not self._path.endswith(".nc"):
+            message = f"""The file {self._path} is not supported. \
+                          Currently only UGrid (NetCDF) files are supported"""
+            raise NotImplementedError(message)
+
+        try:
+            dataset: _xr.Dataset = _xr.open_dataset(self._path, mask_and_scale=True)
+            # mask_and_scale argument is needed to prevent inclusion of NaN's in
+            # dataset for missing values. This inclusion converts integers to
+            # floats
+        except OSError as exc:
+            msg = "ERROR: Cannot open input .nc file -- " + str(self._path)
+            raise OSError(msg) from exc
+
+        return dataset

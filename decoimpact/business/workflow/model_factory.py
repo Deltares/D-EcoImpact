@@ -25,7 +25,11 @@ class ModelFactory:
         """
 
         logger.log_info("Creating rule-based model")
-        model: IModel = RuleBasedModel()
+
+        datasets = [ds.get_input_dataset() for ds in model_data.datasets]
+        rules = []
+
+        model: IModel = RuleBasedModel(datasets, rules)
         model.name = model_data.name
 
         return model

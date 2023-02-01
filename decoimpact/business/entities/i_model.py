@@ -1,13 +1,19 @@
-
 """
 Module for IModel Interface
 
 Interfaces:
     IModel
 
+Classes:
+    ModelStatus
+
 """
+
 from abc import ABC, abstractmethod
 from enum import IntEnum
+
+from typing import List
+import xarray as _xr
 
 
 class ModelStatus(IntEnum):
@@ -49,6 +55,11 @@ class IModel(ABC):
     def status(self, status: ModelStatus):
         """Status of the model"""
         self._status = status
+
+    @property
+    @abstractmethod
+    def input_datasets(self) -> List[_xr.Dataset]:
+        """Status of the model"""
 
     @abstractmethod
     def validate(self) -> bool:
