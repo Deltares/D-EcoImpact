@@ -10,10 +10,15 @@ from abc import ABC
 
 
 class IRule(ABC):
+
     """Interface for rules"""
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, input_variable_name: str):
+
         self._name = name
+        self._description = ""
+        self._input_variable_name = input_variable_name
+        self._output_variable_name = "output"
 
     @property
     def name(self) -> str:
@@ -24,3 +29,33 @@ class IRule(ABC):
     def name(self, name: str):
         """Name of the rule"""
         self._name = name
+
+    @property
+    def description(self) -> str:
+        """Description of the rule"""
+        return self._description
+
+    @description.setter
+    def description(self, description: str):
+        """Description of the rule"""
+        self._description = description
+
+    @property
+    def input_variable_name(self) -> str:
+        """Name of the input variable"""
+        return self._input_variable_name
+
+    @input_variable_name.setter
+    def input_variable_name(self, input_variable_name: str):
+        """Name of the input variable"""
+        self._input_variable_name = input_variable_name
+
+    @property
+    def output_variable_name(self) -> str:
+        """Name of the output variable"""
+        return self._output_variable_name
+
+    @output_variable_name.setter
+    def output_variable_name(self, output_variable_name: str):
+        """Name of the output variable"""
+        self._output_variable_name = output_variable_name
