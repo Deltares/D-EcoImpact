@@ -6,12 +6,13 @@ Classes:
 
 """
 
+from abc import ABC
 from typing import List
 
 from decoimpact.business.entities.rules.i_rule import IRule
 
 
-class RuleBase(IRule):
+class RuleBase(IRule, ABC):
     """Implementation of the rule base"""
 
     def __init__(self, name: str, input_variable_names: List[str]):

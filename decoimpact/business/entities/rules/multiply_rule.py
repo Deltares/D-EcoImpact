@@ -20,10 +20,6 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
         self, name: str, input_variable_names: List[str], multipliers: List[float]
     ):
         super().__init__(name, input_variable_names)
-        self._name = name
-        self._description = ""
-        self._input_variable_names = input_variable_names
-        self._output_variable_name = "output"
         self._multipliers = multipliers
 
     def execute(self, value_array: _xr.DataArray) -> _xr.DataArray:
