@@ -19,4 +19,3 @@ class IArrayBasedRule(IRule, ABC):
     @abstractmethod
     def execute(self, value_array: _xr.DataArray) -> _xr.DataArray:
         """Executes the rule based on the provided array"""
-        pass

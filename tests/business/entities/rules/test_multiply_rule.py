@@ -3,8 +3,6 @@ Tests for RuleBase class
 """
 
 
-from audioop import mul
-
 import xarray as _xr
 
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
