@@ -7,17 +7,18 @@ Interfaces:
 """
 
 from abc import ABC
+from typing import List
 
 
 class IRule(ABC):
 
     """Interface for rules"""
 
-    def __init__(self, name: str, input_variable_name: str):
+    def __init__(self, name: str, input_variable_names: List[str]):
 
         self._name = name
         self._description = ""
-        self._input_variable_name = input_variable_name
+        self._input_variable_names = input_variable_names
         self._output_variable_name = "output"
 
     @property
@@ -41,14 +42,14 @@ class IRule(ABC):
         self._description = description
 
     @property
-    def input_variable_name(self) -> str:
+    def input_variable_names(self) -> List[str]:
         """Name of the input variable"""
-        return self._input_variable_name
+        return self._input_variable_names
 
-    @input_variable_name.setter
-    def input_variable_name(self, input_variable_name: str):
+    @input_variable_names.setter
+    def input_variable_names(self, input_variable_names: List[str]):
         """Name of the input variable"""
-        self._input_variable_name = input_variable_name
+        self._input_variable_names = input_variable_names
 
     @property
     def output_variable_name(self) -> str:
