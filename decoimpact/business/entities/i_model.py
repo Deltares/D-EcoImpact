@@ -33,28 +33,20 @@ class ModelStatus(IntEnum):
 class IModel(ABC):
     """Interface for models"""
 
-    def __init__(self) -> None:
-        self._status = ModelStatus.CREATED
-
     @property
+    @abstractmethod
     def name(self) -> str:
         """Name of the model"""
-        return self._name
-
-    @name.setter
-    def name(self, name: str):
-        """Name of the model"""
-        self._name = name
 
     @property
+    @abstractmethod
     def status(self) -> ModelStatus:
         """Status of the model"""
-        return self._status
 
     @status.setter
+    @abstractmethod
     def status(self, status: ModelStatus):
         """Status of the model"""
-        self._status = status
 
     @property
     @abstractmethod

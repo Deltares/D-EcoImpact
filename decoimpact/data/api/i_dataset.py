@@ -13,9 +13,6 @@ import xarray as _xr
 class IDatasetData(ABC):
     """Interface for dataset information"""
 
-    def __init__(self):
-        pass
-
     @property
     @abstractmethod
     def path(self) -> str:
