@@ -6,7 +6,9 @@ Classes:
 
 """
 
+from pathlib import Path
 from typing import Any
+
 import xarray as _xr
 
 from decoimpact.data.api.i_dataset import IDatasetData
@@ -23,7 +25,7 @@ class DatasetData(IDatasetData):
             info (dict[str, Any]):
         """
         super()
-        self._path = _get_dict_element("filename", dataset)
+        self._path = Path(_get_dict_element("filename", dataset)).resolve()
         self._mapping = _get_dict_element("variable_mapping", dataset, False)
 
     @property
@@ -42,9 +44,13 @@ class DatasetData(IDatasetData):
         return self._get_original_dataset()
 
     def _get_original_dataset(self) -> _xr.Dataset:
-        if not self._path.endswith(".nc"):
+        if not Path.exists(self._path):
+            message = f"""The file {self._path} is not found. \
+                          Make sure the file location is valid."""
+            raise FileExistsError(message)
+        if Path(self._path).suffix != ".nc":
             message = f"""The file {self._path} is not supported. \
-                          Currently only UGrid (NetCDF) files are supported"""
+                          Currently only UGrid (NetCDF) files are supported."""
             raise NotImplementedError(message)
 
         try:
