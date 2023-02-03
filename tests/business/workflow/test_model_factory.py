@@ -4,6 +4,7 @@ Tests for ModelFactory class
 
 
 from unittest.mock import Mock
+
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.workflow.model_factory import ModelFactory
 from decoimpact.crosscutting.i_logger import ILogger

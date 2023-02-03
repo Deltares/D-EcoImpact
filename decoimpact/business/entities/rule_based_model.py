@@ -6,6 +6,7 @@ Classes:
 
 """
 from typing import List
+
 import xarray as _xr
 
 from decoimpact.business.entities.i_model import IModel, ModelStatus
@@ -29,11 +30,6 @@ class RuleBasedModel(IModel):
     def name(self) -> str:
         """Name of the model"""
         return self._name
-
-    @name.setter
-    def name(self, name: str):
-        """Name of the model"""
-        self._name = name
 
     @property
     def status(self) -> ModelStatus:

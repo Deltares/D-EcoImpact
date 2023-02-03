@@ -2,7 +2,11 @@
 Tests for DataAccessLayer class
 """
 
+from unittest.mock import Mock
 
+import pytest
+
+from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.crosscutting.logger_factory import LoggerFactory
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.entities.data_access_layer import DataAccessLayer
@@ -38,3 +42,24 @@ def test_data_access_layer_provides_yaml_model_data_for_yaml_file():
 
     assert first_dataset.mapping["mesh2d_sa1"] == "mesh2d_sa1"
     assert first_dataset.mapping["mesh2d_s1"] == "water_level"
+
+
+def test_data_access_layer_throws_exception_for_invalid_path():
+    """The DataAccessLayer should throw a FileNotFoundError
+    if the provided path for a yaml file does not exists"""
+
+    # Arrange
+    logger = Mock(ILogger)
+    path = "test_invalid_path.yaml"
+    da_layer = DataAccessLayer(logger)
+
+    # Act
+    with pytest.raises(FileExistsError) as exc_info:
+        da_layer.read_input_file(path)
+
+    exception_raised = exc_info.value
+
+    # Assert
+
+    assert isinstance(exception_raised, FileExistsError)
+    assert exception_raised.args[0] == 'The input file test_invalid_path.yaml does not exist.'

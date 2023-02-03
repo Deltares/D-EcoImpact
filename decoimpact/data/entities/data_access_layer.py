@@ -6,8 +6,9 @@ Classes:
 
 """
 
-from typing import Any
 import os as _os
+from typing import Any
+
 import ruamel.yaml as _yaml
 
 from decoimpact.crosscutting.i_logger import ILogger
@@ -32,12 +33,12 @@ class DataAccessLayer(IDataAccessLayer):
             IModelData: Data regarding model
 
         Raises:
-            FileNotFoundError: if file does not exist
+            FileExistsError: if file does not exist
         """
         self._logger.log_info(f"Creating model data based on yaml file {path}")
 
         if not _os.path.exists(path):
-            raise FileNotFoundError(f"The input file {path} does not exist.")
+            raise FileExistsError(f"The input file {path} does not exist.")
 
         with open(path, "r", encoding="utf-8") as stream:
             contents: dict[Any, Any] = _yaml.load(stream, Loader=_yaml.Loader)

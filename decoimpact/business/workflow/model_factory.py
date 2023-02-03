@@ -29,7 +29,6 @@ class ModelFactory:
         datasets = [ds.get_input_dataset() for ds in model_data.datasets]
         rules = []
 
-        model: IModel = RuleBasedModel(datasets, rules)
-        model.name = model_data.name
+        model: IModel = RuleBasedModel(datasets, rules, model_data.name)
 
         return model
