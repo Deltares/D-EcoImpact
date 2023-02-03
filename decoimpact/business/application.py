@@ -15,7 +15,6 @@ from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 
 from decoimpact.business.entities.i_model import IModel
-from decoimpact.business.workflow.model_factory import ModelFactory
 from decoimpact.business.workflow.model_runner import ModelRunner
 
 
@@ -25,7 +24,7 @@ class Application:
     def __init__(self,
                  logger: ILogger,
                  da_layer: IDataAccessLayer,
-                 model_creator: Callable[[ILogger, IModelData], IModel] | None = None):
+                 model_creator: Callable[[ILogger, IModelData], IModel]):
         """Creates an application based on provided logger, data-access layer and
         model creator function (optional)
 
@@ -33,17 +32,12 @@ class Application:
             logger (ILogger): Logger that takes care of logging
             da_layer (IDataAccessLayer): data-access layer for reading/writing data
             model_creator (Callable[[ILogger, IModelData], IModel]): Function for
-            creating a model based on IModelData. Defaults to None.
+            creating a model based on IModelData.
         """
 
         self._logger = logger
         self._da_layer = da_layer
-
-        if model_creator is None:
-            # use default implementation
-            self._model_creator = ModelFactory.create_model
-        else:
-            self._model_creator = model_creator
+        self._model_creator = model_creator
 
     def run(self, input_path: str):
         """Runs application
