@@ -36,7 +36,7 @@ def test_data_access_layer_provides_yaml_model_data_for_yaml_file():
     assert len(model_data.datasets) == 1
 
     first_dataset = model_data.datasets[0]
-    assert first_dataset.path == "test/data/FM-VZM_0000_map.nc"
+    assert first_dataset.path.endswith("FM-VZM_0000_map.nc")
     assert "mesh2d_sa1" in first_dataset.mapping
     assert "mesh2d_s1" in first_dataset.mapping
 

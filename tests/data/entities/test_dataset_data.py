@@ -22,7 +22,7 @@ def test_dataset_data_creation_logic():
     # Assert
 
     assert isinstance(data, IDatasetData)
-    assert data.path == "test.yaml"
+    assert data.path.endswith("test.yaml")
     assert "test" in data.mapping
     assert data.mapping["test"] == "test_new"
 

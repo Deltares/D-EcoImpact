@@ -31,7 +31,7 @@ class DatasetData(IDatasetData):
     @property
     def path(self) -> str:
         """File path to the dataset"""
-        return self._path
+        return str(self._path)
 
     @property
     def mapping(self) -> dict[str, str]:
@@ -48,6 +48,7 @@ class DatasetData(IDatasetData):
             message = f"""The file {self._path} is not found. \
                           Make sure the file location is valid."""
             raise FileExistsError(message)
+
         if Path(self._path).suffix != ".nc":
             message = f"""The file {self._path} is not supported. \
                           Currently only UGrid (NetCDF) files are supported."""
