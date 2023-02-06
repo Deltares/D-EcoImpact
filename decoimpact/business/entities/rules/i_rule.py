@@ -6,21 +6,30 @@ Interfaces:
 
 """
 
-from abc import ABC
+from abc import ABC, abstractmethod
+from typing import List
 
 
 class IRule(ABC):
+
     """Interface for rules"""
 
-    def __init__(self, name: str):
-        self._name = name
-
     @property
+    @abstractmethod
     def name(self) -> str:
         """Name of the rule"""
-        return self._name
 
-    @name.setter
-    def name(self, name: str):
-        """Name of the rule"""
-        self._name = name
+    @property
+    @abstractmethod
+    def description(self) -> str:
+        """Description of the rule"""
+
+    @property
+    @abstractmethod
+    def input_variable_names(self) -> List[str]:
+        """Name of the input variable"""
+
+    @property
+    @abstractmethod
+    def output_variable_name(self) -> str:
+        """Name of the output variable"""

@@ -1,32 +1,26 @@
 """
-Module for RuleBase class
+Module for RuleBase
 
 Classes:
     RuleBase
 
 """
+
 from abc import ABC
 from typing import List
 
-from decoimpact.business.entities.rules.periodvalue import PeriodValue
+from decoimpact.business.entities.rules.i_rule import IRule
 
 
-class RuleBase(ABC):
+class RuleBase(IRule, ABC):
+    """Implementation of the rule base"""
 
-    """Base class for rules"""
-
-    def __init__(
-        self,
-        name: str,
-        input_variable_name: str,
-        period_value: List[PeriodValue] = None,
-    ):
+    def __init__(self, name: str, input_variable_names: List[str]):
 
         self._name = name
         self._description = ""
-        self._input_variable_name = input_variable_name
+        self._input_variable_names = input_variable_names
         self._output_variable_name = "output"
-        self._period_value = period_value
 
     @property
     def name(self) -> str:
@@ -49,14 +43,14 @@ class RuleBase(ABC):
         self._description = description
 
     @property
-    def input_variable_name(self) -> str:
+    def input_variable_names(self) -> List[str]:
         """Name of the input variable"""
-        return self._input_variable_name
+        return self._input_variable_names
 
-    @input_variable_name.setter
-    def input_variable_name(self, input_variable_name: str):
+    @input_variable_names.setter
+    def input_variable_names(self, input_variable_names: List[str]):
         """Name of the input variable"""
-        self._input_variable_name = input_variable_name
+        self._input_variable_names = input_variable_names
 
     @property
     def output_variable_name(self) -> str:
@@ -67,8 +61,3 @@ class RuleBase(ABC):
     def output_variable_name(self, output_variable_name: str):
         """Name of the output variable"""
         self._output_variable_name = output_variable_name
-
-    @property
-    def period_value(self) -> List[PeriodValue]:
-        """periods and values: start_DD_MM, end_DD_MM, value"""
-        return self._period_value
