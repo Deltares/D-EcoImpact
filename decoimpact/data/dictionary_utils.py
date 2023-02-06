@@ -31,6 +31,6 @@ def get_dict_element(
         return contents[key]
 
     if required:
-        raise AttributeError(f"missing element {key}")
+        raise AttributeError(f"Missing element {key}")
 
-    return []
+    return None

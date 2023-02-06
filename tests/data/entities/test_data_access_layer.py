@@ -62,4 +62,5 @@ def test_data_access_layer_throws_exception_for_invalid_path():
     # Assert
 
     assert isinstance(exception_raised, FileExistsError)
-    assert exception_raised.args[0] == 'The input file test_invalid_path.yaml does not exist.'
+    expected_message = 'The input file test_invalid_path.yaml does not exist.'
+    assert exception_raised.args[0] == expected_message

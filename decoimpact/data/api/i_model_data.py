@@ -15,9 +15,6 @@ from decoimpact.data.api.i_dataset import IDatasetData
 class IModelData(ABC):
     """Interface for the model data"""
 
-    def __init__(self):
-        pass
-
     @property
     @abstractmethod
     def name(self) -> str:
