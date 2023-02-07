@@ -33,3 +33,11 @@ class IRule(ABC):
     @abstractmethod
     def output_variable_name(self) -> str:
         """Name of the output variable"""
+
+    @abstractmethod
+    def validate(self) -> bool:
+        """Validates if the rule is valid
+
+        Returns:
+            bool: wether the rule is valid
+        """
