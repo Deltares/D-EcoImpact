@@ -20,7 +20,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
     def __init__(
         self, name: str, input_variable_names: List[str], operation_type: OperationType
     ):
-        super().__init__(name, input_variable_names)
+        super().__init__(name, input_variable_names, operation_type)
         self._operation_type = operation_type
 
     def execute(self, value_array: _xr.DataArray) -> _xr.DataArray:
