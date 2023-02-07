@@ -16,13 +16,16 @@ from decoimpact.business.entities.rules.i_rule import IRule
 class RuleBasedModel(IModel):
     """Model class for models based on rules"""
 
-    def __init__(self,
-                 input_datasets: List[_xr.Dataset],
-                 rules: List[IRule],
-                 name: str = "Rule-Based model",) -> None:
+    def __init__(
+        self,
+        input_datasets: List[_xr.Dataset],
+        rules: List[IRule],
+        name: str = "Rule-Based model",
+    ) -> None:
 
         self._name = name
         self._status = ModelStatus.CREATED
+        print(rules)
         self._rules = rules
         self._input_datasets: List[_xr.Dataset] = input_datasets
 

@@ -6,7 +6,7 @@ Classes:
 
 """
 
-from typing import Any, List
+from typing import List
 
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
@@ -16,11 +16,11 @@ from decoimpact.data.api.i_rule_data import IRuleData
 class YamlModelData(IModelData):
     """Implementation of the model data"""
 
-    def __init__(self, name: str, yaml_contents: dict[str, Any]):
+    def __init__(self, name: str, datasets: List[IDatasetData], rules: List[IRuleData]):
         super()
         self._name = name
-        self._datasets: List[IDatasetData] = []
-        self._rules: List[IRuleData] = []
+        self._datasets = datasets
+        self._rules = rules
 
     @property
     def name(self) -> str:

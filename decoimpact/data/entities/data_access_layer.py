@@ -42,5 +42,5 @@ class DataAccessLayer(IDataAccessLayer):
 
         with open(path, "r", encoding="utf-8") as stream:
             contents: dict[Any, Any] = _yaml.load(stream, Loader=_yaml.Loader)
-
-            return ModelDataBuilder.parse_yaml_data(contents)
+            model_data_builder = ModelDataBuilder()
+            return model_data_builder.parse_yaml_data(contents)

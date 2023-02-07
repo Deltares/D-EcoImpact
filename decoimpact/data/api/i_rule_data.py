@@ -7,8 +7,7 @@ Interfaces:
 """
 
 from abc import ABC, abstractmethod
-
-import xarray as _xr
+from typing import Any
 
 
 class IRuleData(ABC):
@@ -19,6 +18,7 @@ class IRuleData(ABC):
     def name(self) -> str:
         """Name of the rule"""
 
+    @property
     @abstractmethod
-    def get_input_variables(self) -> _xr.Dataset:
+    def data(self) -> dict[str, Any]:
         """Read the rule using the name"""

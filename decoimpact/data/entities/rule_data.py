@@ -9,7 +9,6 @@ Classes:
 from typing import Any
 
 from decoimpact.data.api.i_rule_data import IRuleData
-from decoimpact.data.dictionary_utils import get_dict_element as _get_dict_element
 
 
 class RuleData(IRuleData):
@@ -22,14 +21,15 @@ class RuleData(IRuleData):
             info (dict[str, Any]):
         """
         super()
-        self._mapping = _get_dict_element("variable_mapping", rule, False)
+        self._name = list(rule.keys())[0]
+        self._data = rule[self._name]
 
-    # @property
-    # def path(self) -> str:
-    #     """File path to the dataset"""
-    #     return str(self._path)
+    @property
+    def name(self) -> str:
+        """Name to the rule"""
+        return self._name
 
-    # @property
-    # def mapping(self) -> dict[str, str]:
-    #     """Variable name mapping (source to target)"""
-    #     return self._mapping
+    @property
+    def data(self) -> dict[str, Any]:
+        """Data of the rule data"""
+        return self._data

@@ -5,10 +5,10 @@ Classes:
 """
 from typing import Any, Dict
 
-from decoimpact.business.entities.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.data.dictionary_utils import get_dict_element
+from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
 class ParserMultiplyRule(IParserRuleBase):
@@ -28,7 +28,6 @@ class ParserMultiplyRule(IParserRuleBase):
         Returns:
             RuleBase: Rule based on the provided data
         """
-
         name = get_dict_element("name", dictionary)
         input_variable_name = get_dict_element("input_variable", dictionary)
         multipliers = get_dict_element("multipliers", dictionary)
