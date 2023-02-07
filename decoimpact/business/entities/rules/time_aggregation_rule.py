@@ -18,9 +18,13 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
     """Implementation for the time aggregation rule"""
 
     def __init__(
-        self, name: str, input_variable_names: List[str], operation_type: OperationType
+        self,
+        name: str,
+        # time_scale,
+        input_variable_names: List[str],
+        operation_type: OperationType,
     ):
-        super().__init__(name, input_variable_names, operation_type)
+        super().__init__(name, input_variable_names)
         self._operation_type = operation_type
 
     def execute(self, value_array: _xr.DataArray) -> _xr.DataArray:
