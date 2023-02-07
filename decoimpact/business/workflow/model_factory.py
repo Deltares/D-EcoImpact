@@ -16,7 +16,7 @@ from decoimpact.data.entities.data_access_layer import IModelData
 class ModelFactory:
     """Factory for creating models"""
 
-    @ staticmethod
+    @staticmethod
     def create_model(logger: ILogger, model_data: IModelData) -> IModel:
         """Creates an RuleBasedModel
 
@@ -25,9 +25,10 @@ class ModelFactory:
         """
 
         logger.log_info("Creating rule-based model")
+        print("create model", model_data)
 
         datasets = [ds.get_input_dataset() for ds in model_data.datasets]
-        rules = []
+        rules = model_data.rules
 
         model: IModel = RuleBasedModel(datasets, rules, model_data.name)
 

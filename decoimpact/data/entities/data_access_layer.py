@@ -11,10 +11,10 @@ from typing import Any
 
 import ruamel.yaml as _yaml
 
+from decoimpact.business.workflow.model_data_builder import ModelDataBuilder
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_model_data import IModelData
-from decoimpact.data.entities.yaml_model_data import YamlModelData
 
 
 class DataAccessLayer(IDataAccessLayer):
@@ -43,6 +43,4 @@ class DataAccessLayer(IDataAccessLayer):
         with open(path, "r", encoding="utf-8") as stream:
             contents: dict[Any, Any] = _yaml.load(stream, Loader=_yaml.Loader)
 
-            model_data = YamlModelData("Model 1", contents)
-
-            return model_data
+            return ModelDataBuilder.parse_yaml_data(contents)
