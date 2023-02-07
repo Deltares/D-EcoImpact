@@ -25,5 +25,8 @@
     "python.analysis.diagnosticMode": "openFilesOnly",
     "python.analysis.exclude": [
         "tests/**/*"
+    ],
+    "python.linting.flake8Args": [
+        "--max-line-length=88"
     ]
 }
