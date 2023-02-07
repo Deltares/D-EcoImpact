@@ -3,6 +3,7 @@
 
 import sys
 from decoimpact.business.application import Application
+from decoimpact.business.workflow.model_factory import ModelFactory
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.crosscutting.logger_factory import LoggerFactory
 from decoimpact.data.entities.data_access_layer import DataAccessLayer, IDataAccessLayer
@@ -20,9 +21,9 @@ def main(input_path: str):
     da_layer: IDataAccessLayer = DataAccessLayer(logger)
 
     # create and run application
-    application = Application(logger, da_layer)
+    application = Application(logger, da_layer, ModelFactory.create_model)
     application.run(input_path)
 
 
 if __name__ == "__main__":
-    main(sys.argv[0])
+    main(sys.argv[1])
