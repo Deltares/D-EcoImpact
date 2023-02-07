@@ -7,6 +7,7 @@ Classes:
 """
 
 from typing import Any, List
+
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.dictionary_utils import get_dict_element
@@ -34,12 +35,9 @@ class YamlModelData(IModelData):
         return self._datasets
 
     def _parse_contents(self, contents: dict[str, Any]):
-
         self._parse_datasets(contents)
 
     def _parse_datasets(self, contents: dict[str, Any]):
-
-        # parse input elements
         datasets: List[dict[str, Any]] = get_dict_element("input-data", contents)
 
         for dataset in datasets:

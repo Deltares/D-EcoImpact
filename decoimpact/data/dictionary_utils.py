@@ -5,13 +5,13 @@ Module for dictionary utilities
 
 from typing import Dict, TypeVar
 
-T = TypeVar("T")
+TValue = TypeVar("TValue")
 
 
 def get_dict_element(
         key: str,
-        contents: Dict[str, T],
-        required: bool = True) -> T:
+        contents: Dict[str, TValue],
+        required: bool = True) -> TValue:
 
     """Tries to get an element from the provided dictionary
 

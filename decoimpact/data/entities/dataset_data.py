@@ -40,7 +40,6 @@ class DatasetData(IDatasetData):
 
     def get_input_dataset(self) -> _xr.Dataset:
         """XArray dataset for read from the specified path"""
-
         return self._get_original_dataset()
 
     def _get_original_dataset(self) -> _xr.Dataset:
