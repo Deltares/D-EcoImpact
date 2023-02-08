@@ -27,6 +27,11 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         super().__init__(name, input_variable_names)
         self._operation_type = operation_type
 
+    @property
+    def operation_type(self) -> OperationType:
+        """Name of the rule"""
+        return self._operation_type
+
     def execute(self, input_arrays: List[_xr.DataArray]) -> _xr.DataArray:
         # type: ignore
         """Calculate simple statistic variables from two/more input arrays
@@ -42,7 +47,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         # if self._operation_type is OperationType.Multiply:
         #    return variable1 * variable2
 
-        if self._operation_type.value > 5:
+        if self._operation_type.value > 7:
             raise ValueError(f"Unsupported operation type {self._operation_type.name}")
 
         # values1 = variable1.to_numpy()
@@ -53,7 +58,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         if self._operation_type is OperationType.Multiply:
             result = np_arrays[0]
 
-            for a in np_arrays:
+            for a in np_arrays[1:]:
                 result = _np.multiply(result, a)
 
             return _xr.DataArray(result)
@@ -82,3 +87,21 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         if self._operation_type is OperationType.Median:
             np_arrays = [a.to_numpy() for a in input_arrays]
             return _xr.DataArray(_np.median(np_arrays, axis=0))
+
+        if self._operation_type is OperationType.Add:
+            result = np_arrays[0]
+
+            for a in np_arrays[1:]:
+                result = _np.add(result, a)
+
+            return _xr.DataArray(result)
+        # notice: Add, we mean all the array add with the all arrays, number by number.
+
+        if self._operation_type is OperationType.Substract:
+            result = np_arrays[0]
+
+            for a in np_arrays[1:]:
+                result = _np.subtract(result, a)
+
+            return _xr.DataArray(result)
+        # notice: Substract, we mean all the array Substract with the all arrays, number by number.

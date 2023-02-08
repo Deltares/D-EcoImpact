@@ -6,4 +6,6 @@ class OperationType(IntEnum):
     Min = (2,)
     Max = (3,)
     Average = (4,)
-    Median = 5
+    Median = (5,)
+    Add = (6,)
+    Substract = 7
