@@ -60,11 +60,11 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
 
         if self._operation_type is OperationType.Min:
             np_arrays = [a_array.to_numpy() for a_array in input_arrays]
-            return _xr.DataArray(_np.minimum(np_arrays, axis=0))
+            return _xr.DataArray(_np.min(np_arrays, axis=0))
 
         if self._operation_type is OperationType.Max:
             np_arrays = [a_array.to_numpy() for a_array in input_arrays]
-            return _xr.DataArray(_np.maximum(np_arrays, axis=0))
+            return _xr.DataArray(_np.max(np_arrays, axis=0))
 
         if self._operation_type is OperationType.Average:
             np_arrays = [a_array.to_numpy() for a_array in input_arrays]
