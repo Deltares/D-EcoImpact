@@ -41,25 +41,16 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
             DataArray: Input arrays
         """
 
-        # variable1 = dataset[self.input_variable_name[0]]
-        # variable2 = dataset[self.input_variable_name[1]]
+        # if self._operation_type.value > 7:
+        #    raise ValueError(f"Unsupported operation type {self._operation_type.name}")
 
-        # if self._operation_type is OperationType.Multiply:
-        #    return variable1 * variable2
-
-        if self._operation_type.value > 7:
-            raise ValueError(f"Unsupported operation type {self._operation_type.name}")
-
-        # values1 = variable1.to_numpy()
-        # values2 = variable2.to_numpy()
-
-        np_arrays = [a.to_numpy() for a in input_arrays]
+        np_arrays = [a_array.to_numpy() for a_array in input_arrays]
 
         if self._operation_type is OperationType.Multiply:
             result = np_arrays[0]
 
-            for a in np_arrays[1:]:
-                result = _np.multiply(result, a)
+            for a_array in np_arrays[1:]:
+                result = _np.multiply(result, a_array)
 
             return _xr.DataArray(result)
         # notice: multiply, we mean all the array multiply with the all arrays, number by number.
@@ -67,32 +58,32 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         if self._operation_type is OperationType.Min:
             result = np_arrays[0]
 
-            for a in np_arrays:
-                result = _np.minimum(result, a)
+            for a_array in np_arrays:
+                result = _np.minimum(result, a_array)
 
             return _xr.DataArray(result)
 
         if self._operation_type is OperationType.Max:
             result = np_arrays[0]
 
-            for a in np_arrays:
-                result = _np.maximum(result, a)
+            for a_array in np_arrays:
+                result = _np.maximum(result, a_array)
 
             return _xr.DataArray(result)
 
         if self._operation_type is OperationType.Average:
-            np_arrays = [a.to_numpy() for a in input_arrays]
+            np_arrays = [a_array.to_numpy() for a_array in input_arrays]
             return _xr.DataArray(_np.average(np_arrays, axis=0))
 
         if self._operation_type is OperationType.Median:
-            np_arrays = [a.to_numpy() for a in input_arrays]
+            np_arrays = [a_array.to_numpy() for a_array in input_arrays]
             return _xr.DataArray(_np.median(np_arrays, axis=0))
 
         if self._operation_type is OperationType.Add:
             result = np_arrays[0]
 
-            for a in np_arrays[1:]:
-                result = _np.add(result, a)
+            for a_array in np_arrays[1:]:
+                result = _np.add(result, a_array)
 
             return _xr.DataArray(result)
         # notice: Add, we mean all the array add with the all arrays, number by number.
@@ -100,8 +91,8 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         if self._operation_type is OperationType.Substract:
             result = np_arrays[0]
 
-            for a in np_arrays[1:]:
-                result = _np.subtract(result, a)
+            for a_array in np_arrays[1:]:
+                result = _np.subtract(result, a_array)
 
             return _xr.DataArray(result)
         # notice: Substract, we mean all the array Substract with the all arrays, number by number.
