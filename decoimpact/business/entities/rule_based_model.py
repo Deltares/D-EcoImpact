@@ -71,12 +71,6 @@ class RuleBasedModel(IModel):
 
     def execute(self) -> None:
         """Executes the model"""
-        for rule in self._rules:
-
-            a = _xr.Array()
-
-            if isinstance(rule, IArrayBasedRule):
-                rule.execute(a, self._logger)
 
     def finalize(self) -> None:
         """Finalizes the model"""
