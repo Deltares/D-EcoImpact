@@ -46,10 +46,8 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
 
         np_arrays = [a_array.to_numpy() for a_array in input_arrays]
 
-        if not self._check_dimentions(np_arrays):
-            raise ValueError(
-                f"The arrays are not in the same dimension {self.input_variable_names}"
-            )
+        if not self._check_dimensions(np_arrays):
+            raise ValueError(f"The arrays are not in the same dimension/shape!")
 
         if self._operation_type is OperationType.Multiply:
             result = np_arrays[0]
@@ -61,20 +59,12 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         # notice: multiply, we mean all the array multiply with the all arrays, number by number.
 
         if self._operation_type is OperationType.Min:
-            result = np_arrays[0]
-
-            for a_array in np_arrays:
-                result = _np.minimum(result, a_array)
-
-            return _xr.DataArray(result)
+            np_arrays = [a_array.to_numpy() for a_array in input_arrays]
+            return _xr.DataArray(_np.minimum(np_arrays, axis=0))
 
         if self._operation_type is OperationType.Max:
-            result = np_arrays[0]
-
-            for a_array in np_arrays:
-                result = _np.maximum(result, a_array)
-
-            return _xr.DataArray(result)
+            np_arrays = [a_array.to_numpy() for a_array in input_arrays]
+            return _xr.DataArray(_np.maximum(np_arrays, axis=0))
 
         if self._operation_type is OperationType.Average:
             np_arrays = [a_array.to_numpy() for a_array in input_arrays]
@@ -102,12 +92,12 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
             return _xr.DataArray(result)
         # notice: Substract, we mean all the array Substract with the all arrays, number by number.
 
-    def _check_dimentions(self, np_arrays: List[_np.array]) -> bool:
+    def _check_dimensions(self, np_arrays: List[_np.array]) -> bool:
         # brief check if all the arrays to be combined are in the same size/dimension/length
-        expected_dimentions = np_arrays[0].ndim
+        expected_dimensions = np_arrays[0].ndim
 
         for a_array in np_arrays[1:]:
-            if expected_dimentions != _np.ndim(a_array):
+            if expected_dimensions != _np.ndim(a_array):
                 return False
 
         expected_shape = np_arrays[0].shape

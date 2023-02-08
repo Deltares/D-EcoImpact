@@ -2,6 +2,7 @@
 Tests for RuleBase class
 """
 
+import pytest
 import xarray as _xr
 
 from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
@@ -22,7 +23,7 @@ def test_create_combine_results_rule_should_set_defaults():
     assert isinstance(rule, CombineResultsRule)
 
 
-def test_execute_value_array_combine_results_rule_multiply():
+def test_execute_value_array_combine_results_rule_check_ndim():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
@@ -30,6 +31,50 @@ def test_execute_value_array_combine_results_rule_multiply():
         "test", ["foo_data", "hello_data"], OperationType.Multiply
     )
     foo_data = [1, 2, 3]
+    hello_data = [4, 3, 2, 1]
+    value_array1 = _xr.DataArray(foo_data)
+    value_array2 = _xr.DataArray(hello_data)
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        multiplied_array = rule.execute([value_array1, value_array2])
+
+    exception_raised = exc_info.value
+
+    # Assert
+    assert exception_raised.args[0] == "The arrays are not in the same dimension/shape!"
+
+
+def test_execute_value_array_combine_results_rule_check_shape():
+    """Test setting input_variable_names of a RuleBase"""
+
+    # Arrange & Act
+    rule = CombineResultsRule(
+        "test", ["foo_data", "hello_data"], OperationType.Multiply
+    )
+    foo_data = [[1, 2], [3, 4]]
+    hello_data = [4, 3, 2, 1]
+    value_array1 = _xr.DataArray(foo_data)
+    value_array2 = _xr.DataArray(hello_data)
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        multiplied_array = rule.execute([value_array1, value_array2])
+
+    exception_raised = exc_info.value
+
+    # Assert
+    assert exception_raised.args[0] == "The arrays are not in the same dimension/shape!"
+
+
+def test_execute_value_array_combine_results_rule_multiply():
+    """Test setting input_variable_names of a RuleBase"""
+
+    # Arrange & Act
+    rule = CombineResultsRule(
+        "test", ["foo_data", "hello_data"], OperationType.Multiply
+    )
+    foo_data = [1, 2, 3, 4]
     hello_data = [4, 3, 2, 1]
     value_array1 = _xr.DataArray(foo_data)
     value_array2 = _xr.DataArray(hello_data)
