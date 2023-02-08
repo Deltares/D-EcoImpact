@@ -47,7 +47,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         np_arrays = [a_array.to_numpy() for a_array in input_arrays]
 
         if not self._check_dimensions(np_arrays):
-            raise ValueError(f"The arrays are not in the same dimension/shape!")
+            raise ValueError("The arrays are not in the same dimension/shape!")
 
         if self._operation_type is OperationType.Multiply:
             result = np_arrays[0]
