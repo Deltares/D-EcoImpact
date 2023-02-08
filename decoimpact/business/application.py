@@ -7,6 +7,7 @@ Classes:
 """
 
 
+from typing import Callable
 from decoimpact.crosscutting.i_logger import ILogger
 
 # only import interfaces to stay loosely coupled
@@ -14,16 +15,29 @@ from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 
 from decoimpact.business.entities.i_model import IModel
-from decoimpact.business.workflow.model_factory import ModelFactory
 from decoimpact.business.workflow.model_runner import ModelRunner
 
 
 class Application:
     """Application for running command-line"""
 
-    def __init__(self, logger: ILogger, da_layer: IDataAccessLayer) -> None:
+    def __init__(self,
+                 logger: ILogger,
+                 da_layer: IDataAccessLayer,
+                 model_creator: Callable[[ILogger, IModelData], IModel]):
+        """Creates an application based on provided logger, data-access layer and
+        model creator function (optional)
+
+        Args:
+            logger (ILogger): Logger that takes care of logging
+            da_layer (IDataAccessLayer): data-access layer for reading/writing data
+            model_creator (Callable[[ILogger, IModelData], IModel]): Function for
+            creating a model based on IModelData.
+        """
+
         self._logger = logger
         self._da_layer = da_layer
+        self._model_creator = model_creator
 
     def run(self, input_path: str):
         """Runs application
@@ -33,6 +47,6 @@ class Application:
         """
 
         model_data: IModelData = self._da_layer.read_input_file(input_path)
-        model: IModel = ModelFactory.create_model(self._logger, model_data)
+        model: IModel = self._model_creator(self._logger, model_data)
 
         ModelRunner.run_model(model, self._logger)

@@ -6,9 +6,13 @@ authors = ["Deltares"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.9, <3.12" # max 3.11 because of scipy
 numpy = "^1.24.1"
 xarray = "^2023.1.0"
+ruamel-yaml = "^0.17.21"
+scipy = "^1.10.0"
+netcdf4 = "^1.6.2"
+pathlib = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
