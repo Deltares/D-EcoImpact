@@ -29,7 +29,7 @@ def test_execute_value_array_combine_results_rule_multiply():
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], OperationType.Multiply
     )
-    foo_data = [1, 2, 3, 4]
+    foo_data = [1, 2, 3]
     hello_data = [4, 3, 2, 1]
     value_array1 = _xr.DataArray(foo_data)
     value_array2 = _xr.DataArray(hello_data)

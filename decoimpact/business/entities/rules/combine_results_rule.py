@@ -6,7 +6,7 @@ Classes:
 """
 
 
-from typing import List
+from typing import Any, List
 
 import numpy as _np
 import xarray as _xr
@@ -45,6 +45,11 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         #    raise ValueError(f"Unsupported operation type {self._operation_type.name}")
 
         np_arrays = [a_array.to_numpy() for a_array in input_arrays]
+
+        if not self._check_dimentions(np_arrays):
+            raise ValueError(
+                f"The arrays are not in the same dimension {self.input_variable_names}"
+            )
 
         if self._operation_type is OperationType.Multiply:
             result = np_arrays[0]
@@ -96,3 +101,18 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
 
             return _xr.DataArray(result)
         # notice: Substract, we mean all the array Substract with the all arrays, number by number.
+
+    def _check_dimentions(self, np_arrays: List[_np.array]) -> bool:
+        # brief check if all the arrays to be combined are in the same size/dimension/length
+        expected_dimentions = np_arrays[0].ndim
+
+        for a_array in np_arrays[1:]:
+            if expected_dimentions != _np.ndim(a_array):
+                return False
+
+        expected_shape = np_arrays[0].shape
+        for a_array in np_arrays[1:]:
+            if expected_shape != a_array.shape:
+                return False
+
+        return True
