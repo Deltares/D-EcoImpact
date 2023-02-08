@@ -1,0 +1,19 @@
+input-data:
+        - dataset:
+                  filename: dataset/FM-VZM_0000_map.nc
+                  variable_mapping:
+                          mesh2d_sa1: "mesh2d_sa1"
+                          mesh2d_s1: "water_level"
+                  remove_land_cells: True
+                  bedlevel_threshold: 0.0
+
+rules:
+        - multiply_rule:
+                  name: Multiply salinity to chloride
+                  description: Converts salinity to chloride
+                  multipliers: [0.0018066, 1e5]
+                  input_variable: mesh2d_sa1
+                  output_variable: chloride
+
+storage:
+        filename: test/data/habitat_out.nc

@@ -1,0 +1,14 @@
+input-data:
+  - dataset:
+      filename: test/data/FM-VZM_0000_map.nc
+      variable_mapping:
+        mesh2d_sa1: "mesh2d_sa1"
+        mesh2d_s1: "water_level"
+
+rules:
+  - test_rule:
+      name: test name
+      description: Converts salinity to chloride
+      multipliers: [0.0018066, 1e5]
+      input_variable: mesh2d_sa1
+      output_variable: chloride

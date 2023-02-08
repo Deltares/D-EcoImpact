@@ -6,10 +6,15 @@ Classes:
 
 """
 
+import os as _os
+from typing import Any
+
+import ruamel.yaml as _yaml
+
+from decoimpact.business.workflow.model_data_builder import ModelDataBuilder
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_model_data import IModelData
-from decoimpact.data.entities.yaml_model_data import YamlModelData
 
 
 class DataAccessLayer(IDataAccessLayer):
@@ -26,6 +31,16 @@ class DataAccessLayer(IDataAccessLayer):
 
         Returns:
             IModelData: Data regarding model
+
+        Raises:
+            FileExistsError: if file does not exist
         """
         self._logger.log_info(f"Creating model data based on yaml file {path}")
-        return YamlModelData()
+
+        if not _os.path.exists(path):
+            raise FileExistsError(f"The input file {path} does not exist.")
+
+        with open(path, "r", encoding="utf-8") as stream:
+            contents: dict[Any, Any] = _yaml.load(stream, Loader=_yaml.Loader)
+            model_data_builder = ModelDataBuilder()
+            return model_data_builder.parse_yaml_data(contents)
