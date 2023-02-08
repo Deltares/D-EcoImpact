@@ -47,5 +47,4 @@ class ModelDataBuilder:
         rules: List[dict[str, Any]] = get_dict_element("rules", contents)
         # parsed_rules = []
         for rule in rules:
-            print("rule", rule)
             yield RuleData(rule)
