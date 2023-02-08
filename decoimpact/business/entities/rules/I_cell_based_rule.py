@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
 
-import xarray as _xr
-
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.crosscutting.i_logger import ILogger
 
