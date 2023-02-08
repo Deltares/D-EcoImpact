@@ -6,7 +6,7 @@ Classes:
 """
 
 
-from typing import Any, List
+from typing import List
 
 import numpy as _np
 import xarray as _xr
