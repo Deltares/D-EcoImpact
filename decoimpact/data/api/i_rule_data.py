@@ -11,7 +11,7 @@ from typing import Any
 
 
 class IRuleData(ABC):
-    """Interface for dataset information"""
+    """Interface for rules data information"""
 
     @property
     @abstractmethod

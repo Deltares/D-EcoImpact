@@ -7,9 +7,7 @@ Classes:
 """
 
 
-from typing import Iterable, List
-
-import xarray as _xr
+from typing import List
 
 from decoimpact.business.entities.i_model import IModel
 from decoimpact.business.entities.rule_based_model import RuleBasedModel

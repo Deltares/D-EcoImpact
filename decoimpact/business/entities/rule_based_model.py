@@ -25,7 +25,6 @@ class RuleBasedModel(IModel):
 
         self._name = name
         self._status = ModelStatus.CREATED
-        print(rules)
         self._rules = rules
         self._input_datasets: List[_xr.Dataset] = input_datasets
 

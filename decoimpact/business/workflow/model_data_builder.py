@@ -2,7 +2,6 @@
 Module for ModelDataBuilder class
 """
 
-from abc import ABC
 from typing import Any, Iterable, List
 
 from decoimpact.data.api.i_dataset import IDatasetData
@@ -12,7 +11,6 @@ from decoimpact.data.dictionary_utils import get_dict_element
 from decoimpact.data.entities.dataset_data import DatasetData
 from decoimpact.data.entities.rule_data import RuleData
 from decoimpact.data.entities.yaml_model_data import YamlModelData
-from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.data.parsers.rule_parsers import rule_parsers
 
 
@@ -45,6 +43,6 @@ class ModelDataBuilder:
 
     def _parse_rules(self, contents: dict[str, Any]) -> Iterable[IRuleData]:
         rules: List[dict[str, Any]] = get_dict_element("rules", contents)
-        # parsed_rules = []
+
         for rule in rules:
             yield RuleData(rule)

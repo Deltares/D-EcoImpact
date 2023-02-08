@@ -15,7 +15,7 @@ class RuleData(IRuleData):
     """Class for storing rule information"""
 
     def __init__(self, rule: dict[str, Any]):
-        """Create IRuleData based on provided info dictionary
+        """Create RuleData based on provided info dictionary
 
         Args:
             info (dict[str, Any]):
