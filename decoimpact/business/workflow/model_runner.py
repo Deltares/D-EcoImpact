@@ -7,6 +7,7 @@ Classes:
 """
 
 from typing import Any, Callable
+
 from decoimpact.business.entities.i_model import IModel, ModelStatus
 from decoimpact.crosscutting.i_logger import ILogger
 
@@ -22,64 +23,57 @@ class ModelRunner:
             model (IModel): model to run
         """
 
-        logger.log_info(f"Validating model \"{model.name}\"")
+        logger.log_info(f'Validating model "{model.name}"')
         ModelRunner._change_state(
-            model.validate,
-            model,
-            ModelStatus.VALIDATING,
-            ModelStatus.VALIDATED
-            )
+            model.validate, model, logger, ModelStatus.VALIDATING, ModelStatus.VALIDATED
+        )
 
         if model.status == ModelStatus.FAILED:
-            logger.log_error(f"Validation of model \"{model.name}\" failed")
+            logger.log_error(f'Validation of model "{model.name}" failed')
             return False
 
-        logger.log_info(f"Initializing model \"{model.name}\"")
+        logger.log_info(f'Initializing model "{model.name}"')
         ModelRunner._change_state(
             model.initialize,
             model,
+            logger,
             ModelStatus.INITIALIZING,
-            ModelStatus.INITIALIZED
-            )
+            ModelStatus.INITIALIZED,
+        )
 
         if model.status == ModelStatus.FAILED:
-            logger.log_error(f"Initialization of model \"{model.name}\" failed")
+            logger.log_error(f'Initialization of model "{model.name}" failed')
             return False
 
-        logger.log_info(f"Executing model \"{model.name}\"")
+        logger.log_info(f'Executing model "{model.name}"')
         ModelRunner._change_state(
-            model.execute,
-            model,
-            ModelStatus.EXECUTING,
-            ModelStatus.EXECUTED
-            )
+            model.execute, model, logger, ModelStatus.EXECUTING, ModelStatus.EXECUTED
+        )
 
         if model.status == ModelStatus.FAILED:
-            logger.log_error(f"Execution of model \"{model.name}\" failed")
+            logger.log_error(f'Execution of model "{model.name}" failed')
             return False
 
-        logger.log_info(f"Finalizing model \"{model.name}\"")
+        logger.log_info(f'Finalizing model "{model.name}"')
         ModelRunner._change_state(
-            model.finalize,
-            model,
-            ModelStatus.FINALIZING,
-            ModelStatus.FINALIZED
-            )
+            model.finalize, model, logger, ModelStatus.FINALIZING, ModelStatus.FINALIZED
+        )
 
         if model.status == ModelStatus.FAILED:
-            logger.log_error(f"Finalization of model \"{model.name}\" failed")
+            logger.log_error(f'Finalization of model "{model.name}" failed')
             return False
 
-        logger.log_info(f"Model \"{model.name}\" has successfully finished running")
+        logger.log_info(f'Model "{model.name}" has successfully finished running')
         return True
 
     @staticmethod
     def _change_state(
-            action: Callable[[], Any],
-            model: IModel,
-            pre_status: ModelStatus,
-            post_status: ModelStatus
-            ):
+        action: Callable[[], Any],
+        model: IModel,
+        logger: ILogger,
+        pre_status: ModelStatus,
+        post_status: ModelStatus,
+    ):
 
         model.status = pre_status
 
