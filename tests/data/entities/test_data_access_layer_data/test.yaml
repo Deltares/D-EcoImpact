@@ -1,0 +1,6 @@
+input-data:
+  - dataset:
+      filename: test/data/FM-VZM_0000_map.nc
+      variable_mapping:
+        mesh2d_sa1: "mesh2d_sa1"
+        mesh2d_s1: "water_level"
