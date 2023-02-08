@@ -9,10 +9,7 @@ from typing import List
 
 import xarray as _xr
 
-import xarray as _xr
-
 from decoimpact.business.entities.i_model import IModel, ModelStatus
-from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.crosscutting.i_logger import ILogger
 
@@ -20,12 +17,13 @@ from decoimpact.crosscutting.i_logger import ILogger
 class RuleBasedModel(IModel):
     """Model class for models based on rules"""
 
-    def __init__(self,
-                 input_datasets: List[_xr.Dataset],
-                 rules: List[IRule],
-                 name: str = "Rule-Based model",
-                 logger: ILogger) -> None:
-
+    def __init__(
+        self,
+        input_datasets: List[_xr.Dataset],
+        rules: List[IRule],
+        logger: ILogger,
+        name: str = "Rule-Based model",
+    ) -> None:
 
         self._name = name
         self._status = ModelStatus.CREATED

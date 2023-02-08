@@ -1,5 +1,4 @@
 import numpy as _np
-import xarray as _xr
 
 from decoimpact.business.entities.rules.I_cell_based_rule import ICellBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase

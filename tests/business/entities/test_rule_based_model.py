@@ -8,6 +8,7 @@ from unittest.mock import Mock
 from decoimpact.business.entities.i_model import ModelStatus
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.i_rule import IRule
+from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_dataset import IDatasetData
 
 
@@ -17,10 +18,11 @@ def test_create_rule_based_model_with_defaults():
 
     # Arrange
     rule = Mock(IRule)
+    logger = Mock(ILogger)
     dataset = Mock(IDatasetData)
 
     # Act
-    model = RuleBasedModel([dataset], [rule])
+    model = RuleBasedModel([dataset], [rule], logger)
 
     # Assert
 
@@ -38,12 +40,13 @@ def test_validation_of_rule_based_model():
 
     # Arrange
     rule = Mock(IRule)
+    logger = Mock(ILogger)
     dataset = Mock(IDatasetData)
 
-    no_rules_and_datasets_model = RuleBasedModel([], [])
-    no_rules_model = RuleBasedModel([dataset], [])
-    no_datasets_model = RuleBasedModel([], [rule])
-    model = RuleBasedModel([dataset], [rule])
+    no_rules_and_datasets_model = RuleBasedModel([], [], logger)
+    no_rules_model = RuleBasedModel([dataset], [], logger)
+    no_datasets_model = RuleBasedModel([], [rule], logger)
+    model = RuleBasedModel([dataset], [rule], logger)
 
     # Act & Assert
 
