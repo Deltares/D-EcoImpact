@@ -10,6 +10,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from decoimpact.data.api.i_dataset import IDatasetData
+from decoimpact.data.api.i_rule_data import IRuleData
 
 
 class IModelData(ABC):
@@ -24,3 +25,8 @@ class IModelData(ABC):
     @abstractmethod
     def datasets(self) -> List[IDatasetData]:
         """Datasets of the model"""
+
+    @property
+    @abstractmethod
+    def rules(self) -> List[IRuleData]:
+        """Rules of the model"""

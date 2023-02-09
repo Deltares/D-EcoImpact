@@ -22,6 +22,11 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
         super().__init__(name, input_variable_names)
         self._multipliers = multipliers
 
+    @property
+    def multipliers(self) -> List[float]:
+        """Multiplier property"""
+        return self._multipliers
+
     def execute(self, value_array: _xr.DataArray) -> _xr.DataArray:
 
         """Multiplies the value with the specified multipliers
