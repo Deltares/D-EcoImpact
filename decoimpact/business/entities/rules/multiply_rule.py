@@ -11,28 +11,27 @@ import xarray as _xr
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
-from decoimpact.crosscutting.i_logger import ILogger
 
 
 class MultiplyRule(RuleBase, IArrayBasedRule):
     """Implementation for the multiply rule"""
 
     def __init__(
-        self, name: str, input_variable_name: str, multipliers: List[float]
+        self,
+        name: str,
+        input_variable_names: List[str],
+        multipliers: List[float],
+        output_variable_name: str = "output",
     ):
-        super().__init__(name)
+        super().__init__(name, input_variable_names, output_variable_name)
         self._multipliers = multipliers
-        self._input_variable_name = input_variable_name
 
     @property
-    def input_variable_names(self) -> List[str]:
-        """Name of the input variable"""
-        return [self._input_variable_name]
+    def multipliers(self) -> List[float]:
+        """Multiplier property"""
+        return self._multipliers
 
-    def validate(self) -> bool:
-        return len(self._multipliers) > 1
-
-    def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
+    def execute(self, value_array: _xr.DataArray) -> _xr.DataArray:
 
         """Multiplies the value with the specified multipliers
         Args:

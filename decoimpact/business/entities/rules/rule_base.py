@@ -7,6 +7,7 @@ Classes:
 """
 
 from abc import ABC
+from typing import List
 
 from decoimpact.business.entities.rules.i_rule import IRule
 
@@ -14,11 +15,17 @@ from decoimpact.business.entities.rules.i_rule import IRule
 class RuleBase(IRule, ABC):
     """Implementation of the rule base"""
 
-    def __init__(self, name: str):
+    def __init__(
+        self,
+        name: str,
+        input_variable_names: List[str],
+        output_variable_name: str = "output",
+    ):
 
         self._name = name
         self._description = ""
-        self._output_variable_name = "output"
+        self._input_variable_names = input_variable_names
+        self._output_variable_name = output_variable_name
 
     @property
     def name(self) -> str:
@@ -39,6 +46,16 @@ class RuleBase(IRule, ABC):
     def description(self, description: str):
         """Description of the rule"""
         self._description = description
+
+    @property
+    def input_variable_names(self) -> List[str]:
+        """Name of the input variable"""
+        return self._input_variable_names
+
+    @input_variable_names.setter
+    def input_variable_names(self, input_variable_names: List[str]):
+        """Name of the input variable"""
+        self._input_variable_names = input_variable_names
 
     @property
     def output_variable_name(self) -> str:

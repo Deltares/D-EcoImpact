@@ -14,7 +14,7 @@ import ruamel.yaml as _yaml
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_model_data import IModelData
-from decoimpact.data.entities.yaml_model_data import YamlModelData
+from decoimpact.data.entities.model_data_builder import ModelDataBuilder
 
 
 class DataAccessLayer(IDataAccessLayer):
@@ -42,7 +42,5 @@ class DataAccessLayer(IDataAccessLayer):
 
         with open(path, "r", encoding="utf-8") as stream:
             contents: dict[Any, Any] = _yaml.load(stream, Loader=_yaml.Loader)
-
-            model_data = YamlModelData("Model 1", contents)
-
-            return model_data
+            model_data_builder = ModelDataBuilder()
+            return model_data_builder.parse_yaml_data(contents)
