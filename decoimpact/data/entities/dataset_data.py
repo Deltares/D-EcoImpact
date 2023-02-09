@@ -12,7 +12,7 @@ from typing import Any
 import xarray as _xr
 
 from decoimpact.data.api.i_dataset import IDatasetData
-from decoimpact.data.dictionary_utils import get_dict_element as _get_dict_element
+from decoimpact.data.dictionary_utils import get_dict_element
 
 
 class DatasetData(IDatasetData):
@@ -25,8 +25,8 @@ class DatasetData(IDatasetData):
             info (dict[str, Any]):
         """
         super()
-        self._path = Path(_get_dict_element("filename", dataset)).resolve()
-        self._mapping = _get_dict_element("variable_mapping", dataset, False)
+        self._path = Path(get_dict_element("filename", dataset)).resolve()
+        self._mapping = get_dict_element("variable_mapping", dataset, False)
 
     @property
     def path(self) -> str:
