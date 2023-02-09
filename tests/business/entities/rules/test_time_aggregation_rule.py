@@ -34,7 +34,7 @@ def test_execute_value_array_aggregate_time():
     # operation_min = OperationType.Min
     rule = TimeAggregationRule("test", ["chloride_policy_top_layer"], OperationType.Min)
     data = [1, 2, 3]
-    time = pd.date_range("2020-01-01", periods=3)
+    time = pd.date_range(start="2020-01-01", end="2020-03-01", periods=3)
     ds_values = _xr.Dataset(
         data_vars=dict(data=(["time"], data)), coords=dict(time=time)
     )
