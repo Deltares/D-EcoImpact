@@ -15,12 +15,17 @@ from decoimpact.business.entities.rules.i_rule import IRule
 class RuleBase(IRule, ABC):
     """Implementation of the rule base"""
 
-    def __init__(self, name: str, input_variable_names: List[str]):
+    def __init__(
+        self,
+        name: str,
+        input_variable_names: List[str],
+        output_variable_name: str = "output",
+    ):
 
         self._name = name
         self._description = ""
         self._input_variable_names = input_variable_names
-        self._output_variable_name = "output"
+        self._output_variable_name = output_variable_name
 
     @property
     def name(self) -> str:
