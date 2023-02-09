@@ -1,3 +1,21 @@
+"""
+    Module for StepFunction class
+
+Classes:
+    StepFunction
+
+    Defines a step function output (float) to an input (float).
+
+    The input sorted list [limit_1, limit_2, ..., limit_i, ..., limit_n] 
+        where limit_1 < limit_2 < ... < limit_i < ... < limit_n
+        defines the limits of the interval for which the output values apply.
+        
+        f(val) = f(limit_i) if  limit_i<= val < limit_(i+1)
+        f(val) = f(limit_1) if val < limit_1, and a warning message is logged.
+        f(val) = f(limit_n) if val > limit_1, and a warning message is logged.
+
+"""
+
 import numpy as _np
 
 from decoimpact.business.entities.rules.I_cell_based_rule import ICellBasedRule
@@ -6,7 +24,17 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 
 class StepFunction(RuleBase, ICellBasedRule):
-    """Rule for Step function"""
+    """Rule for Step function
+
+    The input sorted list [limit_1, limit_2, ..., limit_i, ..., limit_n]
+    where limit_1 < limit_2 < ... < limit_i < ... < limit_n
+    defines the limits of the interval for which the output values apply.
+
+    f(val) = f(limit_i) if  limit_i<= val < limit_(i+1)
+    f(val) = f(limit_1) if val < limit_1, and a warning message is logged.
+    f(val) = f(limit_n) if val > limit_1, and a warning message is logged.
+
+    """
 
     def __init__(
         self,
