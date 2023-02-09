@@ -20,7 +20,7 @@ class ModelDataBuilder:
 
     def __init__(self) -> None:
         """"""
-        self._rule_parsers = rule_parsers()
+        self._rule_parsers = list(rule_parsers())
 
     def parse_yaml_data(self, contents: dict[Any, Any]) -> IModelData:
         """_summary_
