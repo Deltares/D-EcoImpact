@@ -7,16 +7,16 @@ Classes:
 """
 
 
-from typing import List
+from typing import Iterable, List
 
 from decoimpact.business.entities.i_model import IModel
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.i_rule import IRule
+from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_model_data import IModelData
+from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
 from decoimpact.data.api.i_rule_data import IRuleData
-from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
-from decoimpact.data.parsers.rule_parsers import rule_parsers
 
 
 class ModelFactory:
@@ -33,23 +33,26 @@ class ModelFactory:
         logger.log_info("Creating rule-based model")
 
         datasets = [ds.get_input_dataset() for ds in model_data.datasets]
-        rules = ModelFactory._create_rules(model_data.rules)
+        rules = list(ModelFactory._create_rules(model_data.rules))
 
         model: IModel = RuleBasedModel(datasets, rules, model_data.name)
 
         return model
 
     @staticmethod
-    def _create_rules(rule_data: List[IRuleData]) -> List[IRule]:
-        rules = []
+    def _create_rules(rule_data: List[IRuleData]) -> Iterable[IRule]:
         for rule_data_object in rule_data:
-            parser = ModelFactory._get_parser(rule_data_object.name)
-            rules.append(parser.parse_dict(rule_data_object.data))
-        return rules
+            yield ModelFactory._create_rule(rule_data_object)
 
     @staticmethod
-    def _get_parser(rule_name: str) -> IParserRuleBase:
-        for parser in rule_parsers():
-            if parser.rule_type_name == rule_name:
-                return parser
-        raise Exception(f"No parser for {rule_name}")
+    def _create_rule(rule_data: IRuleData) -> IRule:
+
+        if isinstance(rule_data, IMultiplyRuleData):
+            return MultiplyRule(
+                rule_data.name,
+                [rule_data.input_variable],
+                rule_data.multipliers,
+                rule_data.output_variable)
+
+        raise NotImplementedError(f"The rule type of rule '{rule_data.name}' is currently not implemented")
+

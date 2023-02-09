@@ -7,7 +7,6 @@ Interfaces:
 """
 
 from abc import ABC, abstractmethod
-from typing import Any
 
 
 class IRuleData(ABC):
@@ -20,5 +19,5 @@ class IRuleData(ABC):
 
     @property
     @abstractmethod
-    def data(self) -> dict[str, Any]:
+    def output_variable(self) -> str:
         """Read the rule using the name"""

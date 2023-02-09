@@ -9,8 +9,8 @@ from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.dictionary_utils import get_dict_element
 from decoimpact.data.entities.dataset_data import DatasetData
-from decoimpact.data.entities.rule_data import RuleData
 from decoimpact.data.entities.yaml_model_data import YamlModelData
+from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.data.parsers.rule_parsers import rule_parsers
 
 
@@ -45,4 +45,16 @@ class ModelDataBuilder:
         rules: List[dict[str, Any]] = get_dict_element("rules", contents)
 
         for rule in rules:
-            yield RuleData(rule)
+            rule_type_name = list(rule.keys())[0]
+            rule_dict = rule[rule_type_name]
+
+            parser = self._get_rule_data_parser(rule_type_name)
+
+            yield parser.parse_dict(rule_dict)
+
+    def _get_rule_data_parser(self, rule_name: str) -> IParserRuleBase:
+        for parser in rule_parsers():
+            if parser.rule_type_name == rule_name:
+                return parser
+
+        raise Exception(f"No parser for {rule_name}")

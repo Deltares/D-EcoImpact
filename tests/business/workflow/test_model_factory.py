@@ -23,7 +23,7 @@ def test_create_rule_based_model():
     dataset_data = Mock(IDatasetData)
     rules_data = Mock(IRuleData)
     rules_data.name = "multiply_rule"
-    rules_data.contents = Mock()
+    rules_data.data = dict({name: "test" , :})
 
     model_data.name = "Test model"
     model_data.datasets = [dataset_data]
