@@ -34,7 +34,8 @@ class ParserMultiplyRule(IParserRuleBase):
         multipliers = get_dict_element("multipliers", dictionary)
         output_variable_name = get_dict_element("output_variable", dictionary)
 
-        return MultiplyRuleData(name,
+        return MultiplyRuleData(
+                                name,
                                 multipliers,
                                 input_variable_name,
                                 output_variable_name)

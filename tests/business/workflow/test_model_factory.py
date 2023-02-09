@@ -22,7 +22,7 @@ def test_create_rule_based_model():
     dataset = Mock()
     dataset_data = Mock(IDatasetData)
 
-    rules_data = MultiplyRuleData("abc", [2,5.86], "a", "b")
+    rules_data = MultiplyRuleData("abc", [2, 5.86], "a", "b")
 
     model_data.name = "Test model"
     model_data.datasets = [dataset_data]

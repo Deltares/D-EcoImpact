@@ -13,8 +13,13 @@ from decoimpact.data.entities.rule_data import RuleData
 
 
 class MultiplyRuleData(IMultiplyRuleData, RuleData):
-
-    def __init__(self, name: str, multipliers: List[float], input_variable: str, output_variable: str):
+    def __init__(
+        self,
+        name: str,
+        multipliers: List[float],
+        input_variable: str,
+        output_variable: str,
+    ):
         super().__init__(name, output_variable)
         self._input_variable = input_variable
         self._multipliers = multipliers

@@ -54,10 +54,11 @@ class DatasetData(IDatasetData):
             raise NotImplementedError(message)
 
         try:
-            dataset: _xr.Dataset = _xr.open_dataset(self._path, mask_and_scale=True)
-            # mask_and_scale argument is needed to prevent inclusion of NaN's in
-            # dataset for missing values. This inclusion converts integers to
-            # floats
+            dataset: _xr.Dataset = _xr.open_dataset(self._path,
+                                                    mask_and_scale=True)
+            # mask_and_scale argument is needed to prevent inclusion of NaN's
+            # in dataset for missing values. This inclusion converts integers
+            # to floats
         except OSError as exc:
             msg = "ERROR: Cannot open input .nc file -- " + str(self._path)
             raise OSError(msg) from exc
