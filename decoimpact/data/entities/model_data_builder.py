@@ -61,4 +61,4 @@ class ModelDataBuilder:
             if parser.rule_type_name == rule_name:
                 return parser
 
-        raise Exception(f"No parser for {rule_name}")
+        raise KeyError(f"No parser for {rule_name}")

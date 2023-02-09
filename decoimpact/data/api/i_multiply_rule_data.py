@@ -14,6 +14,7 @@ from decoimpact.data.api.i_rule_data import IRuleData
 
 
 class IMultiplyRuleData(IRuleData, ABC):
+    """Data for a multiply rule"""
 
     @property
     @abstractmethod

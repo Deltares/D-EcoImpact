@@ -13,6 +13,8 @@ from decoimpact.data.entities.rule_data import RuleData
 
 
 class MultiplyRuleData(IMultiplyRuleData, RuleData):
+    """Class for storing data related to multiply rule"""
+
     def __init__(
         self,
         name: str,
