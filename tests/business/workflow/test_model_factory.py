@@ -10,7 +10,7 @@ from decoimpact.business.workflow.model_factory import ModelFactory
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
-from decoimpact.data.api.i_rule_data import IRuleData
+from decoimpact.data.entities.multiply_rule_data import MultiplyRuleData
 
 
 def test_create_rule_based_model():
@@ -21,9 +21,8 @@ def test_create_rule_based_model():
     model_data = Mock(IModelData)
     dataset = Mock()
     dataset_data = Mock(IDatasetData)
-    rules_data = Mock(IRuleData)
-    rules_data.name = "multiply_rule"
-    rules_data.data = dict({name: "test" , :})
+
+    rules_data = MultiplyRuleData("abc", [2,5.86], "a", "b")
 
     model_data.name = "Test model"
     model_data.datasets = [dataset_data]
@@ -39,6 +38,7 @@ def test_create_rule_based_model():
     assert isinstance(model, RuleBasedModel)
     assert model.name == "Test model"
     assert dataset in model.input_datasets
+    assert len(model.rules) == 1
 
     # logs info about model creation
     logger.log_info.assert_called_once()
