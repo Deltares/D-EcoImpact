@@ -1,18 +1,24 @@
 {
     "python.testing.pytestArgs": [
         "--cov-report=xml",
-        "--cov=decoimpact"
+        //"--cov=decoimpact"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
+    "editor.formatOnSave": true,
     "[python]": {
-        "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
             "source.organizeImports": true,
         },
     },
     "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length=88"
+    ],
     "python.linting.flake8Enabled": true,
+    "python.linting.flake8Args": [
+        "--max-line-length=88"
+    ],
     "python.linting.pylintEnabled": true,
     "coverage-gutters.showLineCoverage": true,
     "coverage-gutters.coverageFileNames": [
@@ -25,5 +31,8 @@
     "python.analysis.diagnosticMode": "openFilesOnly",
     "python.analysis.exclude": [
         "tests/**/*"
-    ]
+    ],
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportUnknownMemberType": "warning"
+    }
 }
