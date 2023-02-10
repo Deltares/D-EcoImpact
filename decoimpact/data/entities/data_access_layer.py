@@ -11,10 +11,10 @@ from typing import Any
 
 import ruamel.yaml as _yaml
 
-from decoimpact.business.workflow.model_data_builder import ModelDataBuilder
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_model_data import IModelData
+from decoimpact.data.entities.model_data_builder import ModelDataBuilder
 
 
 class DataAccessLayer(IDataAccessLayer):
