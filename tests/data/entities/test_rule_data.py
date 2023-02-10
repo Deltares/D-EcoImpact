@@ -11,10 +11,11 @@ def test_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    data = RuleData("test_name", "foo")
+    data = RuleData("test_name", output_variable="foo")
 
     # Assert
 
     assert isinstance(data, IRuleData)
     assert data.name == "test_name"
+    assert data.description == ""
     assert data.output_variable == "foo"

@@ -15,7 +15,9 @@ from decoimpact.data.api.i_rule_data import IRuleData
 class RuleData(IRuleData, ABC):
     """Class for storing rule information"""
 
-    def __init__(self, name: str, output_variable: str):
+    def __init__(
+        self, name: str, output_variable: str = "output", description: str = ""
+    ):
         """Create RuleData based on provided info dictionary
 
         Args:
@@ -23,6 +25,7 @@ class RuleData(IRuleData, ABC):
         """
         super()
         self._name = name
+        self._description = description
         self._output_variable = output_variable
 
     @property
@@ -31,6 +34,12 @@ class RuleData(IRuleData, ABC):
         return self._name
 
     @property
+    def description(self) -> str:
+        """Description of the rule"""
+        return self._description
+
+    @property
     def output_variable(self) -> str:
         """Data of the rule data"""
         return self._output_variable
+
