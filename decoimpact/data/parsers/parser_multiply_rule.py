@@ -2,7 +2,7 @@
 Module for ParserMultiplyRule class
 
 Classes:
-    MultiplyRuleParser
+    ParserMultiplyRule
 """
 from typing import Any, Dict
 

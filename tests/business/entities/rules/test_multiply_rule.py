@@ -26,7 +26,7 @@ def test_execute_value_array_multiplied_by_multipliers():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
-    rule = MultiplyRule("test", ["foo"], [0.5, 4.0])
+    rule = MultiplyRule("test", ["foo"], [0.5, 4.0], "description")
     data = [1, 2, 3, 4]
     value_array = _xr.DataArray(data)
     multiplied_array = rule.execute(value_array)
