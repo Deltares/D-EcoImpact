@@ -35,12 +35,8 @@ class ModelDataBuilder:
 
         return YamlModelData("Model 1", datasets, rules)
 
-    def _parse_datasets(
-                        self,
-                        contents: dict[str, Any]) -> Iterable[IDatasetData]:
-        datasets: List[dict[str, Any]] = get_dict_element(
-                                                          "input-data",
-                                                          contents)
+    def _parse_datasets(self, contents: dict[str, Any]) -> Iterable[IDatasetData]:
+        datasets: List[dict[str, Any]] = get_dict_element("input-data", contents)
 
         for dataset in datasets:
             yield DatasetData(get_dict_element("dataset", dataset))

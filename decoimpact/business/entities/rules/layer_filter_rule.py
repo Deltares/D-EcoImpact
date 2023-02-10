@@ -15,20 +15,21 @@ from decoimpact.business.entities.rules.rule_base import RuleBase
 
 class LayerFilterRule(RuleBase, IArrayBasedRule):
 
-    """Rule for filtering by layer number"""
+    """Implementation for the layer filter rule"""
 
     def __init__(
         self,
         name: str,
         input_variable_names: List[str],
         layer_number: int,
+        output_variable_name: str = "output",
     ):
-        super().__init__(name, input_variable_names)
+        super().__init__(name, input_variable_names, output_variable_name)
         self._layer_number = layer_number
 
     @property
     def layer_number(self) -> int:
-        """Name of the rule"""
+        """Layer number property"""
         return self._layer_number
 
     def execute(self, value_array: _xr.DataArray) -> _xr.DataArray:

@@ -14,3 +14,4 @@ from decoimpact.data.parsers.parser_multiply_rule import ParserMultiplyRule
 def rule_parsers() -> Iterator[IParserRuleBase]:
     """Function to return rule parsers"""
     yield ParserMultiplyRule()
+    yield ParserLayerFilterRule()
