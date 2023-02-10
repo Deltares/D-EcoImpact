@@ -47,7 +47,7 @@ class ModelRunner:
         log.log_info(f"Model \"{model.name}\" -> {str(pre_status)}")
         model.status = pre_status
 
-        success = ModelRunner._change_state_core(action)
+        success = ModelRunner._change_state_core(action, log)
 
         if success:
             model.status = post_status
@@ -64,10 +64,10 @@ class ModelRunner:
         return False
 
     @staticmethod
-    def _change_state_core(action: Callable[[], Any]) -> bool:
+    def _change_state_core(action: Callable[[ILogger], Any], logger: ILogger) -> bool:
 
         try:
-            return_value = action()
+            return_value = action(logger)
 
             if isinstance(return_value, bool) and return_value is False:
                 return False

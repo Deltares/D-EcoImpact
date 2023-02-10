@@ -66,3 +66,11 @@ class RuleBase(IRule, ABC):
     def output_variable_name(self, output_variable_name: str):
         """Name of the output variable"""
         self._output_variable_name = output_variable_name
+
+    def validate(self) -> bool:
+        """Validates if the rule is valid
+
+        Returns:
+            bool: wether the rule is valid
+        """
+        return True

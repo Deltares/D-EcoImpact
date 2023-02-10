@@ -11,6 +11,7 @@ import xarray as _xr
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
+from decoimpact.crosscutting.i_logger import ILogger
 
 
 class MultiplyRule(RuleBase, IArrayBasedRule):
@@ -31,7 +32,7 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
         """Multiplier property"""
         return self._multipliers
 
-    def execute(self, value_array: _xr.DataArray) -> _xr.DataArray:
+    def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
 
         """Multiplies the value with the specified multipliers
         Args:
