@@ -19,16 +19,12 @@ class ModelDataBuilder:
     read from the input file to Rule and DatasetData objects)"""
 
     def __init__(self) -> None:
-        """"""
+        """Create ModelDataBuilder"""
         self._rule_parsers = list(rule_parsers())
 
     def parse_yaml_data(self, contents: dict[Any, Any]) -> IModelData:
-        """_summary_
-        Args:
-            contents (dict[Any, Any]): _description_
-        Returns:
-            IModelData: _description_
-        """
+        """Parse the Yaml input file into a data object"""
+        print('contennts', contents)
 
         datasets = list(self._parse_datasets(contents))
         rules = list(self._parse_rules(contents))
