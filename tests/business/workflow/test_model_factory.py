@@ -8,11 +8,15 @@ from unittest.mock import Mock
 import pytest
 
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
+from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
+from decoimpact.business.entities.rules.i_rule import IRule
+from decoimpact.business.entities.rules.operation_type import OperationType
 from decoimpact.business.workflow.model_factory import ModelFactory
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
+from decoimpact.data.entities.combine_results_rule_data import CombineResultsRuleData
 from decoimpact.data.entities.multiply_rule_data import MultiplyRuleData
 
 
@@ -45,6 +49,23 @@ def test_create_rule_based_model():
 
     # logs info about model creation
     logger.log_info.assert_called_once()
+
+
+def test_create_combine_results_rule_from_data_object():
+    """Test creating a rule-based model via factory"""
+
+    # Arrange
+    rule_data = CombineResultsRuleData("abc", ["a", "b"], "Multiply", "c")
+
+    # Act
+    rule = ModelFactory._create_rule(rule_data)
+
+    # Assert
+    assert isinstance(rule, CombineResultsRule)
+    assert rule.name == "abc"
+    assert rule.input_variable_names == ["a", "b"]
+    assert rule.operation_type == OperationType.MULTIPLY
+    assert rule.output_variable_name == "c"
 
 
 def test_create_rule_based_model_with_non_supported_rule():

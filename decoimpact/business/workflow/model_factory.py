@@ -14,6 +14,7 @@ from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
+from decoimpact.business.entities.rules.operation_type import OperationType
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_combine_results_rule_data import ICombineResultsRuleData
 from decoimpact.data.api.i_model_data import IModelData
@@ -54,15 +55,18 @@ class ModelFactory:
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.multipliers,
-                rule_data.output_variable)
+                rule_data.output_variable,
+            )
 
         if isinstance(rule_data, ICombineResultsRuleData):
             return CombineResultsRule(
                 rule_data.name,
                 rule_data.input_variable_names,
-                rule_data.operation_type,
-                rule_data.output_variable)
+                OperationType[rule_data.operation_type],
+                rule_data.output_variable,
+            )
 
-        error_str = f"The rule type of rule '{rule_data.name}' is currently "\
-                    "not implemented"
+        error_str = (
+            f"The rule type of rule '{rule_data.name}' is currently " "not implemented"
+        )
         raise NotImplementedError(error_str)

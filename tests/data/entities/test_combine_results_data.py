@@ -1,0 +1,21 @@
+"""
+Tests for MultiplyRuleData class
+"""
+
+from decoimpact.business.entities.rules.operation_type import OperationType
+from decoimpact.data.api.i_rule_data import IRuleData
+from decoimpact.data.entities.combine_results_rule_data import CombineResultsRuleData
+
+
+def test_combine_results_rule_data_creation_logic():
+    """The CombineResultsRuleData should parse the provided dictionary
+    to correctly initialize itself during creation"""
+
+    # Act
+    data = CombineResultsRuleData("test_name", [1.0, 2.0], "input", "output", "description")
+
+    # Assert
+
+    assert isinstance(data, IRuleData)
+    assert data.input_variable_names == ["input1","input2"]
+    assert data.operation_type == "multiply"
