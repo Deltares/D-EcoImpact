@@ -75,6 +75,6 @@ def test_create_rule_based_model_with_non_supported_rule():
 
     # Assert
     expected_message = "The rule type of rule 'test' is currently "\
-                    "not implemented"
+                       "not implemented"
     assert exception_raised.args[0] == expected_message
 
