@@ -30,10 +30,15 @@ class ParserLayerFilterRule(IParserRuleBase):
             RuleBase: Rule based on the provided data
         """
         name = get_dict_element("name", dictionary)
+        description = get_dict_element("description", dictionary)
         input_variable_name = get_dict_element("input_variable", dictionary)
         layer_number = get_dict_element("layer_number", dictionary)
+        if not isinstance(layer_number, int):
+            message = f"""Layer number should be an integer, \
+                received: {layer_number}"""
+            raise ValueError(message)
         output_variable_name = get_dict_element("output_variable", dictionary)
 
         return LayerFilterRuleData(
-            name, layer_number, input_variable_name, output_variable_name
+            name, layer_number, input_variable_name, output_variable_name, description
         )
