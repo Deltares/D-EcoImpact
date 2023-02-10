@@ -31,6 +31,19 @@ def test_create_rule_based_model_with_defaults():
     assert model.status == ModelStatus.CREATED
 
 
+def test_status_setter():
+    # Arrange
+    rule = Mock(IRule)
+    dataset = Mock(IDatasetData)
+
+    # Act
+    model = RuleBasedModel([dataset], [rule])
+
+    assert model.status == ModelStatus.CREATED
+    model.status = ModelStatus.EXECUTED
+    assert model.status == ModelStatus.EXECUTED
+
+
 def test_validation_of_rule_based_model():
     """Test if the model correctly validates for required
     parameters (datasets, rules)
