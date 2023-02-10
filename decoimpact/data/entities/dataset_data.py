@@ -45,7 +45,7 @@ class DatasetData(IDatasetData):
     def _get_original_dataset(self) -> _xr.Dataset:
         if not Path.exists(self._path):
             message = f"""The file {self._path} is not found. \
-                          Make sure the file location is valid."""
+                          Make sure the inputfile location is valid."""
             raise FileExistsError(message)
 
         if Path(self._path).suffix != ".nc":
@@ -69,9 +69,9 @@ class DatasetData(IDatasetData):
         return self._write_output_file(output_path)
 
     def _write_output_file(self, output_path: Path) -> _xr.Dataset:
-        if not Path.exists(output_path):
-            message = f"""The file {output_path} is not found. \
-                          Make sure the file location is valid."""
+        if not Path.exists(output_path.parent):
+            message = f"""The path {output_path.parent} is not found. \
+                          Make sure the output file location is valid."""
             raise FileExistsError(message)
 
         if Path(output_path).suffix != ".nc":

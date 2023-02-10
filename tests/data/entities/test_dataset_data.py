@@ -66,7 +66,7 @@ def test_dataset_data_get_input_dataset_should_check_if_path_exists():
 
     # Assert
     exc = exception_raised.args[0]
-    assert exc.endswith("Make sure the file location is valid.")
+    assert exc.endswith("Make sure the input file location is valid.")
 
 
 def test_dataset_data_get_input_dataset_should_check_if_extension_is_correct():
@@ -90,6 +90,28 @@ def test_dataset_data_get_input_dataset_should_check_if_extension_is_correct():
     )
 
 
+def test_dataset_data_write_output_file_should_write_file():
+    """When calling write_output_file on a dataset should
+    write the specified IDatasetData to an output file
+    """
+
+    # Arrange
+    path = get_test_data_path() + "/FlowFM_net.nc"
+    # dataset = _xr.Dataset({"data": (["time"], [1, 2, 3])}, {"time": [1, 2, 3]})
+    data_dict = {"filename": path, "variable_mapping": {"test": "test_new"}}
+    data = DatasetData(data_dict)
+    # print("QQQ1", get_test_data_path() + "/results.nc")
+    print("d", data)
+    output_path = str(get_test_data_path()) + "/results.nc"
+    output_path = Path(str(output_path))
+    print("QQQ2", output_path)
+    # Act
+    data.write_output_file(output_path)
+
+    # Assert
+    assert output_path.is_file()
+
+
 def test_dataset_data_write_output_file_should_check_if_path_exists():
     """When calling write_output_file the provided path
     needs to be checked if it exists"""
@@ -98,7 +120,7 @@ def test_dataset_data_write_output_file_should_check_if_path_exists():
     path = get_test_data_path() + "/FlowFM_net.nc"
     data_dict = {"filename": path, "variable_mapping": {"test": "test_new"}}
     data = DatasetData(data_dict)
-    output_path = Path("non_existing_file.nc")
+    output_path = Path("./non_existing_dir/results.nc")
 
     # Act
     with pytest.raises(FileExistsError) as exc_info:
@@ -108,7 +130,7 @@ def test_dataset_data_write_output_file_should_check_if_path_exists():
 
     # Assert
     exc = exception_raised.args[0]
-    assert exc.endswith("Make sure the file location is valid.")
+    assert exc.endswith("Make sure the output file location is valid.")
 
 
 def test_dataset_data_write_output_file_should_check_if_extension_is_correct():
