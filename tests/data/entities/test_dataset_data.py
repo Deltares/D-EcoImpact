@@ -2,6 +2,8 @@
 Tests for DatasetData class
 """
 
+from pathlib import Path
+
 import pytest
 import xarray as _xr
 
@@ -79,6 +81,49 @@ def test_dataset_data_get_input_dataset_should_check_if_extension_is_correct():
     # Act
     with pytest.raises(NotImplementedError) as exc_info:
         data.get_input_dataset()
+
+    exception_raised = exc_info.value
+
+    # Assert
+    assert exception_raised.args[0].endswith(
+        "Currently only UGrid (NetCDF) files are supported."
+    )
+
+
+def test_dataset_data_write_output_file_should_check_if_path_exists():
+    """When calling write_output_file the provided path
+    needs to be checked if it exists"""
+
+    # Arrange
+    path = get_test_data_path() + "/FlowFM_net.nc"
+    data_dict = {"filename": path, "variable_mapping": {"test": "test_new"}}
+    data = DatasetData(data_dict)
+    output_path = Path("non_existing_file.nc")
+
+    # Act
+    with pytest.raises(FileExistsError) as exc_info:
+        data.write_output_file(output_path)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    exc = exception_raised.args[0]
+    assert exc.endswith("Make sure the file location is valid.")
+
+
+def test_dataset_data_write_output_file_should_check_if_extension_is_correct():
+    """When calling write_output_file the provided path
+    needs to be checked if it exists"""
+
+    # Arrange
+    path = get_test_data_path() + "/FlowFM_net.nc"
+    data_dict = {"filename": path, "variable_mapping": {"test": "test_new"}}
+    data = DatasetData(data_dict)
+    output_path = Path(get_test_data_path() + "/NonUgridFile.txt")
+
+    # Act
+    with pytest.raises(NotImplementedError) as exc_info:
+        data.write_output_file(output_path)
 
     exception_raised = exc_info.value
 

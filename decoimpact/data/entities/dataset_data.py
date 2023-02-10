@@ -54,13 +54,40 @@ class DatasetData(IDatasetData):
             raise NotImplementedError(message)
 
         try:
-            dataset: _xr.Dataset = _xr.open_dataset(self._path,
-                                                    mask_and_scale=True)
+            dataset: _xr.Dataset = _xr.open_dataset(self._path, mask_and_scale=True)
             # mask_and_scale argument is needed to prevent inclusion of NaN's
             # in dataset for missing values. This inclusion converts integers
             # to floats
         except OSError as exc:
             msg = "ERROR: Cannot open input .nc file -- " + str(self._path)
+            raise OSError(msg) from exc
+
+        return dataset
+
+    def write_output_file(self, output_path: Path) -> _xr.Dataset:
+        """Write XArray dataset to specified path"""
+        return self._write_output_file(output_path)
+
+    def _write_output_file(self, output_path: Path) -> _xr.Dataset:
+        if not Path.exists(output_path):
+            message = f"""The file {output_path} is not found. \
+                          Make sure the file location is valid."""
+            raise FileExistsError(message)
+
+        if Path(output_path).suffix != ".nc":
+            message = f"""The file {output_path} is not supported. \
+                          Currently only UGrid (NetCDF) files are supported."""
+            raise NotImplementedError(message)
+
+        try:
+            dataset: _xr.Dataset = _xr.Dataset.to_netcdf(output_path, format="NETCDF4")
+            # D-Flow FM sometimes still uses netCDF3.
+            # If necessary we can revert to "NETCDF4_CLASSIC"
+            # (Data is stored in an HDF5 file, using only netCDF 3 compatible
+            # API features.)
+
+        except OSError as exc:
+            msg = "ERROR: Cannot write output .nc file -- " + str(output_path)
             raise OSError(msg) from exc
 
         return dataset
