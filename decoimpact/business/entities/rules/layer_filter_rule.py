@@ -23,8 +23,9 @@ class LayerFilterRule(RuleBase, IArrayBasedRule):
         input_variable_names: List[str],
         layer_number: int,
         output_variable_name: str = "output",
+        description: str = "",
     ):
-        super().__init__(name, input_variable_names, output_variable_name)
+        super().__init__(name, input_variable_names, output_variable_name, description)
         self._layer_number = layer_number
 
     @property

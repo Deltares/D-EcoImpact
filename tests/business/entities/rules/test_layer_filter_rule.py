@@ -10,7 +10,7 @@ def test_create_layer_filter_rule_should_set_defaults():
     """Test creating a LayerFilterRule with defaults"""
 
     # Arrange & Act
-    rule = LayerFilterRule("test", ["foo"], 3)
+    rule = LayerFilterRule("test", ["foo"], 3, "output", "description")
 
     # Assert
     assert rule.name == "test"
@@ -24,7 +24,7 @@ def test_create_layer_filter_rule_should_set_defaults():
 def test_execute_value_array_filtered():
     """Test execute of layer filter rule"""
     # Arrange & Act
-    rule = LayerFilterRule("test", ["foo"], 3)
+    rule = LayerFilterRule("test", ["foo"], 3, "output", "description")
     data = [[[1, 2, 3, 4]]]
     value_array = _xr.DataArray(data)
     filtered_array = rule.execute(value_array)
