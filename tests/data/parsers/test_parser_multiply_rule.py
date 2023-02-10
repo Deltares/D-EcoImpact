@@ -63,3 +63,28 @@ def test_parse_wrong_dict_to_rule_data_logic():
     # Assert
     expected_message = "Missing element multipliers"
     assert exception_raised.args[0] == expected_message
+
+
+def test_parse_multipliers_type():
+    """Test if an incorrect dictionary is not parsed"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variable": "input",
+            "multipliers": ["a", "b", 2],
+            "output_variable": "output",
+        }
+    )
+
+    # Act
+    data = ParserMultiplyRule()
+    with pytest.raises(ValueError) as exc_info:
+        data.parse_dict(contents)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = "Multipliers should be a list of floats, \
+                          received: ['a', 'b', 2]"
+    assert exception_raised.args[0] == expected_message
