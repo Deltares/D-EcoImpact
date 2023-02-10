@@ -33,7 +33,7 @@ class ParserMultiplyRule(IParserRuleBase):
         input_variable_name = get_dict_element("input_variable", dictionary)
         multipliers = get_dict_element("multipliers", dictionary)
 
-        if not all(isinstance(m, float) for m in multipliers):
+        if not all(isinstance(m, (int, float)) for m in multipliers):
             message = f"""Multipliers should be a list of floats, \
                           received: {multipliers}"""
             raise ValueError(message)
