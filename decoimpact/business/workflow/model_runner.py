@@ -25,39 +25,48 @@ class ModelRunner:
 
         success = True
 
-        success = ModelRunner._change_state(model.validate, model, logger, ModelStatus.VALIDATING, ModelStatus.VALIDATED)
-        success = success and ModelRunner._change_state(model.initialize, model, logger, ModelStatus.INITIALIZING, ModelStatus.INITIALIZED)
-        success = success and ModelRunner._change_state(model.execute, model, logger, ModelStatus.EXECUTING, ModelStatus.EXECUTED)
-        success = success and ModelRunner._change_state(model.finalize, model, logger, ModelStatus.FINALIZING, ModelStatus.FINALIZED)
+        success = ModelRunner._change_state(
+            model.validate, model, logger, ModelStatus.VALIDATING, ModelStatus.VALIDATED
+        )
+        success = success and ModelRunner._change_state(
+            model.initialize, model, logger, ModelStatus.INITIALIZING,
+            ModelStatus.INITIALIZED,
+        )
+        success = success and ModelRunner._change_state(
+            model.execute, model, logger, ModelStatus.EXECUTING, ModelStatus.EXECUTED
+        )
+        success = success and ModelRunner._change_state(
+            model.finalize, model, logger, ModelStatus.FINALIZING, ModelStatus.FINALIZED
+        )
 
         if success:
-            logger.log_info(f"Model \"{model.name}\" has successfully finished running")
+            logger.log_info(f'Model "{model.name}" has successfully finished running')
 
         return success
 
     @staticmethod
     def _change_state(
-            action: Callable[[], Any],
-            model: IModel,
-            log: ILogger,
-            pre_status: ModelStatus,
-            post_status: ModelStatus
-            ) -> bool:
+        action: Callable[[ILogger], Any],
+        model: IModel,
+        log: ILogger,
+        pre_status: ModelStatus,
+        post_status: ModelStatus,
+    ) -> bool:
 
-        log.log_info(f"Model \"{model.name}\" -> {str(pre_status)}")
+        log.log_info(f'Model "{model.name}" -> {str(pre_status)}')
         model.status = pre_status
 
         success = ModelRunner._change_state_core(action, log)
 
         if success:
             model.status = post_status
-            message = f"Model \"{model.name}\" -> {str(post_status)}"
+            message = f'Model "{model.name}" -> {str(post_status)}'
             log.log_info(message)
             return True
 
         model.status = ModelStatus.FAILED
-        message = f"Model \"{model.name}\" transition from \
-                    {str(pre_status)} to {str(post_status)} has failed."
+        message = f'Model "{model.name}" transition from \
+                    {str(pre_status)} to {str(post_status)} has failed.'
 
         log.log_error(message)
 
