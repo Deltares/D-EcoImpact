@@ -19,5 +19,10 @@ class IRuleData(ABC):
 
     @property
     @abstractmethod
+    def description(self) -> str:
+        """Description of the rule"""
+
+    @property
+    @abstractmethod
     def output_variable(self) -> str:
         """Read the rule using the name"""

@@ -20,10 +20,11 @@ class RuleBase(IRule, ABC):
         name: str,
         input_variable_names: List[str],
         output_variable_name: str = "output",
+        description: str = ""
     ):
 
         self._name = name
-        self._description = ""
+        self._description = description
         self._input_variable_names = input_variable_names
         self._output_variable_name = output_variable_name
 
