@@ -22,9 +22,13 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
     """Implementation for the multiply rule"""
 
     def __init__(
-        self, name: str, input_variable_names: List[str], operation_type: OperationType
+        self,
+        name: str,
+        input_variable_names: List[str],
+        operation_type: OperationType,
+        output_variable_name: str,
     ):
-        super().__init__(name, input_variable_names)
+        super().__init__(name, input_variable_names, output_variable_name)
         self._operation_type = operation_type
 
     @property
@@ -49,7 +53,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         if not self._check_dimensions(np_arrays):
             raise ValueError("The arrays are not in the same dimension/shape!")
 
-        if self._operation_type is OperationType.Multiply:
+        if self._operation_type is OperationType.MULTIPLY:
             result = np_arrays[0]
 
             for a_array in np_arrays[1:]:
@@ -58,23 +62,23 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
             return _xr.DataArray(result)
         # notice: multiply, we mean all the array multiply with the all arrays, number by number.
 
-        if self._operation_type is OperationType.Min:
+        if self._operation_type is OperationType.MIN:
             np_arrays = [a_array.to_numpy() for a_array in input_arrays]
             return _xr.DataArray(_np.min(np_arrays, axis=0))
 
-        if self._operation_type is OperationType.Max:
+        if self._operation_type is OperationType.MAX:
             np_arrays = [a_array.to_numpy() for a_array in input_arrays]
             return _xr.DataArray(_np.max(np_arrays, axis=0))
 
-        if self._operation_type is OperationType.Average:
+        if self._operation_type is OperationType.AVERAGE:
             np_arrays = [a_array.to_numpy() for a_array in input_arrays]
             return _xr.DataArray(_np.average(np_arrays, axis=0))
 
-        if self._operation_type is OperationType.Median:
+        if self._operation_type is OperationType.MEDIAN:
             np_arrays = [a_array.to_numpy() for a_array in input_arrays]
             return _xr.DataArray(_np.median(np_arrays, axis=0))
 
-        if self._operation_type is OperationType.Add:
+        if self._operation_type is OperationType.ADD:
             result = np_arrays[0]
 
             for a_array in np_arrays[1:]:
@@ -83,7 +87,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
             return _xr.DataArray(result)
         # notice: Add, we mean all the array add with the all arrays, number by number.
 
-        if self._operation_type is OperationType.Substract:
+        if self._operation_type is OperationType.SUBSTRACT:
             result = np_arrays[0]
 
             for a_array in np_arrays[1:]:

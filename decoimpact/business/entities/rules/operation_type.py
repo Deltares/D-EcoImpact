@@ -2,10 +2,10 @@ from enum import IntEnum
 
 
 class OperationType(IntEnum):
-    Multiply = (1,)
-    Min = (2,)
-    Max = (3,)
-    Average = (4,)
-    Median = (5,)
-    Add = (6,)
-    Substract = 7
+    MULTIPLY = 1
+    MIN = 2
+    MAX = 3
+    AVERAGE = 4
+    MEDIAN = 5
+    ADD = 6
+    SUBSTRACT = 7

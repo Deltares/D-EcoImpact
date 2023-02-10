@@ -7,10 +7,12 @@ Classes:
 """
 
 
+from abc import ABC
+
 from decoimpact.data.api.i_rule_data import IRuleData
 
 
-class RuleData(IRuleData):
+class RuleData(IRuleData, ABC):
     """Class for storing rule information"""
 
     def __init__(self, name: str, output_variable: str):
