@@ -43,7 +43,7 @@ def test_get_dict_element_should_throw_if_required_key_is_missing():
 
 def test_get_dict_element_should_return_none_if_key_is_missing():
     """Test if none is returned when the key is not
-     available in the dictionary"""
+    available in the dictionary"""
 
     # Arrange
     test_dict: Dict[str, Any] = {"test": 1, "test2": "abc"}

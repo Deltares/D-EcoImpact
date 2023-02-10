@@ -17,10 +17,20 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
     """Implementation for the multiply rule"""
 
     def __init__(
-        self, name: str, input_variable_names: List[str], multipliers: List[float]
+        self,
+        name: str,
+        input_variable_names: List[str],
+        multipliers: List[float],
+        output_variable_name: str = "output",
+        description: str = "",
     ):
-        super().__init__(name, input_variable_names)
+        super().__init__(name, input_variable_names, output_variable_name, description)
         self._multipliers = multipliers
+
+    @property
+    def multipliers(self) -> List[float]:
+        """Multiplier property"""
+        return self._multipliers
 
     def execute(self, value_array: _xr.DataArray) -> _xr.DataArray:
 

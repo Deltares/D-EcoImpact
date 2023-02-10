@@ -12,7 +12,7 @@ from typing import Any
 import xarray as _xr
 
 from decoimpact.data.api.i_dataset import IDatasetData
-from decoimpact.data.dictionary_utils import get_dict_element as _get_dict_element
+from decoimpact.data.dictionary_utils import get_dict_element
 
 
 class DatasetData(IDatasetData):
@@ -22,11 +22,11 @@ class DatasetData(IDatasetData):
         """Create DatasetData based on provided info dictionary
 
         Args:
-            info (dict[str, Any]):
+            dataset (dict[str, Any]):
         """
         super()
-        self._path = Path(_get_dict_element("filename", dataset)).resolve()
-        self._mapping = _get_dict_element("variable_mapping", dataset, False)
+        self._path = Path(get_dict_element("filename", dataset)).resolve()
+        self._mapping = get_dict_element("variable_mapping", dataset, False)
 
     @property
     def path(self) -> str:
@@ -55,11 +55,11 @@ class DatasetData(IDatasetData):
 
         try:
             dataset: _xr.Dataset = _xr.open_dataset(self._path, mask_and_scale=True)
-            # mask_and_scale argument is needed to prevent inclusion of NaN's in
-            # dataset for missing values. This inclusion converts integers to
-            # floats
-        except OSError as exc:
+            # mask_and_scale argument is needed to prevent inclusion of NaN's
+            # in dataset for missing values. This inclusion converts integers
+            # to floats
+        except ValueError as exc:
             msg = "ERROR: Cannot open input .nc file -- " + str(self._path)
-            raise OSError(msg) from exc
+            raise ValueError(msg) from exc
 
         return dataset
