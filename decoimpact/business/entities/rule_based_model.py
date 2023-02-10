@@ -108,9 +108,6 @@ class RuleBasedModel(IModel):
         """Finalizes the model"""
         # write output to file
 
-
-class RuleBuilder:
-
     def _get_processing_list(self, logger: ILogger) -> Tuple[List[List[IRule]], bool]:
         """Creates an ordered list of rules arrays, where every rule array contains rules
         that can be processed simultaneously.
