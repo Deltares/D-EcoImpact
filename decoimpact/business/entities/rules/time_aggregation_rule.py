@@ -20,11 +20,12 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
     def __init__(
         self,
         name: str,
-        # time_scale,
         input_variable_names: List[str],
         operation_type: OperationType,
+        output_variable_name: str = "output",
+        description: str = "",
     ):
-        super().__init__(name, input_variable_names)
+        super().__init__(name, input_variable_names, output_variable_name, description)
         self._operation_type = operation_type
 
     def execute(self, value_array: _xr.DataArray) -> _xr.DataArray:
@@ -37,6 +38,8 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             DataArray: Aggregated values
         """
+
+        print("execute", value_array)
 
         time_dim_name = self._get_time_dimension_name(value_array)
         if time_dim_name is None:
@@ -57,16 +60,16 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         return result
 
     def _perform_operation(self, year_values: _xr.DataArray) -> _xr.DataArray:
-        if self._operation_type is OperationType.Min:
+        if self._operation_type is OperationType.MIN:
             return _xr.DataArray(year_values.min())
 
-        if self._operation_type is OperationType.Max:
+        if self._operation_type is OperationType.MAX:
             return _xr.DataArray(year_values.max())
 
-        if self._operation_type is OperationType.Average:
+        if self._operation_type is OperationType.AVERAGE:
             return _xr.DataArray(year_values.mean())
 
-        if self._operation_type is OperationType.Median:
+        if self._operation_type is OperationType.MEDIAN:
             return _xr.DataArray(year_values.median())
 
     def _get_time_dimension_name(self, variable: _xr.DataArray) -> str:

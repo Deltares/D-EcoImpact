@@ -13,10 +13,12 @@ from decoimpact.business.entities.i_model import IModel
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
+from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
 from decoimpact.data.api.i_rule_data import IRuleData
+from decoimpact.data.api.i_time_aggregation_rule_data import ITimeAggregationRuleData
 
 
 class ModelFactory:
@@ -52,8 +54,17 @@ class ModelFactory:
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.multipliers,
-                rule_data.output_variable)
+                rule_data.output_variable,
+            )
+        elif isinstance(rule_data, ITimeAggregationRuleData):
+            return TimeAggregationRule(
+                rule_data.name,
+                [rule_data.input_variable],
+                rule_data.operation,
+                rule_data.output_variable,
+            )
 
-        error_str = f"The rule type of rule '{rule_data.name}' is currently "\
-                    "not implemented"
+        error_str = (
+            f"The rule type of rule '{rule_data.name}' is currently " "not implemented"
+        )
         raise NotImplementedError(error_str)
