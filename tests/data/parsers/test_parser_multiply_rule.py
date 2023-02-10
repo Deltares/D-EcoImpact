@@ -41,7 +41,7 @@ def test_parse_dict_to_rule_data_logic():
     assert isinstance(parsed_dict, IRuleData)
 
 
-def test_parse_dict_to_rule_data_logic():
+def test_parse_wrong_dict_to_rule_data_logic():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
     contents = dict(

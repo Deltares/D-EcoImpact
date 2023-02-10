@@ -6,7 +6,6 @@ Classes:
 
 """
 
-from multiprocessing.dummy import Value
 from pathlib import Path
 from typing import Any
 

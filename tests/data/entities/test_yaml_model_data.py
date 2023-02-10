@@ -7,7 +7,6 @@ from unittest.mock import Mock
 
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
-from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.entities.dataset_data import DatasetData
 from decoimpact.data.entities.multiply_rule_data import MultiplyRuleData
