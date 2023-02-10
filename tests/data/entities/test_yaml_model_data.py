@@ -12,10 +12,11 @@ def test_yaml_model_data_default_settings_and_type():
     interface and gives the right default settings"""
 
     # Arrange
-    yaml_contents = {"input-data": [], "rules": []}
+    datasets = []
+    rules = []
 
     # Act
-    model_data = YamlModelData("Model 1", yaml_contents)
+    model_data = YamlModelData("Model 1", datasets, rules)
 
     # Assert
 

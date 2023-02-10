@@ -2,6 +2,7 @@
 
 
 import sys
+
 from decoimpact.business.application import Application
 from decoimpact.business.workflow.model_factory import ModelFactory
 from decoimpact.crosscutting.i_logger import ILogger
