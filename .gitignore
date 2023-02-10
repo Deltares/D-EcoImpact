@@ -131,3 +131,4 @@ dmypy.json
 # test files
 input_file.yaml
 **/*.nc
+!tests/**/*.nc
