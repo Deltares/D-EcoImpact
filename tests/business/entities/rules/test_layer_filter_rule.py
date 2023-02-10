@@ -10,7 +10,7 @@ def test_create_layer_filter_rule_should_set_defaults():
     """Test creating a LayerFilterRule with defaults"""
 
     # Arrange & Act
-    rule = LayerFilterRule("test", ["foo"], 3, "output", "description")
+    rule = LayerFilterRule("test", ["foo"], 3, "output")
 
     # Assert
     assert rule.name == "test"
