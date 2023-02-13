@@ -71,7 +71,7 @@ class DatasetData(IDatasetData):
     def _write_output_file(self, output_path: Path) -> _xr.Dataset:
         if not Path.exists(output_path.parent):
             message = f"""The path {output_path.parent} is not found. \
-                          Make sure the output file location is valid."""
+                          Make sure the outputfile location is valid."""
             raise FileExistsError(message)
 
         if Path(output_path).suffix != ".nc":

@@ -66,7 +66,7 @@ def test_dataset_data_get_input_dataset_should_check_if_path_exists():
 
     # Assert
     exc = exception_raised.args[0]
-    assert exc.endswith("Make sure the input file location is valid.")
+    assert exc.endswith("Make sure the inputfile location is valid.")
 
 
 def test_dataset_data_get_input_dataset_should_check_if_extension_is_correct():
@@ -154,7 +154,7 @@ def test_dataset_data_write_output_file_should_check_if_path_exists():
 
     # Assert
     exc = exception_raised.args[0]
-    assert exc.endswith("Make sure the output file location is valid.")
+    assert exc.endswith("Make sure the outputfile location is valid.")
 
 
 def test_dataset_data_write_output_file_should_check_if_extension_is_correct():
