@@ -60,7 +60,8 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
                 result = _np.multiply(result, a_array)
 
             return _xr.DataArray(result)
-        # notice: multiply, we mean all the array multiply with the all arrays, number by number.
+        # notice: multiply, we mean all the array multiply with the
+        # all arrays, number by number.
 
         if self._operation_type is OperationType.MIN:
             np_arrays = [a_array.to_numpy() for a_array in input_arrays]
@@ -94,10 +95,12 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
                 result = _np.subtract(result, a_array)
 
             return _xr.DataArray(result)
-        # notice: Substract, we mean all the array Substract with the all arrays, number by number.
+        # notice: Substract, we mean all the array Substract with the all
+        # arrays, number by number.
 
     def _check_dimensions(self, np_arrays: List[_np.array]) -> bool:
-        # brief check if all the arrays to be combined are in the same size/dimension/length
+        # brief check if all the arrays to be combined are in the
+        # same size/dimension/length
         expected_dimensions = np_arrays[0].ndim
 
         for a_array in np_arrays[1:]:

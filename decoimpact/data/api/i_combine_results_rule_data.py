@@ -1,5 +1,5 @@
 """
-Module for ICombineResultsRuleData interface  
+Module for ICombineResultsRuleData interface
 
 Interfaces:
     ICombineResultsRuleData
