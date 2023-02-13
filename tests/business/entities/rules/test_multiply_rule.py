@@ -41,4 +41,4 @@ def test_execute_value_array_multiplied_by_multipliers():
     result_array = _xr.DataArray(result_data)
 
     # Assert
-    assert _xr.testing.assert_equal(multiplied_array, result_array) == None
+    assert _xr.testing.assert_equal(multiplied_array, result_array) is None

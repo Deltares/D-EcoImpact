@@ -109,8 +109,8 @@ class RuleBasedModel(IModel):
         # write output to file
 
     def _get_processing_list(self, logger: ILogger) -> Tuple[List[List[IRule]], bool]:
-        """Creates an ordered list of rules arrays, where every rule array contains rules
-        that can be processed simultaneously.
+        """Creates an ordered list of rules arrays, where every rule array contains
+        rules that can be processed simultaneously.
 
         Args:
             logger (ILogger): logger for reporting messages
