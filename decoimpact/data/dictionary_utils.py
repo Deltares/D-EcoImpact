@@ -18,7 +18,8 @@ def get_dict_element(
     Args:
         key (str): Name of the element to search for
         contents (Dict[str, Any]): Dictionary to search
-        required (bool, optional): If the key needs to be there. Defaults to True.
+        required (bool, optional): If the key needs to be there. Defaults
+        to True.
     Raises:
         AttributeError: Thrown when the key is required but is missing).
 

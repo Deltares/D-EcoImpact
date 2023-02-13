@@ -6,7 +6,7 @@ input-data:
         mesh2d_s1: "water_level"
 
 rules:
-  - test_rule:
+  - multiply_rule:
       name: test name
       description: Converts salinity to chloride
       multipliers: [0.0018066, 1e5]

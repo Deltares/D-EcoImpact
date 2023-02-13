@@ -128,3 +128,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# test files
+input_file.yaml
+**/*.nc
+!tests/**/*.nc

@@ -16,7 +16,11 @@ from decoimpact.data.api.i_rule_data import IRuleData
 class YamlModelData(IModelData):
     """Implementation of the model data"""
 
-    def __init__(self, name: str, datasets: List[IDatasetData], rules: List[IRuleData]):
+    def __init__(
+                self,
+                name: str,
+                datasets: List[IDatasetData],
+                rules: List[IRuleData]):
         super()
         self._name = name
         self._datasets = datasets

@@ -1,27 +1,28 @@
 """
 Module for ParserMultiplyRule class
+
 Classes:
-    MultiplyRuleParser
+    ParserMultiplyRule
 """
 from typing import Any, Dict
 
-from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
-from decoimpact.business.entities.rules.rule_base import RuleBase
+from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.dictionary_utils import get_dict_element
+from decoimpact.data.entities.multiply_rule_data import MultiplyRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
 class ParserMultiplyRule(IParserRuleBase):
 
-    """Class for creating a MultiplyRule"""
+    """Class for creating a MultiplyRuleData"""
 
     @property
     def rule_type_name(self) -> str:
         """Type name for the rule"""
         return "multiply_rule"
 
-    def parse_dict(self, dictionary: Dict[str, Any]) -> RuleBase:
-        """Parses the provided dictionary to a rule
+    def parse_dict(self, dictionary: Dict[str, Any]) -> IRuleData:
+        """Parses the provided dictionary to a IRuleData
         Args:
             dictionary (Dict[str, Any]): Dictionary holding the values
                                          for making the rule
@@ -32,8 +33,14 @@ class ParserMultiplyRule(IParserRuleBase):
         input_variable_name = get_dict_element("input_variable", dictionary)
         multipliers = get_dict_element("multipliers", dictionary)
 
-        rule = MultiplyRule(name, input_variable_name, multipliers)
+        if not all(isinstance(m, (int, float)) for m in multipliers):
+            message = f"""Multipliers should be a list of floats, \
+                          received: {multipliers}"""
+            raise ValueError(message)
+        output_variable_name = get_dict_element("output_variable", dictionary)
 
-        rule.output_variable_name = get_dict_element("output_variable", dictionary)
-
-        return rule
+        return MultiplyRuleData(
+                                name,
+                                multipliers,
+                                input_variable_name,
+                                output_variable_name)

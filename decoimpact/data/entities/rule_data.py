@@ -1,12 +1,11 @@
 """
-Module for RuletData interface
+Module for RuleData interface
 
 Classes:
-    RuletData
+    RuleData
 
 """
 
-from typing import Any
 
 from decoimpact.data.api.i_rule_data import IRuleData
 
@@ -14,15 +13,18 @@ from decoimpact.data.api.i_rule_data import IRuleData
 class RuleData(IRuleData):
     """Class for storing rule information"""
 
-    def __init__(self, rule: dict[str, Any]):
+    def __init__(
+        self, name: str, output_variable: str = "output", description: str = ""
+    ):
         """Create RuleData based on provided info dictionary
 
         Args:
             info (dict[str, Any]):
         """
         super()
-        self._name = list(rule.keys())[0]
-        self._data = rule[self._name]
+        self._name = name
+        self._description = description
+        self._output_variable = output_variable
 
     @property
     def name(self) -> str:
@@ -30,6 +32,12 @@ class RuleData(IRuleData):
         return self._name
 
     @property
-    def data(self) -> dict[str, Any]:
+    def description(self) -> str:
+        """Description of the rule"""
+        return self._description
+
+    @property
+    def output_variable(self) -> str:
         """Data of the rule data"""
-        return self._data
+        return self._output_variable
+

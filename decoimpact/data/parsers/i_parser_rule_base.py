@@ -6,7 +6,7 @@ Classes:
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
-from decoimpact.business.entities.rules.rule_base import RuleBase
+from decoimpact.data.api.i_rule_data import IRuleData
 
 
 class IParserRuleBase(ABC):
@@ -18,7 +18,7 @@ class IParserRuleBase(ABC):
         """Type name for the rule"""
 
     @abstractmethod
-    def parse_dict(self, dictionary: Dict[str, Any]) -> RuleBase:
+    def parse_dict(self, dictionary: Dict[str, Any]) -> IRuleData:
         """Parses the provided dictionary to a rule
         Args:
             dictionary (Dict[str, Any]): Dictionary holding the values
