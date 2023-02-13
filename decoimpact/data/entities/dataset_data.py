@@ -22,7 +22,7 @@ class DatasetData(IDatasetData):
         """Create DatasetData based on provided info dictionary
 
         Args:
-            info (dict[str, Any]):
+            dataset (dict[str, Any]):
         """
         super()
         self._path = Path(get_dict_element("filename", dataset)).resolve()
@@ -58,9 +58,9 @@ class DatasetData(IDatasetData):
             # mask_and_scale argument is needed to prevent inclusion of NaN's
             # in dataset for missing values. This inclusion converts integers
             # to floats
-        except OSError as exc:
+        except ValueError as exc:
             msg = "ERROR: Cannot open input .nc file -- " + str(self._path)
-            raise OSError(msg) from exc
+            raise ValueError(msg) from exc
 
         return dataset
 

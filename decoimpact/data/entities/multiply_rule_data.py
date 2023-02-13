@@ -20,9 +20,10 @@ class MultiplyRuleData(IMultiplyRuleData, RuleData):
         name: str,
         multipliers: List[float],
         input_variable: str,
-        output_variable: str,
+        output_variable: str = "output",
+        description: str = ""
     ):
-        super().__init__(name, output_variable)
+        super().__init__(name, output_variable, description)
         self._input_variable = input_variable
         self._multipliers = multipliers
 

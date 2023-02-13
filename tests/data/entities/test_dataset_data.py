@@ -153,3 +153,27 @@ def test_dataset_data_write_output_file_should_check_if_extension_is_correct():
     assert exception_raised.args[0].endswith(
         "Currently only UGrid (NetCDF) files are supported."
     )
+
+
+def test_dataset_data_get_input_dataset_should_not_read_incorrect_file():
+    """When calling get_input_dataset on a dataset should
+    read the specified IDatasetData.path. If the file is not correct (not
+    readable), raise OSError.
+    """
+
+    # Arrange
+    path = get_test_data_path() + "/FlowFM_net_incorrect.nc"
+    data_dict = {"filename": path, "variable_mapping": {"test": "test_new"}}
+    data = DatasetData(data_dict)
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        data.get_input_dataset()
+
+    exception_raised = exc_info.value
+    # Assert
+
+    path = Path(path).resolve()
+    assert exception_raised.args[0].endswith(
+        f"ERROR: Cannot open input .nc file -- " + str(path)
+    )
