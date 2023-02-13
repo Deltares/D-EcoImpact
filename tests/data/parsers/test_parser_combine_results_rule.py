@@ -88,6 +88,3 @@ def test_parse_operation_type():
     expected_message = """Operation should be a string, \
                 received: 2"""
     assert exception_raised.args[0] == expected_message
-
-
-# to do: check if user put one string in the seven enumrate or not.
