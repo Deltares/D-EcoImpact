@@ -19,5 +19,7 @@ class IMultiArrayBasedRule(IRule, ABC):
     """Rule applied to an a set of arrays"""
 
     @abstractmethod
-    def execute(self, value_arrays: List[_xr.DataArray], logger: ILogger) -> _xr.DataArray:
+    def execute(
+        self, value_arrays: List[_xr.DataArray], logger: ILogger
+    ) -> _xr.DataArray:
         """Executes the rule based on the provided array"""

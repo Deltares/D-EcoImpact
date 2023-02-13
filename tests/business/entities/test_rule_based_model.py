@@ -3,7 +3,7 @@ Tests for RuleBasedModel class
 """
 
 
-from unittest.mock import MagicMock, Mock, PropertyMock
+from unittest.mock import Mock
 
 import xarray as _xr
 
