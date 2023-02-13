@@ -34,6 +34,14 @@ class ParserCombineResultsRule(IParserRuleBase):
         operation_type: str = get_dict_element("operation", dictionary)
         output_variable_name = get_dict_element("output_variable", dictionary)
 
+        if not isinstance(operation_type, str):
+            message = f"""Operation should be a string, \
+                received: {operation_type}"""
+            raise ValueError(message)
+
         return CombineResultsRuleData(
-            name, input_variable_names, operation_type, output_variable_name
+            name,
+            input_variable_names,
+            operation_type.capitalize(),
+            output_variable_name,
         )

@@ -27,10 +27,10 @@ def test_parse_dict_to_rule_data_logic():
     # Arrange
     contents = dict(
         {
-            "name": "Combined water level policy",
-            "input_variable_names": ["water_level_min_policy_year","water_level_max_policy_year"],
-            "operation":"Multiply"
-            "output_variable": "combined_water_level_policy_year",
+            "name": "testname",
+            "input_variables": ["foo", "bar"],
+            "operation": "Multiply",
+            "output_variable": "output",
         }
     )
 
@@ -40,3 +40,54 @@ def test_parse_dict_to_rule_data_logic():
 
     assert isinstance(parsed_dict, IRuleData)
 
+
+def test_parse_wrong_dict_to_rule_data_logic():
+    """Test if the operation type is included or not"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variables": ["foo", "bar"],
+            "output_variable": "output",
+        }
+    )
+
+    # Act
+    data = ParserCombineResultsRule()
+
+    with pytest.raises(AttributeError) as exc_info:
+        data.parse_dict(contents)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = "Missing element operation"
+    assert exception_raised.args[0] == expected_message
+
+
+def test_parse_operation_type():
+    """Test if the operation type is a str, but not a number"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variables": "input",
+            "operation": 2,
+            "output_variable": "output",
+        }
+    )
+
+    # Act
+    data = ParserCombineResultsRule()
+    with pytest.raises(ValueError) as exc_info:
+        data.parse_dict(contents)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = """Operation should be a string, \
+                received: 2"""
+    assert exception_raised.args[0] == expected_message
+
+
+# to do: check if user put one string in the seven enumrate or not.

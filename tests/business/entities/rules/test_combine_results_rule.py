@@ -13,12 +13,14 @@ def test_create_combine_results_rule_should_set_defaults():
     """Test creating a RuleBase with defaults"""
 
     # Arrange & Act
-    rule = CombineResultsRule("test", ["foo", "hello"], OperationType.Multiply)
+    rule = CombineResultsRule(
+        "test", ["foo", "hello"], OperationType.MULTIPLY, "output"
+    )
     # Assert
     assert rule.name == "test"
     assert rule.description == ""
     assert rule.input_variable_names == ["foo", "hello"]
-    assert rule.operation_type == OperationType.Multiply
+    assert rule.operation_type == OperationType.MULTIPLY
     assert rule.output_variable_name == "output"
     assert isinstance(rule, CombineResultsRule)
 
@@ -28,7 +30,7 @@ def test_execute_value_array_combine_results_rule_check_ndim():
 
     # Arrange & Act
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.Multiply
+        "test", ["foo_data", "hello_data"], OperationType.MULTIPLY, "output"
     )
     foo_data = [1, 2, 3]
     hello_data = [4, 3, 2, 1]
@@ -50,7 +52,7 @@ def test_execute_value_array_combine_results_rule_check_shape():
 
     # Arrange & Act
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.Multiply
+        "test", ["foo_data", "hello_data"], OperationType.MULTIPLY, "output"
     )
     foo_data = [[1, 2], [3, 4]]
     hello_data = [4, 3, 2, 1]
@@ -72,7 +74,7 @@ def test_execute_value_array_combine_results_rule_multiply():
 
     # Arrange & Act
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.Multiply
+        "test", ["foo_data", "hello_data"], OperationType.MULTIPLY, "output"
     )
     foo_data = [1, 2, 3, 4]
     hello_data = [4, 3, 2, 1]
@@ -92,7 +94,9 @@ def test_execute_value_array_combine_results_rule_min():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
-    rule = CombineResultsRule("test", ["foo_data", "hello_data"], OperationType.Min)
+    rule = CombineResultsRule(
+        "test", ["foo_data", "hello_data"], OperationType.MIN, "output"
+    )
     foo_data = [1, 2, 3, 4]
     hello_data = [4, 3, 2, 1]
     value_array1 = _xr.DataArray(foo_data)
@@ -111,7 +115,9 @@ def test_execute_value_array_combine_results_rule_max():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
-    rule = CombineResultsRule("test", ["foo_data", "hello_data"], OperationType.Max)
+    rule = CombineResultsRule(
+        "test", ["foo_data", "hello_data"], OperationType.MAX, "output"
+    )
     foo_data = [1, 2, 3, 4]
     hello_data = [4, 3, 2, 1]
     value_array1 = _xr.DataArray(foo_data)
@@ -130,7 +136,9 @@ def test_execute_value_array_combine_results_rule_average():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
-    rule = CombineResultsRule("test", ["foo_data", "hello_data"], OperationType.Average)
+    rule = CombineResultsRule(
+        "test", ["foo_data", "hello_data"], OperationType.AVERAGE, "output"
+    )
     foo_data = [1, 2, 3, 4]
     hello_data = [5, 3, 2, 1]
     value_array1 = _xr.DataArray(foo_data)
@@ -149,7 +157,9 @@ def test_execute_value_array_combine_results_rule_median():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
-    rule = CombineResultsRule("test", ["foo_data", "hello_data"], OperationType.Median)
+    rule = CombineResultsRule(
+        "test", ["foo_data", "hello_data"], OperationType.MEDIAN, "output"
+    )
     foo_data = [1, 2, 3, 4]
     hello_data = [5, 3, 2, 1]
     value_array1 = _xr.DataArray(foo_data)
@@ -168,7 +178,9 @@ def test_execute_value_array_combine_results_rule_add():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
-    rule = CombineResultsRule("test", ["foo_data", "hello_data"], OperationType.Add)
+    rule = CombineResultsRule(
+        "test", ["foo_data", "hello_data"], OperationType.ADD, "output"
+    )
     foo_data = [1, 2, 3, 4]
     hello_data = [5, 3, 2, 1]
     value_array1 = _xr.DataArray(foo_data)
@@ -188,7 +200,7 @@ def test_execute_value_array_combine_results_rule_substract():
 
     # Arrange & Act
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.Substract
+        "test", ["foo_data", "hello_data"], OperationType.SUBSTRACT, "output"
     )
     foo_data = [1, 2, 3, 4]
     hello_data = [5, 3, 2, 1]

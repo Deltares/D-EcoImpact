@@ -55,7 +55,7 @@ def test_create_combine_results_rule_from_data_object():
     """Test creating a rule-based model via factory"""
 
     # Arrange
-    rule_data = CombineResultsRuleData("abc", ["a", "b"], "Multiply", "c")
+    rule_data = CombineResultsRuleData("abc", ["a", "b"], "MULTIPLY", "c")
 
     # Act
     rule = ModelFactory._create_rule(rule_data)
