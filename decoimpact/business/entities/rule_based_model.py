@@ -69,3 +69,6 @@ class RuleBasedModel(IModel):
 
     def finalize(self) -> None:
         """Finalizes the model"""
+
+        # write output files
+        write_output_file

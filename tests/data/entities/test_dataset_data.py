@@ -138,12 +138,14 @@ def test_dataset_data_write_output_file_should_write_file():
     """
 
     # Arrange
+    # create test set
+    # operation_min = OperationType.Min
+    data = [1]
+    time = pd.date_range("2020-01-01", periods=1)
+    dataset = _xr.Dataset(data_vars=dict(data=(["time"], data)), coords=dict(time=time))
     path = get_test_data_path() + "/FlowFM_net.nc"
-    # dataset = _xr.Dataset({"data": (["time"], [1, 2, 3])}, {"time": [1, 2, 3]})
-    # print("QQQ1", get_test_data_path() + "/results.nc")
+
     output_path = str(get_test_data_path()) + "/results.nc"
-    # output_path = Path(str(output_path))
-    print("QQQ2", output_path)
     data_dict = {
         "filename": path,
         "outputfilename": output_path,
