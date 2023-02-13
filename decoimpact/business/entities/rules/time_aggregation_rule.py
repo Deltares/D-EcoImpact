@@ -39,8 +39,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             DataArray: Aggregated values
         """
 
-        print("execute", value_array)
-
         time_dim_name = self._get_time_dimension_name(value_array)
         if time_dim_name is None:
             raise ValueError(f"No time dimension found for {value_array.name}")
@@ -48,7 +46,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         year_values = value_array.resample({time_dim_name: "1Y"})
 
         result = self._perform_operation(year_values)
-
         # create a new aggregated time dimension based on original
         # time dimension
         result_time_dim_name = f"{time_dim_name}_years"
@@ -60,6 +57,9 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         return result
 
     def _perform_operation(self, year_values: _xr.DataArray) -> _xr.DataArray:
+        if self._operation_type is OperationType.MULTIPLY:
+            return _xr.DataArray(year_values.sum())
+
         if self._operation_type is OperationType.MIN:
             return _xr.DataArray(year_values.min())
 
