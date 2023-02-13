@@ -7,6 +7,7 @@ Interfaces:
 """
 
 from abc import ABC, abstractmethod
+
 import xarray as _xr
 
 
@@ -15,7 +16,7 @@ class IDatasetData(ABC):
 
     @property
     @abstractmethod
-    def path(self) -> str:
+    def inputpath(self) -> str:
         """File path to the dataset"""
 
     @property

@@ -17,7 +17,11 @@ def test_dataset_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Arrange
-    data_dict = {"filename": "test.yaml", "variable_mapping": {"test": "new"}}
+    data_dict = {
+        "filename": "test.yaml",
+        "outputfilename": "output.txt",
+        "variable_mapping": {"test": "new"},
+    }
 
     # Act
     data = DatasetData(data_dict)
@@ -25,7 +29,8 @@ def test_dataset_data_creation_logic():
     # Assert
 
     assert isinstance(data, IDatasetData)
-    assert data.path.endswith("test.yaml")
+    assert data.inputpath.endswith("test.yaml")
+    assert data.outputpath.endswith("output.txt")
     assert "test" in data.mapping
     assert data.mapping["test"] == "new"
 
@@ -37,7 +42,11 @@ def test_dataset_data_get_input_dataset_should_read_file():
 
     # Arrange
     path = get_test_data_path() + "/FlowFM_net.nc"
-    data_dict = {"filename": path, "variable_mapping": {"test": "test_new"}}
+    data_dict = {
+        "filename": path,
+        "outputfilename": "output.txt",
+        "variable_mapping": {"test": "test_new"},
+    }
     data = DatasetData(data_dict)
 
     # Act
@@ -54,6 +63,7 @@ def test_dataset_data_get_input_dataset_should_check_if_path_exists():
     # Arrange
     data_dict = {
         "filename": "non_existing_file.nc",
+        "outputfilename": "output.txt",
         "variable_mapping": {"test": "test_new"},
     }
     data = DatasetData(data_dict)
@@ -75,7 +85,11 @@ def test_dataset_data_get_input_dataset_should_check_if_extension_is_correct():
 
     # Arrange
     path = get_test_data_path() + "/NonUgridFile.txt"
-    data_dict = {"filename": path, "variable_mapping": {"test": "test_new"}}
+    data_dict = {
+        "filename": path,
+        "outputfilename": "output.txt",
+        "variable_mapping": {"test": "test_new"},
+    }
     data = DatasetData(data_dict)
 
     # Act
@@ -98,7 +112,11 @@ def test_dataset_data_get_input_dataset_should_not_read_incorrect_file():
 
     # Arrange
     path = get_test_data_path() + "/FlowFM_net_incorrect.nc"
-    data_dict = {"filename": path, "variable_mapping": {"test": "test_new"}}
+    data_dict = {
+        "filename": path,
+        "outputfilename": "output.txt",
+        "variable_mapping": {"test": "test_new"},
+    }
     data = DatasetData(data_dict)
 
     # Act
@@ -122,15 +140,19 @@ def test_dataset_data_write_output_file_should_write_file():
     # Arrange
     path = get_test_data_path() + "/FlowFM_net.nc"
     # dataset = _xr.Dataset({"data": (["time"], [1, 2, 3])}, {"time": [1, 2, 3]})
-    data_dict = {"filename": path, "variable_mapping": {"test": "test_new"}}
-    data = DatasetData(data_dict)
     # print("QQQ1", get_test_data_path() + "/results.nc")
-    print("d", data)
     output_path = str(get_test_data_path()) + "/results.nc"
-    output_path = Path(str(output_path))
+    # output_path = Path(str(output_path))
     print("QQQ2", output_path)
+    data_dict = {
+        "filename": path,
+        "outputfilename": output_path,
+        "variable_mapping": {"test": "test_new"},
+    }
+    data = DatasetData(data_dict)
+
     # Act
-    data.write_output_file(output_path)
+    data.write_output_file()
 
     # Assert
     assert output_path.is_file()
@@ -142,13 +164,17 @@ def test_dataset_data_write_output_file_should_check_if_path_exists():
 
     # Arrange
     path = get_test_data_path() + "/FlowFM_net.nc"
-    data_dict = {"filename": path, "variable_mapping": {"test": "test_new"}}
-    data = DatasetData(data_dict)
     output_path = Path("./non_existing_dir/results.nc")
+    data_dict = {
+        "filename": path,
+        "outputfilename": output_path,
+        "variable_mapping": {"test": "test_new"},
+    }
+    data = DatasetData(data_dict)
 
     # Act
     with pytest.raises(FileExistsError) as exc_info:
-        data.write_output_file(output_path)
+        data.write_output_file()
 
     exception_raised = exc_info.value
 
@@ -163,13 +189,17 @@ def test_dataset_data_write_output_file_should_check_if_extension_is_correct():
 
     # Arrange
     path = get_test_data_path() + "/FlowFM_net.nc"
-    data_dict = {"filename": path, "variable_mapping": {"test": "test_new"}}
-    data = DatasetData(data_dict)
     output_path = Path(get_test_data_path() + "/NonUgridFile.txt")
+    data_dict = {
+        "filename": path,
+        "outputfilename": output_path,
+        "variable_mapping": {"test": "test_new"},
+    }
+    data = DatasetData(data_dict)
 
     # Act
     with pytest.raises(NotImplementedError) as exc_info:
-        data.write_output_file(output_path)
+        data.write_output_file()
 
     exception_raised = exc_info.value
 

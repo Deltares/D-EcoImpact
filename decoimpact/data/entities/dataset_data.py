@@ -25,13 +25,19 @@ class DatasetData(IDatasetData):
             dataset (dict[str, Any]):
         """
         super()
-        self._path = Path(get_dict_element("filename", dataset)).resolve()
+        self._inputpath = Path(get_dict_element("filename", dataset)).resolve()
+        self._outputpath = Path(get_dict_element("outputfilename", dataset)).resolve()
         self._mapping = get_dict_element("variable_mapping", dataset, False)
 
     @property
-    def path(self) -> str:
-        """File path to the dataset"""
-        return str(self._path)
+    def inputpath(self) -> str:
+        """File path to the input dataset"""
+        return str(self._inputpath)
+
+    @property
+    def outputpath(self) -> str:
+        """File path to the output dataset"""
+        return str(self._outputpath)
 
     @property
     def mapping(self) -> dict[str, str]:
@@ -43,51 +49,53 @@ class DatasetData(IDatasetData):
         return self._get_original_dataset()
 
     def _get_original_dataset(self) -> _xr.Dataset:
-        if not Path.exists(self._path):
-            message = f"""The file {self._path} is not found. \
+        if not Path.exists(self._inputpath):
+            message = f"""The file {self._inputpath} is not found. \
                           Make sure the inputfile location is valid."""
             raise FileExistsError(message)
 
-        if Path(self._path).suffix != ".nc":
-            message = f"""The file {self._path} is not supported. \
+        if Path(self._inputpath).suffix != ".nc":
+            message = f"""The file {self._inputpath} is not supported. \
                           Currently only UGrid (NetCDF) files are supported."""
             raise NotImplementedError(message)
 
         try:
-            dataset: _xr.Dataset = _xr.open_dataset(self._path, mask_and_scale=True)
+            dataset: _xr.Dataset = _xr.open_dataset(
+                self._inputpath, mask_and_scale=True
+            )
             # mask_and_scale argument is needed to prevent inclusion of NaN's
             # in dataset for missing values. This inclusion converts integers
             # to floats
         except ValueError as exc:
-            msg = "ERROR: Cannot open input .nc file -- " + str(self._path)
+            msg = "ERROR: Cannot open input .nc file -- " + str(self._inputpath)
             raise ValueError(msg) from exc
 
         return dataset
 
-    def write_output_file(self, output_path: Path) -> _xr.Dataset:
+    def write_output_file(self) -> _xr.Dataset:
         """Write XArray dataset to specified path"""
-        return self._write_output_file(output_path)
+        return self._write_output_file()
 
-    def _write_output_file(self, output_path: Path) -> _xr.Dataset:
-        if not Path.exists(output_path.parent):
-            message = f"""The path {output_path.parent} is not found. \
+    def _write_output_file(self) -> _xr.Dataset:
+        if not Path.exists(self._outputpath.parent):
+            message = f"""The path {self._outputpath.parent} is not found. \
                           Make sure the outputfile location is valid."""
             raise FileExistsError(message)
 
-        if Path(output_path).suffix != ".nc":
-            message = f"""The file {output_path} is not supported. \
+        if Path(self._outputpath).suffix != ".nc":
+            message = f"""The file {self._outputpath} is not supported. \
                           Currently only UGrid (NetCDF) files are supported."""
             raise NotImplementedError(message)
 
         try:
-            dataset: _xr.Dataset = _xr.Dataset.to_netcdf(output_path, format="NETCDF4")
+            self.to_netcdf(self._outputpath, format="NETCDF4")
             # D-Flow FM sometimes still uses netCDF3.
             # If necessary we can revert to "NETCDF4_CLASSIC"
             # (Data is stored in an HDF5 file, using only netCDF 3 compatible
             # API features.)
 
         except OSError as exc:
-            msg = "ERROR: Cannot write output .nc file -- " + str(output_path)
+            msg = "ERROR: Cannot write output .nc file -- " + str(self._outputpath)
             raise OSError(msg) from exc
 
-        return dataset
+        return self
