@@ -40,15 +40,15 @@ class StepFunction(RuleBase, ICellBasedRule):
         self,
         name: str,
         input_variable_name: str,
-        intervals_limits: _np.array,
-        interval_values: _np.array = None,
+        limits: _np.array,
+        responses: _np.array = None,
     ):
         super().__init__(name, input_variable_name)
 
         self._name = name
         self._input_variable_name = input_variable_name
-        self._intervals_limits = intervals_limits
-        self._interval_values = interval_values
+        self._limits = limits
+        self._responses = responses
 
     def execute(self, value: float, logger: ILogger) -> float:
         """Classify a variable, based on given bins.
@@ -65,7 +65,7 @@ class StepFunction(RuleBase, ICellBasedRule):
             float: index corresponding to value to classify
         """
 
-        bins = self._intervals_limits
+        bins = self._limits
         # bins are constant
         selected_bin = -1
         if value < _np.min(bins):
@@ -76,4 +76,4 @@ class StepFunction(RuleBase, ICellBasedRule):
             if value > _np.max(bins):
                 logger.log_warning("value greater than max")
 
-        return self._interval_values[selected_bin]
+        return self._responses[selected_bin]

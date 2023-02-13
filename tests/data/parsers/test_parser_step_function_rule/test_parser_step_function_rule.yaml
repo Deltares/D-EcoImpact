@@ -1,0 +1,8 @@
+#example of a classification rule taken from the simple case yaml file (see DEI-23)
+        - step_function_rule: 
+                  name: Apply chloride policy
+                  description: this rules indicates whether the chloride policy should be applied (1) or not (0) depending on the chloride concentration.
+                  limits: [0, 450]
+                  responses: [1.0, 0.0]
+                  input_variable: chloride_top_layer
+                  output_variable: chloride_policy_top_layer
