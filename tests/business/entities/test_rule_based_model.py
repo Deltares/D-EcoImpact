@@ -118,4 +118,3 @@ def test_validation_of_rule_based_model_rule_dependencies():
 
     # Act & Assert
     assert model.validate(logger)
-
