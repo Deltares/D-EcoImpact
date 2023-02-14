@@ -14,5 +14,4 @@ rules:
       output_variable: chloride
 
 output-data:
-  - dataset:
-      output_filename: test/data/results.nc
+  - output_filename: test/data/results.nc
