@@ -33,7 +33,6 @@ class ModelFactory:
         logger.log_info("Creating rule-based model")
 
         datasets = [ds.get_input_dataset() for ds in model_data.datasets]
-        output_datasets = [ds.get_output_dataset() for ds in model_data.output_datasets]
         rules = list(ModelFactory._create_rules(model_data.rules))
 
         model: IModel = RuleBasedModel(datasets, rules, model_data.name)
