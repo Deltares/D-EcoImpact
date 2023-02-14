@@ -5,9 +5,9 @@ Classes:
 """
 from typing import Any, Dict
 
-from decoimpact.business.entities.rules.rule_base import RuleBase
-from decoimpact.business.entities.rules.step_function_rule import StepFunction
+from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.dictionary_utils import get_dict_element
+from decoimpact.data.entities.step_function_data import StepFunctionRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
@@ -20,10 +20,10 @@ class ParserStepFunctionRule(IParserRuleBase):
         """Type name for the rule"""
         return "step_function_rule"
 
-    def parse_dict(self, dictionary: Dict[str, Any]) -> RuleBase:
+    def parse_dict(self, dictionary: dict[Any, Any]) -> IRuleData:
         """Parses the provided dictionary to a rule
         Args:
-            dictionary (Dict[str, Any]): Dictionary holding the values
+            dictionary (dict[Any, Any]): Dictionary holding the values
                                          for making the rule
         Returns:
             RuleBase: Rule based on the provided data
@@ -32,9 +32,14 @@ class ParserStepFunctionRule(IParserRuleBase):
         input_variable_name = get_dict_element("input_variable", dictionary)
         limits = get_dict_element("limits", dictionary)
         responses = get_dict_element("responses", dictionary)
+        output_variable_name = get_dict_element("output_variable", dictionary)
 
-        rule = StepFunction(name, input_variable_name, limits, responses)
+        rule_data = StepFunctionRuleData(
+            name,
+            limits,
+            responses,
+            input_variable_name,
+            output_variable=output_variable_name,
+        )
 
-        rule.output_variable_name = get_dict_element("output_variable", dictionary)
-
-        return rule
+        return rule_data

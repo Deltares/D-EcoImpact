@@ -37,9 +37,10 @@ def test_status_setter():
     # Arrange
     rule = Mock(IRule)
     dataset = Mock(IDatasetData)
+    logger = Mock(ILogger)
 
     # Act
-    model = RuleBasedModel([dataset], [rule])
+    model = RuleBasedModel([dataset], [rule], logger)
 
     assert model.status == ModelStatus.CREATED
     model.status = ModelStatus.EXECUTED
