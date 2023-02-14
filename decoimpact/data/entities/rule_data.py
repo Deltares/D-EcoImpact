@@ -40,4 +40,3 @@ class RuleData(IRuleData):
     def output_variable(self) -> str:
         """Data of the rule data"""
         return self._output_variable
-
