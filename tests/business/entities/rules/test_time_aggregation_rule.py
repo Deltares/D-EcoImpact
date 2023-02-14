@@ -20,6 +20,9 @@ time = [
 time = [np.datetime64(t) for t in time]
 value_array = _xr.DataArray(data, coords=[time], dims=["time"])
 
+result_time_year = ["2020-12-31", "2021-12-31"]
+result_time_year = [np.datetime64(t) for t in result_time_year]
+
 
 def test_create_time_aggregation_rule_should_set_defaults():
     """Test creating a time aggregation rule with defaults"""
@@ -71,9 +74,9 @@ def test_execute_value_array_aggregate_time_yearly_multiply():
     time_aggregation = rule.execute(value_array)
 
     result_data = [1.2, 0.4]
-    result_time = ["2020-12-31", "2021-12-31"]
-    result_time = [np.datetime64(t) for t in result_time]
-    result_array = _xr.DataArray(result_data, coords=[result_time], dims=["time_years"])
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_year], dims=["time_year"]
+    )
 
     # Assert
     assert _xr.testing.assert_equal(time_aggregation, result_array) == None
@@ -92,9 +95,9 @@ def test_execute_value_array_aggregate_time_yearly_min():
     time_aggregation = rule.execute(value_array)
 
     result_data = [0.1, 0.1]
-    result_time = ["2020-12-31", "2021-12-31"]
-    result_time = [np.datetime64(t) for t in result_time]
-    result_array = _xr.DataArray(result_data, coords=[result_time], dims=["time_years"])
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_year], dims=["time_year"]
+    )
 
     # Assert
     assert _xr.testing.assert_equal(time_aggregation, result_array) == None
@@ -113,9 +116,9 @@ def test_execute_value_array_aggregate_time_yearly_max():
     time_aggregation = rule.execute(value_array)
 
     result_data = [0.7, 0.3]
-    result_time = ["2020-12-31", "2021-12-31"]
-    result_time = [np.datetime64(t) for t in result_time]
-    result_array = _xr.DataArray(result_data, coords=[result_time], dims=["time_years"])
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_year], dims=["time_year"]
+    )
 
     # Assert
     assert _xr.testing.assert_equal(time_aggregation, result_array) == None
@@ -134,9 +137,9 @@ def test_execute_value_array_aggregate_time_yearly_average():
     time_aggregation = rule.execute(value_array)
 
     result_data = [0.3, 0.2]
-    result_time = ["2020-12-31", "2021-12-31"]
-    result_time = [np.datetime64(t) for t in result_time]
-    result_array = _xr.DataArray(result_data, coords=[result_time], dims=["time_years"])
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_year], dims=["time_year"]
+    )
 
     # Assert
     assert _xr.testing.assert_equal(time_aggregation, result_array) == None
@@ -155,9 +158,134 @@ def test_execute_value_array_aggregate_time_yearly_median():
     time_aggregation = rule.execute(value_array)
 
     result_data = [0.2, 0.2]
-    result_time = ["2020-12-31", "2021-12-31"]
-    result_time = [np.datetime64(t) for t in result_time]
-    result_array = _xr.DataArray(result_data, coords=[result_time], dims=["time_years"])
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_year], dims=["time_year"]
+    )
+
+    # Assert
+    assert _xr.testing.assert_equal(time_aggregation, result_array) == None
+
+
+data = [0.1, 0.7, 0.2, 0.2, 0.3, 0.1]
+time = [
+    "2020-01-01",
+    "2020-02-02",
+    "2020-02-03",
+    "2020-04-04",
+    "2021-04-01",
+    "2021-04-02",
+]
+time = [np.datetime64(t) for t in time]
+value_array = _xr.DataArray(data, coords=[time], dims=["time"])
+
+result_time_month = [
+    "2020-01-31",
+    "2020-02-29",
+    "2020-04-30",
+    "2021-04-30",
+]
+result_time_month = [np.datetime64(t) for t in result_time_month]
+
+
+def test_execute_value_array_aggregate_time_monthly_multiply():
+    """Aggregate input_variable_names of a TimeAggregationRule (MULTIPLY, monthly)"""
+
+    # create test set
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["chloride_policy_top_layer"],
+        operation_type=OperationType.MULTIPLY,
+        time_scale="month",
+    )
+
+    time_aggregation = rule.execute(value_array)
+
+    result_data = [0.1, 0.9, 0.2, 0.4]
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_month], dims=["time_month"]
+    )
+
+    # Assert
+    assert _xr.testing.assert_equal(time_aggregation, result_array) == None
+
+
+def test_execute_value_array_aggregate_time_monthly_min():
+    """Aggregate input_variable_names of a TimeAggregationRule (min, monthly)"""
+
+    # create test set
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["chloride_policy_top_layer"],
+        operation_type=OperationType.MIN,
+    )
+
+    time_aggregation = rule.execute(value_array)
+
+    result_data = [0.1, 0.2, 0.2, 0.1]
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_month], dims=["time_month"]
+    )
+
+    # Assert
+    assert _xr.testing.assert_equal(time_aggregation, result_array) == None
+
+
+def test_execute_value_array_aggregate_time_monthly_max():
+    """Aggregate input_variable_names of a TimeAggregationRule (MAX, monthly)"""
+
+    # create test set
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["chloride_policy_top_layer"],
+        operation_type=OperationType.MAX,
+    )
+
+    time_aggregation = rule.execute(value_array)
+
+    result_data = [0.1, 0.7, 0.2, 0.3]
+    result_array = _xr.DataArray(result_data, coords=[result_time_month], dims=["time_month"])
+
+    # Assert
+    assert _xr.testing.assert_equal(time_aggregation, result_array) == None
+
+
+def test_execute_value_array_aggregate_time_monthly_average():
+    """Aggregate input_variable_names of a TimeAggregationRule (average, monthly)"""
+
+    # create test set
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["chloride_policy_top_layer"],
+        operation_type=OperationType.AVERAGE,
+    )
+
+    time_aggregation = rule.execute(value_array)
+
+    result_data = [0.1, 0.45, 0.2, 0.2]
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_month], dims=["time_month"]
+    )
+
+    # Assert
+    assert _xr.testing.assert_equal(time_aggregation, result_array) == None
+
+
+def test_execute_value_array_aggregate_time_monthly_median():
+    """Test aggregate input_variable_names of a TimeAggregationRule (median, monthly)"""
+
+    # create test set
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["chloride_policy_top_layer"],
+        operation_type=OperationType.MEDIAN,
+    )
+
+    time_aggregation = rule.execute(value_array)
+
+    result_data = [0.1, 0.2, 0.2, 0.1]
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_month], dims=["time_month"]
+    )
 
     # Assert
     assert _xr.testing.assert_equal(time_aggregation, result_array) == None

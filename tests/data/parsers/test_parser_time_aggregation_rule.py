@@ -34,6 +34,7 @@ def test_parse_dict_to_rule_data_logic():
             "input_variable": "input",
             "operation": "MIN",
             "output_variable": "output",
+            "time_scale": "year",
         }
     )
 
@@ -52,6 +53,7 @@ def test_parse_wrong_dict_to_rule_data_logic():
             "name": "testname",
             "input_variable": "input",
             "output_variable": "output",
+            "time_scale": "year",
         }
     )
 
@@ -77,6 +79,7 @@ def test_parse_operation_type():
             "input_variable": "input",
             "operation": "Minimum",
             "output_variable": "output",
+            "time_scale": "year",
         }
     )
 

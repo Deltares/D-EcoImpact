@@ -4,6 +4,7 @@ Module for ParserTimeAggregationRule class
 Classes:
     ParserTimeAggregationRule
 """
+from time import time
 from typing import Any, Dict
 
 from decoimpact.business.entities.rules.operation_type import OperationType
@@ -33,6 +34,7 @@ class ParserTimeAggregationRule(IParserRuleBase):
         name = get_dict_element("name", dictionary)
         input_variable_name = get_dict_element("input_variable", dictionary)
         operation = get_dict_element("operation", dictionary)
+        time_scale = get_dict_element("time_scale", dictionary)
 
         if not any(o.name == operation for o in OperationType):
             message = f"Operation is not of a predefined type. Should be in: \
@@ -41,5 +43,5 @@ class ParserTimeAggregationRule(IParserRuleBase):
         output_variable_name = get_dict_element("output_variable", dictionary)
 
         return TimeAggregationRuleData(
-            name, operation, input_variable_name, output_variable_name
+            name, operation, input_variable_name, output_variable_name, time_scale
         )

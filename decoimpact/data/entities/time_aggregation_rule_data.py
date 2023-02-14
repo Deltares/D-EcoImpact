@@ -19,12 +19,14 @@ class TimeAggregationRuleData(ITimeAggregationRuleData, RuleData):
         name: str,
         operation: OperationType,
         input_variable: str,
+        time_scale: str = "year",
         output_variable: str = "output",
         description: str = "",
     ):
         super().__init__(name, output_variable, description)
         self._input_variable = input_variable
         self._operation = operation
+        self._time_scale = time_scale
 
     @property
     def input_variable(self) -> str:
@@ -35,3 +37,8 @@ class TimeAggregationRuleData(ITimeAggregationRuleData, RuleData):
     def operation(self) -> OperationType:
         """Operation type"""
         return self._operation
+
+    @property
+    def time_scale(self) -> str:
+        """time_scale type"""
+        return self._time_scale

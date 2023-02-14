@@ -22,11 +22,13 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: OperationType,
+        time_scale: str = "year",
         output_variable_name: str = "output",
         description: str = "",
     ):
         super().__init__(name, input_variable_names, output_variable_name, description)
         self._operation_type = operation_type
+        self._time_scale = time_scale
 
     def execute(self, value_array: _xr.DataArray) -> _xr.DataArray:
 
@@ -39,38 +41,44 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             DataArray: Aggregated values
         """
 
+        if self._time_scale == "month":
+            dim_name = "M"
+        else:
+            dim_name = "Y"
+
         time_dim_name = self._get_time_dimension_name(value_array)
         if time_dim_name is None:
             raise ValueError(f"No time dimension found for {value_array.name}")
 
-        year_values = value_array.resample({time_dim_name: "1Y"})
+        aggregated_values = value_array.resample({time_dim_name: dim_name})
 
-        result = self._perform_operation(year_values)
+        result = self._perform_operation(aggregated_values)
         # create a new aggregated time dimension based on original
         # time dimension
-        result_time_dim_name = f"{time_dim_name}_years"
+        result_time_dim_name = f"{time_dim_name}_{self._time_scale}"
         result = result.rename({time_dim_name: result_time_dim_name})
 
         for key, value in value_array[time_dim_name].attrs.items():
-            result[result_time_dim_name].attrs[key] = value
+            if value:
+                result[result_time_dim_name].attrs[key] = value
 
         return result
 
-    def _perform_operation(self, year_values: _xr.DataArray) -> _xr.DataArray:
+    def _perform_operation(self, aggregated_values: _xr.DataArray) -> _xr.DataArray:
         if self._operation_type is OperationType.MULTIPLY:
-            return _xr.DataArray(year_values.sum())
+            return _xr.DataArray(aggregated_values.sum())
 
         if self._operation_type is OperationType.MIN:
-            return _xr.DataArray(year_values.min())
+            return _xr.DataArray(aggregated_values.min())
 
         if self._operation_type is OperationType.MAX:
-            return _xr.DataArray(year_values.max())
+            return _xr.DataArray(aggregated_values.max())
 
         if self._operation_type is OperationType.AVERAGE:
-            return _xr.DataArray(year_values.mean())
+            return _xr.DataArray(aggregated_values.mean())
 
         if self._operation_type is OperationType.MEDIAN:
-            return _xr.DataArray(year_values.median())
+            return _xr.DataArray(aggregated_values.median())
 
     def _get_time_dimension_name(self, variable: _xr.DataArray) -> str:
 
