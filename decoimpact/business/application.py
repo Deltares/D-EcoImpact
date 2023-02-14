@@ -7,6 +7,7 @@ Classes:
 """
 
 
+from pathlib import Path
 from typing import Callable
 
 from decoimpact.business.entities.i_model import IModel
@@ -41,14 +42,17 @@ class Application:
         self._da_layer = da_layer
         self._model_creator = model_creator
 
-    def run(self, input_path: str):
+    def run(self, input_path: str, output_path: Path):
         """Runs application
 
         Args:
             input_path (str): path to input file
+            output_path (str): path to output files
         """
 
         model_data: IModelData = self._da_layer.read_input_file(input_path)
         model: IModel = self._model_creator(self._logger, model_data)
 
         ModelRunner.run_model(model, self._logger)
+
+        self._da_layer.write_output_files(model.output_dataset, output_path)

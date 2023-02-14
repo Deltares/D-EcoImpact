@@ -7,6 +7,9 @@ Interfaces:
 """
 
 from abc import ABC, abstractmethod
+from pathlib import Path
+
+import xarray as _xr
 
 from decoimpact.data.api.i_model_data import IModelData
 
@@ -23,4 +26,16 @@ class IDataAccessLayer(ABC):
 
         Returns:
             IModelData: Data regarding model
+        """
+
+    @abstractmethod
+    def write_output_file(self, dataset: _xr.Dataset, path: Path) -> None:
+        """Write output files to provided path
+
+        Args:
+            dataset (XArray dataset): dataset to write
+            path (str): path to output file
+
+        Returns:
+            None
         """

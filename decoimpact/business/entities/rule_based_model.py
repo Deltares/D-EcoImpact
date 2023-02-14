@@ -19,6 +19,7 @@ class RuleBasedModel(IModel):
     def __init__(
         self,
         input_datasets: List[_xr.Dataset],
+        output_dataset: _xr.Dataset,
         rules: List[IRule],
         name: str = "Rule-Based model",
     ) -> None:
@@ -27,6 +28,7 @@ class RuleBasedModel(IModel):
         self._status = ModelStatus.CREATED
         self._rules = rules
         self._input_datasets: List[_xr.Dataset] = input_datasets
+        self._output_dataset: _xr.Dataset = output_dataset
 
     @property
     def name(self) -> str:
@@ -50,8 +52,13 @@ class RuleBasedModel(IModel):
 
     @property
     def input_datasets(self) -> List[_xr.Dataset]:
-        """Status of the model"""
+        """Input datasets of the model"""
         return self._input_datasets
+
+    @property
+    def output_dataset(self) -> _xr.Dataset:
+        """Output dataset of the model"""
+        return self._output_dataset
 
     def validate(self) -> bool:
         """Validates the model"""
@@ -69,6 +76,3 @@ class RuleBasedModel(IModel):
 
     def finalize(self) -> None:
         """Finalizes the model"""
-
-        # write output files
-        write_output_file

@@ -33,6 +33,7 @@ class ModelFactory:
         logger.log_info("Creating rule-based model")
 
         datasets = [ds.get_input_dataset() for ds in model_data.datasets]
+        output_datasets = [ds.get_output_dataset() for ds in model_data.output_datasets]
         rules = list(ModelFactory._create_rules(model_data.rules))
 
         model: IModel = RuleBasedModel(datasets, rules, model_data.name)
@@ -52,8 +53,10 @@ class ModelFactory:
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.multipliers,
-                rule_data.output_variable)
+                rule_data.output_variable,
+            )
 
-        error_str = f"The rule type of rule '{rule_data.name}' is currently "\
-                    "not implemented"
+        error_str = (
+            f"The rule type of rule '{rule_data.name}' is currently " "not implemented"
+        )
         raise NotImplementedError(error_str)
