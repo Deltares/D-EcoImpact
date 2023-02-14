@@ -25,7 +25,7 @@ class DataAccessLayer(IDataAccessLayer):
     def __init__(self, logger: ILogger):
         self._logger = logger
 
-    def read_input_file(self, path: str) -> IModelData:
+    def read_input_file(self, path: Path) -> IModelData:
         """Reads input file from provided path
 
         Args:
@@ -39,7 +39,7 @@ class DataAccessLayer(IDataAccessLayer):
         """
         self._logger.log_info(f"Creating model data based on yaml file {path}")
 
-        if not _os.path.exists(path):
+        if not path.exists():
             msg = f"ERROR: The input file {path} does not exist."
             self._logger.log_error(msg)
             raise FileExistsError(msg)

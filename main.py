@@ -11,11 +11,11 @@ from decoimpact.crosscutting.logger_factory import LoggerFactory
 from decoimpact.data.entities.data_access_layer import DataAccessLayer, IDataAccessLayer
 
 
-def main(input_path: str, output_path: Path):
+def main(input_path: Path, output_path: Path):
     """Main function to run the application when running via command-line
 
     Args:
-        input_path (str): path to the input file
+        input_path (Path): path to the input file
         output_path (Path): path to the input file
     """
 
@@ -31,6 +31,6 @@ def main(input_path: str, output_path: Path):
 
 
 if __name__ == "__main__":
-    # input_path = Path(sys.argv[1])
+    input_path = Path(sys.argv[1])
     output_path = Path(sys.argv[2])
     main(sys.argv[1], output_path)

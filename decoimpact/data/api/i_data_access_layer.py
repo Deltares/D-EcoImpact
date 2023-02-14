@@ -18,7 +18,7 @@ class IDataAccessLayer(ABC):
     """Interface for the data layer"""
 
     @abstractmethod
-    def read_input_file(self, path: str) -> IModelData:
+    def read_input_file(self, path: Path) -> IModelData:
         """Reads input file from provided path
 
         Args:

@@ -42,12 +42,12 @@ class Application:
         self._da_layer = da_layer
         self._model_creator = model_creator
 
-    def run(self, input_path: str, output_path: Path):
+    def run(self, input_path: Path, output_path: Path):
         """Runs application
 
         Args:
-            input_path (str): path to input file
-            output_path (str): path to output files
+            input_path (Path): path to input file
+            output_path (Path): path to output files
         """
 
         model_data: IModelData = self._da_layer.read_input_file(input_path)

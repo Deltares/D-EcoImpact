@@ -23,7 +23,7 @@ def test_data_access_layer_provides_yaml_model_data_for_yaml_file():
 
     # Arrange
     logger = LoggerFactory.create_logger()
-    path = get_test_data_path() + "/test.yaml"
+    path = Path(get_test_data_path() + "/test.yaml")
 
     # Act
     da_layer = DataAccessLayer(logger)
@@ -53,7 +53,7 @@ def test_data_access_layer_read_input_file_throws_exception_for_invalid_path():
 
     # Arrange
     logger = Mock(ILogger)
-    path = "test_invalid_path.yaml"
+    path = Path("test_invalid_path.yaml")
     da_layer = DataAccessLayer(logger)
 
     # Act
