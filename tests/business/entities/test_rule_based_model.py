@@ -5,6 +5,8 @@ Tests for RuleBasedModel class
 
 from unittest.mock import Mock
 
+import xarray as _xr
+
 from decoimpact.business.entities.i_model import ModelStatus
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.i_rule import IRule
@@ -18,9 +20,10 @@ def test_create_rule_based_model_with_defaults():
     # Arrange
     rule = Mock(IRule)
     dataset = Mock(IDatasetData)
+    output_dataset = Mock(_xr.Dataset)
 
     # Act
-    model = RuleBasedModel([dataset], [rule])
+    model = RuleBasedModel([dataset], [output_dataset], [rule])
 
     # Assert
 
@@ -35,9 +38,10 @@ def test_status_setter():
     # Arrange
     rule = Mock(IRule)
     dataset = Mock(IDatasetData)
+    output_dataset = Mock(_xr.Dataset)
 
     # Act
-    model = RuleBasedModel([dataset], [rule])
+    model = RuleBasedModel([dataset], [output_dataset], [rule])
 
     assert model.status == ModelStatus.CREATED
     model.status = ModelStatus.EXECUTED
@@ -53,10 +57,10 @@ def test_validation_of_rule_based_model():
     rule = Mock(IRule)
     dataset = Mock(IDatasetData)
 
-    no_rules_and_datasets_model = RuleBasedModel([], [])
-    no_rules_model = RuleBasedModel([dataset], [])
-    no_datasets_model = RuleBasedModel([], [rule])
-    model = RuleBasedModel([dataset], [rule])
+    no_rules_and_datasets_model = RuleBasedModel([], [], [])
+    no_rules_model = RuleBasedModel([dataset], [], [])
+    no_datasets_model = RuleBasedModel([], [], [rule])
+    model = RuleBasedModel([dataset], [], [rule])
 
     # Act & Assert
 

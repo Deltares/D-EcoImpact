@@ -55,4 +55,4 @@ class Application:
 
         ModelRunner.run_model(model, self._logger)
 
-        self._da_layer.write_output_files(model.output_dataset, output_path)
+        self._da_layer.write_output_file(model.output_dataset, output_path)
