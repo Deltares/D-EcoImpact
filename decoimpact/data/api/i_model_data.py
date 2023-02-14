@@ -28,8 +28,8 @@ class IModelData(ABC):
 
     @property
     @abstractmethod
-    def output_datasets(self) -> List[IDatasetData]:
-        """Datasets of the model to write to output file"""
+    def output_dataset(self) -> List[IDatasetData]:
+        """Model dataset to write to output file"""
 
     @property
     @abstractmethod
