@@ -2,9 +2,12 @@
 Tests for DataAccessLayer class
 """
 
+from pathlib import Path
 from unittest.mock import Mock
 
+import pandas as pd
 import pytest
+import xarray as _xr
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.crosscutting.logger_factory import LoggerFactory
@@ -36,7 +39,7 @@ def test_data_access_layer_provides_yaml_model_data_for_yaml_file():
     assert len(model_data.datasets) == 1
 
     first_dataset = model_data.datasets[0]
-    assert first_dataset.path.endswith("FM-VZM_0000_map.nc")
+    assert first_dataset.inputpath.endswith("FM-VZM_0000_map.nc")
     assert "mesh2d_sa1" in first_dataset.mapping
     assert "mesh2d_s1" in first_dataset.mapping
 
@@ -44,7 +47,7 @@ def test_data_access_layer_provides_yaml_model_data_for_yaml_file():
     assert first_dataset.mapping["mesh2d_s1"] == "water_level"
 
 
-def test_data_access_layer_throws_exception_for_invalid_path():
+def test_data_access_layer_read_input_file_throws_exception_for_invalid_path():
     """The DataAccessLayer should throw a FileNotFoundError
     if the provided path for a yaml file does not exists"""
 
@@ -72,26 +75,18 @@ def test_dataset_data_write_output_file_should_write_file():
     """
 
     # Arrange
-    # create test set
-    # operation_min = OperationType.Min
+    logger = Mock(ILogger)
+    path = Path(str(get_test_data_path()) + "/results.nc")
+    da_layer = DataAccessLayer(logger)
     data = [1]
     time = pd.date_range("2020-01-01", periods=1)
     dataset = _xr.Dataset(data_vars=dict(data=(["time"], data)), coords=dict(time=time))
-    path = get_test_data_path() + "/FlowFM_net.nc"
-
-    output_path = str(get_test_data_path()) + "/results.nc"
-    data_dict = {
-        "filename": path,
-        "outputfilename": output_path,
-        "variable_mapping": {"test": "test_new"},
-    }
-    data = DatasetData(data_dict)
 
     # Act
-    data.write_output_file()
+    da_layer.write_output_file(dataset, path)
 
     # Assert
-    assert output_path.is_file()
+    assert path.is_file()
 
 
 def test_dataset_data_write_output_file_should_check_if_path_exists():
@@ -99,18 +94,14 @@ def test_dataset_data_write_output_file_should_check_if_path_exists():
     needs to be checked if it exists"""
 
     # Arrange
-    path = get_test_data_path() + "/FlowFM_net.nc"
-    output_path = Path("./non_existing_dir/results.nc")
-    data_dict = {
-        "filename": path,
-        "outputfilename": output_path,
-        "variable_mapping": {"test": "test_new"},
-    }
-    data = DatasetData(data_dict)
+    logger = Mock(ILogger)
+    path = Path("./non_existing_dir/results.nc")
+    da_layer = DataAccessLayer(logger)
+    dataset = Mock(_xr.Dataset)
 
     # Act
     with pytest.raises(FileExistsError) as exc_info:
-        data.write_output_file()
+        da_layer.write_output_file(dataset, path)
 
     exception_raised = exc_info.value
 
@@ -121,21 +112,17 @@ def test_dataset_data_write_output_file_should_check_if_path_exists():
 
 def test_dataset_data_write_output_file_should_check_if_extension_is_correct():
     """When calling write_output_file the provided path
-    needs to be checked if it exists"""
+    extension needs to be checked if it matches the currently implementation (netCDF files)"""
 
     # Arrange
-    path = get_test_data_path() + "/FlowFM_net.nc"
-    output_path = Path(get_test_data_path() + "/NonUgridFile.txt")
-    data_dict = {
-        "filename": path,
-        "outputfilename": output_path,
-        "variable_mapping": {"test": "test_new"},
-    }
-    data = DatasetData(data_dict)
+    logger = Mock(ILogger)
+    path = Path(str(get_test_data_path()) + "/NonUgridFile.txt")
+    da_layer = DataAccessLayer(logger)
+    dataset = Mock(_xr.Dataset)
 
     # Act
     with pytest.raises(NotImplementedError) as exc_info:
-        data.write_output_file()
+        da_layer.write_output_file(dataset, path)
 
     exception_raised = exc_info.value
 

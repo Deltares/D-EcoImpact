@@ -4,7 +4,6 @@ Tests for DatasetData class
 
 from pathlib import Path
 
-import pandas as pd
 import pytest
 import xarray as _xr
 
