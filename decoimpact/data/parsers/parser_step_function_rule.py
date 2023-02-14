@@ -3,7 +3,7 @@ Module for ParserStepFunctionRule class
 Classes:
     ParserStepFunctionRule
 """
-from typing import Any, Dict
+from typing import Any
 
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.dictionary_utils import get_dict_element

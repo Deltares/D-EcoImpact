@@ -29,4 +29,5 @@ class IStepFunctionRuleData(IRuleData, ABC):
     @property
     @abstractmethod
     def responses(self) -> List[float]:
-        """Responses corresponding to each of the intervals defining the step function rule"""
+        """Responses corresponding to each of the intervals
+        defining the step function rule"""

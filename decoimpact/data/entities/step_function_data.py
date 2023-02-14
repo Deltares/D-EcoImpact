@@ -22,8 +22,7 @@ class StepFunctionRuleData(IStepFunctionRuleData, RuleData):
         responses: List[float],
         input_variable: str,
         description: str = "",
-        output_variable: str = "output"
-        
+        output_variable: str = "output",
     ):
         super().__init__(name, output_variable, description)
         self._input_variable = input_variable
@@ -44,4 +43,3 @@ class StepFunctionRuleData(IStepFunctionRuleData, RuleData):
     def responses(self) -> List[float]:
         """Name of the input variable"""
         return self._responses
- 
