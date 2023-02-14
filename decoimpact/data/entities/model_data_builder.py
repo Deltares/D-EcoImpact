@@ -4,6 +4,8 @@ Module for ModelDataBuilder class
 
 from typing import Any, Iterable, List
 
+import xarray as _xr
+
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
@@ -24,22 +26,22 @@ class ModelDataBuilder:
 
     def parse_yaml_data(self, contents: dict[Any, Any]) -> IModelData:
         """Parse the Yaml input file into a data object"""
-        print('contennts', contents)
+        print("contents", contents)
 
         datasets = list(self._parse_datasets(contents))
+        output_dataset = self._parse_outputdataset(contents)
         rules = list(self._parse_rules(contents))
 
-        return YamlModelData("Model 1", datasets, rules)
+        return YamlModelData("Model 1", datasets, output_dataset, rules)
 
-    def _parse_datasets(
-                        self,
-                        contents: dict[str, Any]) -> Iterable[IDatasetData]:
-        datasets: List[dict[str, Any]] = get_dict_element(
-                                                          "input-data",
-                                                          contents)
+    def _parse_datasets(self, contents: dict[str, Any]) -> Iterable[IDatasetData]:
+        datasets: List[dict[str, Any]] = get_dict_element("input-data", contents)
 
         for dataset in datasets:
             yield DatasetData(get_dict_element("dataset", dataset))
+
+    def _parse_outputdataset(self, contents: dict[str, Any]) -> _xr.Dataset:
+        output_dataset: dict[str, Any] = get_dict_element("output-data", contents)
 
     def _parse_rules(self, contents: dict[str, Any]) -> Iterable[IRuleData]:
         rules: List[dict[str, Any]] = get_dict_element("rules", contents)

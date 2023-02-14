@@ -27,7 +27,3 @@ class IDatasetData(ABC):
     @abstractmethod
     def get_input_dataset(self) -> _xr.Dataset:
         """Read the dataset using the specified path"""
-
-    @abstractmethod
-    def get_output_dataset(self) -> _xr.Dataset:
-        """Read the dataset using the specified path"""
