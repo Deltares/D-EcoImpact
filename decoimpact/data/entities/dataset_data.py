@@ -30,8 +30,8 @@ class DatasetData(IDatasetData):
 
     def combine_mappings(self, dataset: dict[str, Any]) -> dict[str, Any]:
         """Conbines mapping specified in input file with system mapping.
-        Variables in system mapping have to be included in results to enable XUgrid support
-        and prevent invalid topologies.
+        Variables in system mapping have to be included in results to enable
+        XUgrid support and prevent invalid topologies.
         This also allows QuickPlot to visualise the results.
 
         Args:

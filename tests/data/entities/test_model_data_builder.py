@@ -54,4 +54,4 @@ def test_model_data_builder_gives_error_when_rule_not_defined():
 
     # Assert
     exc = exception_raised.args[0]
-    assert exc.endswith(f"No parser for wrong_rule")
+    assert exc.endswith("No parser for wrong_rule")
