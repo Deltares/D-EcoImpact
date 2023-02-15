@@ -10,7 +10,7 @@ from decoimpact.data.entities.model_data_builder import ModelDataBuilder
 contents = dict(
     {
         "input-data": [
-            {"dataset": {"filename": "test", "variabel_mapping": {"foo": "bar"}}}
+            {"dataset": {"filename": "test", "variable_mapping": {"foo": "bar"}}}
         ],
         "rules": [
             {

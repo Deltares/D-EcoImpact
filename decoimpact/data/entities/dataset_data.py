@@ -26,7 +26,28 @@ class DatasetData(IDatasetData):
         """
         super()
         self._path = Path(get_dict_element("filename", dataset)).resolve()
-        self._mapping = get_dict_element("variable_mapping", dataset, False)
+        self.combine_mappings(dataset)
+
+    def combine_mappings(self, dataset: dict[str, Any]) -> dict[str, Any]:
+        """Conbines mapping specified in input file with system mapping.
+        Variables in system mapping have to be included in results to enable XUgrid support
+        and prevent invalid topologies.
+        This also allows QuickPlot to visualise the results.
+
+        Args:
+            dataset (dict[str, Any]):
+        """
+        user_mapping = get_dict_element("variable_mapping", dataset, False)
+        system_mapping = {
+            "mesh2d": "mesh2d",
+            "mesh2d_face_nodes": "mesh2d_face_nodes",
+            "mesh2d_edge_nodes": "mesh2d_edge_nodes",
+            "mesh2d_face_x_bnd": "mesh2d_face_x_bnd",
+            "mesh2d_face_y_bnd": "mesh2d_face_y_bnd",
+            "mesh2d_flowelem_bl": "mesh2d_flowelem_bl",
+        }
+        self._mapping = user_mapping | system_mapping
+        return self._mapping
 
     @property
     def inputpath(self) -> str:
