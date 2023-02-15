@@ -4,8 +4,6 @@ Module for ModelDataBuilder class
 
 from typing import Any, Iterable, List
 
-import xarray as _xr
-
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
