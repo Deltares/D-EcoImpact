@@ -14,4 +14,4 @@ rules:
       output_variable: chloride
 
 output-data:
-  - output_filename: test/data/results.nc
+  - filename: test/data/results.nc

@@ -41,7 +41,12 @@ class ModelDataBuilder:
             yield DatasetData(get_dict_element("dataset", input_dataset))
 
     def _parse_output_dataset(self, contents: dict[str, Any]) -> str:
-        output_dataset: dict[str, Any] = get_dict_element("output-data", contents)
+        output_datasets: List[dict[str, Any]] = get_dict_element(
+            "output-data", contents
+        )
+
+        for output_dataset in output_datasets:
+            yield DatasetData(get_dict_element("filename", output_dataset))
 
     def _parse_rules(self, contents: dict[str, Any]) -> Iterable[IRuleData]:
         rules: List[dict[str, Any]] = get_dict_element("rules", contents)
