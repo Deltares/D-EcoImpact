@@ -29,6 +29,12 @@ class RuleProcessor:
             rules (List[IRule]): rules to process
             input_datasets (List[_xr.Dataset]): list of input datasets to use
         """
+        if len(rules) < 1:
+            raise ValueError("No rules defined.")
+
+        if len(input_datasets) < 1:
+            raise ValueError("No datasets defined.")
+
         self._rules = rules
         self._input_datasets = input_datasets
         self._processing_list: List[List[IRule]] = []
@@ -63,7 +69,14 @@ class RuleProcessor:
             output_dataset (_xr.Dataset): Dataset to place the rule
                                           results into
             logger (ILogger): logger for reporting messages
+
+        Raises:
+            RuntimeError: if initialization is not correctly done
         """
+        if len(self._processing_list) < 1:
+            message = "Processor is not properly initialized, please re-initialize"
+            raise RuntimeError(message)
+
         for rule_set in self._processing_list:
             for rule in rule_set:
                 logger.log_info(f"Starting rule {rule.name}")
