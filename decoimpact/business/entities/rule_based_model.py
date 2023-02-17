@@ -55,8 +55,13 @@ class RuleBasedModel(IModel):
 
     @property
     def input_datasets(self) -> List[_xr.Dataset]:
-        """Status of the model"""
+        """Input datasets for the model"""
         return self._input_datasets
+
+    @property
+    def output_dataset(self) -> _xr.Dataset:
+        """Output dataset produced by this model"""
+        return self._output_dataset
 
     def validate(self, logger: ILogger) -> bool:
         """Validates the model"""

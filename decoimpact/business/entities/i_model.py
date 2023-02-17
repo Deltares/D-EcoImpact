@@ -53,7 +53,12 @@ class IModel(ABC):
     @property
     @abstractmethod
     def input_datasets(self) -> List[_xr.Dataset]:
-        """Status of the model"""
+        """Input datasets for the model"""
+
+    @property
+    @abstractmethod
+    def output_dataset(self) -> _xr.Dataset:
+        """Output dataset produced by this model"""
 
     @abstractmethod
     def validate(self, logger: ILogger) -> bool:

@@ -75,7 +75,24 @@ def test_creating_rule_processor_without_rules_should_throw_exception():
     assert exception_raised.args[0] == expected_message
 
 
-def test_initialization_of_rule_processor_given_rule_dependencies():
+def test_creating_rule_processor_without_input_datasets_should_throw_exception():
+    """Test if input datasets are correctly checked during creation of the processor"""
+
+    # Arrange
+    rule = Mock(IRule)
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        RuleProcessor([rule], [])
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = "No datasets defined."
+    assert exception_raised.args[0] == expected_message
+
+
+def test_initialization_given_rule_dependencies():
     """Test if the processor can correctly initialize given
     the rule dependencies
     """
@@ -92,7 +109,7 @@ def test_initialization_of_rule_processor_given_rule_dependencies():
     assert processor.initialize(logger)
 
 
-def test_process_rules_of_rule_processor_given_rule_dependencies():
+def test_process_rules_given_rule_dependencies():
     """Test if the processor can correctly process_rules given
     the rule dependencies
     """
@@ -147,7 +164,7 @@ def test_process_rules_of_rule_processor_given_rule_dependencies():
         [[1, 2, 3], True],
     ],
 )
-def test_initialization_of_rule_processor_for_different_rule_dependencies(
+def test_initialization_for_different_rule_dependencies(
     indices_to_remove: List[int], expected_result: bool
 ):
     """Test if the processor can initialize given the rule dependencies"""
@@ -170,7 +187,7 @@ def test_initialization_of_rule_processor_for_different_rule_dependencies(
     assert expected_result == processor.initialize(logger)
 
 
-def test_process_rules_of_rule_processor_fails_for_uninitialized_processor():
+def test_process_rules_fails_for_uninitialized_processor():
     """Test if an error is thrown if process_rules is called on the processor
     when it is not properly initialized"""
 
@@ -195,7 +212,7 @@ def test_process_rules_of_rule_processor_fails_for_uninitialized_processor():
     assert exception_raised.args[0] == expected_message
 
 
-def test_process_rules_of_rule_processor_calls_IMultiArrayBasedRule_execute_correctly():
+def test_process_rules_calls_multi_array_based_rule_execute_correctly():
     """Test if during processing the rule its execute method of
     an IMultiArrayBasedRule is called with the right parameter"""
 
@@ -234,7 +251,7 @@ def test_process_rules_of_rule_processor_calls_IMultiArrayBasedRule_execute_corr
     _xr.testing.assert_equal(array_list[1], array2)
 
 
-def test_process_rules_of_rule_processor_calls_ICellBasedRule_execute_correctly():
+def test_process_rules_calls_cell_based_rule_execute_correctly():
     """Test if during processing the rule its execute method of
     an ICellBasedRule is called with the right parameter"""
 
@@ -266,7 +283,7 @@ def test_process_rules_of_rule_processor_calls_ICellBasedRule_execute_correctly(
     assert rule.execute.call_count == 6
 
 
-def test_process_rules_of_rule_processor_calls_IArrayBasedRule_execute_correctly():
+def test_process_rules_calls_array_based_rule_execute_correctly():
     """Test if during processing the rule its execute method of
     an IArrayBasedRule is called with the right parameter"""
 
@@ -302,7 +319,7 @@ def test_process_rules_of_rule_processor_calls_IArrayBasedRule_execute_correctly
     _xr.testing.assert_equal(array, input_array)
 
 
-def test_process_rules_of_rule_processor_throws_exception_for_IArrayBasedRule_with_multiple_inputs():
+def test_process_rules_throws_exception_for_array_based_rule_with_multiple_inputs():
     """Test if an error is thrown during processing of an IArrayBasedRule
     if two inputs were defined"""
 
@@ -333,7 +350,7 @@ def test_process_rules_of_rule_processor_throws_exception_for_IArrayBasedRule_wi
     assert exception_raised.args[0] == expected_message
 
 
-def test_process_rules_of_rule_processor_throws_exception_for_unsupported_rule():
+def test_process_rules_throws_exception_for_unsupported_rule():
     """Test if an error is thrown when trying to execute a rule that is
     not supported"""
 
