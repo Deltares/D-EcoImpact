@@ -8,9 +8,11 @@ Classes:
 
 from typing import Iterable, List, Tuple
 
+import numpy as _np
 import xarray as _xr
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
+from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
 )
@@ -61,7 +63,7 @@ class RuleProcessor:
 
         return success
 
-    def process_rules(self, output_dataset: _xr.Dataset, logger: ILogger):
+    def process_rules(self, output_dataset: _xr.Dataset, logger: ILogger) -> None:
         """Processes the rules defined in the initialize method
         and adds the results to the provided output_dataset
 
@@ -145,14 +147,39 @@ class RuleProcessor:
         if len(variables) != 1:
             raise NotImplementedError("Array based rule only supports one input")
 
-        if isinstance(rule, IArrayBasedRule):
-            return rule.execute(variables[0], logger)
+        input_variable = variables[0]
 
-        # todo: add cellbase rule running logic
-        # if isinstance(rule, ICellBasedRule):
-        #     return self._process_by_cell(rule, input_variable, self._dataset)
+        if isinstance(rule, IArrayBasedRule):
+            return rule.execute(input_variable, logger)
+
+        if isinstance(rule, ICellBasedRule):
+            return self._process_by_cell(rule, input_variable, logger)
 
         raise NotImplementedError(f"Can not execute rule {rule.name}.")
+
+    def _process_by_cell(
+        self, rule: ICellBasedRule, input_variable: _xr.DataArray, logger: ILogger
+    ) -> _xr.DataArray:
+        """Processes every value of the input_variable and creates a
+        new one from it
+
+        Args:
+            rule (ICellBasedRule): rule to process
+            input_variable (_xr.DataArray): input variable/data
+            logger (ILogger): logger for log messages
+
+        Returns:
+            _xr.DataArray: _description_
+        """
+        np_array = input_variable.to_numpy()
+        result_variable = _np.zeros_like(np_array)
+
+        for indices, value in _np.ndenumerate(np_array):
+            result_variable[indices] = rule.execute(value, logger)
+
+        # use copy to get the same dimensions as the
+        # original input variable
+        return input_variable.copy(data=result_variable)
 
     def _get_rule_input_variables(
         self, rule: IRule, output_dataset: _xr.Dataset

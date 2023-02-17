@@ -6,12 +6,14 @@ Tests for RuleBasedModel class
 from typing import List
 from unittest.mock import Mock
 
+import numpy as _np
 import pytest
 import xarray as _xr
 from mock import ANY
 
 from decoimpact.business.entities.rule_processor import RuleProcessor
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
+from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
 )
@@ -195,7 +197,7 @@ def test_process_rules_of_rule_processor_fails_for_uninitialized_processor():
 
 def test_process_rules_of_rule_processor_calls_IMultiArrayBasedRule_execute_correctly():
     """Test if during processing the rule its execute method of
-    a IMultiArrayBasedRule is called with the right parameter"""
+    an IMultiArrayBasedRule is called with the right parameter"""
 
     # Arrange
     input_dataset = _xr.Dataset()
@@ -232,9 +234,41 @@ def test_process_rules_of_rule_processor_calls_IMultiArrayBasedRule_execute_corr
     _xr.testing.assert_equal(array_list[1], array2)
 
 
+def test_process_rules_of_rule_processor_calls_ICellBasedRule_execute_correctly():
+    """Test if during processing the rule its execute method of
+    an ICellBasedRule is called with the right parameter"""
+
+    # Arrange
+    input_dataset = _xr.Dataset()
+    output_dataset = _xr.Dataset()
+    input_array = _xr.DataArray(_np.array([[1, 2, 3], [4, 5, 6]], _np.int32))
+
+    input_dataset["test"] = input_array
+
+    logger = Mock(ILogger)
+    rule = Mock(ICellBasedRule)
+
+    type(rule).input_variable_names = ["test"]
+    type(rule).output_variable_name = "output"
+
+    rule.execute.return_value = 1
+
+    processor = RuleProcessor([rule], [input_dataset])
+
+    # Act
+    assert processor.initialize(logger)
+    processor.process_rules(output_dataset, logger)
+
+    # Assert
+    assert len(output_dataset) == 1
+    assert rule.output_variable_name in output_dataset.keys()
+
+    assert rule.execute.call_count == 6
+
+
 def test_process_rules_of_rule_processor_calls_IArrayBasedRule_execute_correctly():
     """Test if during processing the rule its execute method of
-    a IArrayBasedRule is called with the right parameter"""
+    an IArrayBasedRule is called with the right parameter"""
 
     # Arrange
     input_dataset = _xr.Dataset()
