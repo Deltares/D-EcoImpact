@@ -1,6 +1,7 @@
 """
 Tests for LayerFilterRule class
 """
+import pytest
 import xarray as _xr
 
 from decoimpact.business.entities.rules.layer_filter_rule import LayerFilterRule
@@ -34,3 +35,20 @@ def test_execute_value_array_filtered():
 
     # Assert
     assert _xr.testing.assert_equal(filtered_array, result_array) is None
+
+
+def test_layer_number_out_of_range_exception():
+    """Test if layer number is within range"""
+
+    rule = LayerFilterRule("test", ["foo"], 4, "output", "description")
+    data = [[[1, 2, 3, 4]]]
+    value_array = _xr.DataArray(data)
+
+    with pytest.raises(IndexError) as exc_info:
+        rule.execute(value_array)
+
+    exception_raised = exc_info.value
+
+    expected_message = "Layer number should be within range [0,3]"
+
+    assert exception_raised.args[0] == expected_message

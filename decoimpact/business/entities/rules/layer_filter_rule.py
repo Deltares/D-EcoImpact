@@ -1,5 +1,5 @@
 """
-Module for LayerFilterRule interface
+Module for LayerFilterRule class
 
 Classes:
     LayerFilterRule
@@ -44,4 +44,12 @@ class LayerFilterRule(RuleBase, IArrayBasedRule):
         Returns:
             float: 2D variable
         """
+
+        if not (self._layer_number >= 0 and self._layer_number < len(value_array.dims)):
+            print("in if")
+            message = (
+                f"""Layer number should be within range [0,{len(value_array.dims)}]"""
+            )
+            raise IndexError(message)
+
         return value_array[:, :, self._layer_number - 1]

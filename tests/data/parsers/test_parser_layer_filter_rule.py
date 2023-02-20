@@ -86,7 +86,6 @@ def test_parse_layer_number_type():
         data.parse_dict(contents)
 
     exception_raised = exc_info.value
-    print("exception_raised", exception_raised)
 
     # Assert
     expected_message = "Layer number should be an integer, \
