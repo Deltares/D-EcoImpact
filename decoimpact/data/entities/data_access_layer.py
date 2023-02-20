@@ -70,7 +70,8 @@ class DataAccessLayer(IDataAccessLayer):
             raise NotImplementedError(message)
 
         try:
-            dataset: _xr.Dataset = _xr.open_dataset(dataset_data.path, mask_and_scale=True)
+            dataset: _xr.Dataset = _xr.open_dataset(dataset_data.path,
+                                                    mask_and_scale=True)
             # mask_and_scale argument is needed to prevent inclusion of NaN's
             # in dataset for missing values. This inclusion converts integers
             # to floats

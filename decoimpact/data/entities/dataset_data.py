@@ -9,8 +9,6 @@ Classes:
 from pathlib import Path
 from typing import Any
 
-import xarray as _xr
-
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.dictionary_utils import get_dict_element
 
