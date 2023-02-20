@@ -11,6 +11,7 @@ import xarray as _xr
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
+from decoimpact.crosscutting.i_logger import ILogger
 
 
 class LayerFilterRule(RuleBase, IArrayBasedRule):
@@ -33,7 +34,7 @@ class LayerFilterRule(RuleBase, IArrayBasedRule):
         """Layer number property"""
         return self._layer_number
 
-    def execute(self, value_array: _xr.DataArray) -> _xr.DataArray:
+    def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
 
         """Obtain a 2D layer from a 3D variable
 
@@ -51,6 +52,7 @@ class LayerFilterRule(RuleBase, IArrayBasedRule):
             message = (
                 f"""Layer number should be within range [0,{len(value_array.dims)}]"""
             )
+            logger.log_error(message)
             raise IndexError(message)
 
         return value_array[:, :, self._layer_number - 1]

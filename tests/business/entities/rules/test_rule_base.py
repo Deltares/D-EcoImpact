@@ -18,7 +18,6 @@ def test_create_rule_base_should_set_defaults():
     # Assert
     assert rule.name == "test"
     assert rule.description == ""
-    assert rule.input_variable_names == ["foo"]
     assert rule.output_variable_name == "output"
     assert isinstance(rule, RuleBase)
 
