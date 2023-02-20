@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 from decoimpact.business.application import Application
-from decoimpact.business.workflow.model_factory import ModelBuilder
+from decoimpact.business.workflow.model_builder import ModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.crosscutting.logger_factory import LoggerFactory
 from decoimpact.data.entities.data_access_layer import DataAccessLayer, IDataAccessLayer

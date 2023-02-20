@@ -8,7 +8,7 @@ from unittest.mock import Mock
 import pytest
 
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
-from decoimpact.business.workflow.model_factory import ModelBuilder
+from decoimpact.business.workflow.model_builder import ModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_dataset import IDatasetData
