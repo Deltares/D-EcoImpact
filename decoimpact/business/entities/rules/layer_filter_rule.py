@@ -45,8 +45,9 @@ class LayerFilterRule(RuleBase, IArrayBasedRule):
             float: 2D variable
         """
 
-        if not (self._layer_number >= 0 and self._layer_number < len(value_array.dims)):
-            print("in if")
+        if not (
+            self._layer_number >= 0 and self._layer_number <= len(value_array.dims)
+        ):
             message = (
                 f"""Layer number should be within range [0,{len(value_array.dims)}]"""
             )
