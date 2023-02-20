@@ -21,7 +21,7 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 
 class RuleProcessor:
-    """Model class for models based on rules"""
+    """Model class for processing models based on rules"""
 
     def __init__(self, rules: List[IRule], input_datasets: List[_xr.Dataset]) -> None:
         """Creates instance of a rule processor using the provided
@@ -42,7 +42,7 @@ class RuleProcessor:
         self._processing_list: List[List[IRule]] = []
 
     def initialize(self, logger: ILogger) -> bool:
-        """Creates an ordered list of rules arrays, where every rule array contains
+        """Creates an ordered list of rule arrays, where every rule array contains
         rules that can be processed simultaneously.
 
         Args:
@@ -56,7 +56,7 @@ class RuleProcessor:
             for key in dataset:
                 inputs.append(str(key))
 
-        tree, success = self._process_rules(inputs, list(self._rules), [], logger)
+        tree, success = self._create_rule_sets(inputs, list(self._rules), [], logger)
 
         if success:
             self._processing_list = tree
@@ -76,7 +76,7 @@ class RuleProcessor:
             RuntimeError: if initialization is not correctly done
         """
         if len(self._processing_list) < 1:
-            message = "Processor is not properly initialized, please re-initialize"
+            message = "Processor is not properly initialized, please initialize"
             raise RuntimeError(message)
 
         for rule_set in self._processing_list:
@@ -91,7 +91,7 @@ class RuleProcessor:
                     rule_result.values,
                 )
 
-    def _process_rules(
+    def _create_rule_sets(
         self,
         inputs: List[str],
         unprocessed_rules: List[IRule],
@@ -102,7 +102,9 @@ class RuleProcessor:
         solvable_rules = self._get_solvable_rules(inputs, unprocessed_rules)
 
         if len(solvable_rules) == 0:
-            logger.log_warning("Can not resolve all rules")
+            rules_list = [rule.name for rule in unprocessed_rules]
+            rules_text = ", ".join(rules_list)
+            logger.log_warning(f"Some rules can not be resolved: {rules_text}")
             return [], False
 
         for rule in solvable_rules:
@@ -112,7 +114,9 @@ class RuleProcessor:
         current_tree.append(solvable_rules)
 
         if len(unprocessed_rules) > 0:
-            return self._process_rules(inputs, unprocessed_rules, current_tree, logger)
+            return self._create_rule_sets(
+                inputs, unprocessed_rules, current_tree, logger
+            )
 
         return current_tree, True
 
@@ -201,4 +205,6 @@ class RuleProcessor:
         if name in output_dataset:
             return output_dataset[name]
 
-        raise KeyError(f"Key {name} was not found in ")
+        raise KeyError(
+            f"Key {name} was not found in input datasets or as calculated output"
+        )

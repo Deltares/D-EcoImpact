@@ -42,15 +42,20 @@ def _create_test_rules() -> List[IRule]:
     rule3 = Mock(IRule, id="rule3")
     rule4 = Mock(IRule, id="rule4")
 
-    type(rule1).input_variable_names = ["test"]
-    type(rule2).input_variable_names = ["test"]
-    type(rule3).input_variable_names = ["out1", "out2"]
-    type(rule4).input_variable_names = ["out3", "test"]
+    rule1.input_variable_names = ["test"]
+    rule2.input_variable_names = ["test"]
+    rule3.input_variable_names = ["out1", "out2"]
+    rule4.input_variable_names = ["out3", "test"]
 
-    type(rule1).output_variable_name = "out1"
-    type(rule2).output_variable_name = "out2"
-    type(rule3).output_variable_name = "out3"
-    type(rule4).output_variable_name = "out4"
+    rule1.output_variable_name = "out1"
+    rule2.output_variable_name = "out2"
+    rule3.output_variable_name = "out3"
+    rule4.output_variable_name = "out4"
+
+    rule1.name = "rule1"
+    rule2.name = "rule2"
+    rule3.name = "rule3"
+    rule4.name = "rule4"
 
     return [rule1, rule2, rule3, rule4]
 
@@ -126,13 +131,13 @@ def test_process_rules_given_rule_dependencies():
 
     logger = Mock(ILogger)
 
-    type(rule1).input_variable_names = ["test"]
-    type(rule2).input_variable_names = ["test"]
-    type(rule3).input_variable_names = ["out1", "out2"]
+    rule1.input_variable_names = ["test"]
+    rule2.input_variable_names = ["test"]
+    rule3.input_variable_names = ["out1", "out2"]
 
-    type(rule1).output_variable_name = "out1"
-    type(rule2).output_variable_name = "out2"
-    type(rule3).output_variable_name = "out3"
+    rule1.output_variable_name = "out1"
+    rule2.output_variable_name = "out2"
+    rule3.output_variable_name = "out3"
 
     rule1.execute.return_value = _xr.DataArray([1, 2, 3])
     rule2.execute.return_value = _xr.DataArray([4, 5, 6])
@@ -208,7 +213,7 @@ def test_process_rules_fails_for_uninitialized_processor():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = "Processor is not properly initialized, please re-initialize"
+    expected_message = "Processor is not properly initialized, please initialize"
     assert exception_raised.args[0] == expected_message
 
 
@@ -228,8 +233,8 @@ def test_process_rules_calls_multi_array_based_rule_execute_correctly():
     logger = Mock(ILogger)
     rule = Mock(IMultiArrayBasedRule)
 
-    type(rule).input_variable_names = ["test", "test2"]
-    type(rule).output_variable_name = "output"
+    rule.input_variable_names = ["test", "test2"]
+    rule.output_variable_name = "output"
     rule.execute.return_value = _xr.DataArray([4, 3, 2])
 
     processor = RuleProcessor([rule], [input_dataset])
@@ -265,8 +270,8 @@ def test_process_rules_calls_cell_based_rule_execute_correctly():
     logger = Mock(ILogger)
     rule = Mock(ICellBasedRule)
 
-    type(rule).input_variable_names = ["test"]
-    type(rule).output_variable_name = "output"
+    rule.input_variable_names = ["test"]
+    rule.output_variable_name = "output"
 
     rule.execute.return_value = 1
 
@@ -297,8 +302,8 @@ def test_process_rules_calls_array_based_rule_execute_correctly():
     logger = Mock(ILogger)
     rule = Mock(IArrayBasedRule)
 
-    type(rule).input_variable_names = ["test"]
-    type(rule).output_variable_name = "output"
+    rule.input_variable_names = ["test"]
+    rule.output_variable_name = "output"
     rule.execute.return_value = _xr.DataArray([4, 3, 2])
 
     processor = RuleProcessor([rule], [input_dataset])
@@ -333,8 +338,8 @@ def test_process_rules_throws_exception_for_array_based_rule_with_multiple_input
     logger = Mock(ILogger)
     rule = Mock(IArrayBasedRule)
 
-    type(rule).input_variable_names = ["test1", "test2"]
-    type(rule).output_variable_name = "output"
+    rule.input_variable_names = ["test1", "test2"]
+    rule.output_variable_name = "output"
 
     processor = RuleProcessor([rule], [input_dataset])
     assert processor.initialize(logger)
@@ -365,8 +370,8 @@ def test_process_rules_throws_exception_for_unsupported_rule():
     rule = Mock(IRule)
 
     rule.name = "test"
-    type(rule).input_variable_names = ["test"]
-    type(rule).output_variable_name = "output"
+    rule.input_variable_names = ["test"]
+    rule.output_variable_name = "output"
 
     processor = RuleProcessor([rule], [input_dataset])
     assert processor.initialize(logger)
@@ -378,5 +383,5 @@ def test_process_rules_throws_exception_for_unsupported_rule():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = "Can not execute rule test."
+    expected_message = f"Can not execute rule {rule.name}."
     assert exception_raised.args[0] == expected_message

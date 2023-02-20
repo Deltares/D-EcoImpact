@@ -63,8 +63,8 @@ def test_validation_of_rule_based_model():
 
     dataset["test"] = _xr.DataArray([32, 94, 9])
 
-    type(rule).input_variable_names = ["test"]
-    type(rule).output_variable_name = "output"
+    rule.input_variable_names = ["test"]
+    rule.output_variable_name = "output"
 
     no_rules_and_datasets_model = RuleBasedModel([], [])
     no_rules_model = RuleBasedModel([dataset], [])
@@ -121,13 +121,13 @@ def test_run_rule_based_model():
     rule2 = Mock(IArrayBasedRule, id="rule2")
     rule3 = Mock(IMultiArrayBasedRule, id="rule3")
 
-    type(rule1).input_variable_names = ["test"]
-    type(rule2).input_variable_names = ["test"]
-    type(rule3).input_variable_names = ["out1", "out2"]
+    rule1.input_variable_names = ["test"]
+    rule2.input_variable_names = ["test"]
+    rule3.input_variable_names = ["out1", "out2"]
 
-    type(rule1).output_variable_name = "out1"
-    type(rule2).output_variable_name = "out2"
-    type(rule3).output_variable_name = "out3"
+    rule1.output_variable_name = "out1"
+    rule2.output_variable_name = "out2"
+    rule3.output_variable_name = "out3"
 
     rule1.execute.return_value = _xr.DataArray([32, 94, 9])
     rule2.execute.return_value = _xr.DataArray([32, 94, 9])

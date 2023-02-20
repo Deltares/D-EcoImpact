@@ -98,5 +98,5 @@ class RuleBasedModel(IModel):
     def finalize(self, logger: ILogger) -> None:
         """Finalizes the model"""
 
-        logger.log_debug("Disposing the rule processor")
+        logger.log_debug("Finalize the rule processor")
         self._rule_processor = None
