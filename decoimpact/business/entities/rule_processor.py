@@ -98,7 +98,17 @@ class RuleProcessor:
         current_tree: List[List[IRule]],
         logger: ILogger,
     ) -> Tuple[List[List[IRule]], bool]:
+        """Creates an ordered list of rule-sets that can be processed in parallel.
 
+        Args:
+            inputs (List[str]): input names that are available to rules
+            unprocessed_rules (List[IRule]): rules that still need to be handled
+            current_tree (List[List[IRule]]): the current output list state
+            logger (ILogger): logger for logging messages
+
+        Returns:
+            Tuple[List[List[IRule]], bool]: Ordered list of rule-sets
+        """
         solvable_rules = self._get_solvable_rules(inputs, unprocessed_rules)
 
         if len(solvable_rules) == 0:
@@ -123,7 +133,15 @@ class RuleProcessor:
     def _get_solvable_rules(
         self, inputs: List[str], unprocessed_rules: List[IRule]
     ) -> List[IRule]:
+        """Checks which rules can be resolved using the provided "inputs" list
 
+        Args:
+            inputs (List[str]): available inputs to resolve rules with
+            unprocessed_rules (List[IRule]): rules that need need to be checked
+
+        Returns:
+            List[IRule]: list of rules that can be resolved with the provided inputs
+        """
         solvable_rules: List[IRule] = []
 
         for rule in unprocessed_rules:
