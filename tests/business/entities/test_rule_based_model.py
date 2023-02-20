@@ -5,6 +5,8 @@ Tests for RuleBasedModel class
 
 from unittest.mock import Mock
 
+import xarray as _xr
+
 from decoimpact.business.entities.i_model import ModelStatus
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.i_rule import IRule

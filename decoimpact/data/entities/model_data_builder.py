@@ -2,6 +2,8 @@
 Module for ModelDataBuilder class
 """
 
+from pathlib import Path
+from sqlite3 import NotSupportedError
 from typing import Any, Iterable, List
 
 from decoimpact.data.api.i_dataset import IDatasetData
@@ -24,22 +26,27 @@ class ModelDataBuilder:
 
     def parse_yaml_data(self, contents: dict[Any, Any]) -> IModelData:
         """Parse the Yaml input file into a data object"""
-        print('contennts', contents)
+        print("contents", contents)
 
-        datasets = list(self._parse_datasets(contents))
+        intput_datasets = list(self._parse_input_datasets(contents))
+        output_dataset = self._parse_output_dataset(contents)
         rules = list(self._parse_rules(contents))
 
-        return YamlModelData("Model 1", datasets, rules)
+        return YamlModelData("Model 1", intput_datasets, output_dataset, rules)
 
-    def _parse_datasets(
-                        self,
-                        contents: dict[str, Any]) -> Iterable[IDatasetData]:
-        datasets: List[dict[str, Any]] = get_dict_element(
-                                                          "input-data",
-                                                          contents)
+    def _parse_input_datasets(self, contents: dict[str, Any]) -> Iterable[IDatasetData]:
+        input_datasets: List[dict[str, Any]] = get_dict_element("input-data", contents)
 
-        for dataset in datasets:
-            yield DatasetData(get_dict_element("dataset", dataset))
+        for input_dataset in input_datasets:
+            yield DatasetData(get_dict_element("dataset", input_dataset))
+
+    def _parse_output_dataset(self, contents: dict[str, Any]) -> Path:
+        output_data: dict[str, Any] = get_dict_element("output-data", contents)
+
+        if len(output_data) != 1:
+            raise NotSupportedError("Only one output is currently supported")
+
+        return Path(output_data["filename"])
 
     def _parse_rules(self, contents: dict[str, Any]) -> Iterable[IRuleData]:
         rules: List[dict[str, Any]] = get_dict_element("rules", contents)

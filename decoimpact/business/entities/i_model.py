@@ -11,13 +11,14 @@ Classes:
 
 from abc import ABC, abstractmethod
 from enum import IntEnum
-
 from typing import List
+
 import xarray as _xr
 
 
 class ModelStatus(IntEnum):
     """Enum for the model status"""
+
     CREATED = 1
     INITIALIZING = 2
     INITIALIZED = 3
@@ -51,7 +52,12 @@ class IModel(ABC):
     @property
     @abstractmethod
     def input_datasets(self) -> List[_xr.Dataset]:
-        """Status of the model"""
+        """Input datasets of the model"""
+
+    @property
+    @abstractmethod
+    def output_dataset(self) -> _xr.Dataset:
+        """Output dataset of the model"""
 
     @abstractmethod
     def validate(self) -> bool:
