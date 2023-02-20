@@ -7,8 +7,7 @@ Interfaces:
 """
 
 from abc import ABC, abstractmethod
-
-import xarray as _xr
+from pathlib import Path
 
 
 class IDatasetData(ABC):
@@ -16,14 +15,10 @@ class IDatasetData(ABC):
 
     @property
     @abstractmethod
-    def inputpath(self) -> str:
+    def path(self) -> Path:
         """File path to the dataset"""
 
     @property
     @abstractmethod
     def mapping(self) -> dict[str, str]:
         """Variable name mapping (source to target)"""
-
-    @abstractmethod
-    def get_input_dataset(self) -> _xr.Dataset:
-        """Read the dataset using the specified path"""

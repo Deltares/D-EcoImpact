@@ -7,9 +7,8 @@ Interfaces:
 """
 
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import List
-
-import xarray as _xr
 
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_rule_data import IRuleData
@@ -30,8 +29,8 @@ class IModelData(ABC):
 
     @property
     @abstractmethod
-    def output_dataset(self) -> _xr.Dataset:
-        """Model dataset to write to output file"""
+    def output_path(self) -> Path:
+        """Model path to the output file"""
 
     @property
     @abstractmethod

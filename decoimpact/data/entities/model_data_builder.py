@@ -2,6 +2,8 @@
 Module for ModelDataBuilder class
 """
 
+from pathlib import Path
+from sqlite3 import NotSupportedError
 from typing import Any, Iterable, List
 
 from decoimpact.data.api.i_dataset import IDatasetData
@@ -38,13 +40,13 @@ class ModelDataBuilder:
         for input_dataset in input_datasets:
             yield DatasetData(get_dict_element("dataset", input_dataset))
 
-    def _parse_output_dataset(self, contents: dict[str, Any]) -> str:
-        output_datasets: List[dict[str, Any]] = get_dict_element(
-            "output-data", contents
-        )
+    def _parse_output_dataset(self, contents: dict[str, Any]) -> Path:
+        output_data: dict[str, Any] = get_dict_element("output-data", contents)
 
-        for output_dataset in output_datasets:
-            yield DatasetData(get_dict_element("filename", output_dataset))
+        if len(output_data) != 1:
+            raise NotSupportedError("Only one output is currently supported")
+
+        return Path(output_data["filename"])
 
     def _parse_rules(self, contents: dict[str, Any]) -> Iterable[IRuleData]:
         rules: List[dict[str, Any]] = get_dict_element("rules", contents)

@@ -11,6 +11,7 @@ from pathlib import Path
 
 import xarray as _xr
 
+from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 
 
@@ -26,6 +27,18 @@ class IDataAccessLayer(ABC):
 
         Returns:
             IModelData: Data regarding model
+        """
+
+    @abstractmethod
+    def read_input_dataset(self, dataset_data: IDatasetData) -> _xr.Dataset:
+        """Uses the provided dataset_data to create/read a xarray Dataset
+
+        Args:
+            dataset_data (IDatasetData): dataset data for creating an
+                                         xarray dataset
+
+        Returns:
+            _xr.Dataset: Dataset based on provided dataset_data
         """
 
     @abstractmethod

@@ -23,7 +23,7 @@ contents = dict(
                 }
             }
         ],
-        "output-data": [{"filename": "test"}],
+        "output-data": {"filename": "test"},
     }
 )
 

@@ -6,9 +6,8 @@ Classes:
 
 """
 
+from pathlib import Path
 from typing import List
-
-import xarray as _xr
 
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
@@ -22,13 +21,13 @@ class YamlModelData(IModelData):
         self,
         name: str,
         datasets: List[IDatasetData],
-        output_dataset: _xr.Dataset,
+        output_path: Path,
         rules: List[IRuleData],
     ):
         super()
         self._name = name
         self._datasets = datasets
-        self._output_dataset = output_dataset
+        self._output_path = output_path
         self._rules = rules
 
     @property
@@ -42,9 +41,9 @@ class YamlModelData(IModelData):
         return self._datasets
 
     @property
-    def output_dataset(self) -> _xr.Dataset:
-        """Output dataset of the model"""
-        return self._output_dataset
+    def output_path(self) -> Path:
+        """Model path to the output file"""
+        return self._output_path
 
     @property
     def rules(self) -> List[IRuleData]:

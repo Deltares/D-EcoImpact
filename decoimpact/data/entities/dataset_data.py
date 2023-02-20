@@ -26,13 +26,23 @@ class DatasetData(IDatasetData):
         """
         super()
         self._path = Path(get_dict_element("filename", dataset)).resolve()
-        self.combine_mappings(dataset)
+        self._combine_mappings(dataset)
 
-    def combine_mappings(self, dataset: dict[str, Any]) -> dict[str, Any]:
-        """Conbines mapping specified in input file with system mapping.
+    @property
+    def path(self) -> Path:
+        """File path to the input dataset"""
+        return self._path
+
+    @property
+    def mapping(self) -> dict[str, str]:
+        """Variable name mapping (source to target)"""
+        return self._mapping
+
+    def _combine_mappings(self, dataset: dict[str, Any]) -> dict[str, Any]:
+        """Combines mapping specified in input file with system mapping.
         Variables in system mapping have to be included in results to enable
         XUgrid support and prevent invalid topologies.
-        This also allows QuickPlot to visualise the results.
+        This also allows QuickPlot to visualize the results.
 
         Args:
             dataset (dict[str, Any]):
@@ -48,39 +58,3 @@ class DatasetData(IDatasetData):
         }
         self._mapping = user_mapping | system_mapping
         return self._mapping
-
-    @property
-    def inputpath(self) -> str:
-        """File path to the input dataset"""
-        return str(self._path)
-
-    @property
-    def mapping(self) -> dict[str, str]:
-        """Variable name mapping (source to target)"""
-        return self._mapping
-
-    def get_input_dataset(self) -> _xr.Dataset:
-        """XArray dataset for read from the specified path"""
-        return self._get_original_dataset()
-
-    def _get_original_dataset(self) -> _xr.Dataset:
-        if not Path.exists(self._path):
-            message = f"""The file {self._path} is not found. \
-                          Make sure the inputfile location is valid."""
-            raise FileExistsError(message)
-
-        if Path(self._path).suffix != ".nc":
-            message = f"""The file {self._path} is not supported. \
-                          Currently only UGrid (NetCDF) files are supported."""
-            raise NotImplementedError(message)
-
-        try:
-            dataset: _xr.Dataset = _xr.open_dataset(self._path, mask_and_scale=True)
-            # mask_and_scale argument is needed to prevent inclusion of NaN's
-            # in dataset for missing values. This inclusion converts integers
-            # to floats
-        except ValueError as exc:
-            msg = "ERROR: Cannot open input .nc file -- " + str(self._path)
-            raise ValueError(msg) from exc
-
-        return dataset

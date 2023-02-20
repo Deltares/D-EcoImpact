@@ -19,7 +19,6 @@ class RuleBasedModel(IModel):
     def __init__(
         self,
         input_datasets: List[_xr.Dataset],
-        output_dataset: _xr.Dataset,
         rules: List[IRule],
         name: str = "Rule-Based model",
     ) -> None:
@@ -28,7 +27,7 @@ class RuleBasedModel(IModel):
         self._status = ModelStatus.CREATED
         self._rules = rules
         self._input_datasets: List[_xr.Dataset] = input_datasets
-        self._output_dataset: _xr.Dataset = output_dataset
+        self._output_dataset: _xr.Dataset = _xr.Dataset()
 
     @property
     def name(self) -> str:

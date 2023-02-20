@@ -1,11 +1,10 @@
 """
-Module for ModelFactory class
+Module for ModelBuilder class
 
 Classes:
-    ModelFactory
+    ModelBuilder
 
 """
-
 
 from typing import Iterable, List
 
