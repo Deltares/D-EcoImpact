@@ -10,6 +10,7 @@ from abc import ABC
 from typing import List
 
 from decoimpact.business.entities.rules.i_rule import IRule
+from decoimpact.crosscutting.i_logger import ILogger
 
 
 class RuleBase(IRule, ABC):
@@ -20,7 +21,7 @@ class RuleBase(IRule, ABC):
         name: str,
         input_variable_names: List[str],
         output_variable_name: str = "output",
-        description: str = ""
+        description: str = "",
     ):
 
         self._name = name
@@ -53,11 +54,6 @@ class RuleBase(IRule, ABC):
         """Name of the input variable"""
         return self._input_variable_names
 
-    @input_variable_names.setter
-    def input_variable_names(self, input_variable_names: List[str]):
-        """Name of the input variable"""
-        self._input_variable_names = input_variable_names
-
     @property
     def output_variable_name(self) -> str:
         """Name of the output variable"""
@@ -67,3 +63,11 @@ class RuleBase(IRule, ABC):
     def output_variable_name(self, output_variable_name: str):
         """Name of the output variable"""
         self._output_variable_name = output_variable_name
+
+    def validate(self, logger: ILogger) -> bool:
+        """Validates if the rule is valid
+
+        Returns:
+            bool: wether the rule is valid
+        """
+        return True

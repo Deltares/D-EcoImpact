@@ -9,6 +9,8 @@ Interfaces:
 from abc import ABC, abstractmethod
 from typing import List
 
+from decoimpact.crosscutting.i_logger import ILogger
+
 
 class IRule(ABC):
 
@@ -33,3 +35,11 @@ class IRule(ABC):
     @abstractmethod
     def output_variable_name(self) -> str:
         """Name of the output variable"""
+
+    @abstractmethod
+    def validate(self, logger: ILogger) -> bool:
+        """Validates if the rule is valid
+
+        Returns:
+            bool: wether the rule is valid
+        """
