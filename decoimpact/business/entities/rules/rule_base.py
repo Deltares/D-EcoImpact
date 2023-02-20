@@ -21,7 +21,7 @@ class RuleBase(IRule, ABC):
         name: str,
         input_variable_names: List[str],
         output_variable_name: str = "output",
-        description: str = ""
+        description: str = "",
     ):
 
         self._name = name
@@ -53,11 +53,6 @@ class RuleBase(IRule, ABC):
     def input_variable_names(self) -> List[str]:
         """Name of the input variable"""
         return self._input_variable_names
-
-    @input_variable_names.setter
-    def input_variable_names(self, input_variable_names: List[str]):
-        """Name of the input variable"""
-        self._input_variable_names = input_variable_names
 
     @property
     def output_variable_name(self) -> str:
