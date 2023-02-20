@@ -10,7 +10,7 @@ from decoimpact.data.entities.model_data_builder import ModelDataBuilder
 contents = dict(
     {
         "input-data": [
-            {"dataset": {"filename": "test", "variabel_mapping": {"foo": "bar"}}}
+            {"dataset": {"filename": "test", "variable_mapping": {"foo": "bar"}}}
         ],
         "rules": [
             {
@@ -23,6 +23,7 @@ contents = dict(
                 }
             }
         ],
+        "output-data": {"filename": "test"},
     }
 )
 
@@ -53,4 +54,4 @@ def test_model_data_builder_gives_error_when_rule_not_defined():
 
     # Assert
     exc = exception_raised.args[0]
-    assert exc.endswith(f"No parser for wrong_rule")
+    assert exc.endswith("No parser for wrong_rule")

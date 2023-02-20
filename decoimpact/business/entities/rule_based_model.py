@@ -30,7 +30,7 @@ class RuleBasedModel(IModel):
         self._status = ModelStatus.CREATED
         self._rules = rules
         self._input_datasets: List[_xr.Dataset] = input_datasets
-        self._output_dataset = _xr.Dataset()
+        self._output_dataset: _xr.Dataset = _xr.Dataset()
         self._rule_processor: RuleProcessor
 
     @property

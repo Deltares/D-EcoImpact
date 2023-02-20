@@ -5,6 +5,8 @@ Tests for YamlModelData class
 
 from unittest.mock import Mock
 
+import xarray as _xr
+
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
@@ -20,9 +22,10 @@ def test_yaml_model_data_default_settings_and_type():
     # Arrange
     datasets = [Mock(DatasetData)]
     rules = [Mock(MultiplyRuleData)]
+    output_dataset = Mock(_xr.Dataset)
 
     # Act
-    model_data = YamlModelData("Model 1", datasets, rules)
+    model_data = YamlModelData("Model 1", datasets, output_dataset, rules)
 
     # Assert
 

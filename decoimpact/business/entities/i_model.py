@@ -20,6 +20,7 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 class ModelStatus(IntEnum):
     """Enum for the model status"""
+
     CREATED = 1
     INITIALIZING = 2
     INITIALIZED = 3
