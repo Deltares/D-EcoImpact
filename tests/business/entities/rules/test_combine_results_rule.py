@@ -8,7 +8,9 @@ import pytest
 import xarray as _xr
 
 from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
-from decoimpact.business.entities.rules.operation_type import OperationType
+from decoimpact.business.entities.rules.multi_array_operation_type import (
+    MultiArrayOperationType,
+)
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -17,13 +19,13 @@ def test_create_combine_results_rule_should_set_defaults():
 
     # Arrange & Act
     rule = CombineResultsRule(
-        "test", ["foo", "hello"], OperationType.MULTIPLY, "output"
+        "test", ["foo", "hello"], MultiArrayOperationType.MULTIPLY, "output"
     )
     # Assert
     assert rule.name == "test"
     assert rule.description == ""
     assert rule.input_variable_names == ["foo", "hello"]
-    assert rule.operation_type == OperationType.MULTIPLY
+    assert rule.operation_type == MultiArrayOperationType.MULTIPLY
     assert rule.output_variable_name == "output"
     assert isinstance(rule, CombineResultsRule)
 
@@ -34,7 +36,7 @@ def test_execute_value_array_combine_results_rule_check_ndim():
     # Arrange & Act
     logger = Mock(ILogger)
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.MULTIPLY, "output"
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
     )
     foo_data = [1, 2, 3]
     hello_data = [4, 3, 2, 1]
@@ -57,7 +59,7 @@ def test_execute_value_array_combine_results_rule_check_shape():
     # Arrange & Act
     logger = Mock(ILogger)
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.MULTIPLY, "output"
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
     )
     foo_data = [[1, 2], [3, 4]]
     hello_data = [4, 3, 2, 1]
@@ -80,7 +82,7 @@ def test_execute_value_array_combine_results_rule_multiply():
     # Arrange & Act
     logger = Mock(ILogger)
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.MULTIPLY, "output"
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
     )
     foo_data = [1, 2, 3, 4]
     hello_data = [4, 3, 2, 1]
@@ -102,7 +104,7 @@ def test_execute_value_array_combine_results_rule_min():
     # Arrange & Act
     logger = Mock(ILogger)
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.MIN, "output"
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MIN, "output"
     )
     foo_data = [1, 2, 3, 4]
     hello_data = [4, 3, 2, 1]
@@ -124,7 +126,7 @@ def test_execute_value_array_combine_results_rule_max():
     # Arrange & Act
     logger = Mock(ILogger)
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.MAX, "output"
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MAX, "output"
     )
     foo_data = [1, 2, 3, 4]
     hello_data = [4, 3, 2, 1]
@@ -146,7 +148,7 @@ def test_execute_value_array_combine_results_rule_average():
     # Arrange & Act
     logger = Mock(ILogger)
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.AVERAGE, "output"
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.AVERAGE, "output"
     )
     foo_data = [1, 2, 3, 4]
     hello_data = [5, 3, 2, 1]
@@ -168,7 +170,7 @@ def test_execute_value_array_combine_results_rule_median():
     # Arrange & Act
     logger = Mock(ILogger)
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.MEDIAN, "output"
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MEDIAN, "output"
     )
     foo_data = [1, 2, 3, 4]
     hello_data = [5, 3, 2, 1]
@@ -190,7 +192,7 @@ def test_execute_value_array_combine_results_rule_add():
     # Arrange & Act
     logger = Mock(ILogger)
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.ADD, "output"
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.ADD, "output"
     )
     foo_data = [1, 2, 3, 4]
     hello_data = [5, 3, 2, 1]
@@ -212,7 +214,7 @@ def test_execute_value_array_combine_results_rule_substract():
     # Arrange & Act
     logger = Mock(ILogger)
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], OperationType.SUBSTRACT, "output"
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.SUBSTRACT, "output"
     )
     foo_data = [1, 2, 3, 4]
     hello_data = [5, 3, 2, 1]

@@ -10,7 +10,7 @@ from decoimpact.data.parsers.parser_combine_results_rule import ParserCombineRes
 
 
 def test_parser_combine_results_rule_creation_logic():
-    """The ParserMultiplyRule should parse the provided dictionary
+    """The ParserCombinResultsRule should parse the provided dictionary
     to correctly initialize itself during creation"""
 
     # Act

@@ -12,8 +12,10 @@ from decoimpact.business.entities.i_model import IModel
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
 from decoimpact.business.entities.rules.i_rule import IRule
+from decoimpact.business.entities.rules.multi_array_operation_type import (
+    MultiArrayOperationType,
+)
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
-from decoimpact.business.entities.rules.operation_type import OperationType
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_combine_results_rule_data import ICombineResultsRuleData
@@ -66,7 +68,7 @@ class ModelBuilder(IModelBuilder):
             return CombineResultsRule(
                 rule_data.name,
                 rule_data.input_variable_names,
-                OperationType[rule_data.operation_type],
+                MultiArrayOperationType[rule_data.operation_type],
                 rule_data.output_variable,
             )
 

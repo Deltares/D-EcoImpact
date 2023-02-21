@@ -14,7 +14,9 @@ import xarray as _xr
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
 )
-from decoimpact.business.entities.rules.operation_type import OperationType
+from decoimpact.business.entities.rules.multi_array_operation_type import (
+    MultiArrayOperationType,
+)
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.crosscutting.i_logger import ILogger
 
@@ -26,14 +28,14 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         self,
         name: str,
         input_variable_names: List[str],
-        operation_type: OperationType,
+        operation_type: MultiArrayOperationType,
         output_variable_name: str,
     ):
         super().__init__(name, input_variable_names, output_variable_name)
         self._operation_type = operation_type
 
     @property
-    def operation_type(self) -> OperationType:
+    def operation_type(self) -> MultiArrayOperationType:
         """Name of the rule"""
         return self._operation_type
 
@@ -52,7 +54,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         if not self._check_dimensions(np_arrays):
             raise ValueError("The arrays are not in the same dimension/shape!")
 
-        if self._operation_type is OperationType.MULTIPLY:
+        if self._operation_type is MultiArrayOperationType.MULTIPLY:
             result = np_arrays[0]
 
             for a_array in np_arrays[1:]:
@@ -62,19 +64,19 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         # notice: multiply, we mean all the array multiply with the
         # all arrays, number by number.
 
-        if self._operation_type is OperationType.MIN:
+        if self._operation_type is MultiArrayOperationType.MIN:
             return _xr.DataArray(_np.min(np_arrays, axis=0))
 
-        if self._operation_type is OperationType.MAX:
+        if self._operation_type is MultiArrayOperationType.MAX:
             return _xr.DataArray(_np.max(np_arrays, axis=0))
 
-        if self._operation_type is OperationType.AVERAGE:
+        if self._operation_type is MultiArrayOperationType.AVERAGE:
             return _xr.DataArray(_np.average(np_arrays, axis=0))
 
-        if self._operation_type is OperationType.MEDIAN:
+        if self._operation_type is MultiArrayOperationType.MEDIAN:
             return _xr.DataArray(_np.median(np_arrays, axis=0))
 
-        if self._operation_type is OperationType.ADD:
+        if self._operation_type is MultiArrayOperationType.ADD:
             result = np_arrays[0]
 
             for a_array in np_arrays[1:]:
@@ -83,7 +85,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
             return _xr.DataArray(result)
         # notice: Add, we mean all the array add with the all arrays, number by number.
 
-        if self._operation_type is OperationType.SUBSTRACT:
+        if self._operation_type is MultiArrayOperationType.SUBSTRACT:
             result = np_arrays[0]
 
             for a_array in np_arrays[1:]:
@@ -96,8 +98,14 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         # arrays, number by number.
 
     def _check_dimensions(self, np_arrays: List[_np.array]) -> bool:
-        # brief check if all the arrays to be combined are in the
-        # same size/dimension/length
+        """Brief check if all the arrays to be combined are in the
+           same size/dimension/length
+        Args:
+            np_arrays: List of numpy arrays
+        Returns:
+            Boolean: True of False
+        """
+
         expected_dimensions = np_arrays[0].ndim
 
         for a_array in np_arrays[1:]:
