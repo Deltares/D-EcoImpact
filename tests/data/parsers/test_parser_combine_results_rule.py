@@ -1,5 +1,5 @@
 """
-Tests for ParserMultiplyRule class
+Tests for ParserCombinResultsRule class
 """
 
 import pytest

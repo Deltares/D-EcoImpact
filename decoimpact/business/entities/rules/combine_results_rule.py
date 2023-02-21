@@ -1,5 +1,5 @@
 """
-Module for CombineResultsRule interface
+Module for CombineResultsRule Class
 
 Classes:
     CombineResultsRule
@@ -19,7 +19,7 @@ from decoimpact.business.entities.rules.rule_base import RuleBase
 
 
 class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
-    """Implementation for the multiply rule"""
+    """Implementation for the combine results rule"""
 
     def __init__(
         self,
@@ -37,16 +37,12 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         return self._operation_type
 
     def execute(self, input_arrays: List[_xr.DataArray]) -> _xr.DataArray:
-        # type: ignore
         """Calculate simple statistic variables from two/more input arrays
         Args:
             input_arrays (DataArray): array list  containing the variables
         Returns:
             DataArray: Input arrays
         """
-
-        # if self._operation_type.value > 7:
-        #    raise ValueError(f"Unsupported operation type {self._operation_type.name}")
 
         np_arrays = [a_array.to_numpy() for a_array in input_arrays]
 

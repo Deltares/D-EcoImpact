@@ -67,6 +67,6 @@ class ModelFactory:
             )
 
         error_str = (
-            f"The rule type of rule '{rule_data.name}' is currently " "not implemented"
+            f"The rule type of rule {rule_data.name} is currently " "not implemented"
         )
         raise NotImplementedError(error_str)

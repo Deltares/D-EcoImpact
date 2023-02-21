@@ -2,7 +2,7 @@
 Module for Parser CombineResultsRule class
 
 Classes:
-    MultiplyRuleParser
+    CombineResultsRuleParser
 """
 from typing import Any, Dict
 

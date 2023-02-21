@@ -23,4 +23,4 @@ class ICombineResultsRuleData(IRuleData, ABC):
     @property
     @abstractmethod
     def operation_type(self) -> str:
-        """Name of the input variable"""
+        """Property for the operation_type"""

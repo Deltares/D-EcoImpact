@@ -1,5 +1,5 @@
 """
-Tests for MultiplyRuleData class
+Tests for CombineResultsRuleData class
 """
 
 
