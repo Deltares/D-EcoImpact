@@ -1,42 +1,43 @@
 """
-Module for ModelFactory class
+Module for ModelBuilder class
 
 Classes:
-    ModelFactory
+    ModelBuilder
 
 """
-
 
 from typing import Iterable, List
 
 from decoimpact.business.entities.i_model import IModel
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
-from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
-from decoimpact.business.entities.rules.operation_type import OperationType
+from decoimpact.business.workflow.i_model_builder import IModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
-from decoimpact.data.api.i_combine_results_rule_data import ICombineResultsRuleData
+from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
 from decoimpact.data.api.i_rule_data import IRuleData
 
 
-class ModelFactory:
+class ModelBuilder(IModelBuilder):
     """Factory for creating models"""
 
-    @staticmethod
-    def create_model(logger: ILogger, model_data: IModelData) -> IModel:
-        """Creates an RuleBasedModel
+    def __init__(self, da_layer: IDataAccessLayer, logger: ILogger) -> None:
+        self._logger = logger
+        self._da_layer = da_layer
+
+    def build_model(self, model_data: IModelData) -> IModel:
+        """Creates an model based on model data
 
         Returns:
-            RuleBasedModel: instance of a RuleBasedModel
+            IModel: instance of a model based on model data
         """
 
-        logger.log_info("Creating rule-based model")
+        self._logger.log_info("Creating rule-based model")
 
-        datasets = [ds.get_input_dataset() for ds in model_data.datasets]
-        rules = list(ModelFactory._create_rules(model_data.rules))
+        datasets = [self._da_layer.read_input_dataset(ds) for ds in model_data.datasets]
+        rules = list(ModelBuilder._create_rules(model_data.rules))
 
         model: IModel = RuleBasedModel(datasets, rules, model_data.name)
 
@@ -45,7 +46,7 @@ class ModelFactory:
     @staticmethod
     def _create_rules(rule_data: List[IRuleData]) -> Iterable[IRule]:
         for rule_data_object in rule_data:
-            yield ModelFactory._create_rule(rule_data_object)
+            yield ModelBuilder._create_rule(rule_data_object)
 
     @staticmethod
     def _create_rule(rule_data: IRuleData) -> IRule:
@@ -58,15 +59,7 @@ class ModelFactory:
                 rule_data.output_variable,
             )
 
-        if isinstance(rule_data, ICombineResultsRuleData):
-            return CombineResultsRule(
-                rule_data.name,
-                rule_data.input_variable_names,
-                OperationType[rule_data.operation_type],
-                rule_data.output_variable,
-            )
-
         error_str = (
-            f"The rule type of rule {rule_data.name} is currently " "not implemented"
+            f"The rule type of rule '{rule_data.name}' is currently " "not implemented"
         )
         raise NotImplementedError(error_str)

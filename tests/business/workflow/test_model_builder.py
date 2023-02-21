@@ -8,26 +8,24 @@ from unittest.mock import Mock
 import pytest
 
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
-from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
-from decoimpact.business.entities.rules.i_rule import IRule
-from decoimpact.business.entities.rules.operation_type import OperationType
-from decoimpact.business.workflow.model_factory import ModelFactory
+from decoimpact.business.workflow.model_builder import ModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
-from decoimpact.data.entities.combine_results_rule_data import CombineResultsRuleData
 from decoimpact.data.entities.multiply_rule_data import MultiplyRuleData
 
 
 def test_create_rule_based_model():
-    """Test creating a rule-based model via factory"""
+    """Test creating a rule-based model via builder"""
 
     # Arrange
     logger = Mock(ILogger)
     model_data = Mock(IModelData)
     dataset = Mock()
     dataset_data = Mock(IDatasetData)
+    da_layer = Mock(IDataAccessLayer)
 
     rules_data = MultiplyRuleData("abc", [2, 5.86], "a", "b")
 
@@ -35,10 +33,11 @@ def test_create_rule_based_model():
     model_data.datasets = [dataset_data]
     model_data.rules = [rules_data]
 
-    dataset_data.get_input_dataset.return_value = dataset
+    da_layer.read_input_dataset.return_value = dataset
+    model_builder = ModelBuilder(da_layer, logger)
 
     # Act
-    model = ModelFactory.create_model(logger, model_data)
+    model = model_builder.build_model(model_data)
 
     # Assert
 
@@ -51,23 +50,6 @@ def test_create_rule_based_model():
     logger.log_info.assert_called_once()
 
 
-def test_create_combine_results_rule_from_data_object():
-    """Test creating a rule-based model via factory"""
-
-    # Arrange
-    rule_data = CombineResultsRuleData("abc", ["a", "b"], "MULTIPLY", "c")
-
-    # Act
-    rule = ModelFactory._create_rule(rule_data)
-
-    # Assert
-    assert isinstance(rule, CombineResultsRule)
-    assert rule.name == "abc"
-    assert rule.input_variable_names == ["a", "b"]
-    assert rule.operation_type == OperationType.MULTIPLY
-    assert rule.output_variable_name == "c"
-
-
 def test_create_rule_based_model_with_non_supported_rule():
     """Test creating a rule-based model with a rule that is
     not supported/recognized by the builder.
@@ -77,6 +59,7 @@ def test_create_rule_based_model_with_non_supported_rule():
     logger = Mock(ILogger)
     model_data = Mock(IModelData)
     dataset_data = Mock(IDatasetData)
+    da_layer = Mock(IDataAccessLayer)
 
     rules_data = Mock(IRuleData)
 
@@ -86,11 +69,11 @@ def test_create_rule_based_model_with_non_supported_rule():
     model_data.datasets = [dataset_data]
     model_data.rules = [rules_data]
 
-    dataset_data.get_input_dataset.return_value = []
+    model_builder = ModelBuilder(da_layer, logger)
 
     # Act & Assert
     with pytest.raises(NotImplementedError) as exc_info:
-        ModelFactory.create_model(logger, model_data)
+        model_builder.build_model(model_data)
 
     exception_raised = exc_info.value
 
