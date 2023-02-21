@@ -23,8 +23,6 @@ def main(path: Path):
     da_layer: IDataAccessLayer = DataAccessLayer(logger)
     model_builder = ModelBuilder(da_layer, logger)
 
-    # CONVERT input_path TO PATHS! TO DO
-
     # create and run application
     application = Application(logger, da_layer, model_builder)
     application.run(path)
