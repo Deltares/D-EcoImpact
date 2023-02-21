@@ -2,11 +2,14 @@
 Tests for RuleBase class
 """
 
+from unittest.mock import Mock
+
 import pytest
 import xarray as _xr
 
 from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
 from decoimpact.business.entities.rules.operation_type import OperationType
+from decoimpact.crosscutting.i_logger import ILogger
 
 
 def test_create_combine_results_rule_should_set_defaults():
@@ -29,6 +32,7 @@ def test_execute_value_array_combine_results_rule_check_ndim():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
+    logger = Mock(ILogger)
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], OperationType.MULTIPLY, "output"
     )
@@ -39,7 +43,7 @@ def test_execute_value_array_combine_results_rule_check_ndim():
 
     # Act
     with pytest.raises(ValueError) as exc_info:
-        multiplied_array = rule.execute([value_array1, value_array2])
+        rule.execute([value_array1, value_array2], logger)
 
     exception_raised = exc_info.value
 
@@ -51,6 +55,7 @@ def test_execute_value_array_combine_results_rule_check_shape():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
+    logger = Mock(ILogger)
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], OperationType.MULTIPLY, "output"
     )
@@ -61,7 +66,7 @@ def test_execute_value_array_combine_results_rule_check_shape():
 
     # Act
     with pytest.raises(ValueError) as exc_info:
-        multiplied_array = rule.execute([value_array1, value_array2])
+        rule.execute([value_array1, value_array2], logger)
 
     exception_raised = exc_info.value
 
@@ -73,6 +78,7 @@ def test_execute_value_array_combine_results_rule_multiply():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
+    logger = Mock(ILogger)
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], OperationType.MULTIPLY, "output"
     )
@@ -81,7 +87,7 @@ def test_execute_value_array_combine_results_rule_multiply():
     value_array1 = _xr.DataArray(foo_data)
     value_array2 = _xr.DataArray(hello_data)
 
-    multiplied_array = rule.execute([value_array1, value_array2])
+    multiplied_array = rule.execute([value_array1, value_array2], logger)
 
     result_data = [4.0, 6.0, 6.0, 4.0]
     result_array = _xr.DataArray(result_data)
@@ -94,6 +100,7 @@ def test_execute_value_array_combine_results_rule_min():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
+    logger = Mock(ILogger)
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], OperationType.MIN, "output"
     )
@@ -102,7 +109,7 @@ def test_execute_value_array_combine_results_rule_min():
     value_array1 = _xr.DataArray(foo_data)
     value_array2 = _xr.DataArray(hello_data)
 
-    min_array = rule.execute([value_array1, value_array2])
+    min_array = rule.execute([value_array1, value_array2], logger)
 
     result_data = [1.0, 2.0, 2.0, 1.0]
     result_array = _xr.DataArray(result_data)
@@ -115,6 +122,7 @@ def test_execute_value_array_combine_results_rule_max():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
+    logger = Mock(ILogger)
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], OperationType.MAX, "output"
     )
@@ -123,7 +131,7 @@ def test_execute_value_array_combine_results_rule_max():
     value_array1 = _xr.DataArray(foo_data)
     value_array2 = _xr.DataArray(hello_data)
 
-    max_array = rule.execute([value_array1, value_array2])
+    max_array = rule.execute([value_array1, value_array2], logger)
 
     result_data = [4.0, 3.0, 3.0, 4.0]
     result_array = _xr.DataArray(result_data)
@@ -136,6 +144,7 @@ def test_execute_value_array_combine_results_rule_average():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
+    logger = Mock(ILogger)
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], OperationType.AVERAGE, "output"
     )
@@ -144,7 +153,7 @@ def test_execute_value_array_combine_results_rule_average():
     value_array1 = _xr.DataArray(foo_data)
     value_array2 = _xr.DataArray(hello_data)
 
-    ave_array = rule.execute([value_array1, value_array2])
+    ave_array = rule.execute([value_array1, value_array2], logger)
 
     result_data = [3, 2.5, 2.5, 2.5]
     result_array = _xr.DataArray(result_data)
@@ -157,6 +166,7 @@ def test_execute_value_array_combine_results_rule_median():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
+    logger = Mock(ILogger)
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], OperationType.MEDIAN, "output"
     )
@@ -165,7 +175,7 @@ def test_execute_value_array_combine_results_rule_median():
     value_array1 = _xr.DataArray(foo_data)
     value_array2 = _xr.DataArray(hello_data)
 
-    medi_array = rule.execute([value_array1, value_array2])
+    medi_array = rule.execute([value_array1, value_array2], logger)
 
     result_data = [3, 2.5, 2.5, 2.5]
     result_array = _xr.DataArray(result_data)
@@ -178,6 +188,7 @@ def test_execute_value_array_combine_results_rule_add():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
+    logger = Mock(ILogger)
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], OperationType.ADD, "output"
     )
@@ -186,7 +197,7 @@ def test_execute_value_array_combine_results_rule_add():
     value_array1 = _xr.DataArray(foo_data)
     value_array2 = _xr.DataArray(hello_data)
 
-    add_array = rule.execute([value_array1, value_array2])
+    add_array = rule.execute([value_array1, value_array2], logger)
 
     result_data = [6, 5, 5, 5]
     result_array = _xr.DataArray(result_data)
@@ -199,6 +210,7 @@ def test_execute_value_array_combine_results_rule_substract():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
+    logger = Mock(ILogger)
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], OperationType.SUBSTRACT, "output"
     )
@@ -207,7 +219,7 @@ def test_execute_value_array_combine_results_rule_substract():
     value_array1 = _xr.DataArray(foo_data)
     value_array2 = _xr.DataArray(hello_data)
 
-    subs_array = rule.execute([value_array1, value_array2])
+    subs_array = rule.execute([value_array1, value_array2], logger)
 
     result_data = [-4, -1, 1, 3]
     result_array = _xr.DataArray(result_data)

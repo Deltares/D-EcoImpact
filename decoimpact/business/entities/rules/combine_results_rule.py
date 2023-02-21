@@ -16,6 +16,7 @@ from decoimpact.business.entities.rules.i_multi_array_based_rule import (
 )
 from decoimpact.business.entities.rules.operation_type import OperationType
 from decoimpact.business.entities.rules.rule_base import RuleBase
+from decoimpact.crosscutting.i_logger import ILogger
 
 
 class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
@@ -36,7 +37,9 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         """Name of the rule"""
         return self._operation_type
 
-    def execute(self, input_arrays: List[_xr.DataArray]) -> _xr.DataArray:
+    def execute(
+        self, value_arrays: List[_xr.DataArray], logger: ILogger
+    ) -> _xr.DataArray:
         """Calculate simple statistic variables from two/more input arrays
         Args:
             input_arrays (DataArray): array list  containing the variables
@@ -44,7 +47,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
             DataArray: Input arrays
         """
 
-        np_arrays = [a_array.to_numpy() for a_array in input_arrays]
+        np_arrays = [a_array.to_numpy() for a_array in value_arrays]
 
         if not self._check_dimensions(np_arrays):
             raise ValueError("The arrays are not in the same dimension/shape!")
@@ -60,19 +63,15 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         # all arrays, number by number.
 
         if self._operation_type is OperationType.MIN:
-            np_arrays = [a_array.to_numpy() for a_array in input_arrays]
             return _xr.DataArray(_np.min(np_arrays, axis=0))
 
         if self._operation_type is OperationType.MAX:
-            np_arrays = [a_array.to_numpy() for a_array in input_arrays]
             return _xr.DataArray(_np.max(np_arrays, axis=0))
 
         if self._operation_type is OperationType.AVERAGE:
-            np_arrays = [a_array.to_numpy() for a_array in input_arrays]
             return _xr.DataArray(_np.average(np_arrays, axis=0))
 
         if self._operation_type is OperationType.MEDIAN:
-            np_arrays = [a_array.to_numpy() for a_array in input_arrays]
             return _xr.DataArray(_np.median(np_arrays, axis=0))
 
         if self._operation_type is OperationType.ADD:
@@ -91,6 +90,8 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
                 result = _np.subtract(result, a_array)
 
             return _xr.DataArray(result)
+
+        raise NotImplementedError("")
         # notice: Substract, we mean all the array Substract with the all
         # arrays, number by number.
 

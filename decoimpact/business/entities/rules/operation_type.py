@@ -1,3 +1,9 @@
+"""
+Module for OperationType Class
+
+Classes:
+    OperationType
+"""
 from enum import IntEnum
 
 
