@@ -22,6 +22,7 @@ class RuleBasedModel(IModel):
     def __init__(
         self,
         input_datasets: List[_xr.Dataset],
+        mappings: List[str],
         rules: List[IRule],
         name: str = "Rule-Based model",
     ) -> None:
@@ -30,6 +31,7 @@ class RuleBasedModel(IModel):
         self._status = ModelStatus.CREATED
         self._rules = rules
         self._input_datasets: List[_xr.Dataset] = input_datasets
+        self._mappings = List[str] = mappings
         self._output_dataset: _xr.Dataset = _xr.Dataset()
         self._rule_processor: RuleProcessor
 
@@ -87,15 +89,15 @@ class RuleBasedModel(IModel):
         self._rule_processor = RuleProcessor(self._rules, self._input_datasets)
         success = self._rule_processor.initialize(logger)
 
-        self._output_dataset = self.copy_dataset(self._input_datasets[0])
-        self._output_dataset = self.remove_variable(
-            self._output_dataset, list_variables
+        self._output_dataset = self._copy_dataset(self._input_datasets[0])
+        self._output_dataset = self._remove_variable(
+            self._output_dataset, self._mappings[0]
         )
 
         if not success:
             logger.log_error("Initialization failed")
 
-    def remove_variable(self, dataset: _xr.Dataset, variable: str) -> _xr.Dataset:
+    def _remove_variable(self, dataset: _xr.Dataset, variable: str) -> _xr.Dataset:
         """Remove variable from dataset
 
         Args:
@@ -114,7 +116,7 @@ class RuleBasedModel(IModel):
             raise ValueError("ERROR: Cannot remove variable from dataset") from exc
         return dataset
 
-    def copy_dataset(self, dataset: _xr.Dataset) -> _xr.Dataset:
+    def _copy_dataset(self, dataset: _xr.Dataset) -> _xr.Dataset:
         """Copy dataset to new dataset
 
         Args:

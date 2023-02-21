@@ -20,5 +20,5 @@ class IDatasetData(ABC):
 
     @property
     @abstractmethod
-    def mapping(self) -> dict[str, str]:
-        """Variable name mapping (source to target)"""
+    def mappings(self) -> dict[str, str]:
+        """Variable name mappings (source to target)"""
