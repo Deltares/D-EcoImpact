@@ -91,7 +91,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
 
             return _xr.DataArray(result)
 
-        raise NotImplementedError("")
+        raise NotImplementedError("The operation from input is not implemented")
         # notice: Substract, we mean all the array Substract with the all
         # arrays, number by number.
 
