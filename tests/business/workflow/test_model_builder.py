@@ -8,9 +8,9 @@ from unittest.mock import Mock
 import pytest
 
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
-from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
-from decoimpact.business.workflow.model_factory import ModelFactory
+from decoimpact.business.workflow.model_builder import ModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
@@ -21,11 +21,16 @@ from decoimpact.data.entities.time_aggregation_rule_data import TimeAggregationR
 def test_create_multiply_rule_based_model():
     """Test creating a multiply-rule-based model via factory"""
 
+
+def test_create_rule_based_model():
+    """Test creating a rule-based model via builder"""
+
     # Arrange
     logger = Mock(ILogger)
     model_data = Mock(IModelData)
     dataset = Mock()
     dataset_data = Mock(IDatasetData)
+    da_layer = Mock(IDataAccessLayer)
 
     rules_data = MultiplyRuleData("abc", [2, 5.86], "a", "b")
 
@@ -33,10 +38,11 @@ def test_create_multiply_rule_based_model():
     model_data.datasets = [dataset_data]
     model_data.rules = [rules_data]
 
-    dataset_data.get_input_dataset.return_value = dataset
+    da_layer.read_input_dataset.return_value = dataset
+    model_builder = ModelBuilder(da_layer, logger)
 
     # Act
-    model = ModelFactory.create_model(logger, model_data)
+    model = model_builder.build_model(model_data)
 
     # Assert
 
@@ -89,6 +95,7 @@ def test_create_rule_based_model_with_non_supported_rule():
     logger = Mock(ILogger)
     model_data = Mock(IModelData)
     dataset_data = Mock(IDatasetData)
+    da_layer = Mock(IDataAccessLayer)
 
     rules_data = Mock(IRuleData)
 
@@ -98,11 +105,11 @@ def test_create_rule_based_model_with_non_supported_rule():
     model_data.datasets = [dataset_data]
     model_data.rules = [rules_data]
 
-    dataset_data.get_input_dataset.return_value = []
+    model_builder = ModelBuilder(da_layer, logger)
 
     # Act & Assert
     with pytest.raises(NotImplementedError) as exc_info:
-        ModelFactory.create_model(logger, model_data)
+        model_builder.build_model(model_data)
 
     exception_raised = exc_info.value
 

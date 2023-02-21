@@ -7,6 +7,7 @@ Interfaces:
 """
 
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import List
 
 from decoimpact.data.api.i_dataset import IDatasetData
@@ -25,6 +26,11 @@ class IModelData(ABC):
     @abstractmethod
     def datasets(self) -> List[IDatasetData]:
         """Datasets of the model"""
+
+    @property
+    @abstractmethod
+    def output_path(self) -> Path:
+        """Model path to the output file"""
 
     @property
     @abstractmethod

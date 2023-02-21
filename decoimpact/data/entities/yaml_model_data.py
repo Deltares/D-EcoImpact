@@ -6,6 +6,7 @@ Classes:
 
 """
 
+from pathlib import Path
 from typing import List
 
 from decoimpact.data.api.i_dataset import IDatasetData
@@ -17,13 +18,16 @@ class YamlModelData(IModelData):
     """Implementation of the model data"""
 
     def __init__(
-                self,
-                name: str,
-                datasets: List[IDatasetData],
-                rules: List[IRuleData]):
+        self,
+        name: str,
+        datasets: List[IDatasetData],
+        output_path: Path,
+        rules: List[IRuleData],
+    ):
         super()
         self._name = name
         self._datasets = datasets
+        self._output_path = output_path
         self._rules = rules
 
     @property
@@ -35,6 +39,11 @@ class YamlModelData(IModelData):
     def datasets(self) -> List[IDatasetData]:
         """Datasets of the model"""
         return self._datasets
+
+    @property
+    def output_path(self) -> Path:
+        """Model path to the output file"""
+        return self._output_path
 
     @property
     def rules(self) -> List[IRuleData]:

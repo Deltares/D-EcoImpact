@@ -5,20 +5,26 @@
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
+    "editor.formatOnSave": true,
     "[python]": {
-        "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
             "source.organizeImports": true,
         },
     },
     "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length=88"
+    ],
     "python.linting.flake8Enabled": true,
+    "python.linting.flake8Args": [
+        "--max-line-length=88"
+    ],
     "python.linting.pylintEnabled": true,
     "coverage-gutters.showLineCoverage": true,
     "coverage-gutters.coverageFileNames": [
         "coverage.xml"
     ],
-    "python.analysis.typeCheckingMode": "strict",
+    "python.analysis.typeCheckingMode": "basic",
     "python.analysis.completeFunctionParens": true,
     "python.analysis.autoImportUserSymbols": true,
     "python.analysis.autoImportCompletions": true,
