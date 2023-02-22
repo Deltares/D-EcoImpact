@@ -56,7 +56,6 @@ def list_vars(dataset: _xr.Dataset) -> list:
     Args:
         dataset (_xr.Dataset): Dataset to list variables from
 
-
     Returns:
         list_variables
     """
@@ -81,4 +80,29 @@ def copy_dataset(dataset: _xr.Dataset) -> _xr.Dataset:
         output_dataset = dataset.copy(deep=False)
     except ValueError as exc:
         raise ValueError("ERROR: Cannot copy dataset") from exc
+    return output_dataset
+
+
+def rename_variable(
+    dataset: _xr.Dataset, variable_old: str, variable_new: str
+) -> _xr.Dataset:
+    """Rename variable in dataset
+
+    Args:
+        dataset (_xr.Dataset): Dataset to remove variable from
+        variable_old (str): Variable to rename, old name
+        variable_new (str): Variable to rename, new name
+
+    Raises:
+        ValueError: When variable can not be renamed
+
+    Returns:
+        _xr.Dataset: Original dataset
+    """
+    try:
+        output_dataset = dataset.rename(variable_old=variable_new)
+    except ValueError as exc:
+        raise ValueError(
+            f"ERROR: Cannot rename variable {variable_old} to {variable_new}"
+        ) from exc
     return output_dataset

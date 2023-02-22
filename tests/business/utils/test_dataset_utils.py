@@ -24,7 +24,8 @@ def test_dataset_contains_variable_after_addition():
 
 
 def test_add_incorrect_variable_to_dataset_throws_exception():
-    """Test if add variable throws exception when variable to be added is not an XArray array"""
+    """Test if add variable throws exception when variable to be
+    added is not an XArray array"""
 
     # Arrange
     variable = None
@@ -40,7 +41,8 @@ def test_add_incorrect_variable_to_dataset_throws_exception():
 
 
 def test_remove_variable_remove_variable_and_keeps_others():
-    """Test if remove dataset removes the desired variable, and keeps the other variables"""
+    """Test if remove dataset removes the desired variable, and
+    keeps the other variables"""
 
     # Arrange
     variable1 = "variable1"
@@ -61,7 +63,8 @@ def test_remove_variable_remove_variable_and_keeps_others():
 
 
 def test_remove_variable_throws_exception_if_dataset_does_not_contain_variable():
-    """Test if remove variable throws exception when variable is not present in dataset"""
+    """Test if remove variable throws exception when variable is not present
+    in dataset"""
 
     # Arrange
     variable_name = "test_variable"
@@ -105,3 +108,26 @@ def test_copy_dataset_return_xarray_dataset():
 
     # Assert
     assert isinstance(dataset2, _xr.Dataset)
+
+
+def test_rename_variable_returns_dataset_without_old_variable_and_with_new_variable():
+    """Test if copy dataset returns an XArray dataset"""
+
+    # Arrange
+    variable1 = "variable1"
+    variable2 = "variable2"
+    variable3 = "variable3"
+    new_name = "new_name"
+    dataset1 = _xr.Dataset(
+        data_vars=dict(var1=variable1, var2=variable2, var3=variable3)
+    )
+    # Act
+    dataset2 = utilities.rename_variable(dataset1, "var1", new_name)
+    # dataset2 = dataset1.rename(var1=new_name)
+    print("qq1", dataset1)
+    print("qq2", dataset2)
+    # Assert
+    assert isinstance(dataset2, _xr.Dataset)
+    assert dataset2.__contains__(new_name)
+    assert dataset2.__contains__("var2")
+    assert not dataset2.__contains__("var1")
