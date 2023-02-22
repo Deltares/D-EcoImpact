@@ -3,6 +3,33 @@
 import xarray as _xr
 
 
+def add_variable(
+    dataset: _xr.Dataset, variable: _xr.DataArray, variable_name: str
+) -> _xr.Dataset:
+    """Add variable to dataset
+
+    Args:
+        dataset (_xr.Dataset): Dataset to add to
+        variable (_xr.DataArray): Variable containing new data
+        variable_name (str): Name of new variable
+
+    Raises:
+        ValueError: When variable can not be added
+
+    Returns:
+        _xr.Dataset: original dataset
+    """
+    if not isinstance(variable, _xr.DataArray):
+        raise ValueError("ERROR: Cannot add variable to dataset")
+
+    try:
+        dataset[variable_name] = (variable.dims, variable.data)
+    except ValueError as exc:
+        raise ValueError("ERROR: Cannot add variable to dataset") from exc
+
+    return dataset
+
+
 def remove_variable(dataset: _xr.Dataset, variable: str) -> _xr.Dataset:
     """Remove variable from dataset
 
@@ -21,6 +48,20 @@ def remove_variable(dataset: _xr.Dataset, variable: str) -> _xr.Dataset:
     except ValueError as exc:
         raise ValueError("ERROR: Cannot remove variable from dataset") from exc
     return dataset
+
+
+def list_vars(dataset: _xr.Dataset) -> list:
+    """List variables in dataset
+
+    Args:
+        dataset (_xr.Dataset): Dataset to list variables from
+
+
+    Returns:
+        list_variables
+    """
+    list_variables = list(dataset.data_vars)
+    return list_variables
 
 
 def copy_dataset(dataset: _xr.Dataset) -> _xr.Dataset:
