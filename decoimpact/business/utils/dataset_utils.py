@@ -1,3 +1,5 @@
+"""Library for utility functions regarding an xarray dataset"""
+
 import xarray as _xr
 
 
