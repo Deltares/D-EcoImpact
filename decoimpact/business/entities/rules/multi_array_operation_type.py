@@ -16,4 +16,4 @@ class MultiArrayOperationType(IntEnum):
     AVERAGE = 4
     MEDIAN = 5
     ADD = 6
-    SUBSTRACT = 7
+    SUBTRACT = 7

@@ -85,7 +85,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
             return _xr.DataArray(result)
         # notice: Add, we mean all the array add with the all arrays, number by number.
 
-        if self._operation_type is MultiArrayOperationType.SUBSTRACT:
+        if self._operation_type is MultiArrayOperationType.SUBTRACT:
             result = np_arrays[0]
 
             for a_array in np_arrays[1:]:
@@ -94,7 +94,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
             return _xr.DataArray(result)
 
         raise NotImplementedError("The operation from input is not implemented")
-        # notice: Substract, we mean all the array Substract with the all
+        # notice: Subtract, we mean all the array Subtract with the all
         # arrays, number by number.
 
     def _check_dimensions(self, np_arrays: List[_np.array]) -> bool:

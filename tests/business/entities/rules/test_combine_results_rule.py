@@ -208,13 +208,13 @@ def test_execute_value_array_combine_results_rule_add():
     _xr.testing.assert_equal(add_array, result_array)
 
 
-def test_execute_value_array_combine_results_rule_substract():
+def test_execute_value_array_combine_results_rule_subtract():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
     logger = Mock(ILogger)
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], MultiArrayOperationType.SUBSTRACT, "output"
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.SUBTRACT, "output"
     )
     foo_data = [1, 2, 3, 4]
     hello_data = [5, 3, 2, 1]
