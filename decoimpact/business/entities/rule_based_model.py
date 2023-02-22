@@ -88,7 +88,8 @@ class RuleBasedModel(IModel):
         success = self._rule_processor.initialize(logger)
 
         self._output_dataset = self.copy_dataset(self._input_datasets[0])
-        # MDK NEEDS TO BE DONE AS PART OF DEI-32. Work in progess
+        # MDK 22-02-2023 NEEDS TO BE DONE AS PART OF DEI-32. Work in progess
+        # Right now everything is copied to the output dataset, which is not ideal
         # self._output_dataset = self.remove_variable(
         #    self._output_dataset, list_variables
         # )
