@@ -2,7 +2,7 @@
 Tests for TimeAggregationRuleData class
 """
 
-from decoimpact.business.entities.rules.operation_type import OperationType
+from decoimpact.business.entities.rules.time_operation_type import TimeOperationType
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.entities.time_aggregation_rule_data import TimeAggregationRuleData
 
@@ -12,7 +12,9 @@ def test_time_aggregation_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    data = TimeAggregationRuleData("test_name", OperationType.MIN, "input", "output", "description")
+    data = TimeAggregationRuleData(
+        "test_name", TimeOperationType.MIN, "input", "output", "description"
+    )
 
     # Assert
 

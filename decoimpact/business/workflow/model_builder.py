@@ -66,9 +66,10 @@ class ModelBuilder(IModelBuilder):
                 [rule_data.input_variable],
                 rule_data.operation,
                 rule_data.output_variable,
+                rule_data.time_scale,
             )
 
         error_str = (
-            f"The rule type of rule '{rule_data.name}' is currently " "not implemented"
+            f"The rule type of rule {rule_data.name} is currently  not implemented"
         )
         raise NotImplementedError(error_str)

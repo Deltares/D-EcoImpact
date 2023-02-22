@@ -9,7 +9,7 @@ Interfaces:
 
 from abc import ABC, abstractmethod
 
-from decoimpact.business.entities.rules.operation_type import OperationType
+from decoimpact.business.entities.rules.time_operation_type import TimeOperationType
 from decoimpact.data.api.i_rule_data import IRuleData
 
 
@@ -23,7 +23,7 @@ class ITimeAggregationRuleData(IRuleData, ABC):
 
     @property
     @abstractmethod
-    def operation(self) -> OperationType:
+    def operation(self) -> TimeOperationType:
         """Operation type"""
 
     @property

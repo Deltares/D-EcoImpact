@@ -4,7 +4,7 @@ Tests for ParserTimeAggregationRule class
 
 import pytest
 
-from decoimpact.business.entities.rules.operation_type import OperationType
+from decoimpact.business.entities.rules.time_operation_type import TimeOperationType
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.data.parsers.parser_time_aggregation_rule import (
@@ -92,5 +92,5 @@ def test_parse_operation_type():
 
     # Assert
     expected_message = f"Operation is not of a predefined type. Should be in: \
-                      {[o.name for o in OperationType]}. Received: Minimum"
+                      {[o.name for o in TimeOperationType]}. Received: Minimum"
     assert exception_raised.args[0] == expected_message
