@@ -88,9 +88,10 @@ class RuleBasedModel(IModel):
         success = self._rule_processor.initialize(logger)
 
         self._output_dataset = self.copy_dataset(self._input_datasets[0])
-        self._output_dataset = self.remove_variable(
-            self._output_dataset, list_variables
-        )
+        # MDK NEEDS TO BE DONE AS PART OF DEI-32. Work in progess
+        # self._output_dataset = self.remove_variable(
+        #    self._output_dataset, list_variables
+        # )
 
         if not success:
             logger.log_error("Initialization failed")
