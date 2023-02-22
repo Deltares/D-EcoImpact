@@ -186,9 +186,7 @@ time_monthly = [
     "2020-03-10",
 ]
 time_monthly = [np.datetime64(t) for t in time_monthly]
-value_array_monthly = _xr.DataArray(
-    data_monthly, coords=[time_monthly], dims=["time"]
-)
+value_array_monthly = _xr.DataArray(data_monthly, coords=[time_monthly], dims=["time"])
 
 result_time_monthly = [
     "2020-01-31",
@@ -218,7 +216,7 @@ def test_execute_value_array_aggregate_time_monthly_add():
     )
 
     # Assert
-    assert _xr.testing.assert_equal(time_aggregation, result_array) is None
+    _xr.testing.assert_equal(time_aggregation, result_array)
 
 
 def test_execute_value_array_aggregate_time_monthly_min():
@@ -228,6 +226,7 @@ def test_execute_value_array_aggregate_time_monthly_min():
     logger = Mock(ILogger)
     rule = TimeAggregationRule(
         name="test",
+        time_scale="month",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.MIN,
     )
@@ -250,19 +249,26 @@ def test_execute_value_array_aggregate_time_monthly_max():
     logger = Mock(ILogger)
     rule = TimeAggregationRule(
         name="test",
+        time_scale="month",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.MAX,
     )
 
     time_aggregation = rule.execute(value_array_monthly, logger)
 
-    result_data = [0.1, 0.7, 0.2, 0.3]
+    result_data = [0.1, 0.7, 0.3]
     result_array = _xr.DataArray(
         result_data, coords=[result_time_monthly], dims=["time_month"]
     )
 
     # Assert
-    assert _xr.testing.assert_equal(time_aggregation, result_array) is None
+    assert (
+        _xr.testing.assert_equal(
+            time_aggregation,
+            result_array,
+        )
+        is None
+    )
 
 
 def test_execute_value_array_aggregate_time_monthly_average():
@@ -272,13 +278,14 @@ def test_execute_value_array_aggregate_time_monthly_average():
     logger = Mock(ILogger)
     rule = TimeAggregationRule(
         name="test",
+        time_scale="month",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.AVERAGE,
     )
 
     time_aggregation = rule.execute(value_array_monthly, logger)
 
-    result_data = [0.1, 0.45, 0.2, 0.2]
+    result_data = [0.1, 0.45, 0.25]
     result_array = _xr.DataArray(
         result_data, coords=[result_time_monthly], dims=["time_month"]
     )
@@ -294,16 +301,17 @@ def test_execute_value_array_aggregate_time_monthly_median():
     logger = Mock(ILogger)
     rule = TimeAggregationRule(
         name="test",
+        time_scale="month",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.MEDIAN,
     )
 
     time_aggregation = rule.execute(value_array_monthly, logger)
 
-    result_data = [0.1, 0.2, 0.2, 0.1]
+    result_data = [0.1, 0.45, 0.25]
     result_array = _xr.DataArray(
         result_data, coords=[result_time_monthly], dims=["time_month"]
     )
 
     # Assert
-    assert _xr.testing.assert_equal(time_aggregation, result_array) is None
+    _xr.testing.assert_allclose(time_aggregation, result_array, atol=0.00000000001)
