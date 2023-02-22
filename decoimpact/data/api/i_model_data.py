@@ -27,10 +27,6 @@ class IModelData(ABC):
     def datasets(self) -> List[IDatasetData]:
         """Datasets of the model"""
 
-    @abstractmethod
-    def mappings(self) -> List[str]:
-        """Mappings of datasets of the model"""
-
     @property
     @abstractmethod
     def output_path(self) -> Path:

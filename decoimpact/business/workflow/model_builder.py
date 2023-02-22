@@ -37,10 +37,9 @@ class ModelBuilder(IModelBuilder):
         self._logger.log_info("Creating rule-based model")
 
         datasets = [self._da_layer.read_input_dataset(ds) for ds in model_data.datasets]
-        mappings = [self._da_layer.return_mapping(ds) for ds in model_data.datasets]
         rules = list(ModelBuilder._create_rules(model_data.rules))
 
-        model: IModel = RuleBasedModel(datasets, mappings, rules, model_data.name)
+        model: IModel = RuleBasedModel(datasets, rules, model_data.name)
 
         return model
 

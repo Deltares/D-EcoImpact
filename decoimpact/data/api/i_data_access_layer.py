@@ -42,18 +42,6 @@ class IDataAccessLayer(ABC):
         """
 
     @abstractmethod
-    def return_mapping(self, dataset_data: IDatasetData) -> list:
-        """Uses the provided dataset_data to create/read a xarray Dataset
-
-        Args:
-            dataset_data (IDatasetData): dataset data for creating an
-                                         xarray dataset
-
-        Returns:
-            _xr.Dataset: Dataset based on provided dataset_data
-        """
-
-    @abstractmethod
     def write_output_file(self, dataset: _xr.Dataset, path: Path) -> None:
         """Write output files to provided path
 

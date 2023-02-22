@@ -121,7 +121,3 @@ class DataAccessLayer(IDataAccessLayer):
             raise OSError(msg) from exc
 
         return None
-
-    def return_mapping(self, dataset_data: IDatasetData) -> list:
-        variables_to_map = ["abc"]
-        return variables_to_map
