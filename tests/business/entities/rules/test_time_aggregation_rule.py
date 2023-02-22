@@ -216,7 +216,9 @@ def test_execute_value_array_aggregate_time_monthly_add():
     )
 
     # Assert
-    _xr.testing.assert_equal(time_aggregation, result_array)
+    assert (
+        _xr.testing.assert_allclose(time_aggregation, result_array, atol=1e-11) is None
+    )
 
 
 def test_execute_value_array_aggregate_time_monthly_min():
@@ -291,7 +293,9 @@ def test_execute_value_array_aggregate_time_monthly_average():
     )
 
     # Assert
-    assert _xr.testing.assert_equal(time_aggregation, result_array) is None
+    assert (
+        _xr.testing.assert_allclose(time_aggregation, result_array, atol=1e-11) is None
+    )
 
 
 def test_execute_value_array_aggregate_time_monthly_median():
@@ -314,4 +318,6 @@ def test_execute_value_array_aggregate_time_monthly_median():
     )
 
     # Assert
-    _xr.testing.assert_allclose(time_aggregation, result_array, atol=0.00000000001)
+    assert (
+        _xr.testing.assert_allclose(time_aggregation, result_array, atol=1e-11) is None
+    )

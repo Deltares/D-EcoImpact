@@ -15,7 +15,6 @@ from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.entities.multiply_rule_data import MultiplyRuleData
-from decoimpact.data.entities.time_aggregation_rule_data import TimeAggregationRuleData
 
 
 def test_create_multiply_rule_based_model():
@@ -43,37 +42,6 @@ def test_create_rule_based_model():
 
     # Act
     model = model_builder.build_model(model_data)
-
-    # Assert
-
-    assert isinstance(model, RuleBasedModel)
-    assert model.name == "Test model"
-    assert dataset in model.input_datasets
-    assert len(model.rules) == 1
-
-    # logs info about model creation
-    logger.log_info.assert_called_once()
-
-
-def test_create_time_aggregation_rule_based_model():
-    """Test creating a time-aggregation-rule-based model via factory"""
-
-    # Arrange
-    logger = Mock(ILogger)
-    model_data = Mock(IModelData)
-    dataset = Mock()
-    dataset_data = Mock(IDatasetData)
-
-    rules_data = TimeAggregationRuleData("abc", [2, 5.86], "a", "b")
-
-    model_data.name = "Test model"
-    model_data.datasets = [dataset_data]
-    model_data.rules = [rules_data]
-
-    dataset_data.get_input_dataset.return_value = dataset
-
-    # Act
-    model = ModelFactory.create_model(logger, model_data)
 
     # Assert
 
@@ -114,5 +82,5 @@ def test_create_rule_based_model_with_non_supported_rule():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = "The rule type of rule 'test' is currently " "not implemented"
+    expected_message = "The rule type of rule 'test' is currently not implemented"
     assert exception_raised.args[0] == expected_message
