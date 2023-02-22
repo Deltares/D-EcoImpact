@@ -10,10 +10,10 @@ from typing import List
 
 import xarray as _xr
 
-from decoimpact.business.dataset_utils import copy_dataset
 from decoimpact.business.entities.i_model import IModel, ModelStatus
 from decoimpact.business.entities.rule_processor import RuleProcessor
 from decoimpact.business.entities.rules.i_rule import IRule
+from decoimpact.business.utils.dataset_utils import copy_dataset
 from decoimpact.crosscutting.i_logger import ILogger
 
 
