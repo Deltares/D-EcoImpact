@@ -88,7 +88,7 @@ class RuleProcessor:
                 rule_result = self._execute_rule(rule, output_dataset, logger)
                 output_name = rule.output_variable_name
 
-                output_dataset[output_name] = (rule_result.dims, rule_result.values)
+                output_dataset[output_name] = (rule_result.dims, rule_result.values, rule_result.attrs)
 
     def _create_rule_sets(
         self,
@@ -182,12 +182,15 @@ class RuleProcessor:
 
         raise NotImplementedError(f"Can not execute rule {rule.name}.")
 
-
-    def _copy_definition_attributes(self, source_array: _xr.DataArray, target_array: _xr.DataArray) -> None:
+    def _copy_definition_attributes(
+        self, source_array: _xr.DataArray, target_array: _xr.DataArray
+    ) -> None:
         attributes_to_copy = ["location", "mesh"]
 
         for attribute_name in attributes_to_copy:
-            target_array.attrs[attribute_name] = get_dict_element(attribute_name, source_array.attrs, False)
+            target_array.attrs[attribute_name] = get_dict_element(
+                attribute_name, source_array.attrs, False
+            )
 
     def _process_by_cell(
         self, rule: ICellBasedRule, input_variable: _xr.DataArray, logger: ILogger
