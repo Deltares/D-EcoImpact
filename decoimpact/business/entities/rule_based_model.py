@@ -5,12 +5,15 @@ Classes:
     RuleBasedModel
 
 """
+
 from typing import List
 
 import xarray as _xr
 
 from decoimpact.business.entities.i_model import IModel, ModelStatus
+from decoimpact.business.entities.rule_processor import RuleProcessor
 from decoimpact.business.entities.rules.i_rule import IRule
+from decoimpact.business.utils.dataset_utils import copy_dataset
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -29,7 +32,8 @@ class RuleBasedModel(IModel):
         self._status = ModelStatus.CREATED
         self._rules = rules
         self._input_datasets: List[_xr.Dataset] = input_datasets
-        self._logger = logger
+        self._output_dataset: _xr.Dataset
+        self._rule_processor: RuleProcessor
 
     @property
     def name(self) -> str:
@@ -53,22 +57,52 @@ class RuleBasedModel(IModel):
 
     @property
     def input_datasets(self) -> List[_xr.Dataset]:
-        """Status of the model"""
+        """Input datasets for the model"""
         return self._input_datasets
 
-    def validate(self) -> bool:
+    @property
+    def output_dataset(self) -> _xr.Dataset:
+        """Output dataset produced by this model"""
+        return self._output_dataset
+
+    def validate(self, logger: ILogger) -> bool:
         """Validates the model"""
 
-        success = len(self._input_datasets) >= 1
-        success &= len(self._rules) >= 1
+        valid = True
 
-        return success
+        if len(self._input_datasets) < 1:
+            logger.log_error("Model does not contain any datasets")
+            valid = False
 
-    def initialize(self) -> None:
+        if len(self._rules) < 1:
+            logger.log_error("Model does not contain any rules")
+            valid = False
+
+        for rule in self._rules:
+            valid = valid and rule.validate(logger)
+
+        return valid
+
+    def initialize(self, logger: ILogger) -> None:
         """Initializes the model"""
 
-    def execute(self) -> None:
+        self._rule_processor = RuleProcessor(self._rules, self._input_datasets)
+        success = self._rule_processor.initialize(logger)
+
+        # MDK 22-02-2023 NEEDS TO BE DONE AS PART OF DEI-32. Work in progress
+        # Right now everything is copied to the output dataset, which is not ideal
+        self._output_dataset = copy_dataset(self._input_datasets[0])
+
+        if not success:
+            logger.log_error("Initialization failed")
+
+    def execute(self, logger: ILogger) -> None:
         """Executes the model"""
 
-    def finalize(self) -> None:
+        self._rule_processor.process_rules(self._output_dataset, logger)
+
+    def finalize(self, logger: ILogger) -> None:
         """Finalizes the model"""
+
+        logger.log_debug("Finalize the rule processor")
+        self._rule_processor = None

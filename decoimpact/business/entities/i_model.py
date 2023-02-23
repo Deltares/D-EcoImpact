@@ -11,13 +11,16 @@ Classes:
 
 from abc import ABC, abstractmethod
 from enum import IntEnum
-
 from typing import List
+
 import xarray as _xr
+
+from decoimpact.crosscutting.i_logger import ILogger
 
 
 class ModelStatus(IntEnum):
     """Enum for the model status"""
+
     CREATED = 1
     INITIALIZING = 2
     INITIALIZED = 3
@@ -51,20 +54,25 @@ class IModel(ABC):
     @property
     @abstractmethod
     def input_datasets(self) -> List[_xr.Dataset]:
-        """Status of the model"""
+        """Input datasets for the model"""
+
+    @property
+    @abstractmethod
+    def output_dataset(self) -> _xr.Dataset:
+        """Output dataset produced by this model"""
 
     @abstractmethod
-    def validate(self) -> bool:
+    def validate(self, logger: ILogger) -> bool:
         """Validates the model"""
 
     @abstractmethod
-    def initialize(self) -> None:
+    def initialize(self, logger: ILogger) -> None:
         """Initializes the model"""
 
     @abstractmethod
-    def execute(self) -> None:
+    def execute(self, logger: ILogger) -> None:
         """Executes the model"""
 
     @abstractmethod
-    def finalize(self) -> None:
+    def finalize(self, logger: ILogger) -> None:
         """Finalizes the model"""

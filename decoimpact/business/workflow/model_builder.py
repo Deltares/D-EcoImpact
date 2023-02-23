@@ -1,11 +1,10 @@
 """
-Module for ModelFactory class
+Module for ModelBuilder class
 
 Classes:
-    ModelFactory
+    ModelBuilder
 
 """
-
 
 from typing import Iterable, List
 
@@ -14,29 +13,33 @@ from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
 from decoimpact.business.entities.rules.step_function_rule import StepFunctionRule
+from decoimpact.business.workflow.i_model_builder import IModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.api.i_step_function_rule_data import IStepFunctionRuleData
-from decoimpact.data.entities.step_function_data import StepFunctionRuleData
 
 
-class ModelFactory:
+class ModelBuilder(IModelBuilder):
     """Factory for creating models"""
 
-    @staticmethod
-    def create_model(logger: ILogger, model_data: IModelData) -> IModel:
-        """Creates an RuleBasedModel
+    def __init__(self, da_layer: IDataAccessLayer, logger: ILogger) -> None:
+        self._logger = logger
+        self._da_layer = da_layer
+
+    def build_model(self, model_data: IModelData) -> IModel:
+        """Creates an model based on model data
 
         Returns:
-            RuleBasedModel: instance of a RuleBasedModel
+            IModel: instance of a model based on model data
         """
 
-        logger.log_info("Creating rule-based model")
+        self._logger.log_info("Creating rule-based model")
 
-        datasets = [ds.get_input_dataset() for ds in model_data.datasets]
-        rules = list(ModelFactory._create_rules(model_data.rules))
+        datasets = [self._da_layer.read_input_dataset(ds) for ds in model_data.datasets]
+        rules = list(ModelBuilder._create_rules(model_data.rules))
 
         model: IModel = RuleBasedModel(datasets, rules, logger, model_data.name)
 
@@ -45,7 +48,7 @@ class ModelFactory:
     @staticmethod
     def _create_rules(rule_data: List[IRuleData]) -> Iterable[IRule]:
         for rule_data_object in rule_data:
-            yield ModelFactory._create_rule(rule_data_object)
+            yield ModelBuilder._create_rule(rule_data_object)
 
     @staticmethod
     def _create_rule(rule_data: IRuleData) -> IRule:
