@@ -24,11 +24,10 @@ def test_create_rule_based_model_with_defaults():
 
     # Arrange
     rule = Mock(IRule)
-    logger = Mock(ILogger)
     dataset = Mock(IDatasetData)
 
     # Act
-    model = RuleBasedModel([dataset], [rule], logger)
+    model = RuleBasedModel([dataset], [rule])
 
     # Assert
 

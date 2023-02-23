@@ -18,7 +18,7 @@ Classes:
 
 import numpy as _np
 
-from decoimpact.business.entities.rules.I_cell_based_rule import ICellBasedRule
+from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.crosscutting.i_logger import ILogger
 
