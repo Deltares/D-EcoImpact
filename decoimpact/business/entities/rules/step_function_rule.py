@@ -23,7 +23,7 @@ from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.crosscutting.i_logger import ILogger
 
 
-class StepFunction(RuleBase, ICellBasedRule):
+class StepFunctionRule(RuleBase, ICellBasedRule):
     """Rule for Step function
 
     The input sorted list [limit_1, limit_2, ..., limit_i, ..., limit_n]
@@ -41,9 +41,10 @@ class StepFunction(RuleBase, ICellBasedRule):
         name: str,
         input_variable_name: str,
         limits: _np.array,
-        responses: _np.array = None,
+        responses: _np.array,
+        output_variable_name="output",
     ):
-        super().__init__(name, input_variable_name)
+        super().__init__(name, [input_variable_name], output_variable_name)
 
         self._name = name
         self._input_variable_name = input_variable_name

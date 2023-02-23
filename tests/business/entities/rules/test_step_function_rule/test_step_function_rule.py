@@ -6,13 +6,13 @@ Tests for Step Function Rule class
 import pytest
 from mock import Mock
 
-from decoimpact.business.entities.rules.step_function_rule import StepFunction
+from decoimpact.business.entities.rules.step_function_rule import StepFunctionRule
 from decoimpact.crosscutting.i_logger import ILogger
 
 
 @pytest.fixture
 def example_rule():
-    return StepFunction(
+    return StepFunctionRule(
         "step_function_rule_name",
         "input_variable_name",
         [0, 1, 2, 5, 10],
@@ -26,10 +26,12 @@ def test_create_step_function(example_rule):
     """
 
     assert example_rule._name == "step_function_rule_name"
-    assert example_rule.input_variable_names == "input_variable_name"
+
+    assert example_rule.input_variable_names[0] == "input_variable_name"
     assert example_rule._limits == [0, 1, 2, 5, 10]
+
     assert example_rule._responses == [10, 11, 12, 15, 20]
-    assert isinstance(example_rule, StepFunction)
+    assert isinstance(example_rule, StepFunctionRule)
 
 
 @pytest.mark.parametrize(
@@ -42,7 +44,7 @@ def test_create_step_function(example_rule):
     ],
 )
 def test_execute_values_between_limits(
-    example_rule: StepFunction, input_value: int, expected_output_value: int
+    example_rule: StepFunctionRule, input_value: int, expected_output_value: int
 ):
     """
     Test the function execution with input values between the interval limits.
@@ -58,7 +60,7 @@ def test_execute_values_between_limits(
     [(0, 10), (1, 11), (2, 12), (5, 15), (10, 20)],
 )
 def test_execute_values_at_limits(
-    example_rule: StepFunction, input_value: int, expected_output_value: int
+    example_rule: StepFunctionRule, input_value: int, expected_output_value: int
 ):
     """
     Test the function execution with input values exactly at the interval limits.
@@ -74,7 +76,7 @@ def test_execute_values_at_limits(
     [(-1, 10, "value less than min"), (11, 20, "value greater than max")],
 )
 def test_execute_values_outside_limits(
-    example_rule: StepFunction,
+    example_rule: StepFunctionRule,
     input_value: int,
     expected_output_value: int,
     expected_log_message: str,

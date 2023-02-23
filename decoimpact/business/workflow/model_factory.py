@@ -13,10 +13,13 @@ from decoimpact.business.entities.i_model import IModel
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
+from decoimpact.business.entities.rules.step_function_rule import StepFunctionRule
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
 from decoimpact.data.api.i_rule_data import IRuleData
+from decoimpact.data.api.i_step_function_rule_data import IStepFunctionRuleData
+from decoimpact.data.entities.step_function_data import StepFunctionRuleData
 
 
 class ModelFactory:
@@ -52,8 +55,19 @@ class ModelFactory:
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.multipliers,
-                rule_data.output_variable)
+                rule_data.output_variable,
+            )
 
-        error_str = f"The rule type of rule '{rule_data.name}' is currently "\
-                    "not implemented"
+        if isinstance(rule_data, IStepFunctionRuleData):
+            return StepFunctionRule(
+                rule_data.name,
+                rule_data.input_variable,
+                rule_data.limits,
+                rule_data.responses,
+                rule_data.output_variable,
+            )
+
+        error_str = (
+            f"The rule type of rule '{rule_data.name}' is currently " "not implemented"
+        )
         raise NotImplementedError(error_str)

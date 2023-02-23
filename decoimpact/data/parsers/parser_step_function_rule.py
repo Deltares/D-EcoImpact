@@ -33,13 +33,13 @@ class ParserStepFunctionRule(IParserRuleBase):
         limits = get_dict_element("limits", dictionary)
         responses = get_dict_element("responses", dictionary)
         output_variable_name = get_dict_element("output_variable", dictionary)
+        rule_description = get_dict_element("description", dictionary, False)
 
-        rule_data = StepFunctionRuleData(
+        return StepFunctionRuleData(
             name,
             limits,
             responses,
             input_variable_name,
+            description=rule_description,
             output_variable=output_variable_name,
         )
-
-        return rule_data
