@@ -4,7 +4,6 @@ Module for ParserTimeAggregationRule class
 Classes:
     ParserTimeAggregationRule
 """
-from time import time
 from typing import Any, Dict
 
 from decoimpact.business.entities.rules.time_operation_type import TimeOperationType
