@@ -34,13 +34,15 @@ class ParserTimeAggregationRule(IParserRuleBase):
         input_variable_name = get_dict_element("input_variable", dictionary)
         operation = get_dict_element("operation", dictionary)
         time_scale = get_dict_element("time_scale", dictionary)
+        match_operation = [o for o in TimeOperationType if o.name == operation]
+        operation_value = next(iter(match_operation), None)
 
-        if not any(o.name == operation for o in TimeOperationType):
+        if not operation_value:
             message = f"Operation is not of a predefined type. Should be in: \
                       {[o.name for o in TimeOperationType]}. Received: {operation}"
             raise ValueError(message)
         output_variable_name = get_dict_element("output_variable", dictionary)
 
         return TimeAggregationRuleData(
-            name, operation, input_variable_name, output_variable_name, time_scale
+            name, operation_value, input_variable_name, output_variable_name, time_scale
         )
