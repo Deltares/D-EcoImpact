@@ -1,3 +1,11 @@
+"""
+Module for ICellBasedRule interface
+
+Interfaces:
+    ICellBasedRule
+
+"""
+
 from abc import ABC, abstractmethod
 
 from decoimpact.business.entities.rules.i_rule import IRule

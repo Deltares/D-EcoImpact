@@ -24,7 +24,6 @@ class RuleBasedModel(IModel):
         self,
         input_datasets: List[_xr.Dataset],
         rules: List[IRule],
-        logger: ILogger,
         name: str = "Rule-Based model",
     ) -> None:
 
