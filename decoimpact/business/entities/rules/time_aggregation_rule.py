@@ -95,19 +95,22 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             DataArray: Values of operation type
         """
-        match self._operation_type:
-            case TimeOperationType.ADD:
-                result = aggregated_values.sum()
-            case TimeOperationType.MIN:
-                result = aggregated_values.min()
-            case TimeOperationType.MAX:
-                result = aggregated_values.max()
-            case TimeOperationType.AVERAGE:
-                result = aggregated_values.mean()
-            case TimeOperationType.MEDIAN:
-                result = aggregated_values.median()
-            case _:
-                raise NotImplementedError(f"The operation type '{self._operation_type}'"
+        if self._operation_type is TimeOperationType.ADD:
+            result = aggregated_values.sum()
+
+        if self._operation_type is TimeOperationType.MIN:
+            result = aggregated_values.min()
+
+        if self._operation_type is TimeOperationType.MAX:
+            result = aggregated_values.max()
+
+        if self._operation_type is TimeOperationType.AVERAGE:
+            result = aggregated_values.mean()
+
+        if self._operation_type is TimeOperationType.MEDIAN:
+            result = aggregated_values.median()
+        else:
+           raise NotImplementedError(f"The operation type '{self._operation_type}'"
                                           "is currently not supported")
 
         return _xr.DataArray(result)
