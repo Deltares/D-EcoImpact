@@ -33,7 +33,7 @@ class IRule(ABC):
 
     @property
     @abstractmethod
-    def output_variable_name(self) -> str:
+    def output_variable_name(self) -> List[str]:
         """Name of the output variable"""
 
     @abstractmethod

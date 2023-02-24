@@ -55,12 +55,12 @@ class RuleBase(IRule, ABC):
         return self._input_variable_names
 
     @property
-    def output_variable_name(self) -> str:
+    def output_variable_name(self) -> List[str]:
         """Name of the output variable"""
         return self._output_variable_name
 
     @output_variable_name.setter
-    def output_variable_name(self, output_variable_name: str):
+    def output_variable_name(self, output_variable_name: List[str]):
         """Name of the output variable"""
         self._output_variable_name = output_variable_name
 

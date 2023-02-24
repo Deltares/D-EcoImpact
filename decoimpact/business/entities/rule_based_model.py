@@ -128,7 +128,7 @@ class RuleBasedModel(IModel):
         print("help", variables_in_output)
         print("help", flatten_list(variables_in_output))
 
-        print("help", remove_duplicates_from_list(variables_in_output))
+        print("help", flatten_list(remove_duplicates_from_list(variables_in_output)))
 
         # Now do the renaming
 
