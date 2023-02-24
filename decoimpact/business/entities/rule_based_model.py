@@ -118,7 +118,11 @@ class RuleBasedModel(IModel):
         return self._output_dataset
 
     def _make_output_variables_list(self):
-        """Make list of variables to be contained in the output dataset"""
+        """Make list of variables to be contained in the output dataset
+        System variables have to be included in results to enable
+        XUgrid support and prevent invalid topologies.
+        This also allows QuickPlot to visualize the results.
+        """
         system_vars = [
             "mesh2d",
             "mesh2d_face_nodes",
