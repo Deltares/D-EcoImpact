@@ -100,7 +100,6 @@ class RuleBasedModel(IModel):
         # Right now everything is copied to the output dataset, which is not ideal
         self._output_dataset = merge_list_of_datasets(self._input_datasets)
 
-        variables_to_remove = list_vars(self._output_dataset)
         system_vars = [
             "mesh2d",
             "mesh2d_face_nodes",
@@ -120,14 +119,16 @@ class RuleBasedModel(IModel):
         variables_in_output = flatten_list(
             remove_duplicates_from_list(variables_in_output)
         )
-        print("dsds", variables_in_output)
+        all_variables = list_vars(self._output_dataset)
+        print("dsds", all_variables)
+        print("needed vars", variables_in_output)
 
-        # remove all vars
+        variables_to_remove = [x for x in all_variables if x not in variables_in_output]
+        print("qqq", variables_to_remove)
+
         self._output_dataset = remove_variables(
             self._output_dataset, variables_to_remove
         )
-
-        # Now do the renaming
 
         if not success:
             logger.log_error("Initialization failed")
