@@ -11,8 +11,8 @@ import xarray as _xr
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
-from decoimpact.business.entities.rules.time_operation_type import TimeOperationType
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.dictionary_utils import get_dict_element
 
 

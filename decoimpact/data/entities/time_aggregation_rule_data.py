@@ -6,8 +6,8 @@ Classes:
 
 """
 
-from decoimpact.business.entities.rules.time_operation_type import TimeOperationType
 from decoimpact.data.api.i_time_aggregation_rule_data import ITimeAggregationRuleData
+from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.entities.rule_data import RuleData
 
 
