@@ -10,6 +10,7 @@ from typing import Iterable, List, Tuple
 
 import numpy as _np
 import xarray as _xr
+from attr import attributes
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
@@ -18,6 +19,7 @@ from decoimpact.business.entities.rules.i_multi_array_based_rule import (
 )
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.dictionary_utils import get_dict_element
 
 
 class RuleProcessor:
@@ -86,10 +88,7 @@ class RuleProcessor:
                 rule_result = self._execute_rule(rule, output_dataset, logger)
                 output_name = rule.output_variable_name
 
-                output_dataset[output_name] = (
-                    rule_result.dims,
-                    rule_result.values,
-                )
+                output_dataset[output_name] = (rule_result.dims, rule_result.values, rule_result.attrs)
 
     def _create_rule_sets(
         self,
@@ -172,12 +171,26 @@ class RuleProcessor:
         input_variable = variables[0]
 
         if isinstance(rule, IArrayBasedRule):
-            return rule.execute(input_variable, logger)
+            result = rule.execute(input_variable, logger)
+            self._copy_definition_attributes(input_variable, result)
+            return result
 
         if isinstance(rule, ICellBasedRule):
-            return self._process_by_cell(rule, input_variable, logger)
+            result = self._process_by_cell(rule, input_variable, logger)
+            self._copy_definition_attributes(input_variable, result)
+            return result
 
         raise NotImplementedError(f"Can not execute rule {rule.name}.")
+
+    def _copy_definition_attributes(
+        self, source_array: _xr.DataArray, target_array: _xr.DataArray
+    ) -> None:
+        attributes_to_copy = ["location", "mesh"]
+
+        for attribute_name in attributes_to_copy:
+            target_array.attrs[attribute_name] = get_dict_element(
+                attribute_name, source_array.attrs, False
+            )
 
     def _process_by_cell(
         self, rule: ICellBasedRule, input_variable: _xr.DataArray, logger: ILogger
