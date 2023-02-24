@@ -126,3 +126,22 @@ def merge_datasets(dataset1: _xr.Dataset, dataset2: _xr.Dataset) -> _xr.Dataset:
     except ValueError as exc:
         raise ValueError(f"ERROR: Cannot merge {dataset1} and {dataset2}") from exc
     return output_dataset
+
+
+def merge_list_of_datasets(list_datasets: list) -> _xr.Dataset:
+    """Merge list of datasets into 1 dataset
+
+    Args:
+        list_datasets (list): list of datasets to merge
+
+    Raises:
+        ValueError: When datasets cannot be merged
+
+    Returns:
+        _xr.Dataset: Original dataset
+    """
+    try:
+        output_dataset = _xr.merge(list_datasets, compat="identical")
+    except ValueError as exc:
+        raise ValueError(f"ERROR: Cannot merge {list_datasets}") from exc
+    return output_dataset

@@ -144,11 +144,41 @@ def test_merged_dataset_is_xarray_dataset_and_contains_all_variables():
     dataset2 = _xr.Dataset(data_vars=dict(variable3=variable3, variable4=variable4))
 
     # Act
-    dataset3 = utilities.merge_datasets(dataset1, dataset2)
+    merged_dataset = utilities.merge_datasets(dataset1, dataset2)
 
     # Assert
-    assert isinstance(dataset3, _xr.Dataset)
-    assert dataset3.__contains__(variable1)
-    assert dataset3.__contains__(variable2)
-    assert dataset3.__contains__(variable3)
-    assert dataset3.__contains__(variable4)
+    assert isinstance(merged_dataset, _xr.Dataset)
+    assert merged_dataset.__contains__(variable1)
+    assert merged_dataset.__contains__(variable2)
+    assert merged_dataset.__contains__(variable3)
+    assert merged_dataset.__contains__(variable4)
+
+
+def test_merged_list_of_datasets_is_xarray_dataset_and_contains_all_variables():
+    """Test if merged dataset returns an XArray dataset and contains all variables"""
+
+    # Arrange
+    variable1 = "variable1"
+    variable2 = "variable2"
+    dataset1 = _xr.Dataset(data_vars=dict(variable1=variable1, variable2=variable2))
+
+    variable3 = "variable3"
+    variable4 = "variable4"
+    dataset2 = _xr.Dataset(data_vars=dict(variable3=variable3, variable4=variable4))
+
+    variable5 = "variable5"
+    variable6 = "variable6"
+    dataset3 = _xr.Dataset(data_vars=dict(variable5=variable5, variable6=variable6))
+
+    list_datasets = [dataset1, dataset2, dataset3]
+    # Act
+    merged_dataset = utilities.merge_list_of_datasets(list_datasets)
+
+    # Assert
+    assert isinstance(merged_dataset, _xr.Dataset)
+    assert merged_dataset.__contains__(variable1)
+    assert merged_dataset.__contains__(variable2)
+    assert merged_dataset.__contains__(variable3)
+    assert merged_dataset.__contains__(variable4)
+    assert merged_dataset.__contains__(variable5)
+    assert merged_dataset.__contains__(variable6)
