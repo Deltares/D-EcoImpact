@@ -240,5 +240,5 @@ class RuleProcessor:
             return output_dataset[name]
 
         raise KeyError(
-            f"Key {name} was not found in input datasets or as calculated output"
+            f"Key {name} was not found in input datasets or in calculated output dataset"
         )

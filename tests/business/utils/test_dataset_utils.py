@@ -123,7 +123,6 @@ def test_rename_variable_returns_dataset_without_old_variable_and_with_new_varia
     )
     # Act
     dataset2 = utilities.rename_variable(dataset1, "variable1", new_name)
-    # dataset2 = dataset1.rename(variable1=new_name)
     # Assert
     assert isinstance(dataset2, _xr.Dataset)
     assert dataset2.__contains__(new_name)

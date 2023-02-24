@@ -93,12 +93,11 @@ class RuleBasedModel(IModel):
     def initialize(self, logger: ILogger) -> None:
         """Initializes the model"""
 
+        self._create_output_dataset()
+        self._output_dataset = self._output_dataset.rename_vars(self._mapping)
+
         self._rule_processor = RuleProcessor(self._rules, self._input_datasets)
         success = self._rule_processor.initialize(logger)
-
-        self._create_output_dataset()
-
-        self._output_dataset = self._output_dataset.rename_vars(self._mapping)
 
         if not success:
             logger.log_error("Initialization failed")
@@ -131,12 +130,14 @@ class RuleBasedModel(IModel):
             "mesh2d_face_y_bnd",
             "mesh2d_flowelem_bl",
         ]
+        mapping_keys = list(self._mapping.keys())
 
         variables_in_output = []
         for rule in range(0, len(self._rules)):
             variables_in_output.append(self._rules[rule].input_variable_names)
             variables_in_output.append([self._rules[rule].output_variable_name])
         variables_in_output.append(system_vars)
+        variables_in_output.append(mapping_keys)
 
         variables_in_output = flatten_list(
             remove_duplicates_from_list(variables_in_output)
