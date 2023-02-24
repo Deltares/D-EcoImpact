@@ -2,18 +2,13 @@
 Tests for the ParserStepFunctionRule class
 """
 
-from typing import Any, Dict
+import random
 
 import pytest
 from mock import Mock
 
-from decoimpact.business.entities.rules.rule_base import RuleBase
-from decoimpact.business.entities.rules.step_function_rule import StepFunctionRule
 from decoimpact.crosscutting.i_logger import ILogger
-from decoimpact.data.api.i_rule_data import IRuleData
-from decoimpact.data.dictionary_utils import get_dict_element
 from decoimpact.data.entities.step_function_data import StepFunctionRuleData
-from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.data.parsers.parser_step_function_rule import ParserStepFunctionRule
 
 
@@ -46,9 +41,10 @@ def test_parser_step_function_rule_correct_input():
         }
     )
     parser = ParserStepFunctionRule()
+    logger = Mock(ILogger)
 
     # Act
-    step_function_data = parser.parse_dict(new_dict)
+    step_function_data = parser.parse_dict(new_dict, logger)
 
     # Assert
     assert isinstance(step_function_data, StepFunctionRuleData)
@@ -74,12 +70,102 @@ def test_parser_step_function_rule_missing_argument(argument_to_remove: str):
     example_step_function_dict = _get_example_step_function_dict()
     example_step_function_dict.pop(argument_to_remove)
     parser = ParserStepFunctionRule()
+    logger = Mock(ILogger)
 
     # Act
     with pytest.raises(AttributeError) as exc_info:
-        parser.parse_dict(example_step_function_dict)
+        parser.parse_dict(example_step_function_dict, logger)
 
     exception_raised = exc_info.value
 
     # Assert
     assert exception_raised.args[0] == "Missing element " + argument_to_remove
+
+
+def test_parser_does_not_change_ordered__limits():
+    """The ParserStepFunctionRule should sort all values for
+    limits in an increasing order. The respective responses
+    should also be sorted accordingly."""
+    # Arrange
+    rule_dict = dict(
+        {
+            "name": "Test name",
+            "description": "Test description",
+            "limits": [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0],
+            "responses": [
+                0.0,
+                10.0,
+                20.0,
+                30.0,
+                40.0,
+                50.0,
+                60.0,
+                70.0,
+                80.0,
+                90.0,
+                100.0,
+            ],
+            "input_variable": "test input variable name",
+            "output_variable": "test output variable name",
+        }
+    )
+    parser = ParserStepFunctionRule()
+    logger = Mock(ILogger)
+
+    # Act
+    parser.parse_dict(rule_dict, logger)
+
+    # Assert
+    logger.log_warning.assert_not_called()
+
+
+def test_parser_sorts_unordered_limits():
+    """The ParserStepFunctionRule should sort all values for
+    limits in an increasing order. The respective responses
+    should also be sorted accordingly."""
+    # Arrange
+    rule_dict = dict(
+        {
+            "name": "Test name",
+            "description": "Test description",
+            "limits": [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0],
+            "responses": [
+                0.0,
+                10.0,
+                20.0,
+                30.0,
+                40.0,
+                50.0,
+                60.0,
+                70.0,
+                80.0,
+                90.0,
+                100.0,
+            ],
+            "input_variable": "test input variable name",
+            "output_variable": "test output variable name",
+        }
+    )
+    parser = ParserStepFunctionRule()
+    logger = Mock(ILogger)
+    expected_log_message = "Limits were not ordered. They have been sorted increasingly, and their respective responses accordingly too."
+
+    # Act
+    original_step_function_data = parser.parse_dict(rule_dict, logger)
+    temp_limits = rule_dict["limits"]
+    temp_responses = rule_dict["responses"]
+    temp_tuple = list(zip(temp_limits, temp_responses))
+    random.shuffle(temp_tuple)
+    temp_limits, temp_responses = map(list, zip(*temp_tuple))
+    rule_dict["limits"] = temp_limits
+    rule_dict["responses"] = temp_responses
+    comparison_step_function_data = parser.parse_dict(rule_dict, logger)
+
+    # Assert
+    assert not original_step_function_data.limits == temp_limits
+    assert not original_step_function_data.responses == temp_responses
+    assert original_step_function_data.limits == comparison_step_function_data.limits
+    assert (
+        original_step_function_data.responses == comparison_step_function_data.responses
+    )
+    logger.log_warning.assert_called_with(expected_log_message)

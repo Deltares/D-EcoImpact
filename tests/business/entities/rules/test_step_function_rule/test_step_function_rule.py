@@ -88,3 +88,12 @@ def test_execute_values_outside_limits(
 
     assert example_rule.execute(input_value, logger) == expected_output_value
     logger.log_warning.assert_called_with(expected_log_message)
+
+
+def test_limits_and_responses_have_different_lengths(example_rule: StepFunctionRule):
+    """
+    Test the function execution with input values outside the interval limits.
+    """
+    logger = Mock(ILogger)
+    example_rule._limits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    assert not example_rule.validate(logger)

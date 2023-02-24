@@ -51,6 +51,11 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
         self._limits = limits
         self._responses = responses
 
+    def validate(self, logger: ILogger) -> bool:
+        if not len(self._limits) == len(self._responses):
+            return False
+        return True
+
     def execute(self, value: float, logger: ILogger) -> float:
         """Classify a variable, based on given bins.
         Values lower than lowest bin will produce a warning and will
