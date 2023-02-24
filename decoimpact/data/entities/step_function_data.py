@@ -13,7 +13,7 @@ from decoimpact.data.entities.rule_data import RuleData
 
 
 class StepFunctionRuleData(IStepFunctionRuleData, RuleData):
-    """Class for storing data related to multiply rule"""
+    """Class for storing data related to step function rule"""
 
     def __init__(
         self,
@@ -36,10 +36,10 @@ class StepFunctionRuleData(IStepFunctionRuleData, RuleData):
 
     @property
     def limits(self) -> List[float]:
-        """Name of the input variable"""
+        """Limits of the interval definition for the step function rule"""
         return self._limits
 
     @property
     def responses(self) -> List[float]:
-        """Name of the input variable"""
+        """Step wise responses corresponding to each nterval defined by the limits"""
         return self._responses

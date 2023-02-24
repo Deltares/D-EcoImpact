@@ -3,7 +3,7 @@ Module for ParserStepFunctionRule class
 Classes:
     ParserStepFunctionRule
 """
-from typing import Any, List, Union
+from typing import Any, List
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
@@ -39,7 +39,8 @@ class ParserStepFunctionRule(IParserRuleBase):
         limits_are_sorted = all(a <= b for a, b in zip(limits, limits[1:]))
         if not limits_are_sorted:
             logger.log_warning(
-                "Limits were not ordered. They have been sorted increasingly, and their respective responses accordingly too."
+                "Limits were not ordered. They have been sorted increasingly,"
+                " and their respective responses accordingly too."
             )
             unsorted_map = list(zip(limits, responses))
             sorted_map = sorted(unsorted_map, key=lambda x: x[0])

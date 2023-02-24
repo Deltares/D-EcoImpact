@@ -63,8 +63,8 @@ def test_parser_step_function_rule_correct_input():
     ["name", "responses", "limits", "input_variable", "output_variable"],
 )
 def test_parser_step_function_rule_missing_argument(argument_to_remove: str):
-    """The ParserStepFunctionRule should give an error message
-    indicating which argument is missing"""
+    """If an argument is missing, the ParserStepFunctionRule
+    should give an error message indicating which one"""
 
     # Arrange
     example_step_function_dict = _get_example_step_function_dict()
@@ -83,9 +83,8 @@ def test_parser_step_function_rule_missing_argument(argument_to_remove: str):
 
 
 def test_parser_does_not_change_ordered__limits():
-    """The ParserStepFunctionRule should sort all values for
-    limits in an increasing order. The respective responses
-    should also be sorted accordingly."""
+    """If the limits are sorted, the ParserStepFunctionRule
+    should not modify the order."""
     # Arrange
     rule_dict = dict(
         {
