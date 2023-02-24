@@ -101,7 +101,6 @@ class RuleBasedModel(IModel):
         self._output_dataset = merge_list_of_datasets(self._input_datasets)
 
         variables_to_remove = list_vars(self._output_dataset)
-        print("d1", variables_to_remove)
         system_vars = [
             "mesh2d",
             "mesh2d_face_nodes",
@@ -110,13 +109,6 @@ class RuleBasedModel(IModel):
             "mesh2d_face_y_bnd",
             "mesh2d_flowelem_bl",
         ]
-        print("d2", system_vars)
-        # variables_to_remove.remove(system_vars)
-        print("d3", variables_to_remove)
-        # remove all vars
-        self._output_dataset = remove_variables(
-            self._output_dataset, variables_to_remove
-        )
 
         variables_in_output = []
         for rule in range(0, len(self._rules)):
@@ -125,10 +117,15 @@ class RuleBasedModel(IModel):
 
         variables_in_output.append(system_vars)
 
-        print("help", variables_in_output)
-        print("help", flatten_list(variables_in_output))
+        variables_in_output = flatten_list(
+            remove_duplicates_from_list(variables_in_output)
+        )
+        print("dsds", variables_in_output)
 
-        print("help", flatten_list(remove_duplicates_from_list(variables_in_output)))
+        # remove all vars
+        self._output_dataset = remove_variables(
+            self._output_dataset, variables_to_remove
+        )
 
         # Now do the renaming
 

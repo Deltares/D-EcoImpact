@@ -57,10 +57,8 @@ class RuleProcessor:
         for dataset in self._input_datasets:
             for key in dataset:
                 inputs.append(str(key))
-                print("q", key)
 
         tree, success = self._create_rule_sets(inputs, list(self._rules), [], logger)
-        print("q2", tree)
         if success:
             self._processing_list = tree
 
@@ -84,7 +82,6 @@ class RuleProcessor:
 
         for rule_set in self._processing_list:
             for rule in rule_set:
-                print("q3", rule, rule.input_variable_names)
                 logger.log_info(f"Starting rule {rule.name}")
 
                 rule_result = self._execute_rule(rule, output_dataset, logger)
