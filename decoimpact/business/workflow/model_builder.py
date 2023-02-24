@@ -11,10 +11,12 @@ from typing import Iterable, List
 from decoimpact.business.entities.i_model import IModel
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.i_rule import IRule
+from decoimpact.business.entities.rules.layer_filter_rule import LayerFilterRule
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
+from decoimpact.data.api.i_layer_filter_rule_data import ILayerFilterRuleData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
 from decoimpact.data.api.i_rule_data import IRuleData
@@ -59,6 +61,14 @@ class ModelBuilder(IModelBuilder):
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.multipliers,
+                rule_data.output_variable,
+            )
+
+        if isinstance(rule_data, ILayerFilterRuleData):
+            return LayerFilterRule(
+                rule_data.name,
+                [rule_data.input_variable],
+                rule_data.layer_number,
                 rule_data.output_variable,
             )
 
