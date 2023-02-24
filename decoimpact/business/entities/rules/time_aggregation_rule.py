@@ -95,6 +95,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             DataArray: Values of operation type
         """
+        result = None
         if self._operation_type is TimeOperationType.ADD:
             result = aggregated_values.sum()
 
@@ -109,9 +110,12 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         if self._operation_type is TimeOperationType.MEDIAN:
             result = aggregated_values.median()
-        else:
-           raise NotImplementedError(f"The operation type '{self._operation_type}'"
-                                          "is currently not supported")
+
+        if result is None:
+            raise NotImplementedError(
+                f"The operation type '{self._operation_type}'"
+                "is currently not supported"
+            )
 
         return _xr.DataArray(result)
 
