@@ -119,7 +119,7 @@ def test_rename_variable_returns_dataset_without_old_variable_and_with_new_varia
     variable3 = "variable3"
     new_name = "new_name"
     dataset1 = _xr.Dataset(
-        data_vars=dict(var1=variable1, var2=variable2, var3=variable3)
+        data_vars=dict(variable1=variable1, variable2=variable2, variable3=variable3)
     )
     # Act
     dataset2 = utilities.rename_variable(dataset1, "var1", new_name)
@@ -127,5 +127,28 @@ def test_rename_variable_returns_dataset_without_old_variable_and_with_new_varia
     # Assert
     assert isinstance(dataset2, _xr.Dataset)
     assert dataset2.__contains__(new_name)
-    assert dataset2.__contains__("var2")
-    assert not dataset2.__contains__("var1")
+    assert dataset2.__contains__("variable2")
+    assert not dataset2.__contains__("variable1")
+
+
+def test_merged_dataset_is_xarray_dataset_and_contains_all_variables():
+    """Test if merged dataset returns an XArray dataset and contains all variables"""
+
+    # Arrange
+    variable1 = "variable1"
+    variable2 = "variable2"
+    dataset1 = _xr.Dataset(data_vars=dict(variable1=variable1, variable2=variable2))
+
+    variable3 = "variable3"
+    variable4 = "variable4"
+    dataset2 = _xr.Dataset(data_vars=dict(variable3=variable3, variable4=variable4))
+
+    # Act
+    dataset3 = utilities.merge_datasets(dataset1, dataset2)
+
+    # Assert
+    assert isinstance(dataset3, _xr.Dataset)
+    assert dataset3.__contains__(variable1)
+    assert dataset3.__contains__(variable2)
+    assert dataset3.__contains__(variable3)
+    assert dataset3.__contains__(variable4)

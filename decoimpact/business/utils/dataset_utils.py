@@ -106,3 +106,23 @@ def rename_variable(
             f"ERROR: Cannot rename variable {variable_old} to {variable_new}"
         ) from exc
     return output_dataset
+
+
+def merge_datasets(dataset1: _xr.Dataset, dataset2: _xr.Dataset) -> _xr.Dataset:
+    """Merge 2 datasets into 1 dataset
+
+    Args:
+        dataset1 (_xr.Dataset): Dataset 1 to merge
+        dataset2 (_xr.Dataset): Dataset 2 to merge
+
+    Raises:
+        ValueError: When datasets cannot be merged
+
+    Returns:
+        _xr.Dataset: Original dataset
+    """
+    try:
+        output_dataset = dataset1.merge(dataset2, compat="identical")
+    except ValueError as exc:
+        raise ValueError(f"ERROR: Cannot merge {dataset1} and {dataset2}") from exc
+    return output_dataset

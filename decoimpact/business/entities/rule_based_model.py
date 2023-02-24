@@ -13,7 +13,7 @@ import xarray as _xr
 from decoimpact.business.entities.i_model import IModel, ModelStatus
 from decoimpact.business.entities.rule_processor import RuleProcessor
 from decoimpact.business.entities.rules.i_rule import IRule
-from decoimpact.business.utils.dataset_utils import copy_dataset
+from decoimpact.business.utils.dataset_utils import copy_dataset, merge_datasets
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -90,7 +90,9 @@ class RuleBasedModel(IModel):
 
         # MDK 22-02-2023 NEEDS TO BE DONE AS PART OF DEI-32. Work in progress
         # Right now everything is copied to the output dataset, which is not ideal
-        self._output_dataset = copy_dataset(self._input_datasets[0])
+        self._output_dataset = merge_datasets(
+            self._input_datasets[0], self._input_datasets[1]
+        )
 
         if not success:
             logger.log_error("Initialization failed")
