@@ -22,16 +22,18 @@ def example_rule():
 
 def test_create_step_function(example_rule):
     """
-    Test creating a new Step Fuction rule
+    Test creating a new (valid) Step Fuction rule
     """
+    # Arrange
+    logger = Mock(ILogger)
 
+    # Assert
     assert example_rule._name == "step_function_rule_name"
-
     assert example_rule.input_variable_names[0] == "input_variable_name"
     assert example_rule._limits == [0, 1, 2, 5, 10]
-
     assert example_rule._responses == [10, 11, 12, 15, 20]
     assert isinstance(example_rule, StepFunctionRule)
+    assert example_rule.validate(logger)
 
 
 @pytest.mark.parametrize(
@@ -49,8 +51,10 @@ def test_execute_values_between_limits(
     """
     Test the function execution with input values between the interval limits.
     """
+    # Arrange
     logger = Mock(ILogger)
 
+    # Assert
     assert example_rule.execute(input_value, logger) == expected_output_value
     logger.log_warning.assert_not_called()
 
@@ -65,8 +69,10 @@ def test_execute_values_at_limits(
     """
     Test the function execution with input values exactly at the interval limits.
     """
+    # Arrange
     logger = Mock(ILogger)
 
+    # Assert
     assert example_rule.execute(input_value, logger) == expected_output_value
     logger.log_warning.assert_not_called()
 
@@ -84,16 +90,23 @@ def test_execute_values_outside_limits(
     """
     Test the function execution with input values outside the interval limits.
     """
+    # Arrange
     logger = Mock(ILogger)
 
+    # Assert
     assert example_rule.execute(input_value, logger) == expected_output_value
     logger.log_warning.assert_called_with(expected_log_message)
 
 
 def test_limits_and_responses_have_different_lengths(example_rule: StepFunctionRule):
     """
-    Test the function execution with input values outside the interval limits.
+    Test the function execution when limits and responses have different lengths
     """
+    # Arrange
     logger = Mock(ILogger)
+
+    # Act
     example_rule._limits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    # Assert
     assert not example_rule.validate(logger)
