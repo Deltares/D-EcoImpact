@@ -2,8 +2,8 @@
 Tests for TimeAggregationRuleData class
 """
 
-from decoimpact.business.entities.rules.time_operation_type import TimeOperationType
 from decoimpact.data.api.i_rule_data import IRuleData
+from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.entities.time_aggregation_rule_data import TimeAggregationRuleData
 
 

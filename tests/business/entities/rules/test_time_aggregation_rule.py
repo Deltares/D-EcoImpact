@@ -7,8 +7,8 @@ import xarray as _xr
 from mock import Mock
 
 from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
-from decoimpact.business.entities.rules.time_operation_type import TimeOperationType
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.api.time_operation_type import TimeOperationType
 
 data_yearly = [0.1, 0.7, 0.2, 0.2, 0.3, 0.1]
 time_yearly = [
@@ -196,6 +196,7 @@ result_time_monthly = [
 result_time_monthly = [np.datetime64(t) for t in result_time_monthly]
 
 ####################################################################
+
 def test_execute_value_array_aggregate_time_monthly_add():
     """Aggregate input_variable_names of a TimeAggregationRule (add, monthly)"""
 

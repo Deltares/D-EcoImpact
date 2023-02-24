@@ -68,12 +68,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
 
-        time_dim_name = self._get_time_dimension_name(value_array)
-        if time_dim_name is None:
-            message = f"No time dimension found for {value_array.name}"
-            logger.log_error(message)
-            raise ValueError(message)
-
+        time_dim_name = self._get_time_dimension_name(value_array, logger)
         aggregated_values = value_array.resample({time_dim_name: dim_name})
 
         result = self._perform_operation(aggregated_values)
@@ -117,14 +112,14 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         return _xr.DataArray(result)
 
-    def _get_time_dimension_name(self, variable: _xr.DataArray) -> str:
+    def _get_time_dimension_name(self, variable: _xr.DataArray, logger: ILogger) -> str:
         """Retrieves the dimension name
 
         Args:
             value_array (DataArray): values to get time dimension
 
         Raises:
-            KeyError: If time dimension could not be found
+            ValueError: If time dimension could not be found
 
         Returns:
             str: time dimension name
@@ -135,4 +130,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             if dim_values.dtype.name == "datetime64[ns]":
                 return str(dim)
 
-        raise KeyError(f"Could not detect time dimension for {variable.name}")
+        message = f"No time dimension found for {variable.name}"
+        logger.log_error(message)
+        raise ValueError(message)

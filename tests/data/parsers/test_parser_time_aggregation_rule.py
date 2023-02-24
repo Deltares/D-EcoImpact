@@ -4,8 +4,8 @@ Tests for ParserTimeAggregationRule class
 
 import pytest
 
-from decoimpact.business.entities.rules.time_operation_type import TimeOperationType
 from decoimpact.data.api.i_rule_data import IRuleData
+from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.data.parsers.parser_time_aggregation_rule import (
     ParserTimeAggregationRule,
