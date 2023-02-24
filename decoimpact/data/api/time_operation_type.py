@@ -1,5 +1,5 @@
 """
-Module for TimeOperationType 
+Module for TimeOperationType
 
 Classes:
     TimeOperationType
