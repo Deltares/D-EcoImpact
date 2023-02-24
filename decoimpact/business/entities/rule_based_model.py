@@ -98,7 +98,7 @@ class RuleBasedModel(IModel):
 
         self._create_output_dataset()
 
-        # Do the renaming TO DO
+        self._output_dataset = self._output_dataset.rename_vars(self._mapping)
 
         if not success:
             logger.log_error("Initialization failed")
