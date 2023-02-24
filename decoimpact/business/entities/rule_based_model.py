@@ -19,6 +19,7 @@ from decoimpact.business.utils.dataset_utils import (
     merge_list_of_datasets,
     remove_variables,
 )
+from decoimpact.business.utils.utils import flatten_list, remove_duplicates_from_list
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -110,19 +111,25 @@ class RuleBasedModel(IModel):
             "mesh2d_flowelem_bl",
         ]
         print("d2", system_vars)
-        variables_to_remove.remove(system_vars)
+        # variables_to_remove.remove(system_vars)
         print("d3", variables_to_remove)
         # remove all vars
         self._output_dataset = remove_variables(
             self._output_dataset, variables_to_remove
         )
 
-        #         vanuit Irule:
-        #     def input_variable_names(self) -> List[str]:
+        variables_in_output = []
+        for rule in range(0, len(self._rules)):
+            variables_in_output.append(self._rules[rule].input_variable_names)
+            variables_in_output.append([self._rules[rule].output_variable_name])
 
-        #     def output_variable_name(self) -> str:
-        # bewaren
-        # make unique list
+        variables_in_output.append(system_vars)
+
+        print("help", variables_in_output)
+        print("help", flatten_list(variables_in_output))
+
+        print("help", remove_duplicates_from_list(variables_in_output))
+
         # Now do the renaming
 
         if not success:
