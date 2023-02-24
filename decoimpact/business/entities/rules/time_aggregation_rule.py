@@ -8,6 +8,7 @@ Classes:
 from typing import List
 
 import xarray as _xr
+from xarray.core.resample import DataArrayResample
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
@@ -87,35 +88,43 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         return result
 
-    def _perform_operation(self, aggregated_values: _xr.DataArray) -> _xr.DataArray:
+    def _perform_operation(self, aggregated_values: DataArrayResample) -> _xr.DataArray:
         """Returns the values based on the operation type
 
         Args:
-            aggregated_values (DataArray): aggragetate values
+            aggregated_values (DataArrayResample): aggregate values
+
+        Raises:
+            NotImplementedError: If operation type is not supported
 
         Returns:
             DataArray: Values of operation type
         """
-        if self._operation_type is TimeOperationType.ADD:
-            return _xr.DataArray(aggregated_values.sum())
+        match self._operation_type:
+            case TimeOperationType.ADD:
+                result = aggregated_values.sum()
+            case TimeOperationType.MIN:
+                result = aggregated_values.min()
+            case TimeOperationType.MAX:
+                result = aggregated_values.max()
+            case TimeOperationType.AVERAGE:
+                result = aggregated_values.mean()
+            case TimeOperationType.MEDIAN:
+                result = aggregated_values.median()
+            case _:
+                raise NotImplementedError(f"The operation type '{self._operation_type}'"
+                                          "is currently not supported")
 
-        if self._operation_type is TimeOperationType.MIN:
-            return _xr.DataArray(aggregated_values.min())
-
-        if self._operation_type is TimeOperationType.MAX:
-            return _xr.DataArray(aggregated_values.max())
-
-        if self._operation_type is TimeOperationType.AVERAGE:
-            return _xr.DataArray(aggregated_values.mean())
-
-        if self._operation_type is TimeOperationType.MEDIAN:
-            return _xr.DataArray(aggregated_values.median())
+        return _xr.DataArray(result)
 
     def _get_time_dimension_name(self, variable: _xr.DataArray) -> str:
         """Retrieves the dimension name
 
         Args:
             value_array (DataArray): values to get time dimension
+
+        Raises:
+            KeyError: If time dimension could not be found
 
         Returns:
             str: time dimension name
@@ -124,4 +133,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         for dim in variable.dims:
             dim_values = variable[dim]
             if dim_values.dtype.name == "datetime64[ns]":
-                return dim
+                return str(dim)
+
+        raise KeyError(f"Could not detect time dimension for {variable.name}")
