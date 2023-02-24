@@ -6,8 +6,6 @@ Classes:
 
 """
 
-
-from operator import mod
 from pathlib import Path
 
 from decoimpact.business.entities.i_model import ModelStatus
