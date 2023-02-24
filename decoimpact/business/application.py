@@ -7,8 +7,10 @@ Classes:
 """
 
 
+from operator import mod
 from pathlib import Path
 
+from decoimpact.business.entities.i_model import ModelStatus
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
 from decoimpact.business.workflow.model_runner import ModelRunner
 
@@ -52,4 +54,7 @@ class Application:
 
         ModelRunner.run_model(model, self._logger)
 
-        self._da_layer.write_output_file(model.output_dataset, model_data.output_path)
+        if model.status == ModelStatus.FINALIZED:
+            self._da_layer.write_output_file(
+                model.output_dataset, model_data.output_path
+            )

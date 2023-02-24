@@ -13,6 +13,7 @@ from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRul
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.business.entities.rules.time_operation_type import TimeOperationType
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.dictionary_utils import get_dict_element
 
 
 class TimeAggregationRule(RuleBase, IArrayBasedRule):
@@ -29,7 +30,29 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
     ):
         super().__init__(name, input_variable_names, output_variable_name, description)
         self._operation_type = operation_type
-        self._time_scale = time_scale
+        self._time_scale = time_scale.lower()
+        self._time_scale_mapping = {"month": "M", "year": "Y"}
+
+    def validate(self, logger: ILogger) -> bool:
+        """Validates if the rule is valid
+
+        Returns:
+            bool: wether the rule is valid
+        """
+        valid = True
+        allowed_time_scales = self._time_scale_mapping.keys()
+
+        if self._time_scale not in allowed_time_scales:
+            options = ",".join(allowed_time_scales)
+            logger.log_error(
+                f"The provided time scale '{self._time_scale}' "
+                f"of rule '{self._name}' is not supported.\n"
+                f"Please select one of the following types: "
+                f"{options}"
+            )
+            valid = False
+
+        return valid
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
 
@@ -42,10 +65,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             DataArray: Aggregated values
         """
 
-        if self._time_scale == "month":
-            dim_name = "M"
-        else:
-            dim_name = "Y"
+        dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
 
         time_dim_name = self._get_time_dimension_name(value_array)
         if time_dim_name is None:
