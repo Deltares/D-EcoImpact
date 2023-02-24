@@ -96,10 +96,29 @@ class RuleBasedModel(IModel):
         self._rule_processor = RuleProcessor(self._rules, self._input_datasets)
         success = self._rule_processor.initialize(logger)
 
-        # MDK 22-02-2023 NEEDS TO BE DONE AS PART OF DEI-32. Work in progress
-        # Right now everything is copied to the output dataset, which is not ideal
+        self._create_output_dataset()
+
+        # Do the renaming TO DO
+
+        if not success:
+            logger.log_error("Initialization failed")
+
+    def _create_output_dataset(self):
+        """Create the output dataset containing system variables"""
         self._output_dataset = merge_list_of_datasets(self._input_datasets)
 
+        variables_in_output = self._make_output_variables_list()
+        all_variables = list_vars(self._output_dataset)
+
+        variables_to_remove = [x for x in all_variables if x not in variables_in_output]
+
+        self._output_dataset = remove_variables(
+            self._output_dataset, variables_to_remove
+        )
+        return self._output_dataset
+
+    def _make_output_variables_list(self):
+        """Make list of variables to be contained in the output dataset"""
         system_vars = [
             "mesh2d",
             "mesh2d_face_nodes",
@@ -113,25 +132,12 @@ class RuleBasedModel(IModel):
         for rule in range(0, len(self._rules)):
             variables_in_output.append(self._rules[rule].input_variable_names)
             variables_in_output.append([self._rules[rule].output_variable_name])
-
         variables_in_output.append(system_vars)
 
         variables_in_output = flatten_list(
             remove_duplicates_from_list(variables_in_output)
         )
-        all_variables = list_vars(self._output_dataset)
-        print("dsds", all_variables)
-        print("needed vars", variables_in_output)
-
-        variables_to_remove = [x for x in all_variables if x not in variables_in_output]
-        print("qqq", variables_to_remove)
-
-        self._output_dataset = remove_variables(
-            self._output_dataset, variables_to_remove
-        )
-
-        if not success:
-            logger.log_error("Initialization failed")
+        return variables_in_output
 
     def execute(self, logger: ILogger) -> None:
         """Executes the model"""
