@@ -9,11 +9,16 @@ Classes:
 from typing import List
 
 import xarray as _xr
+from numpy import var
 
 from decoimpact.business.entities.i_model import IModel, ModelStatus
 from decoimpact.business.entities.rule_processor import RuleProcessor
 from decoimpact.business.entities.rules.i_rule import IRule
-from decoimpact.business.utils.dataset_utils import merge_list_of_datasets
+from decoimpact.business.utils.dataset_utils import (
+    list_vars,
+    merge_list_of_datasets,
+    remove_variables,
+)
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -24,6 +29,7 @@ class RuleBasedModel(IModel):
         self,
         input_datasets: List[_xr.Dataset],
         rules: List[IRule],
+        mapping: dict[str, str] = {},
         name: str = "Rule-Based model",
     ) -> None:
 
@@ -33,6 +39,7 @@ class RuleBasedModel(IModel):
         self._input_datasets: List[_xr.Dataset] = input_datasets
         self._output_dataset: _xr.Dataset
         self._rule_processor: RuleProcessor
+        self._mapping = mapping
 
     @property
     def name(self) -> str:
@@ -91,6 +98,32 @@ class RuleBasedModel(IModel):
         # MDK 22-02-2023 NEEDS TO BE DONE AS PART OF DEI-32. Work in progress
         # Right now everything is copied to the output dataset, which is not ideal
         self._output_dataset = merge_list_of_datasets(self._input_datasets)
+
+        variables_to_remove = list_vars(self._output_dataset)
+        print("d1", variables_to_remove)
+        system_vars = [
+            "mesh2d",
+            "mesh2d_face_nodes",
+            "mesh2d_edge_nodes",
+            "mesh2d_face_x_bnd",
+            "mesh2d_face_y_bnd",
+            "mesh2d_flowelem_bl",
+        ]
+        print("d2", system_vars)
+        variables_to_remove.remove(system_vars)
+        print("d3", variables_to_remove)
+        # remove all vars
+        self._output_dataset = remove_variables(
+            self._output_dataset, variables_to_remove
+        )
+
+        #         vanuit Irule:
+        #     def input_variable_names(self) -> List[str]:
+
+        #     def output_variable_name(self) -> str:
+        # bewaren
+        # make unique list
+        # Now do the renaming
 
         if not success:
             logger.log_error("Initialization failed")

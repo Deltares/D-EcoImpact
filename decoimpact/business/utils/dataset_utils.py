@@ -30,12 +30,12 @@ def add_variable(
     return dataset
 
 
-def remove_variable(dataset: _xr.Dataset, variable: str) -> _xr.Dataset:
+def remove_variables(dataset: _xr.Dataset, variables: list[str]) -> _xr.Dataset:
     """Remove variable from dataset
 
     Args:
         dataset (_xr.Dataset): Dataset to remove variable from
-        variable (str/list): Variable(s) to remove
+        variables (str/list): Variable(s) to remove
 
     Raises:
         ValueError: When variable can not be removed
@@ -44,9 +44,9 @@ def remove_variable(dataset: _xr.Dataset, variable: str) -> _xr.Dataset:
         _xr.Dataset: Original dataset
     """
     try:
-        dataset = dataset.drop_vars(variable)
+        dataset = dataset.drop_vars(variables)
     except ValueError as exc:
-        raise ValueError("ERROR: Cannot remove variable from dataset") from exc
+        raise ValueError(f"ERROR: Cannot remove {variables} from dataset") from exc
     return dataset
 
 
@@ -99,8 +99,9 @@ def rename_variable(
     Returns:
         _xr.Dataset: Original dataset
     """
+    mapping_dict = {variable_old: variable_new}
     try:
-        output_dataset = dataset.rename(variable_old=variable_new)
+        output_dataset = dataset.rename(mapping_dict)
     except ValueError as exc:
         raise ValueError(
             f"ERROR: Cannot rename variable {variable_old} to {variable_new}"
@@ -128,7 +129,7 @@ def merge_datasets(dataset1: _xr.Dataset, dataset2: _xr.Dataset) -> _xr.Dataset:
     return output_dataset
 
 
-def merge_list_of_datasets(list_datasets: list) -> _xr.Dataset:
+def merge_list_of_datasets(list_datasets: list[_xr.Dataset]) -> _xr.Dataset:
     """Merge list of datasets into 1 dataset
 
     Args:

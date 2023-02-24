@@ -39,7 +39,10 @@ class ModelBuilder(IModelBuilder):
         datasets = [self._da_layer.read_input_dataset(ds) for ds in model_data.datasets]
         rules = list(ModelBuilder._create_rules(model_data.rules))
 
-        model: IModel = RuleBasedModel(datasets, rules, model_data.name)
+        # 24-02-2023. Current mapping only for one 1 dataset
+        mapping = model_data.datasets[0].mapping
+
+        model: IModel = RuleBasedModel(datasets, rules, mapping, model_data.name)
 
         return model
 

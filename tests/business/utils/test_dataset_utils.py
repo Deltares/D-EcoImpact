@@ -54,7 +54,7 @@ def test_remove_variable_remove_variable_and_keeps_others():
     variable_to_be_removed = variable2
 
     # Act
-    dataset = utilities.remove_variable(dataset, variable_to_be_removed)
+    dataset = utilities.remove_variables(dataset, variable_to_be_removed)
 
     # Assert
     assert dataset.__contains__(variable1)
@@ -68,15 +68,15 @@ def test_remove_variable_throws_exception_if_dataset_does_not_contain_variable()
 
     # Arrange
     variable_name = "test_variable"
-
+    list_variables = [variable_name]
     dataset = _xr.Dataset()
 
     # Act
     with pytest.raises(ValueError) as error:
-        utilities.remove_variable(dataset, variable_name)
+        utilities.remove_variables(dataset, list_variables)
 
     # Assert
-    assert error.value.args[0] == "ERROR: Cannot remove variable from dataset"
+    assert error.value.args[0] == f"ERROR: Cannot remove {list_variables} from dataset"
 
 
 def test_list_variables_in_dataset():
@@ -122,8 +122,8 @@ def test_rename_variable_returns_dataset_without_old_variable_and_with_new_varia
         data_vars=dict(variable1=variable1, variable2=variable2, variable3=variable3)
     )
     # Act
-    dataset2 = utilities.rename_variable(dataset1, "var1", new_name)
-
+    dataset2 = utilities.rename_variable(dataset1, "variable1", new_name)
+    # dataset2 = dataset1.rename(variable1=new_name)
     # Assert
     assert isinstance(dataset2, _xr.Dataset)
     assert dataset2.__contains__(new_name)
