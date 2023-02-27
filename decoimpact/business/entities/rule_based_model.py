@@ -86,7 +86,7 @@ class RuleBasedModel(IModel):
             valid = False
 
         for rule in self._rules:
-            valid = valid and rule.validate(logger)
+            valid = rule.validate(logger) and valid
 
         return valid
 
