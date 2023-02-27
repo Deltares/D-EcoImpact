@@ -18,6 +18,10 @@ from decoimpact.data.entities.multiply_rule_data import MultiplyRuleData
 from decoimpact.data.entities.step_function_data import StepFunctionRuleData
 
 
+def test_create_multiply_rule_based_model():
+    """Test creating a multiply-rule-based model via factory"""
+
+
 def test_create_rule_based_model():
     """Test creating a rule-based model via builder"""
 
@@ -87,5 +91,5 @@ def test_create_rule_based_model_with_non_supported_rule():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = "The rule type of rule 'test' is currently " "not implemented"
+    expected_message = "The rule type of rule 'test' is currently not implemented"
     assert exception_raised.args[0] == expected_message
