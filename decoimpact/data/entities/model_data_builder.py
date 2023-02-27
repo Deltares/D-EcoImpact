@@ -6,6 +6,7 @@ from pathlib import Path
 from sqlite3 import NotSupportedError
 from typing import Any, Iterable, List
 
+from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
@@ -20,9 +21,10 @@ class ModelDataBuilder:
     """Builder for creating Model data objects (parsing rules and datasets
     read from the input file to Rule and DatasetData objects)"""
 
-    def __init__(self) -> None:
+    def __init__(self, logger: ILogger) -> None:
         """Create ModelDataBuilder"""
         self._rule_parsers = list(rule_parsers())
+        self._logger = logger
 
     def parse_yaml_data(self, contents: dict[Any, Any]) -> IModelData:
         """Parse the Yaml input file into a data object"""
@@ -57,7 +59,7 @@ class ModelDataBuilder:
 
             parser = self._get_rule_data_parser(rule_type_name)
 
-            yield parser.parse_dict(rule_dict)
+            yield parser.parse_dict(rule_dict, self._logger)
 
     def _get_rule_data_parser(self, rule_name: str) -> IParserRuleBase:
         for parser in rule_parsers():

@@ -32,7 +32,7 @@ class ModelBuilder(IModelBuilder):
         self._da_layer = da_layer
 
     def build_model(self, model_data: IModelData) -> IModel:
-        """Creates an model based on model data
+        """Creates a model based on model data
 
         Returns:
             IModel: instance of a model based on model data
