@@ -10,7 +10,6 @@ from typing import Iterable, List, Tuple
 
 import numpy as _np
 import xarray as _xr
-from attr import attributes
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
@@ -25,22 +24,22 @@ from decoimpact.data.dictionary_utils import get_dict_element
 class RuleProcessor:
     """Model class for processing models based on rules"""
 
-    def __init__(self, rules: List[IRule], input_datasets: List[_xr.Dataset]) -> None:
+    def __init__(self, rules: List[IRule], input_dataset: _xr.Dataset) -> None:
         """Creates instance of a rule processor using the provided
         rules and input datasets
 
         Args:
             rules (List[IRule]): rules to process
-            input_datasets (List[_xr.Dataset]): list of input datasets to use
+            input_dataset (_xr.Dataset): input dataset to use
         """
         if len(rules) < 1:
             raise ValueError("No rules defined.")
 
-        if len(input_datasets) < 1:
+        if input_dataset is None:
             raise ValueError("No datasets defined.")
 
         self._rules = rules
-        self._input_datasets = input_datasets
+        self._input_dataset = input_dataset
         self._processing_list: List[List[IRule]] = []
 
     def initialize(self, logger: ILogger) -> bool:
@@ -54,9 +53,9 @@ class RuleProcessor:
             bool: A boolean to indicate if all the rules can be processed.
         """
         inputs: List[str] = []
-        for dataset in self._input_datasets:
-            for key in dataset:
-                inputs.append(str(key))
+
+        for key in self._input_dataset:
+            inputs.append(str(key))
 
         tree, success = self._create_rule_sets(inputs, list(self._rules), [], logger)
         if success:
@@ -230,15 +229,11 @@ class RuleProcessor:
     def _get_variable_by_name(
         self, name: str, output_dataset: _xr.Dataset
     ) -> _xr.DataArray:
-        # search input datasets
-        for dataset in self._input_datasets:
-            if name in dataset.keys():
-                return dataset[name]
-
         # search output dataset (generated output)
         if name in output_dataset:
             return output_dataset[name]
 
         raise KeyError(
-            f"Key {name} was not found in input datasets or in calculated output dataset"
+            f"Key {name} was not found in input datasets or " ,
+            "in calculated output dataset"
         )

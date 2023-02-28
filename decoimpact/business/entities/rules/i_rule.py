@@ -29,11 +29,11 @@ class IRule(ABC):
     @property
     @abstractmethod
     def input_variable_names(self) -> List[str]:
-        """Name of the input variable"""
+        """Names of the input variable"""
 
     @property
     @abstractmethod
-    def output_variable_name(self) -> List[str]:
+    def output_variable_name(self) -> str:
         """Name of the output variable"""
 
     @abstractmethod

@@ -26,8 +26,6 @@ class ModelDataBuilder:
 
     def parse_yaml_data(self, contents: dict[Any, Any]) -> IModelData:
         """Parse the Yaml input file into a data object"""
-        print("contents", contents)
-
         intput_datasets = list(self._parse_input_datasets(contents))
         output_dataset = self._parse_output_dataset(contents)
         rules = list(self._parse_rules(contents))

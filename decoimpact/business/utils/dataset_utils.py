@@ -1,5 +1,7 @@
 """Library for utility functions regarding an xarray dataset"""
 
+from typing import List, Optional
+
 import xarray as _xr
 
 
@@ -50,7 +52,7 @@ def remove_variables(dataset: _xr.Dataset, variables: list[str]) -> _xr.Dataset:
     return dataset
 
 
-def list_vars(dataset: _xr.Dataset) -> list:
+def list_vars(dataset: _xr.Dataset) -> list[str]:
     """List variables in dataset
 
     Args:
@@ -59,8 +61,7 @@ def list_vars(dataset: _xr.Dataset) -> list:
     Returns:
         list_variables
     """
-    list_variables = list(dataset.data_vars)
-    return list_variables
+    return list((dataset.data_vars or {}).keys())
 
 
 def copy_dataset(dataset: _xr.Dataset) -> _xr.Dataset:
@@ -146,3 +147,32 @@ def merge_list_of_datasets(list_datasets: list[_xr.Dataset]) -> _xr.Dataset:
     except ValueError as exc:
         raise ValueError(f"ERROR: Cannot merge {list_datasets}") from exc
     return output_dataset
+
+
+def create_composed_dataset(
+    input_datasets: List[_xr.Dataset],
+    variables_to_use: List[str],
+    mapping: Optional[dict[str, str]],
+) -> _xr.Dataset:
+    """Creates a dataset based on the provided input datasets and
+    the selected variables
+
+    Args:
+        input_datasets (List[_xr.Dataset]): inputs to copy the data from
+        variables_to_use (List[str]): selected variables to copy
+        mapping (dict[str, str]): mapping for variables to rename after copying
+
+    Returns:
+        _xr.Dataset: composed dataset (with selected variables)
+    """
+    merged_dataset = merge_list_of_datasets(input_datasets)
+
+    all_variables = list_vars(merged_dataset)
+
+    variables_to_remove = [x for x in all_variables if x not in variables_to_use]
+
+    cleaned_dataset = remove_variables(merged_dataset, variables_to_remove)
+    if mapping is None or len(mapping) == 0:
+        return cleaned_dataset
+
+    return cleaned_dataset.rename_vars(mapping)

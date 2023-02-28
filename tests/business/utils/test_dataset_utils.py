@@ -20,7 +20,7 @@ def test_dataset_contains_variable_after_addition():
     utilities.add_variable(dataset, variable, variable_name)
 
     # Assert
-    assert dataset.__contains__(variable_name)
+    assert variable_name in dataset
 
 
 def test_add_incorrect_variable_to_dataset_throws_exception():
@@ -51,15 +51,15 @@ def test_remove_variable_remove_variable_and_keeps_others():
     dataset = _xr.Dataset(
         data_vars=dict(variable1=variable1, variable2=variable2, variable3=variable3)
     )
-    variable_to_be_removed = variable2
+    variable_to_be_removed = [variable2]
 
     # Act
     dataset = utilities.remove_variables(dataset, variable_to_be_removed)
 
     # Assert
-    assert dataset.__contains__(variable1)
-    assert dataset.__contains__(variable3)
-    assert not dataset.__contains__(variable2)
+    assert variable1 in dataset
+    assert variable3 in dataset
+    assert variable2 not in dataset
 
 
 def test_remove_variable_throws_exception_if_dataset_does_not_contain_variable():
@@ -125,9 +125,9 @@ def test_rename_variable_returns_dataset_without_old_variable_and_with_new_varia
     dataset2 = utilities.rename_variable(dataset1, "variable1", new_name)
     # Assert
     assert isinstance(dataset2, _xr.Dataset)
-    assert dataset2.__contains__(new_name)
-    assert dataset2.__contains__("variable2")
-    assert not dataset2.__contains__("variable1")
+    assert new_name in dataset2
+    assert "variable2" in dataset2
+    assert "variable1" not in dataset2
 
 
 def test_merged_dataset_is_xarray_dataset_and_contains_all_variables():
@@ -147,10 +147,10 @@ def test_merged_dataset_is_xarray_dataset_and_contains_all_variables():
 
     # Assert
     assert isinstance(merged_dataset, _xr.Dataset)
-    assert merged_dataset.__contains__(variable1)
-    assert merged_dataset.__contains__(variable2)
-    assert merged_dataset.__contains__(variable3)
-    assert merged_dataset.__contains__(variable4)
+    assert variable1 in merged_dataset
+    assert variable2 in merged_dataset
+    assert variable3 in merged_dataset
+    assert variable4 in merged_dataset
 
 
 def test_merged_list_of_datasets_is_xarray_dataset_and_contains_all_variables():
@@ -175,9 +175,9 @@ def test_merged_list_of_datasets_is_xarray_dataset_and_contains_all_variables():
 
     # Assert
     assert isinstance(merged_dataset, _xr.Dataset)
-    assert merged_dataset.__contains__(variable1)
-    assert merged_dataset.__contains__(variable2)
-    assert merged_dataset.__contains__(variable3)
-    assert merged_dataset.__contains__(variable4)
-    assert merged_dataset.__contains__(variable5)
-    assert merged_dataset.__contains__(variable6)
+    assert variable1 in merged_dataset
+    assert variable2 in merged_dataset
+    assert variable3 in merged_dataset
+    assert variable4 in merged_dataset
+    assert variable5 in merged_dataset
+    assert variable6 in merged_dataset

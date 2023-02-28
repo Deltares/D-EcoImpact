@@ -3,7 +3,7 @@ Module for dictionary utilities
 
 """
 
-from typing import Dict, TypeVar
+from typing import Dict, Optional, TypeVar
 
 TValue = TypeVar("TValue")
 
@@ -11,7 +11,7 @@ TValue = TypeVar("TValue")
 def get_dict_element(
         key: str,
         contents: Dict[str, TValue],
-        required: bool = True) -> TValue:
+        required: bool = True) -> Optional[TValue]:
 
     """Tries to get an element from the provided dictionary
 

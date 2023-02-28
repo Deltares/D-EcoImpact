@@ -88,7 +88,7 @@ def test_creating_rule_processor_without_input_datasets_should_throw_exception()
 
     # Act
     with pytest.raises(ValueError) as exc_info:
-        RuleProcessor([rule], [])
+        RuleProcessor([rule], None)
 
     exception_raised = exc_info.value
 
@@ -108,7 +108,7 @@ def test_initialization_given_rule_dependencies():
 
     logger = Mock(ILogger)
     rules = _create_test_rules()
-    processor = RuleProcessor(rules, [dataset])
+    processor = RuleProcessor(rules, dataset)
 
     # Act & Assert
     assert processor.initialize(logger)
@@ -120,10 +120,8 @@ def test_process_rules_given_rule_dependencies():
     """
 
     # Arrange
-    input_dataset = _xr.Dataset()
     output_dataset = _xr.Dataset()
-
-    input_dataset["test"] = _xr.DataArray([32, 94, 9])
+    output_dataset["test"] = _xr.DataArray([32, 94, 9])
 
     rule1 = Mock(IArrayBasedRule, id="rule1")
     rule2 = Mock(IArrayBasedRule, id="rule2")
@@ -144,7 +142,7 @@ def test_process_rules_given_rule_dependencies():
     rule3.execute.return_value = _xr.DataArray([7, 8, 9])
 
     rules: List[IRule] = [rule1, rule2, rule3]
-    processor = RuleProcessor(rules, [input_dataset])
+    processor = RuleProcessor(rules, output_dataset)
 
     assert processor.initialize(logger)
 
@@ -152,7 +150,7 @@ def test_process_rules_given_rule_dependencies():
     processor.process_rules(output_dataset, logger)
 
     # Assert
-    assert len(output_dataset) == 3
+    assert len(output_dataset) == 4
     for rule in rules:
         rule.execute.assert_called_once_with(ANY, logger)
         assert rule.output_variable_name in output_dataset.keys()
@@ -180,7 +178,7 @@ def test_initialization_for_different_rule_dependencies(
 
     logger = Mock(ILogger)
     rules = _create_test_rules()
-    processor = RuleProcessor(rules, [dataset])
+    processor = RuleProcessor(rules, dataset)
 
     rules_to_remove = [rules[index] for index in indices_to_remove]
 
@@ -222,13 +220,12 @@ def test_process_rules_calls_multi_array_based_rule_execute_correctly():
     an IMultiArrayBasedRule is called with the right parameter"""
 
     # Arrange
-    input_dataset = _xr.Dataset()
     output_dataset = _xr.Dataset()
     array1 = _xr.DataArray([32, 94, 9])
     array2 = _xr.DataArray([7, 93, 6])
 
-    input_dataset["test"] = array1
-    input_dataset["test2"] = array2
+    output_dataset["test"] = array1
+    output_dataset["test2"] = array2
 
     logger = Mock(ILogger)
     rule = Mock(IMultiArrayBasedRule)
@@ -237,14 +234,14 @@ def test_process_rules_calls_multi_array_based_rule_execute_correctly():
     rule.output_variable_name = "output"
     rule.execute.return_value = _xr.DataArray([4, 3, 2])
 
-    processor = RuleProcessor([rule], [input_dataset])
+    processor = RuleProcessor([rule], output_dataset)
 
     # Act
     assert processor.initialize(logger)
     processor.process_rules(output_dataset, logger)
 
     # Assert
-    assert len(output_dataset) == 1
+    assert len(output_dataset) == 3
     assert rule.output_variable_name in output_dataset.keys()
 
     rule.execute.assert_called_once_with(ANY, logger)
@@ -261,11 +258,10 @@ def test_process_rules_calls_cell_based_rule_execute_correctly():
     an ICellBasedRule is called with the right parameter"""
 
     # Arrange
-    input_dataset = _xr.Dataset()
     output_dataset = _xr.Dataset()
     input_array = _xr.DataArray(_np.array([[1, 2, 3], [4, 5, 6]], _np.int32))
 
-    input_dataset["test"] = input_array
+    output_dataset["test"] = input_array
 
     logger = Mock(ILogger)
     rule = Mock(ICellBasedRule)
@@ -275,14 +271,14 @@ def test_process_rules_calls_cell_based_rule_execute_correctly():
 
     rule.execute.return_value = 1
 
-    processor = RuleProcessor([rule], [input_dataset])
+    processor = RuleProcessor([rule], output_dataset)
 
     # Act
     assert processor.initialize(logger)
     processor.process_rules(output_dataset, logger)
 
     # Assert
-    assert len(output_dataset) == 1
+    assert len(output_dataset) == 2
     assert rule.output_variable_name in output_dataset.keys()
 
     assert rule.execute.call_count == 6
@@ -293,11 +289,10 @@ def test_process_rules_calls_array_based_rule_execute_correctly():
     an IArrayBasedRule is called with the right parameter"""
 
     # Arrange
-    input_dataset = _xr.Dataset()
     output_dataset = _xr.Dataset()
     input_array = _xr.DataArray([32, 94, 9])
 
-    input_dataset["test"] = input_array
+    output_dataset["test"] = input_array
 
     logger = Mock(ILogger)
     rule = Mock(IArrayBasedRule)
@@ -306,14 +301,14 @@ def test_process_rules_calls_array_based_rule_execute_correctly():
     rule.output_variable_name = "output"
     rule.execute.return_value = _xr.DataArray([4, 3, 2])
 
-    processor = RuleProcessor([rule], [input_dataset])
+    processor = RuleProcessor([rule], output_dataset)
 
     # Act
     assert processor.initialize(logger)
     processor.process_rules(output_dataset, logger)
 
     # Assert
-    assert len(output_dataset) == 1
+    assert len(output_dataset) == 2
     assert rule.output_variable_name in output_dataset.keys()
 
     rule.execute.assert_called_once_with(ANY, logger)
@@ -329,11 +324,10 @@ def test_process_rules_throws_exception_for_array_based_rule_with_multiple_input
     if two inputs were defined"""
 
     # Arrange
-    input_dataset = _xr.Dataset()
     output_dataset = _xr.Dataset()
 
-    input_dataset["test1"] = _xr.DataArray([32, 94, 9])
-    input_dataset["test2"] = _xr.DataArray([32, 94, 9])
+    output_dataset["test1"] = _xr.DataArray([32, 94, 9])
+    output_dataset["test2"] = _xr.DataArray([32, 94, 9])
 
     logger = Mock(ILogger)
     rule = Mock(IArrayBasedRule)
@@ -341,7 +335,7 @@ def test_process_rules_throws_exception_for_array_based_rule_with_multiple_input
     rule.input_variable_names = ["test1", "test2"]
     rule.output_variable_name = "output"
 
-    processor = RuleProcessor([rule], [input_dataset])
+    processor = RuleProcessor([rule], output_dataset)
     assert processor.initialize(logger)
 
     # Act
@@ -360,11 +354,10 @@ def test_process_rules_throws_exception_for_unsupported_rule():
     not supported"""
 
     # Arrange
-    input_dataset = _xr.Dataset()
     output_dataset = _xr.Dataset()
     input_array = _xr.DataArray([32, 94, 9])
 
-    input_dataset["test"] = input_array
+    output_dataset["test"] = input_array
 
     logger = Mock(ILogger)
     rule = Mock(IRule)
@@ -373,7 +366,7 @@ def test_process_rules_throws_exception_for_unsupported_rule():
     rule.input_variable_names = ["test"]
     rule.output_variable_name = "output"
 
-    processor = RuleProcessor([rule], [input_dataset])
+    processor = RuleProcessor([rule], output_dataset)
     assert processor.initialize(logger)
 
     # Act
