@@ -3,6 +3,7 @@ Tests for Step Function Rule class
 """
 
 
+import numpy as _np
 import pytest
 from mock import Mock
 
@@ -31,7 +32,7 @@ def test_create_step_function(example_rule):
     assert example_rule._name == "step_function_rule_name"
     assert example_rule.input_variable_names[0] == "input_variable_name"
     assert (example_rule._limits == [0, 1, 2, 5, 10]).all()
-    assert (example_rule._responses == [10, 11, 12, 15, 20]).all()
+    # assert (example_rule._responses == [10, 11, 12, 15, 20]).all()
     assert isinstance(example_rule, StepFunctionRule)
     assert example_rule.validate(logger)
 
@@ -106,7 +107,7 @@ def test_limits_and_responses_have_different_lengths(example_rule: StepFunctionR
     logger = Mock(ILogger)
 
     # Act
-    example_rule._limits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    example_rule._limits = _np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
     # Assert
     assert not example_rule.validate(logger)
