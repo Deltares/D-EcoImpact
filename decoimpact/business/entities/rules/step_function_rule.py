@@ -12,9 +12,11 @@ Classes:
 
         f(val) = f(limit_i) if  limit_i<= val < limit_(i+1)
         f(val) = f(limit_1) if val < limit_1, and a warning message is logged.
-        f(val) = f(limit_n) if val > limit_1, and a warning message is logged.
+        f(val) = f(limit_n) if val > limit_n, and a warning message is logged.
 
 """
+
+from typing import List
 
 import numpy as _np
 
@@ -32,7 +34,7 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
 
     f(val) = f(limit_i) if  limit_i<= val < limit_(i+1)
     f(val) = f(limit_1) if val < limit_1, and a warning message is logged.
-    f(val) = f(limit_n) if val > limit_1, and a warning message is logged.
+    f(val) = f(limit_n) if val > limit_n, and a warning message is logged.
 
     """
 
@@ -40,16 +42,16 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
         self,
         name: str,
         input_variable_name: str,
-        limits: _np.array,
-        responses: _np.array,
+        limits: List[float],
+        responses: List[float],
         output_variable_name="output",
     ):
         super().__init__(name, [input_variable_name], output_variable_name)
 
         self._name = name
         self._input_variable_name = input_variable_name
-        self._limits = limits
-        self._responses = responses
+        self._limits = _np.array(limits)
+        self._responses = _np.array(responses)
 
     def validate(self, logger: ILogger) -> bool:
         if not len(self._limits) == len(self._responses):
