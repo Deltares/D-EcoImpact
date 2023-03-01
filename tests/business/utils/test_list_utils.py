@@ -18,7 +18,7 @@ def test_flatten_list_returns_flat_list():
     assert myflatlist == ["a", "b", "c", "d"]
 
 
-def test_remove_duplicates_from_List():
+def test_remove_duplicates_from_list():
     """Test if remove_duplicates_from_list returns a list without duplicates"""
     # Arrange
     mylist = ["a", "b", "c", "a", "b", "d", "e"]
