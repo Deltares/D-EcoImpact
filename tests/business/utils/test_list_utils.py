@@ -17,3 +17,15 @@ def test_flatten_list_returns_flat_list():
     # Assert
     assert myflatlist == ["a", "b", "c", "d"]
 
+
+def test_remove_duplicates_from_List():
+    """Test if remove_duplicates_from_list returns a list without duplicates"""
+    # Arrange
+    mylist = ["a", "b", "c", "a", "b", "d", "e"]
+    # Act
+
+    myflatlist = utilities.flatten_list(utilities.remove_duplicates_from_list(mylist))
+    myflatlist.sort()
+
+    # Assert
+    assert myflatlist == ["a", "b", "c", "d", "e"]
