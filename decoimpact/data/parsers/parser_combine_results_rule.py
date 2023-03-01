@@ -42,6 +42,6 @@ class ParserCombineResultsRule(IParserRuleBase):
         return CombineResultsRuleData(
             name,
             input_variable_names,
-            operation_type.capitalize(),
+            operation_type.upper(),
             output_variable_name,
         )
