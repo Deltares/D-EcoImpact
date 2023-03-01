@@ -1,5 +1,5 @@
 """
-Module for MultiplyRule interface
+Module for MultiplyRule class
 
 Classes:
     MultiplyRule
