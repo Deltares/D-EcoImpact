@@ -41,5 +41,5 @@ class StepFunctionRuleData(IStepFunctionRuleData, RuleData):
 
     @property
     def responses(self) -> List[float]:
-        """Step wise responses corresponding to each nterval defined by the limits"""
+        """Step wise responses corresponding to each interval defined by the limits"""
         return self._responses
