@@ -11,7 +11,7 @@ def flatten_list(_2d_list: list[Any]) -> list:
         _2d_list (list): list to be flattened
 
     Returns:
-        list
+        list: flat list
     """
     flat_list = []
     # Iterate through the outer list
@@ -31,7 +31,7 @@ def remove_duplicates_from_list(list_with_duplicates: list) -> list:
         list (list): list to be made distinct
 
     Returns:
-        list
+        list: list without duplicates
     """
 
     return list(set(list_with_duplicates))
