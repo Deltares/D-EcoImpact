@@ -70,7 +70,7 @@ class ModelRunner:
         model.status = ModelStatus.FAILED
         message = (
             f'Model "{model.name}" transition from '
-            f'{str(pre_status)} to {str(post_status)} has failed.'
+            f"{str(pre_status)} to {str(post_status)} has failed."
         )
 
         log.log_error(message)

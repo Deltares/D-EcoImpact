@@ -22,7 +22,6 @@ var/
 wheels/
 pip-wheel-metadata/
 share/python-wheels/
-ecoimpact/
 *.egg-info/
 .installed.cfg
 *.egg
