@@ -3,7 +3,9 @@ Tests for ParserMultiplyRule class
 """
 
 import pytest
+from mock import Mock
 
+from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.data.parsers.parser_multiply_rule import ParserMultiplyRule
@@ -33,10 +35,10 @@ def test_parse_dict_to_rule_data_logic():
             "output_variable": "output",
         }
     )
-
+    logger = Mock(ILogger)
     # Act
     data = ParserMultiplyRule()
-    parsed_dict = data.parse_dict(contents)
+    parsed_dict = data.parse_dict(contents, logger)
 
     assert isinstance(parsed_dict, IRuleData)
 
@@ -51,12 +53,13 @@ def test_parse_wrong_dict_to_rule_data_logic():
             "output_variable": "output",
         }
     )
+    logger = Mock(ILogger)
 
     # Act
     data = ParserMultiplyRule()
 
     with pytest.raises(AttributeError) as exc_info:
-        data.parse_dict(contents)
+        data.parse_dict(contents, logger)
 
     exception_raised = exc_info.value
 
@@ -76,11 +79,12 @@ def test_parse_multipliers_type():
             "output_variable": "output",
         }
     )
+    logger = Mock(ILogger)
 
     # Act
     data = ParserMultiplyRule()
     with pytest.raises(ValueError) as exc_info:
-        data.parse_dict(contents)
+        data.parse_dict(contents, logger)
 
     exception_raised = exc_info.value
 

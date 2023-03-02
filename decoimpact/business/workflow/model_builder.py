@@ -13,6 +13,7 @@ from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.layer_filter_rule import LayerFilterRule
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
+from decoimpact.business.entities.rules.step_function_rule import StepFunctionRule
 from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
@@ -21,6 +22,7 @@ from decoimpact.data.api.i_layer_filter_rule_data import ILayerFilterRuleData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
 from decoimpact.data.api.i_rule_data import IRuleData
+from decoimpact.data.api.i_step_function_rule_data import IStepFunctionRuleData
 from decoimpact.data.api.i_time_aggregation_rule_data import ITimeAggregationRuleData
 
 
@@ -32,7 +34,7 @@ class ModelBuilder(IModelBuilder):
         self._da_layer = da_layer
 
     def build_model(self, model_data: IModelData) -> IModel:
-        """Creates an model based on model data
+        """Creates a model based on model data
 
         Returns:
             IModel: instance of a model based on model data
@@ -68,6 +70,15 @@ class ModelBuilder(IModelBuilder):
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.layer_number,
+                rule_data.output_variable,
+            )
+
+        if isinstance(rule_data, IStepFunctionRuleData):
+            return StepFunctionRule(
+                rule_data.name,
+                rule_data.input_variable,
+                rule_data.limits,
+                rule_data.responses,
                 rule_data.output_variable,
             )
 

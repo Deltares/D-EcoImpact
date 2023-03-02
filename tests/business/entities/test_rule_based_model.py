@@ -42,9 +42,10 @@ def test_status_setter():
     # Arrange
     rule = Mock(IRule)
     dataset = Mock(IDatasetData)
+    logger = Mock(ILogger)
 
     # Act
-    model = RuleBasedModel([dataset], [rule])
+    model = RuleBasedModel([dataset], [rule], logger)
 
     assert model.status == ModelStatus.CREATED
     model.status = ModelStatus.EXECUTED
@@ -66,10 +67,10 @@ def test_validation_of_rule_based_model():
     rule.input_variable_names = ["test"]
     rule.output_variable_name = "output"
 
-    no_rules_and_datasets_model = RuleBasedModel([], [])
-    no_rules_model = RuleBasedModel([dataset], [])
-    no_datasets_model = RuleBasedModel([], [rule])
-    model = RuleBasedModel([dataset], [rule])
+    no_rules_and_datasets_model = RuleBasedModel([], [], logger)
+    no_rules_model = RuleBasedModel([dataset], [], logger)
+    no_datasets_model = RuleBasedModel([], [rule], logger)
+    model = RuleBasedModel([dataset], [rule], logger)
 
     # Act & Assert
 

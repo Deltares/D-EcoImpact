@@ -3,7 +3,9 @@ Tests for ParserLayerFilterRule class
 """
 
 import pytest
+from mock import Mock
 
+from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.data.parsers.parser_layer_filter_rule import ParserLayerFilterRule
@@ -34,11 +36,13 @@ def test_parse_dict_to_rule_data_logic():
             "output_variable": "output",
         }
     )
+    logger = Mock(ILogger)
 
     # Act
     data = ParserLayerFilterRule()
-    parsed_dict = data.parse_dict(contents)
+    parsed_dict = data.parse_dict(contents, logger)
 
+    # Assert
     assert isinstance(parsed_dict, IRuleData)
 
 
@@ -53,12 +57,13 @@ def test_parse_wrong_dict_to_rule_data_logic():
             "output_variable": "output",
         }
     )
+    logger = Mock(ILogger)
 
     # Act
     data = ParserLayerFilterRule()
 
     with pytest.raises(AttributeError) as exc_info:
-        data.parse_dict(contents)
+        data.parse_dict(contents, logger)
 
     exception_raised = exc_info.value
 
@@ -79,11 +84,12 @@ def test_parse_layer_number_type():
             "output_variable": "output",
         }
     )
+    logger = Mock(ILogger)
 
     # Act
     data = ParserLayerFilterRule()
     with pytest.raises(ValueError) as exc_info:
-        data.parse_dict(contents)
+        data.parse_dict(contents, logger)
 
     exception_raised = exc_info.value
 

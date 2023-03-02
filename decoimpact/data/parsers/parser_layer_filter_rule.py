@@ -6,6 +6,7 @@ Classes:
 """
 from typing import Any, Dict
 
+from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.dictionary_utils import get_dict_element
 from decoimpact.data.entities.layer_filter_rule_data import LayerFilterRuleData
@@ -21,7 +22,7 @@ class ParserLayerFilterRule(IParserRuleBase):
         """Type name for the rule"""
         return "layer_filter_rule"
 
-    def parse_dict(self, dictionary: Dict[str, Any]) -> IRuleData:
+    def parse_dict(self, dictionary: Dict[str, Any], logger: ILogger) -> IRuleData:
         """Parses the provided dictionary to a IRuleData
         Args:
             dictionary (Dict[str, Any]): Dictionary holding the values
