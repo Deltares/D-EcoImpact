@@ -32,7 +32,6 @@ def test_create_step_function(example_rule):
     assert example_rule._name == "step_function_rule_name"
     assert example_rule.input_variable_names[0] == "input_variable_name"
     assert (example_rule._limits == [0, 1, 2, 5, 10]).all()
-    # assert (example_rule._responses == [10, 11, 12, 15, 20]).all()
     assert isinstance(example_rule, StepFunctionRule)
     assert example_rule.validate(logger)
 
