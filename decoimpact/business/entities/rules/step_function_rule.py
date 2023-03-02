@@ -10,8 +10,10 @@ Classes:
         where limit_1 < limit_2 < ... < limit_i < ... < limit_n
         defines the limits of the interval for which the output values apply.
 
-        f(val) = f(limit_i) if  limit_i<= val < limit_(i+1)
+        f(val) = f(limit_i) if  limit_i<= val < limit_(i+1), no warning message is logged.
+        f(val) = f(limit_1) if val = limit_1, no warning message is logged.
         f(val) = f(limit_1) if val < limit_1, and a warning message is logged.
+        f(val) = f(limit_n) if val = limit_n, no warning message is logged.
         f(val) = f(limit_n) if val > limit_n, and a warning message is logged.
 
 """
@@ -32,8 +34,10 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
     where limit_1 < limit_2 < ... < limit_i < ... < limit_n
     defines the limits of the interval for which the output values apply.
 
-    f(val) = f(limit_i) if  limit_i<= val < limit_(i+1)
+    f(val) = f(limit_i) if  limit_i<= val < limit_(i+1), no warning message is logged.
+    f(val) = f(limit_1) if val = limit_1, no warning message is logged.
     f(val) = f(limit_1) if val < limit_1, and a warning message is logged.
+    f(val) = f(limit_n) if val = limit_n, no warning message is logged.
     f(val) = f(limit_n) if val > limit_n, and a warning message is logged.
 
     """
@@ -54,7 +58,11 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
         self._responses = _np.array(responses)
 
     def validate(self, logger: ILogger) -> bool:
-        if not len(self._limits) == len(self._responses):
+        if len(self._limits) != len(self._responses):
+            logger.log_error("The number of limits and of responses must be equal.")
+            return False
+        if len(self._limits) != len(set(self._limits)):
+            logger.log_error("Limits must be unique.")
             return False
         return True
 
@@ -70,7 +78,7 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
             value (float): value to classify
 
         Returns:
-            float: index corresponding to value to classify
+            float: response corresponding to value to classify
         """
 
         bins = self._limits

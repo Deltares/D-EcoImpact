@@ -150,17 +150,24 @@ def test_parser_sorts_unordered_limits():
     expected_log_message = "Limits were not ordered. They have been sorted increasingly, and their respective responses accordingly too."
 
     # Act
+
     original_step_function_data = parser.parse_dict(rule_dict, logger)
-    temp_limits = rule_dict["limits"]
-    temp_responses = rule_dict["responses"]
+    dictionary_shuffled = dict(rule_dict)
+
+    # shuffle limits and responses
+    temp_limits = dictionary_shuffled["limits"]
+    temp_responses = dictionary_shuffled["responses"]
     temp_tuple = list(zip(temp_limits, temp_responses))
     random.shuffle(temp_tuple)
+
     temp_limits, temp_responses = map(list, zip(*temp_tuple))
-    rule_dict["limits"] = temp_limits
-    rule_dict["responses"] = temp_responses
-    comparison_step_function_data = parser.parse_dict(rule_dict, logger)
+    dictionary_shuffled["limits"] = temp_limits
+    dictionary_shuffled["responses"] = temp_responses
+    comparison_step_function_data = parser.parse_dict(dictionary_shuffled, logger)
 
     # Assert
+    assert isinstance(original_step_function_data, StepFunctionRuleData)
+    assert isinstance(comparison_step_function_data, StepFunctionRuleData)
     assert not original_step_function_data.limits == temp_limits
     assert not original_step_function_data.responses == temp_responses
     assert original_step_function_data.limits == comparison_step_function_data.limits

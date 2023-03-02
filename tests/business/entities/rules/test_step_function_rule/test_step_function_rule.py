@@ -111,3 +111,20 @@ def test_limits_and_responses_have_different_lengths(example_rule: StepFunctionR
 
     # Assert
     assert not example_rule.validate(logger)
+    logger.log_error.assert_called_with(
+        "The number of limits and of responses must be equal."
+    )
+
+
+def test_limits_must_be_unique(example_rule: StepFunctionRule):
+    """The ParserStepFunctionRule cannot sort
+    limits if they are not unique. An error message should be sent."""
+    # Arrange
+    logger = Mock(ILogger)
+
+    # Act
+    example_rule._limits = _np.array([0, 1, 2, 5, 1])
+
+    # Assert
+    assert not example_rule.validate(logger)
+    logger.log_error.assert_called_with("Limits must be unique.")

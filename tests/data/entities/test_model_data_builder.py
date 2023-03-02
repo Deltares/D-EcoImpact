@@ -2,6 +2,8 @@
 Tests for ModelDataBuilder class
 """
 
+from typing import Any
+
 import pytest
 from mock import Mock
 
@@ -9,7 +11,7 @@ from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.entities.model_data_builder import ModelDataBuilder
 
-contents = dict(
+contents: dict[str, Any] = dict(
     {
         "input-data": [
             {"dataset": {"filename": "test", "variable_mapping": {"foo": "bar"}}}
