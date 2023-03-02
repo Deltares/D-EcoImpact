@@ -6,6 +6,7 @@ Classes:
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
+from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
 
 
@@ -18,7 +19,7 @@ class IParserRuleBase(ABC):
         """Type name for the rule"""
 
     @abstractmethod
-    def parse_dict(self, dictionary: Dict[str, Any]) -> IRuleData:
+    def parse_dict(self, dictionary: Dict[str, Any], logger: ILogger) -> IRuleData:
         """Parses the provided dictionary to a rule
         Args:
             dictionary (Dict[str, Any]): Dictionary holding the values

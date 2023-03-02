@@ -29,7 +29,10 @@ class ModelRunner:
             model.validate, model, logger, ModelStatus.VALIDATING, ModelStatus.VALIDATED
         )
         success = success and ModelRunner._change_state(
-            model.initialize, model, logger, ModelStatus.INITIALIZING,
+            model.initialize,
+            model,
+            logger,
+            ModelStatus.INITIALIZING,
             ModelStatus.INITIALIZED,
         )
         success = success and ModelRunner._change_state(
@@ -67,7 +70,7 @@ class ModelRunner:
         model.status = ModelStatus.FAILED
         message = (
             f'Model "{model.name}" transition from '
-            f'{str(pre_status)} to {str(post_status)} has failed.'
+            f"{str(pre_status)} to {str(post_status)} has failed."
         )
 
         log.log_error(message)
