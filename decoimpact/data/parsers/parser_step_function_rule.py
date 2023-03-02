@@ -3,7 +3,6 @@ Module for ParserStepFunctionRule class
 Classes:
     ParserStepFunctionRule
 """
-from logging import exception
 from typing import Any, List
 
 from decoimpact.crosscutting.i_logger import ILogger

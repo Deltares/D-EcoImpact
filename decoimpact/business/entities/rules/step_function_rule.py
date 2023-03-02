@@ -4,18 +4,6 @@
 Classes:
     StepFunction
 
-    Defines a step function output (float) to an input (float).
-
-    The input sorted list [limit_1, limit_2, ..., limit_i, ..., limit_n]
-        where limit_1 < limit_2 < ... < limit_i < ... < limit_n
-        defines the limits of the interval for which the output values apply.
-
-        f(val) = f(limit_i) if  limit_i<= val < limit_(i+1), no warning message is logged.
-        f(val) = f(limit_1) if val = limit_1, no warning message is logged.
-        f(val) = f(limit_1) if val < limit_1, and a warning message is logged.
-        f(val) = f(limit_n) if val = limit_n, no warning message is logged.
-        f(val) = f(limit_n) if val > limit_n, and a warning message is logged.
-
 """
 
 from typing import List
@@ -29,6 +17,8 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 class StepFunctionRule(RuleBase, ICellBasedRule):
     """Rule for Step function
+
+    Defines a step function output (float) to an input (float).
 
     The input sorted list [limit_1, limit_2, ..., limit_i, ..., limit_n]
     where limit_1 < limit_2 < ... < limit_i < ... < limit_n
