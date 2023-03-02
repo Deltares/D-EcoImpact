@@ -5,6 +5,7 @@ Tests for ParserCombinResultsRule class
 import pytest
 
 from decoimpact.data.api.i_rule_data import IRuleData
+from decoimpact.data.entities.combine_results_rule_data import CombineResultsRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.data.parsers.parser_combine_results_rule import ParserCombineResultsRule
 
@@ -30,15 +31,20 @@ def test_parse_dict_to_rule_data_logic():
             "name": "testname",
             "input_variables": ["foo", "bar"],
             "operation": "Multiply",
-            "output_variable": "output",
+            "output_variable": "test_output_name",
         }
     )
 
     # Act
-    data = ParserCombineResultsRule()
-    parsed_dict = data.parse_dict(contents)
+    parser = ParserCombineResultsRule()
+    parsed_dict = parser.parse_dict(contents)
 
     assert isinstance(parsed_dict, IRuleData)
+    assert isinstance(parsed_dict, CombineResultsRuleData)
+    assert parsed_dict.name == "testname"
+    assert parsed_dict.input_variable_names == ["foo", "bar"]
+    assert parsed_dict.operation_type == "MULTIPLY"
+    assert parsed_dict.output_variable == "test_output_name"
 
 
 def test_parse_wrong_dict_to_rule_data_logic():
@@ -65,7 +71,7 @@ def test_parse_wrong_dict_to_rule_data_logic():
     assert exception_raised.args[0] == expected_message
 
 
-def test_parse_operation_type():
+def test_error_if_parse_operation_type_given_by_number():
     """Test if the operation type is a str, but not a number"""
     # Arrange
     contents = dict(
