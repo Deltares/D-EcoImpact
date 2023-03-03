@@ -55,22 +55,19 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         Returns:
             DataArray: Input arrays
         """
+        dict_operations = {
+            MultiArrayOperationType.MULTIPLY: lambda npa: _np.product(npa, axis=0),
+            MultiArrayOperationType.MIN: lambda npa: _np.min(npa, axis=0),
+            MultiArrayOperationType.MAX: lambda npa: _np.max(npa, axis=0),
+            MultiArrayOperationType.AVERAGE: lambda npa: _np.average(npa, axis=0),
+            MultiArrayOperationType.MEDIAN: lambda npa: _np.median(npa, axis=0),
+            MultiArrayOperationType.ADD: lambda npa: _np.sum(npa, axis=0),
+            MultiArrayOperationType.SUBTRACT: lambda npa: _np.subtract(
+                npa[0], _np.sum(npa[1:], axis=0)
+            ),
+        }
         np_arrays = [a_array.to_numpy() for a_array in value_arrays]
-        match self._operation_type:
-            case MultiArrayOperationType.MULTIPLY:
-                return _xr.DataArray(_np.product(np_arrays, axis=0))
-            case MultiArrayOperationType.MIN:
-                return _xr.DataArray(_np.min(np_arrays, axis=0))
-            case MultiArrayOperationType.MAX:
-                return _xr.DataArray(_np.max(np_arrays, axis=0))
-            case MultiArrayOperationType.AVERAGE:
-                return _xr.DataArray(_np.average(np_arrays, axis=0))
-            case MultiArrayOperationType.MEDIAN:
-                return _xr.DataArray(_np.median(np_arrays, axis=0))
-            case MultiArrayOperationType.ADD:
-                return _xr.DataArray(_np.sum(np_arrays, axis=0))
-            case MultiArrayOperationType.SUBTRACT:
-                return _xr.DataArray(_np.subtract(np_arrays[0], _np.sum(np_arrays[1:], axis=0)))
+        return _xr.DataArray(dict_operations[self._operation_type](np_arrays))
 
     def _check_dimensions(self, np_arrays: List[_np.array]) -> bool:
         """Brief check if all the arrays to be combined have the
