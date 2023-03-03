@@ -2,6 +2,7 @@
 Tests for RuleBase class
 """
 
+from typing import List
 from unittest.mock import Mock
 
 import pytest
@@ -14,23 +15,62 @@ from decoimpact.business.entities.rules.multi_array_operation_type import (
 from decoimpact.crosscutting.i_logger import ILogger
 
 
-def test_create_combine_results_rule_should_set_defaults():
-    """Test creating a RuleBase with defaults"""
+def test_create_combine_results_rule_with_defaults():
+    """Test creating a combine results rule with defaults"""
 
     # Arrange & Act
     rule = CombineResultsRule(
-        "test", ["foo", "hello"], MultiArrayOperationType.MULTIPLY, "output"
+        "test_rule_name", ["foo", "hello"], MultiArrayOperationType.MULTIPLY, "output"
     )
     # Assert
-    assert rule.name == "test"
+    assert isinstance(rule, CombineResultsRule)
+    assert rule.name == "test_rule_name"
     assert rule.description == ""
     assert rule.input_variable_names == ["foo", "hello"]
     assert rule.operation_type == MultiArrayOperationType.MULTIPLY
     assert rule.output_variable_name == "output"
+
+
+def test_no_validate_error_with_correct_rule():
+    """Test a correct combine results rule validates without error"""
+
+    # Arrange
+    logger = Mock(ILogger)
+    rule = CombineResultsRule(
+        "test_rule_name", ["foo", "hello"], MultiArrayOperationType.MULTIPLY, "output"
+    )
+    value_array1 = _xr.DataArray([1, 2, 3])
+    value_array2 = _xr.DataArray([4, 3, 2])
+
+    # Act
+    valid = rule.validate([value_array1, value_array2], logger)
+
+    # Assert
     assert isinstance(rule, CombineResultsRule)
+    assert valid
 
 
-def test_execute_value_array_combine_results_rule_check_ndim():
+def test_create_combine_results_rule_with_all_fields():
+    """Test creating a combine results rule with all fields"""
+
+    # Arrange & Act
+    rule = CombineResultsRule(
+        "test_rule_name",
+        ["foo", "hello"],
+        MultiArrayOperationType.MULTIPLY,
+        "output",
+        "test description",
+    )
+    # Assert
+    assert isinstance(rule, CombineResultsRule)
+    assert rule.name == "test_rule_name"
+    assert rule.description == "test description"
+    assert rule.input_variable_names == ["foo", "hello"]
+    assert rule.operation_type == MultiArrayOperationType.MULTIPLY
+    assert rule.output_variable_name == "output"
+
+
+def test_validate_error_combine_results_rule_different_lengths():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
@@ -38,193 +78,61 @@ def test_execute_value_array_combine_results_rule_check_ndim():
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
     )
-    foo_data = [1, 2, 3]
-    hello_data = [4, 3, 2, 1]
-    value_array1 = _xr.DataArray(foo_data)
-    value_array2 = _xr.DataArray(hello_data)
+    value_array1 = _xr.DataArray([1, 2, 3])
+    value_array2 = _xr.DataArray([4, 3, 2, 1])
+
+    # Assert
+    valid = rule.validate([value_array1, value_array2], logger)
+    assert valid is False
+    logger.log_error.assert_called_with("The arrays must have the same dimensions.")
+
+
+def test_validate_error_combine_results_rule_different_shapes():
+    """Test setting input_variable_names of a RuleBase"""
+
+    # Arrange & Act
+    logger = Mock(ILogger)
+    rule = CombineResultsRule(
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
+    )
+    value_array1 = _xr.DataArray([[1, 2], [3, 4]])
+    value_array2 = _xr.DataArray([4, 3, 2, 1])
+
+    # Assert
+    valid = rule.validate([value_array1, value_array2], logger)
+    assert valid is False
+    logger.log_error.assert_called_with("The arrays must have the same dimensions.")
+
+
+@pytest.mark.parametrize(
+    "operation, expected_result",
+    [
+        (MultiArrayOperationType.MIN, [4, 5, 3]),
+        (MultiArrayOperationType.MAX, [20, 12, 24]),
+        (MultiArrayOperationType.MULTIPLY, [1200, 420, 432]),
+        (MultiArrayOperationType.AVERAGE, [13, 8, 11]),
+        (MultiArrayOperationType.MEDIAN, [15, 7, 6]),
+        (MultiArrayOperationType.ADD, [39, 24, 33]),
+        (MultiArrayOperationType.SUBTRACT, [1, -10, -27]),
+    ],
+)
+def test_all_operations_combine_results_rule(
+    operation: MultiArrayOperationType, expected_result: List[float]
+):
+    """Test the outcome of each operand for the combine results rule"""
+    # Arrange
+    logger = Mock(ILogger)
+    raw_data = [[20, 7, 3], [4, 5, 6], [15, 12, 24]]
+    xarray_data = [_xr.DataArray(arr) for arr in raw_data]
 
     # Act
-    with pytest.raises(ValueError) as exc_info:
-        rule.execute([value_array1, value_array2], logger)
-
-    exception_raised = exc_info.value
-
-    # Assert
-    assert exception_raised.args[0] == "The arrays are not in the same dimension/shape!"
-
-
-def test_execute_value_array_combine_results_rule_check_shape():
-    """Test setting input_variable_names of a RuleBase"""
-
-    # Arrange & Act
-    logger = Mock(ILogger)
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
+        "test_name",
+        ["var1_name", "var2_name", "var3_name"],
+        operation,
+        "output",
     )
-    foo_data = [[1, 2], [3, 4]]
-    hello_data = [4, 3, 2, 1]
-    value_array1 = _xr.DataArray(foo_data)
-    value_array2 = _xr.DataArray(hello_data)
-
-    # Act
-    with pytest.raises(ValueError) as exc_info:
-        rule.execute([value_array1, value_array2], logger)
-
-    exception_raised = exc_info.value
+    obtained_result = rule.execute(xarray_data, logger)
 
     # Assert
-    assert exception_raised.args[0] == "The arrays are not in the same dimension/shape!"
-
-
-def test_execute_value_array_combine_results_rule_multiply():
-    """Test setting input_variable_names of a RuleBase"""
-
-    # Arrange & Act
-    logger = Mock(ILogger)
-    rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
-    )
-    foo_data = [1, 2, 3, 4]
-    hello_data = [4, 3, 2, 1]
-    value_array1 = _xr.DataArray(foo_data)
-    value_array2 = _xr.DataArray(hello_data)
-
-    multiplied_array = rule.execute([value_array1, value_array2], logger)
-
-    result_data = [4.0, 6.0, 6.0, 4.0]
-    result_array = _xr.DataArray(result_data)
-
-    # Assert
-    _xr.testing.assert_equal(multiplied_array, result_array)
-
-
-def test_execute_value_array_combine_results_rule_min():
-    """Test setting input_variable_names of a RuleBase"""
-
-    # Arrange & Act
-    logger = Mock(ILogger)
-    rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MIN, "output"
-    )
-    foo_data = [1, 2, 3, 4]
-    hello_data = [4, 3, 2, 1]
-    value_array1 = _xr.DataArray(foo_data)
-    value_array2 = _xr.DataArray(hello_data)
-
-    min_array = rule.execute([value_array1, value_array2], logger)
-
-    result_data = [1.0, 2.0, 2.0, 1.0]
-    result_array = _xr.DataArray(result_data)
-
-    # Assert
-    _xr.testing.assert_equal(min_array, result_array)
-
-
-def test_execute_value_array_combine_results_rule_max():
-    """Test setting input_variable_names of a RuleBase"""
-
-    # Arrange & Act
-    logger = Mock(ILogger)
-    rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MAX, "output"
-    )
-    foo_data = [1, 2, 3, 4]
-    hello_data = [4, 3, 2, 1]
-    value_array1 = _xr.DataArray(foo_data)
-    value_array2 = _xr.DataArray(hello_data)
-
-    max_array = rule.execute([value_array1, value_array2], logger)
-
-    result_data = [4.0, 3.0, 3.0, 4.0]
-    result_array = _xr.DataArray(result_data)
-
-    # Assert
-    _xr.testing.assert_equal(max_array, result_array)
-
-
-def test_execute_value_array_combine_results_rule_average():
-    """Test setting input_variable_names of a RuleBase"""
-
-    # Arrange & Act
-    logger = Mock(ILogger)
-    rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], MultiArrayOperationType.AVERAGE, "output"
-    )
-    foo_data = [1, 2, 3, 4]
-    hello_data = [5, 3, 2, 1]
-    value_array1 = _xr.DataArray(foo_data)
-    value_array2 = _xr.DataArray(hello_data)
-
-    ave_array = rule.execute([value_array1, value_array2], logger)
-
-    result_data = [3, 2.5, 2.5, 2.5]
-    result_array = _xr.DataArray(result_data)
-
-    # Assert
-    _xr.testing.assert_equal(ave_array, result_array)
-
-
-def test_execute_value_array_combine_results_rule_median():
-    """Test setting input_variable_names of a RuleBase"""
-
-    # Arrange & Act
-    logger = Mock(ILogger)
-    rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MEDIAN, "output"
-    )
-    foo_data = [1, 2, 3, 4]
-    hello_data = [5, 3, 2, 1]
-    value_array1 = _xr.DataArray(foo_data)
-    value_array2 = _xr.DataArray(hello_data)
-
-    medi_array = rule.execute([value_array1, value_array2], logger)
-
-    result_data = [3, 2.5, 2.5, 2.5]
-    result_array = _xr.DataArray(result_data)
-
-    # Assert
-    _xr.testing.assert_equal(medi_array, result_array)
-
-
-def test_execute_value_array_combine_results_rule_add():
-    """Test setting input_variable_names of a RuleBase"""
-
-    # Arrange & Act
-    logger = Mock(ILogger)
-    rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], MultiArrayOperationType.ADD, "output"
-    )
-    foo_data = [1, 2, 3, 4]
-    hello_data = [5, 3, 2, 1]
-    value_array1 = _xr.DataArray(foo_data)
-    value_array2 = _xr.DataArray(hello_data)
-
-    add_array = rule.execute([value_array1, value_array2], logger)
-
-    result_data = [6, 5, 5, 5]
-    result_array = _xr.DataArray(result_data)
-
-    # Assert
-    _xr.testing.assert_equal(add_array, result_array)
-
-
-def test_execute_value_array_combine_results_rule_subtract():
-    """Test setting input_variable_names of a RuleBase"""
-
-    # Arrange & Act
-    logger = Mock(ILogger)
-    rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], MultiArrayOperationType.SUBTRACT, "output"
-    )
-    foo_data = [1, 2, 3, 4]
-    hello_data = [5, 3, 2, 1]
-    value_array1 = _xr.DataArray(foo_data)
-    value_array2 = _xr.DataArray(hello_data)
-
-    subs_array = rule.execute([value_array1, value_array2], logger)
-
-    result_data = [-4, -1, 1, 3]
-    result_array = _xr.DataArray(result_data)
-
-    # Assert
-    _xr.testing.assert_equal(subs_array, result_array)
+    _xr.testing.assert_equal(obtained_result, _xr.DataArray(expected_result))

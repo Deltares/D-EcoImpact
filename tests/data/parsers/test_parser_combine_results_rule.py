@@ -2,8 +2,13 @@
 Tests for ParserCombinResultsRule class
 """
 
+from typing import Any
+
 import pytest
 
+from decoimpact.business.entities.rules.multi_array_operation_type import (
+    MultiArrayOperationType,
+)
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.entities.combine_results_rule_data import CombineResultsRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
@@ -15,16 +20,42 @@ def test_parser_combine_results_rule_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    data = ParserCombineResultsRule()
+    rule = ParserCombineResultsRule()
 
     # Assert
-
-    assert isinstance(data, IParserRuleBase)
-    assert data.rule_type_name == "combine_results_rule"
+    assert isinstance(rule, IParserRuleBase)
+    assert rule.rule_type_name == "combine_results_rule"
 
 
 def test_parse_dict_to_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variables": ["foo", "bar"],
+            "operation": "Multiply",
+            "output_variable": "test_output_name",
+            "description": "test description",
+        }
+    )
+
+    # Act
+    parser = ParserCombineResultsRule()
+    parsed_dict = parser.parse_dict(contents)
+
+    # Assert
+    assert isinstance(parsed_dict, IRuleData)
+    assert isinstance(parsed_dict, CombineResultsRuleData)
+    assert parsed_dict.name == "testname"
+    assert parsed_dict.input_variable_names == ["foo", "bar"]
+    assert parsed_dict.operation_type == "MULTIPLY"
+    assert parsed_dict.output_variable == "test_output_name"
+    assert parsed_dict.description == "test description"
+
+
+def test_parse_dict_without_description():
+    """Test if description is set to empty string when not passed"""
     # Arrange
     contents = dict(
         {
@@ -39,12 +70,8 @@ def test_parse_dict_to_rule_data_logic():
     parser = ParserCombineResultsRule()
     parsed_dict = parser.parse_dict(contents)
 
-    assert isinstance(parsed_dict, IRuleData)
-    assert isinstance(parsed_dict, CombineResultsRuleData)
-    assert parsed_dict.name == "testname"
-    assert parsed_dict.input_variable_names == ["foo", "bar"]
-    assert parsed_dict.operation_type == "MULTIPLY"
-    assert parsed_dict.output_variable == "test_output_name"
+    # Assert
+    assert parsed_dict.description == ""
 
 
 def test_parse_wrong_dict_to_rule_data_logic():
@@ -71,26 +98,57 @@ def test_parse_wrong_dict_to_rule_data_logic():
     assert exception_raised.args[0] == expected_message
 
 
-def test_error_if_parse_operation_type_given_by_number():
-    """Test if the operation type is a str, but not a number"""
+@pytest.mark.parametrize(
+    "invalid_operation",
+    [1, [2, 3, 4], (5, 5, 7, 9), {"key": "MULTIPLYI"}, lambda a: a + 10],
+)
+def test_error_if_parse_operation_type_not_given_by_string(invalid_operation: Any):
+    """Test error if the operation is not a number"""
     # Arrange
     contents = dict(
         {
             "name": "testname",
             "input_variables": "input",
-            "operation": 2,
+            "operation": invalid_operation,
             "output_variable": "output",
         }
     )
+    rule = ParserCombineResultsRule()
 
     # Act
-    data = ParserCombineResultsRule()
     with pytest.raises(ValueError) as exc_info:
-        data.parse_dict(contents)
-
+        rule.parse_dict(contents)
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = """Operation should be a string, \
-                received: 2"""
+    expected_message = f"""Operation must be a string, \
+                received: {str(invalid_operation)}"""
+    assert exception_raised.args[0] == expected_message
+
+
+def test_error_if_parse_unknown_operation_type():
+    """Test error if the operation type is unknown"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variables": "input",
+            "operation": "unkown",
+            "output_variable": "output",
+        }
+    )
+    possible_operations = [
+        "\n" + operation_name
+        for operation_name in dir(MultiArrayOperationType)
+        if not operation_name.startswith("_")
+    ]
+    expected_message = f"Operation must be one of: {possible_operations}"
+    rule = ParserCombineResultsRule()
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        rule.parse_dict(contents)
+    exception_raised = exc_info.value
+
+    # Assert
     assert exception_raised.args[0] == expected_message

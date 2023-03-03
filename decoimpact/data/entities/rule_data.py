@@ -25,8 +25,8 @@ class RuleData(IRuleData, ABC):
         """
         super()
         self._name = name
-        self._description = description
         self._output_variable = output_variable
+        self._description = description
 
     @property
     def name(self) -> str:

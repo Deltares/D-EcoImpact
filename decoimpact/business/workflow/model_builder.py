@@ -101,6 +101,7 @@ class ModelBuilder(IModelBuilder):
                 rule_data.input_variable_names,
                 MultiArrayOperationType[rule_data.operation_type],
                 rule_data.output_variable,
+                rule_data.description,
             )
 
         error_str = (

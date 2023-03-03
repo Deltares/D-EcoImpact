@@ -21,8 +21,9 @@ class CombineResultsRuleData(ICombineResultsRuleData, RuleData):
         input_variable_names: List[str],
         operation_type: str,
         output_variable: str,
+        description: str = "",
     ):
-        super().__init__(name, output_variable)
+        super().__init__(name, output_variable, description)
         self._input_variable_names = input_variable_names
         self._operation_type = operation_type
 

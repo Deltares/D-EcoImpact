@@ -4,8 +4,12 @@ Module for Parser CombineResultsRule class
 Classes:
     CombineResultsRuleParser
 """
+from pkgutil import get_data
 from typing import Any, Dict
 
+from decoimpact.business.entities.rules.multi_array_operation_type import (
+    MultiArrayOperationType,
+)
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.dictionary_utils import get_dict_element
 from decoimpact.data.entities.combine_results_rule_data import CombineResultsRuleData
@@ -29,19 +33,34 @@ class ParserCombineResultsRule(IParserRuleBase):
         Returns:
             RuleBase: Rule based on the provided data
         """
-        name = get_dict_element("name", dictionary)
-        input_variable_names = get_dict_element("input_variables", dictionary)
-        operation_type: str = get_dict_element("operation", dictionary)
+        name = get_dict_element("name", dictionary, True)
+        input_variable_names = get_dict_element("input_variables", dictionary, True)
+        operation_type: str = get_dict_element("operation", dictionary, True)
+        self._validate_operation_type(operation_type)
+        operation_type = operation_type.upper()
         output_variable_name = get_dict_element("output_variable", dictionary)
-
-        if not isinstance(operation_type, str):
-            message = f"""Operation should be a string, \
-                received: {operation_type}"""
-            raise ValueError(message)
+        description = get_dict_element("description", dictionary, False)
+        if not description:
+            description = ""
 
         return CombineResultsRuleData(
             name,
             input_variable_names,
-            operation_type.upper(),
+            operation_type,
             output_variable_name,
+            description,
         )
+
+    def _validate_operation_type(self, operation_type: str):
+        if not isinstance(operation_type, str):
+            message = f"""Operation must be a string, \
+                received: {operation_type}"""
+            raise ValueError(message)
+        if operation_type.upper() not in dir(MultiArrayOperationType):
+            possible_operations = [
+                "\n" + operation_name
+                for operation_name in dir(MultiArrayOperationType)
+                if not operation_name.startswith("_")
+            ]
+            message = f"""Operation must be one of: {possible_operations}"""
+            raise ValueError(message)
