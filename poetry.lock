@@ -939,4 +939,4 @@ viz = ["matplotlib", "nc-time-axis", "seaborn"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9, <3.12" # max 3.11 because of scipy
-content-hash = "cdb151bb0397e3db9aedeacd387d9f3bce5971bab5a72a89a90a601674829f13"
+content-hash = "d2ce855c7d5f30b682965cbf1c239c8e6903f645792867f96f7fd533589759a0"

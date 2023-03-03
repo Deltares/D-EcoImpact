@@ -44,9 +44,10 @@ def test_status_setter():
     # Arrange
     rule = Mock(IRule)
     dataset = Mock(IDatasetData)
+    logger = Mock(ILogger)
 
     # Act
-    model = RuleBasedModel([dataset], [rule])
+    model = RuleBasedModel([dataset], [rule], logger)
 
     assert model.status == ModelStatus.CREATED
     model.status = ModelStatus.EXECUTED
@@ -70,11 +71,11 @@ def test_validation_of_rule_based_model():
     mapping = {"test": "renamed_var"}
     double_mapping = {"test": "test"}
 
-    no_rules_and_datasets_model = RuleBasedModel([], [])
-    no_rules_model = RuleBasedModel([dataset], [])
-    no_datasets_model = RuleBasedModel([], [rule])
+    no_rules_and_datasets_model = RuleBasedModel([], [], logger)
+    no_rules_model = RuleBasedModel([dataset], [], logger)
+    no_datasets_model = RuleBasedModel([], [rule], logger)
     duplicate_mapped_model = RuleBasedModel([dataset], [rule], double_mapping)
-    model = RuleBasedModel([dataset], [rule], mapping)
+    model = RuleBasedModel([dataset], [rule], mapping, logger)
 
     # Act & Assert
     assert not no_rules_and_datasets_model.validate(logger)
