@@ -65,6 +65,7 @@ def test_validation_of_rule_based_model():
 
     rule.input_variable_names = ["test"]
     rule.output_variable_name = "output"
+    rule.mapping = {"test": "renamed_var"}
 
     no_rules_and_datasets_model = RuleBasedModel([], [])
     no_rules_model = RuleBasedModel([dataset], [])
