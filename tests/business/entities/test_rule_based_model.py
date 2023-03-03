@@ -66,16 +66,19 @@ def test_validation_of_rule_based_model():
     rule.input_variable_names = ["test"]
     rule.output_variable_name = "output"
     mapping = {"test": "renamed_var"}
+    double_mapping = {"test": "test"}
 
     no_rules_and_datasets_model = RuleBasedModel([], [])
     no_rules_model = RuleBasedModel([dataset], [])
     no_datasets_model = RuleBasedModel([], [rule])
+    duplicate_mapped_model = RuleBasedModel([dataset], [rule], double_mapping)
     model = RuleBasedModel([dataset], [rule], mapping)
 
     # Act & Assert
     assert not no_rules_and_datasets_model.validate(logger)
     assert not no_rules_model.validate(logger)
     assert not no_datasets_model.validate(logger)
+    assert not duplicate_mapped_model.validate(logger)
     assert model.validate(logger)
 
 
