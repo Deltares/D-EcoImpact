@@ -39,6 +39,8 @@ def test_create_rule_based_model_with_defaults():
 
 
 def test_status_setter():
+    """Test if status is correctly set for a model"""
+
     # Arrange
     rule = Mock(IRule)
     dataset = Mock(IDatasetData)
