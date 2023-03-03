@@ -4,7 +4,6 @@ Module for Parser CombineResultsRule class
 Classes:
     CombineResultsRuleParser
 """
-from pkgutil import get_data
 from typing import Any, Dict
 
 from decoimpact.business.entities.rules.multi_array_operation_type import (
