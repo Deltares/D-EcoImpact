@@ -39,13 +39,6 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         """Name of the rule"""
         return self._operation_type
 
-    def validate(self, value_arrays: List[_xr.DataArray], logger: ILogger) -> bool:
-        np_arrays = [a_array.to_numpy() for a_array in value_arrays]
-        if not self._check_dimensions(np_arrays):
-            logger.log_error("The arrays must have the same dimensions.")
-            return False
-        return True
-
     def execute(
         self, value_arrays: List[_xr.DataArray], logger: ILogger
     ) -> _xr.DataArray:
@@ -55,7 +48,11 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         Returns:
             DataArray: Input arrays
         """
-        dict_operations = {
+        np_arrays = [a_array.to_numpy() for a_array in value_arrays]
+        if not self._check_dimensions(np_arrays):
+            raise ValueError("The arrays must have the same dimensions.")
+
+        operations = {
             MultiArrayOperationType.MULTIPLY: lambda npa: _np.product(npa, axis=0),
             MultiArrayOperationType.MIN: lambda npa: _np.min(npa, axis=0),
             MultiArrayOperationType.MAX: lambda npa: _np.max(npa, axis=0),
@@ -66,8 +63,10 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
                 npa[0], _np.sum(npa[1:], axis=0)
             ),
         }
-        np_arrays = [a_array.to_numpy() for a_array in value_arrays]
-        return _xr.DataArray(dict_operations[self._operation_type](np_arrays))
+        result_variable = operations[self._operation_type](np_arrays)
+        # result_variable = _xr.DataArray(operations[self._operation_type](np_arrays))
+        result_array = value_arrays[0].copy(data=result_variable)
+        return result_array
 
     def _check_dimensions(self, np_arrays: List[_np.array]) -> bool:
         """Brief check if all the arrays to be combined have the

@@ -5,10 +5,12 @@ Tests for ParserCombinResultsRule class
 from typing import Any
 
 import pytest
+from mock import Mock
 
 from decoimpact.business.entities.rules.multi_array_operation_type import (
     MultiArrayOperationType,
 )
+from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.entities.combine_results_rule_data import CombineResultsRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
@@ -39,10 +41,11 @@ def test_parse_dict_to_rule_data_logic():
             "description": "test description",
         }
     )
+    logger = Mock(ILogger)
 
     # Act
     parser = ParserCombineResultsRule()
-    parsed_dict = parser.parse_dict(contents)
+    parsed_dict = parser.parse_dict(contents, logger)
 
     # Assert
     assert isinstance(parsed_dict, IRuleData)
@@ -68,7 +71,7 @@ def test_parse_dict_without_description():
 
     # Act
     parser = ParserCombineResultsRule()
-    parsed_dict = parser.parse_dict(contents)
+    parsed_dict = parser.parse_dict(contents, logger=Mock(ILogger))
 
     # Assert
     assert parsed_dict.description == ""
@@ -89,7 +92,7 @@ def test_parse_wrong_dict_to_rule_data_logic():
     data = ParserCombineResultsRule()
 
     with pytest.raises(AttributeError) as exc_info:
-        data.parse_dict(contents)
+        data.parse_dict(contents, logger=Mock(ILogger))
 
     exception_raised = exc_info.value
 
@@ -117,7 +120,7 @@ def test_error_if_parse_operation_type_not_given_by_string(invalid_operation: An
 
     # Act
     with pytest.raises(ValueError) as exc_info:
-        rule.parse_dict(contents)
+        rule.parse_dict(contents, logger=Mock(ILogger))
     exception_raised = exc_info.value
 
     # Assert
@@ -147,7 +150,7 @@ def test_error_if_parse_unknown_operation_type():
 
     # Act
     with pytest.raises(ValueError) as exc_info:
-        rule.parse_dict(contents)
+        rule.parse_dict(contents, logger=Mock(ILogger))
     exception_raised = exc_info.value
 
     # Assert

@@ -39,11 +39,9 @@ def test_no_validate_error_with_correct_rule():
     rule = CombineResultsRule(
         "test_rule_name", ["foo", "hello"], MultiArrayOperationType.MULTIPLY, "output"
     )
-    value_array1 = _xr.DataArray([1, 2, 3])
-    value_array2 = _xr.DataArray([4, 3, 2])
 
     # Act
-    valid = rule.validate([value_array1, value_array2], logger)
+    valid = rule.validate(logger)
 
     # Assert
     assert isinstance(rule, CombineResultsRule)
@@ -70,11 +68,10 @@ def test_create_combine_results_rule_with_all_fields():
     assert rule.output_variable_name == "output"
 
 
-def test_validate_error_combine_results_rule_different_lengths():
+def test_execute_error_combine_results_rule_different_lengths():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
-    logger = Mock(ILogger)
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
     )
@@ -82,16 +79,17 @@ def test_validate_error_combine_results_rule_different_lengths():
     value_array2 = _xr.DataArray([4, 3, 2, 1])
 
     # Assert
-    valid = rule.validate([value_array1, value_array2], logger)
-    assert valid is False
-    logger.log_error.assert_called_with("The arrays must have the same dimensions.")
+    with pytest.raises(ValueError) as exc_info:
+        rule.execute([value_array1, value_array2], logger=Mock(ILogger))
+
+    exception_raised = exc_info.value
+    assert exception_raised.args[0] == "The arrays must have the same dimensions."
 
 
-def test_validate_error_combine_results_rule_different_shapes():
+def test_execute_error_combine_results_rule_different_shapes():
     """Test setting input_variable_names of a RuleBase"""
 
     # Arrange & Act
-    logger = Mock(ILogger)
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
     )
@@ -99,9 +97,11 @@ def test_validate_error_combine_results_rule_different_shapes():
     value_array2 = _xr.DataArray([4, 3, 2, 1])
 
     # Assert
-    valid = rule.validate([value_array1, value_array2], logger)
-    assert valid is False
-    logger.log_error.assert_called_with("The arrays must have the same dimensions.")
+    with pytest.raises(ValueError) as exc_info:
+        rule.execute([value_array1, value_array2], logger=Mock(ILogger))
+
+    exception_raised = exc_info.value
+    assert exception_raised.args[0] == "The arrays must have the same dimensions."
 
 
 @pytest.mark.parametrize(
