@@ -66,23 +66,39 @@ def test_validation_of_rule_based_model():
 
     dataset["test"] = _xr.DataArray([32, 94, 9])
 
-    rule.input_variable_names = ["test"]
+    rule.input_variable_names = ["input"]
     rule.output_variable_name = "output"
-    mapping = {"test": "renamed_var"}
-    double_mapping = {"test": "test"}
 
-    no_rules_and_datasets_model = RuleBasedModel([], [])
-    no_rules_model = RuleBasedModel([dataset], [])
-    no_datasets_model = RuleBasedModel([], [rule])
-    duplicate_mapped_model = RuleBasedModel([dataset], [rule], double_mapping)
+    mapping = {"test": "input"}
     model = RuleBasedModel([dataset], [rule], mapping)
 
+    map_to_itself = {"test": "test"}
+    model_map_to_itself = RuleBasedModel([dataset], [rule], map_to_itself)
+
+    map_non_existing_var = {"non_existing_var": "input"}
+    model_map_non_existing_var = RuleBasedModel([dataset], [rule], map_non_existing_var)
+
+    map_to_wrong_var = {"test": "incorrect_var"}
+    model_map_to_wrong_var = RuleBasedModel([dataset], [rule], map_to_wrong_var)
+
+    map_non_existing_var_to_wrong_var = {"non_existing_var": "incorrect_var"}
+    model_map_non_existing_var_to_wrong_var = RuleBasedModel(
+        [dataset], [rule], map_non_existing_var_to_wrong_var
+    )
+
+    model_no_rules_and_datasets = RuleBasedModel([], [])
+    model_no_rules = RuleBasedModel([dataset], [])
+    model_no_datasets_model = RuleBasedModel([], [rule])
+
     # Act & Assert
-    assert not no_rules_and_datasets_model.validate(logger)
-    assert not no_rules_model.validate(logger)
-    assert not no_datasets_model.validate(logger)
-    assert not duplicate_mapped_model.validate(logger)
     assert model.validate(logger)
+    assert not model_map_to_itself.validate(logger)
+    assert not model_map_non_existing_var.validate(logger)
+    assert not model_map_to_wrong_var.validate(logger)
+    assert not model_map_non_existing_var_to_wrong_var.validate(logger)
+    assert not model_no_rules_and_datasets.validate(logger)
+    assert not model_no_rules.validate(logger)
+    assert not model_no_datasets_model.validate(logger)
 
 
 def test_validation_of_rule_based_model_rule_dependencies():
