@@ -6,6 +6,7 @@ Classes:
 
 """
 
+from distutils.command import check
 from typing import List, Optional
 
 import xarray as _xr
@@ -121,17 +122,34 @@ class RuleBasedModel(IModel):
         XUgrid support and prevent invalid topologies.
         This also allows QuickPlot to visualize the results.
         """
-        system_vars = [
-            "mesh2d",
-            "mesh2d_face_nodes",
-            "mesh2d_edge_nodes",
-            "mesh2d_face_x_bnd",
-            "mesh2d_face_y_bnd",
-            "mesh2d_flowelem_bl",
-        ]
+
+        checked_vars = []
+        var_list = []
+        dummy_vars = []
+
+        def rec_search_dep_vars(dataset, var_list, dep_vars=[]):
+            # Recursive function to find all variable dependencies
+            for var_name in var_list:
+                if var_name not in checked_vars:
+                    dep_var = _du.get_dependent_vars_by_var_name(dataset, var_name)
+                    checked_vars.append(var_name)
+                    if len(dep_var) > 0:
+                        dep_vars = list(set(dep_var + dep_vars))
+                        dep_vars = list(
+                            set(
+                                dep_vars
+                                + rec_search_dep_vars(dataset, dep_var, dep_vars)
+                            )
+                        )
+
+            return dep_vars
+
+        for dataset in self._input_datasets:
+            dummy_vars = _du.get_dummy_variable_in_ugrid(dataset)
+            var_list = rec_search_dep_vars(dataset, dummy_vars)
 
         mapping_keys = list((self._mappings or {}).keys())
-        all_vars = system_vars + mapping_keys + self._get_direct_rule_inputs()
+        all_vars = dummy_vars + var_list + mapping_keys + self._get_direct_rule_inputs()
         return _lu.remove_duplicates_from_list(all_vars)
 
     def _check_mappings(self, mappings: dict[str, str], logger: ILogger) -> bool:
