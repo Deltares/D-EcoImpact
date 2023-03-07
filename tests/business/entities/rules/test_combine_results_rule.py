@@ -5,6 +5,7 @@ Tests for RuleBase class
 from typing import List
 from unittest.mock import Mock
 
+import numpy as _np
 import pytest
 import xarray as _xr
 
@@ -136,3 +137,29 @@ def test_all_operations_combine_results_rule(
 
     # Assert
     _xr.testing.assert_equal(obtained_result, _xr.DataArray(expected_result))
+
+
+def test_dims_present_in_result():
+    """Test that the dims metadata of the result is equal to the one of the first xarray used."""
+    # Arrange
+    logger = Mock(ILogger)
+    raw_data_1 = _np.ones((10, 20))
+    raw_data_2 = 2 * _np.ones((10, 20))
+    raw_data = [raw_data_1, raw_data_2]
+    xarray_data = [
+        _xr.DataArray(data=arr, dims=["test_dimension_1", "test_dimension_2"])
+        for arr in raw_data
+    ]
+
+    # Act
+    rule = CombineResultsRule(
+        "test_name",
+        ["var1_name", "var2_name", "var3_name"],
+        MultiArrayOperationType.ADD,
+        "output",
+    )
+    obtained_result = rule.execute(xarray_data, logger)
+
+    # Assert
+    # _xr.testing.assert_equal(obtained_result.dims, xarray_data[0].dims)
+    assert obtained_result.dims == xarray_data[0].dims

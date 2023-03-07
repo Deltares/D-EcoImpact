@@ -26,7 +26,7 @@ class ParserCombineResultsRule(IParserRuleBase):
         return "combine_results_rule"
 
     def parse_dict(self, dictionary: Dict[str, Any], logger: ILogger) -> IRuleData:
-        """Parses the provided dictionary to a IRuleData
+        """Parses the provided dictionary to an IRuleData
         Args:
             dictionary (Dict[str, Any]): Dictionary holding the values
                                          for making the rule
@@ -52,6 +52,9 @@ class ParserCombineResultsRule(IParserRuleBase):
         )
 
     def _validate_operation_type(self, operation_type: str):
+        """
+        Validates if the operation type is well formed (a string)
+        and if it has been implemented."""
         if not isinstance(operation_type, str):
             message = f"""Operation must be a string, \
                 received: {operation_type}"""

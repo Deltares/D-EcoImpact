@@ -14,6 +14,7 @@ from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
+from decoimpact.data.entities.combine_results_rule_data import CombineResultsRuleData
 from decoimpact.data.entities.multiply_rule_data import MultiplyRuleData
 from decoimpact.data.entities.step_function_data import StepFunctionRuleData
 
@@ -32,8 +33,8 @@ def test_create_rule_based_model():
     dataset_data = Mock(IDatasetData)
     da_layer = Mock(IDataAccessLayer)
 
-    rules_data = MultiplyRuleData("abc", [2, 5.86], "a", "b")
-    rule_data_step_function = StepFunctionRuleData(
+    multiply_rule_data = MultiplyRuleData("abc", [2, 5.86], "a", "b")
+    step_function_rule_data = StepFunctionRuleData(
         "step_function_name",
         [0.0, 20.0, 100.0],
         [1.0, 2.0, 3.0],
@@ -42,9 +43,17 @@ def test_create_rule_based_model():
         "output_step_func_name",
     )
 
+    combine_results_rule_data = CombineResultsRuleData(
+        "test_rule_name", ["foo", "hello"], "MULTIPLY", "output"
+    )
+
     model_data.name = "Test model"
     model_data.datasets = [dataset_data]
-    model_data.rules = [rules_data, rule_data_step_function]
+    model_data.rules = [
+        multiply_rule_data,
+        step_function_rule_data,
+        combine_results_rule_data,
+    ]
 
     da_layer.read_input_dataset.return_value = dataset
     model_builder = ModelBuilder(da_layer, logger)
@@ -57,7 +66,7 @@ def test_create_rule_based_model():
     assert isinstance(model, RuleBasedModel)
     assert model.name == "Test model"
     assert dataset in model.input_datasets
-    assert len(model.rules) == 2
+    assert len(model.rules) == 3
 
     # logs info about model creation
     logger.log_info.assert_called_once()

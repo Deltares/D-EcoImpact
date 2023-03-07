@@ -44,7 +44,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
     ) -> _xr.DataArray:
         """Calculate simple statistical operations with two or more input arrays
         Args:
-            input_arrays (DataArray): array list  containing the variables
+            input_arrays (DataArray): array list containing the variables
         Returns:
             DataArray: Input arrays
         """
@@ -63,10 +63,11 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
                 npa[0], _np.sum(npa[1:], axis=0)
             ),
         }
-        result_variable = operations[self._operation_type](np_arrays)
-        # result_variable = _xr.DataArray(operations[self._operation_type](np_arrays))
-        result_array = value_arrays[0].copy(data=result_variable)
-        return result_array
+        result_variable = _xr.DataArray(
+            data=operations[self._operation_type](np_arrays),
+            dims=value_arrays[0].dims,
+        )
+        return result_variable  # result_array
 
     def _check_dimensions(self, np_arrays: List[_np.array]) -> bool:
         """Brief check if all the arrays to be combined have the
