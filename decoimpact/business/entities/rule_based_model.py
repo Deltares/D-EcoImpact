@@ -6,7 +6,6 @@ Classes:
 
 """
 
-from distutils.command import check
 from typing import List, Optional
 
 import xarray as _xr
