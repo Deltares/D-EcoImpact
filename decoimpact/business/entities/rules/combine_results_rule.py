@@ -5,7 +5,7 @@ Classes:
     CombineResultsRule
 """
 
-from typing import List
+from typing import Any, Callable, List
 
 import numpy as _np
 import xarray as _xr
@@ -33,11 +33,27 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
     ):
         super().__init__(name, input_variable_names, output_variable_name, description)
         self._operation_type: MultiArrayOperationType = operation_type
+        self._operations = self._create_operations()
 
     @property
     def operation_type(self) -> MultiArrayOperationType:
         """Name of the rule"""
         return self._operation_type
+
+    def validate(self, logger: ILogger) -> bool:
+        if self._operation_type not in self._operations:
+
+            message = (f"Operation type {self._operation_type} is currently"
+                       " not supported.")
+
+            logger.log_error(message)
+            return False
+
+        if len(self._input_variable_names) < 2:
+            logger.log_error("Minimum of two input variables required.")
+            return False
+
+        return True
 
     def execute(
         self, value_arrays: List[_xr.DataArray], logger: ILogger
@@ -48,11 +64,24 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         Returns:
             DataArray: Input arrays
         """
+        if len(value_arrays) != len(self._input_variable_names):
+            raise ValueError("Not all expected arrays where provided.")
+
         np_arrays = [a_array.to_numpy() for a_array in value_arrays]
         if not self._check_dimensions(np_arrays):
             raise ValueError("The arrays must have the same dimensions.")
 
-        operations = {
+        operation_to_use = self._operations[self._operation_type]
+
+        result_variable = _xr.DataArray(
+            data=operation_to_use(np_arrays),
+            dims=value_arrays[0].dims
+        )
+
+        return result_variable
+
+    def _create_operations(self) -> dict[MultiArrayOperationType, Callable]:
+        return {
             MultiArrayOperationType.MULTIPLY: lambda npa: _np.product(npa, axis=0),
             MultiArrayOperationType.MIN: lambda npa: _np.min(npa, axis=0),
             MultiArrayOperationType.MAX: lambda npa: _np.max(npa, axis=0),
@@ -61,13 +90,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
             MultiArrayOperationType.ADD: lambda npa: _np.sum(npa, axis=0),
             MultiArrayOperationType.SUBTRACT: lambda npa: _np.subtract(
                 npa[0], _np.sum(npa[1:], axis=0)
-            ),
-        }
-        result_variable = _xr.DataArray(
-            data=operations[self._operation_type](np_arrays),
-            dims=value_arrays[0].dims,
-        )
-        return result_variable  # result_array
+            )}
 
     def _check_dimensions(self, np_arrays: List[_np.array]) -> bool:
         """Brief check if all the arrays to be combined have the
