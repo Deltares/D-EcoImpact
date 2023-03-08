@@ -73,11 +73,11 @@ class RuleBasedModel(IModel):
         valid = True
 
         if len(self._input_datasets) < 1:
-            logger.log_error("Model does not contain any datasets")
+            logger.log_error("Model does not contain any datasets.")
             valid = False
 
         if len(self._rules) < 1:
-            logger.log_error("Model does not contain any rules")
+            logger.log_error("Model does not contain any rules.")
             valid = False
 
         for rule in self._rules:
@@ -105,20 +105,20 @@ class RuleBasedModel(IModel):
     def execute(self, logger: ILogger) -> None:
         """Executes the model"""
         if self._rule_processor is None:
-            raise RuntimeError("Processor is not set, please initialize model")
+            raise RuntimeError("Processor is not set, please initialize model.")
 
         self._rule_processor.process_rules(self._output_dataset, logger)
 
     def finalize(self, logger: ILogger) -> None:
         """Finalizes the model"""
 
-        logger.log_debug("Finalize the rule processor")
+        logger.log_debug("Finalize the rule processor.")
         self._rule_processor = None
 
     def _make_output_variables_list(self):
-        """Make list of variables to be contained in the output dataset
+        """Make the list of variables to be contained in the output dataset.
         System variables have to be included in results to enable
-        XUgrid support and prevent invalid topologies.
+        XUgrid support and to prevent invalid topologies.
         This also allows QuickPlot to visualize the results.
         """
         system_vars = [
@@ -135,7 +135,7 @@ class RuleBasedModel(IModel):
         return _lu.remove_duplicates_from_list(all_vars)
 
     def _check_mappings(self, mappings: dict[str, str], logger: ILogger) -> bool:
-        """Checks if the provided mappings are valid
+        """Checks if the provided mappings are valid.
 
         Args:
             mappings (dict[str, str]): mappings to check
@@ -157,7 +157,7 @@ class RuleBasedModel(IModel):
         if len(missing_vars) > 0:
             logger.log_error(
                 "Could not find mapping variables "
-                f"'{', '.join(missing_vars)}' in any input dataset"
+                f"'{', '.join(missing_vars)}' in any input dataset."
             )
             valid = False
 
@@ -169,7 +169,7 @@ class RuleBasedModel(IModel):
             logger.log_error(
                 "Mapping towards the following variables "
                 f"'{', '.join(duplicates_created)}', will create duplicates with"
-                " variables in the input datasets"
+                " variables in the input datasets."
             )
             valid = False
 
@@ -182,7 +182,7 @@ class RuleBasedModel(IModel):
         if len(missing_rule_inputs) > 0:
             logger.log_error(
                 f"Missing the variables '{', '.join(missing_rule_inputs)}' that "
-                "are required by some rules"
+                "are required by some rules."
             )
             valid = False
 
@@ -190,7 +190,7 @@ class RuleBasedModel(IModel):
 
     def _get_direct_rule_inputs(self) -> List[str]:
         """Gets the input variables directly needed by rules from
-        input datasets
+        input datasets.
 
         Returns:
             List[str]:

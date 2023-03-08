@@ -20,7 +20,7 @@ from decoimpact.data.api.i_dataset import IDatasetData
 
 def test_create_rule_based_model_with_defaults():
     """Test that the default properties of a rule-based model
-    is set when creating the model using the default constructor"""
+    are set when creating the model using the default constructor."""
 
     # Arrange
     rule = Mock(IRule)

@@ -65,7 +65,7 @@ class RuleProcessor:
 
     def process_rules(self, output_dataset: _xr.Dataset, logger: ILogger) -> None:
         """Processes the rules defined in the initialize method
-        and adds the results to the provided output_dataset
+        and adds the results to the provided output_dataset.
 
         Args:
             output_dataset (_xr.Dataset): Dataset to place the rule
@@ -76,7 +76,7 @@ class RuleProcessor:
             RuntimeError: if initialization is not correctly done
         """
         if len(self._processing_list) < 1:
-            message = "Processor is not properly initialized, please initialize"
+            message = "Processor is not properly initialized, please initialize."
             raise RuntimeError(message)
 
         for rule_set in self._processing_list:
@@ -134,7 +134,7 @@ class RuleProcessor:
     def _get_solvable_rules(
         self, inputs: List[str], unprocessed_rules: List[IRule]
     ) -> List[IRule]:
-        """Checks which rules can be resolved using the provided "inputs" list
+        """Checks which rules can be resolved using the provided "inputs" list.
 
         Args:
             inputs (List[str]): available inputs to resolve rules with
@@ -156,7 +156,7 @@ class RuleProcessor:
     def _execute_rule(
         self, rule: IRule, output_dataset: _xr.Dataset, logger: ILogger
     ) -> _xr.DataArray:
-        """Processes the rule with the provided dataset
+        """Processes the rule with the provided dataset.
 
         Returns:
             _xr.DataArray: result data set
@@ -168,7 +168,7 @@ class RuleProcessor:
             return rule.execute(variables, logger)
 
         if len(variables) != 1:
-            raise NotImplementedError("Array based rule only supports one input")
+            raise NotImplementedError("Array based rule only supports one input array.")
 
         input_variable = variables[0]
 
@@ -235,5 +235,5 @@ class RuleProcessor:
 
         raise KeyError(
             f"Key {name} was not found in input datasets or ",
-            "in calculated output dataset",
+            "in calculated output dataset.",
         )

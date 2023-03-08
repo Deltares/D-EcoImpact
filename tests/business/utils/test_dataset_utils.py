@@ -9,7 +9,7 @@ import decoimpact.business.utils.dataset_utils as utilities
 
 
 def test_dataset_contains_variable_after_addition():
-    """Test if new dataset contains variable after addition"""
+    """Tests if new dataset contains variable after addition."""
 
     # Arrange
     variable = _xr.DataArray()
@@ -24,8 +24,8 @@ def test_dataset_contains_variable_after_addition():
 
 
 def test_add_incorrect_variable_to_dataset_throws_exception():
-    """Test if add variable throws exception when variable to be
-    added is not an XArray array"""
+    """Tests if add variable throws exception when variable to be
+    added is not an XArray array."""
 
     # Arrange
     variable = None
@@ -41,8 +41,8 @@ def test_add_incorrect_variable_to_dataset_throws_exception():
 
 
 def test_remove_variable_remove_variable_and_keeps_others():
-    """Test if remove dataset removes the desired variable, and
-    keeps the other variables"""
+    """Tests if remove dataset removes the desired variable, and
+    keeps the other variables."""
 
     # Arrange
     variable1 = "variable1"
@@ -63,8 +63,8 @@ def test_remove_variable_remove_variable_and_keeps_others():
 
 
 def test_remove_variable_throws_exception_if_dataset_does_not_contain_variable():
-    """Test if remove variable throws exception when variable is not present
-    in dataset"""
+    """Tests if remove variable throws exception when variable is not present
+    in dataset."""
 
     # Arrange
     variable_name = "test_variable"
@@ -76,11 +76,11 @@ def test_remove_variable_throws_exception_if_dataset_does_not_contain_variable()
         utilities.remove_variables(dataset, list_variables)
 
     # Assert
-    assert error.value.args[0] == f"ERROR: Cannot remove {list_variables} from dataset"
+    assert error.value.args[0] == f"ERROR: Cannot remove {list_variables} from dataset."
 
 
 def test_list_variables_in_dataset():
-    """Test if list dataset returns a list containing all variables"""
+    """Tests if list dataset returns a list containing all variables."""
 
     # Arrange
     variable1 = "variable1"
@@ -98,7 +98,7 @@ def test_list_variables_in_dataset():
 
 
 def test_copy_dataset_return_xarray_dataset():
-    """Test if copy dataset returns an XArray dataset"""
+    """Tests if copy dataset returns an XArray dataset."""
 
     # Arrange
     dataset1 = _xr.Dataset()
@@ -111,7 +111,7 @@ def test_copy_dataset_return_xarray_dataset():
 
 
 def test_rename_variable_returns_dataset_without_old_variable_and_with_new_variable():
-    """Test if copy dataset returns an XArray dataset"""
+    """Tests if copy dataset returns an XArray dataset."""
 
     # Arrange
     variable1 = "variable1"
@@ -131,7 +131,7 @@ def test_rename_variable_returns_dataset_without_old_variable_and_with_new_varia
 
 
 def test_merged_dataset_is_xarray_dataset_and_contains_all_variables():
-    """Test if merged dataset returns an XArray dataset and contains all variables"""
+    """Tests if merged dataset returns an XArray dataset and contains all variables."""
 
     # Arrange
     variable1 = "variable1"
@@ -154,7 +154,7 @@ def test_merged_dataset_is_xarray_dataset_and_contains_all_variables():
 
 
 def test_merged_list_of_datasets_is_xarray_dataset_and_contains_all_variables():
-    """Test if merged dataset returns an XArray dataset and contains all variables"""
+    """Tests if merged dataset returns an XArray dataset and contains all variables."""
 
     # Arrange
     variable1 = "variable1"
