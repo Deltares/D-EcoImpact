@@ -24,6 +24,7 @@ def add_variable(
     if not isinstance(variable, _xr.DataArray):
         raise ValueError("ERROR: Cannot add variable to dataset")
 
+    dataset[variable_name] = (variable.dims, variable.data)
     try:
         dataset[variable_name] = (variable.dims, variable.data)
     except ValueError as exc:

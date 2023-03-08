@@ -127,7 +127,7 @@ class RuleBasedModel(IModel):
         var_list = []
         dummy_vars = []
 
-        def rec_search_dep_vars(dataset, var_list, dep_vars=[]):
+        def rec_search_dep_vars(dataset, var_list, dep_vars):
             # Recursive function to find all variable dependencies
             for var_name in var_list:
                 if var_name not in checked_vars:
@@ -146,9 +146,11 @@ class RuleBasedModel(IModel):
 
         for dataset in self._input_datasets:
             dummy_vars = _du.get_dummy_variable_in_ugrid(dataset)
-            var_list = rec_search_dep_vars(dataset, dummy_vars)
+            var_list = rec_search_dep_vars(dataset, dummy_vars, [])
 
         mapping_keys = list((self._mappings or {}).keys())
+        print(mapping_keys)
+        print(self._get_direct_rule_inputs())
         all_vars = dummy_vars + var_list + mapping_keys + self._get_direct_rule_inputs()
         return _lu.remove_duplicates_from_list(all_vars)
 
