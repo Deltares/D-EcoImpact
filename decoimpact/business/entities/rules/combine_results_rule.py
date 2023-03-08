@@ -5,7 +5,7 @@ Classes:
     CombineResultsRule
 """
 
-from typing import Any, Callable, List
+from typing import Callable, List
 
 import numpy as _np
 import xarray as _xr
@@ -43,8 +43,9 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
     def validate(self, logger: ILogger) -> bool:
         if self._operation_type not in self._operations:
 
-            message = (f"Operation type {self._operation_type} is currently"
-                       " not supported.")
+            message = (
+                f"Operation type {self._operation_type} is currently" " not supported."
+            )
 
             logger.log_error(message)
             return False
@@ -74,8 +75,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         operation_to_use = self._operations[self._operation_type]
 
         result_variable = _xr.DataArray(
-            data=operation_to_use(np_arrays),
-            dims=value_arrays[0].dims
+            data=operation_to_use(np_arrays), dims=value_arrays[0].dims
         )
 
         return result_variable
@@ -90,7 +90,8 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
             MultiArrayOperationType.ADD: lambda npa: _np.sum(npa, axis=0),
             MultiArrayOperationType.SUBTRACT: lambda npa: _np.subtract(
                 npa[0], _np.sum(npa[1:], axis=0)
-            )}
+            ),
+        }
 
     def _check_dimensions(self, np_arrays: List[_np.array]) -> bool:
         """Brief check if all the arrays to be combined have the
