@@ -154,7 +154,7 @@ def test_dims_present_in_result():
     # Act
     rule = CombineResultsRule(
         "test_name",
-        ["var1_name", "var2_name", "var3_name"],
+        ["var1_name", "var2_name"],
         MultiArrayOperationType.ADD,
         "output",
     )
