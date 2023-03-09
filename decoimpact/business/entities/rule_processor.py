@@ -111,7 +111,6 @@ class RuleProcessor:
             Tuple[List[List[IRule]], bool]: Ordered list of rule-sets
         """
         solvable_rules = self._get_solvable_rules(inputs, unprocessed_rules)
-
         if len(solvable_rules) == 0:
             rules_list = [rule.name for rule in unprocessed_rules]
             rules_text = ", ".join(rules_list)
@@ -128,7 +127,6 @@ class RuleProcessor:
             return self._create_rule_sets(
                 inputs, unprocessed_rules, current_tree, logger
             )
-
         return current_tree, True
 
     def _get_solvable_rules(
@@ -161,7 +159,6 @@ class RuleProcessor:
         Returns:
             _xr.DataArray: result data set
         """
-
         variables = list(self._get_rule_input_variables(rule, output_dataset))
 
         if isinstance(rule, IMultiArrayBasedRule):
@@ -171,15 +168,20 @@ class RuleProcessor:
             raise NotImplementedError("Array based rule only supports one input")
 
         input_variable = variables[0]
-
         if isinstance(rule, IArrayBasedRule):
             result = rule.execute(input_variable, logger)
             self._copy_definition_attributes(input_variable, result)
+            # TODO: this should come from the input
+            result.attrs["long_name"] = rule.output_variable_name
+            result.attrs["standard_name"] = rule.output_variable_name
             return result
 
         if isinstance(rule, ICellBasedRule):
             result = self._process_by_cell(rule, input_variable, logger)
             self._copy_definition_attributes(input_variable, result)
+            # TODO: this should come from the input
+            result.attrs["long_name"] = rule.output_variable_name
+            result.attrs["standard_name"] = rule.output_variable_name
             return result
 
         raise NotImplementedError(f"Can not execute rule {rule.name}.")
