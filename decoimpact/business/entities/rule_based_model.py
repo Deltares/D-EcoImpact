@@ -84,14 +84,16 @@ class RuleBasedModel(IModel):
             valid = rule.validate(logger) and valid
 
         if self._mappings is not None:
-            valid = self._check_mappings(self._mappings, logger) and valid
+            valid = self._validate_mappings(self._mappings, logger) and valid
 
         return valid
 
     def initialize(self, logger: ILogger) -> None:
-        """Initializes the model"""
+        """Initializes the model.
+        Creates an output dataset which contains the necessary variables obtained
+        from the input dataset.
+        """
 
-        # create output dataset which contains the necessary input variables
         self._output_dataset = _du.create_composed_dataset(
             self._input_datasets, self._make_output_variables_list(), self._mappings
         )
@@ -134,7 +136,7 @@ class RuleBasedModel(IModel):
         all_vars = system_vars + mapping_keys + self._get_direct_rule_inputs()
         return _lu.remove_duplicates_from_list(all_vars)
 
-    def _check_mappings(self, mappings: dict[str, str], logger: ILogger) -> bool:
+    def _validate_mappings(self, mappings: dict[str, str], logger: ILogger) -> bool:
         """Checks if the provided mappings are valid.
 
         Args:

@@ -24,7 +24,7 @@ from decoimpact.data.dictionary_utils import get_dict_element
 class RuleProcessor:
     """Model class for processing models based on rules"""
 
-    def __init__(self, rules: List[IRule], input_dataset: _xr.Dataset) -> None:
+    def __init__(self, rules: List[IRule], dataset: _xr.Dataset) -> None:
         """Creates instance of a rule processor using the provided
         rules and input datasets
 
@@ -35,11 +35,11 @@ class RuleProcessor:
         if len(rules) < 1:
             raise ValueError("No rules defined.")
 
-        if input_dataset is None:
+        if dataset is None:
             raise ValueError("No datasets defined.")
 
         self._rules = rules
-        self._input_dataset = input_dataset
+        self._input_dataset = dataset
         self._processing_list: List[List[IRule]] = []
 
     def initialize(self, logger: ILogger) -> bool:
@@ -54,10 +54,9 @@ class RuleProcessor:
         """
         inputs: List[str] = []
 
-        for key in self._input_dataset:
-            inputs.append(str(key))
+        inputs = [str(key) for key in self._input_dataset]
 
-        tree, success = self._create_rule_sets(inputs, list(self._rules), [], logger)
+        tree, success = self._create_rule_sets(inputs, self._rules, [], logger)
         if success:
             self._processing_list = tree
 

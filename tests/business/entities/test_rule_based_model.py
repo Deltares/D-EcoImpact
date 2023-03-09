@@ -69,8 +69,8 @@ def test_validation_of_rule_based_model():
     rule.input_variable_names = ["input"]
     rule.output_variable_name = "output"
 
-    mapping = {"test": "input"}
-    model = RuleBasedModel([dataset], [rule], mapping)
+    mapping_usual = {"test": "input"}
+    model_usual = RuleBasedModel([dataset], [rule], mapping_usual)
 
     map_to_itself = {"test": "test"}
     model_map_to_itself = RuleBasedModel([dataset], [rule], map_to_itself)
@@ -81,9 +81,9 @@ def test_validation_of_rule_based_model():
     map_to_wrong_var = {"test": "incorrect_var"}
     model_map_to_wrong_var = RuleBasedModel([dataset], [rule], map_to_wrong_var)
 
-    map_non_existing_var_to_wrong_var = {"non_existing_var": "incorrect_var"}
-    model_map_non_existing_var_to_wrong_var = RuleBasedModel(
-        [dataset], [rule], map_non_existing_var_to_wrong_var
+    map_from_non_existing_var_to_wrong_var = {"non_existing_var": "incorrect_var"}
+    model_map_from_non_existing_var_to_wrong_var = RuleBasedModel(
+        [dataset], [rule], map_from_non_existing_var_to_wrong_var
     )
 
     model_no_rules_and_datasets = RuleBasedModel([], [])
@@ -91,11 +91,11 @@ def test_validation_of_rule_based_model():
     model_no_datasets_model = RuleBasedModel([], [rule])
 
     # Act & Assert
-    assert model.validate(logger)
+    assert model_usual.validate(logger)
     assert not model_map_to_itself.validate(logger)
     assert not model_map_non_existing_var.validate(logger)
     assert not model_map_to_wrong_var.validate(logger)
-    assert not model_map_non_existing_var_to_wrong_var.validate(logger)
+    assert not model_map_from_non_existing_var_to_wrong_var.validate(logger)
     assert not model_no_rules_and_datasets.validate(logger)
     assert not model_no_rules.validate(logger)
     assert not model_no_datasets_model.validate(logger)

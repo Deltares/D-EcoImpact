@@ -43,4 +43,4 @@ class DatasetData(IDatasetData):
             dataset (dict[str, Any]):
         """
         self._mapping = get_dict_element("variable_mapping", dataset, False)
-        return self._mapping
+        return
