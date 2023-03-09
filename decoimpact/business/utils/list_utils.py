@@ -5,7 +5,7 @@ from typing import Any, List
 
 
 def flatten_list(_2d_list: list[Any]) -> list:
-    """Flatten list of lists to one list
+    """Flattens list of lists to one list.
 
     Args:
         _2d_list (list): list to be flattened
@@ -25,7 +25,7 @@ def flatten_list(_2d_list: list[Any]) -> list:
 
 
 def remove_duplicates_from_list(list_with_duplicates: list) -> list:
-    """Remove duplicates from list
+    """Removes duplicates from list.
 
     Args:
         list (list): list to be made distinct
@@ -38,7 +38,7 @@ def remove_duplicates_from_list(list_with_duplicates: list) -> list:
 
 
 def items_not_in(first: List[str], second: List[str]) -> List[str]:
-    """Returns list of items in first list that are not in second list
+    """Returns a list of items in the first list that are not in the second list.
 
     Args:
         first (List[str]): list of items to iterate
@@ -51,7 +51,7 @@ def items_not_in(first: List[str], second: List[str]) -> List[str]:
 
 
 def items_in(first: List[str], second: List[str]) -> List[str]:
-    """Returns list of items in first list that are in second list
+    """Returns a list of items in the first list that are in the second list.
 
     Args:
         first (List[str]): list of items to iterate

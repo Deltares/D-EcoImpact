@@ -24,7 +24,7 @@ from decoimpact.data.dictionary_utils import get_dict_element
 class RuleProcessor:
     """Model class for processing models based on rules"""
 
-    def __init__(self, rules: List[IRule], input_dataset: _xr.Dataset) -> None:
+    def __init__(self, rules: List[IRule], dataset: _xr.Dataset) -> None:
         """Creates instance of a rule processor using the provided
         rules and input datasets
 
@@ -35,11 +35,11 @@ class RuleProcessor:
         if len(rules) < 1:
             raise ValueError("No rules defined.")
 
-        if input_dataset is None:
+        if dataset is None:
             raise ValueError("No datasets defined.")
 
         self._rules = rules
-        self._input_dataset = input_dataset
+        self._input_dataset = dataset
         self._processing_list: List[List[IRule]] = []
 
     def initialize(self, logger: ILogger) -> bool:
@@ -54,10 +54,9 @@ class RuleProcessor:
         """
         inputs: List[str] = []
 
-        for key in self._input_dataset:
-            inputs.append(str(key))
+        inputs = [str(key) for key in self._input_dataset]
 
-        tree, success = self._create_rule_sets(inputs, list(self._rules), [], logger)
+        tree, success = self._create_rule_sets(inputs, self._rules, [], logger)
         if success:
             self._processing_list = tree
 
@@ -65,7 +64,7 @@ class RuleProcessor:
 
     def process_rules(self, output_dataset: _xr.Dataset, logger: ILogger) -> None:
         """Processes the rules defined in the initialize method
-        and adds the results to the provided output_dataset
+        and adds the results to the provided output_dataset.
 
         Args:
             output_dataset (_xr.Dataset): Dataset to place the rule
@@ -76,7 +75,7 @@ class RuleProcessor:
             RuntimeError: if initialization is not correctly done
         """
         if len(self._processing_list) < 1:
-            message = "Processor is not properly initialized, please initialize"
+            message = "Processor is not properly initialized, please initialize."
             raise RuntimeError(message)
 
         for rule_set in self._processing_list:
@@ -132,7 +131,7 @@ class RuleProcessor:
     def _get_solvable_rules(
         self, inputs: List[str], unprocessed_rules: List[IRule]
     ) -> List[IRule]:
-        """Checks which rules can be resolved using the provided "inputs" list
+        """Checks which rules can be resolved using the provided "inputs" list.
 
         Args:
             inputs (List[str]): available inputs to resolve rules with
@@ -154,7 +153,7 @@ class RuleProcessor:
     def _execute_rule(
         self, rule: IRule, output_dataset: _xr.Dataset, logger: ILogger
     ) -> _xr.DataArray:
-        """Processes the rule with the provided dataset
+        """Processes the rule with the provided dataset.
 
         Returns:
             _xr.DataArray: result data set
@@ -165,7 +164,7 @@ class RuleProcessor:
             return rule.execute(variables, logger)
 
         if len(variables) != 1:
-            raise NotImplementedError("Array based rule only supports one input")
+            raise NotImplementedError("Array based rule only supports one input array.")
 
         input_variable = variables[0]
         if isinstance(rule, IArrayBasedRule):
@@ -237,5 +236,5 @@ class RuleProcessor:
 
         raise KeyError(
             f"Key {name} was not found in input datasets or ",
-            "in calculated output dataset",
+            "in calculated output dataset.",
         )
