@@ -119,8 +119,8 @@ class RuleBasedModel(IModel):
 
     def _make_output_variables_list(self):
         """Make the list of variables to be contained in the output dataset.
-        A list of variables needed is conducted from the dummy variable and
-        the dependent variables are recursively looked up. This is doen to
+        A list of variables needed is obtained from the dummy variable and
+        the dependent variables are recursively looked up. This is done to
         support XUgrid and to prevent invalid topologies.
         This also allows QuickPlot to visualize the results.
         """
