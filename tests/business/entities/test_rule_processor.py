@@ -155,7 +155,7 @@ def test_process_rules_given_rule_dependencies():
 
     # Assert
     assert len(dataset) == 4
-    for rule in rules:
+    for rule in [rule1, rule2, rule3]:
         rule.execute.assert_called_once_with(ANY, logger)
         assert rule.output_variable_name in dataset.keys()
 
