@@ -119,8 +119,9 @@ class RuleBasedModel(IModel):
 
     def _make_output_variables_list(self):
         """Make the list of variables to be contained in the output dataset.
-        System variables have to be included in results to enable
-        XUgrid support and to prevent invalid topologies.
+        A list of variables needed is conducted from the dummy variable and
+        the dependent variables are recursively looked up. This is doen to
+        support XUgrid and to prevent invalid topologies.
         This also allows QuickPlot to visualize the results.
         """
 
