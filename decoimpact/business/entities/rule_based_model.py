@@ -6,10 +6,12 @@ Classes:
 
 """
 
-from typing import List, Optional
+from typing import List, Optional, Optional
 
 import xarray as _xr
 
+import decoimpact.business.utils.dataset_utils as _du
+import decoimpact.business.utils.list_utils as _lu
 import decoimpact.business.utils.dataset_utils as _du
 import decoimpact.business.utils.list_utils as _lu
 from decoimpact.business.entities.i_model import IModel, ModelStatus
@@ -26,6 +28,7 @@ class RuleBasedModel(IModel):
         input_datasets: List[_xr.Dataset],
         rules: List[IRule],
         mapping: Optional[dict[str, str]] = None,
+        mapping: Optional[dict[str, str]] = None,
         name: str = "Rule-Based model",
     ) -> None:
 
@@ -34,7 +37,8 @@ class RuleBasedModel(IModel):
         self._rules = rules
         self._input_datasets: List[_xr.Dataset] = input_datasets
         self._output_dataset: _xr.Dataset
-        self._rule_processor: Optional[RuleProcessor]
+        self._rule_processor: Optional[Optional[RuleProcessor]
+        self._mappings = mapping]
         self._mappings = mapping
 
     @property
@@ -73,15 +77,18 @@ class RuleBasedModel(IModel):
         valid = True
 
         if len(self._input_datasets) < 1:
-            logger.log_error("Model does not contain any datasets.")
+            logger.log_error("Model does not contain any datasets..")
             valid = False
 
         if len(self._rules) < 1:
-            logger.log_error("Model does not contain any rules.")
+            logger.log_error("Model does not contain any rules..")
             valid = False
 
         for rule in self._rules:
             valid = rule.validate(logger) and valid
+
+        if self._mappings is not None:
+            valid = self._validate_mappings(self._mappings, logger) and valid
 
         if self._mappings is not None:
             valid = self._validate_mappings(self._mappings, logger) and valid
@@ -92,20 +99,30 @@ class RuleBasedModel(IModel):
         """Initializes the model.
         Creates an output dataset which contains the necessary variables obtained
         from the input dataset.
+        .
+        Creates an output dataset which contains the necessary variables obtained
+        from the input dataset.
         """
 
         self._output_dataset = _du.create_composed_dataset(
             self._input_datasets, self._make_output_variables_list(), self._mappings
         )
 
+        self._output_dataset = _du.create_composed_dataset(
+            self._input_datasets, self._make_output_variables_list(), self._mappings
+        )
+
+        self._rule_processor = RuleProcessor(self._rules, self._output_dataset)
         self._rule_processor = RuleProcessor(self._rules, self._output_dataset)
         success = self._rule_processor.initialize(logger)
 
         if not success:
-            logger.log_error("Initialization failed.")
+            logger.log_error("Initialization failed..")
 
     def execute(self, logger: ILogger) -> None:
         """Executes the model"""
+        if self._rule_processor is None:
+            raise RuntimeError("Processor is not set, please initialize model.")
         if self._rule_processor is None:
             raise RuntimeError("Processor is not set, please initialize model.")
 
