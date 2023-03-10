@@ -97,7 +97,6 @@ class RuleBasedModel(IModel):
         self._output_dataset = _du.create_composed_dataset(
             self._input_datasets, self._make_output_variables_list(), self._mappings
         )
-
         self._rule_processor = RuleProcessor(self._rules, self._output_dataset)
         success = self._rule_processor.initialize(logger)
 
@@ -109,7 +108,9 @@ class RuleBasedModel(IModel):
         if self._rule_processor is None:
             raise RuntimeError("Processor is not set, please initialize model.")
 
-        self._rule_processor.process_rules(self._output_dataset, logger)
+        self._output_dataset = self._rule_processor.process_rules(
+            self._output_dataset, logger
+        )
 
     def finalize(self, logger: ILogger) -> None:
         """Finalizes the model"""

@@ -62,7 +62,9 @@ class RuleProcessor:
 
         return success
 
-    def process_rules(self, output_dataset: _xr.Dataset, logger: ILogger) -> None:
+    def process_rules(
+        self, output_dataset: _xr.Dataset, logger: ILogger
+    ) -> _xr.Dataset:
         """Processes the rules defined in the initialize method
         and adds the results to the provided output_dataset.
 
@@ -89,7 +91,14 @@ class RuleProcessor:
                     rule_result.dims,
                     rule_result.values,
                     rule_result.attrs,
+                    rule_result.coords,
                 )
+                for coord in rule_result.coords:
+                    if coord not in output_dataset.coords:
+                        output_dataset = output_dataset.assign_coords(
+                            {coord: rule_result[coord]}
+                        )
+        return output_dataset
 
     def _create_rule_sets(
         self,
