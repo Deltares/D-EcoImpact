@@ -6,12 +6,10 @@ Classes:
 
 """
 
-from typing import List, Optional, Optional
+from typing import List, Optional
 
 import xarray as _xr
 
-import decoimpact.business.utils.dataset_utils as _du
-import decoimpact.business.utils.list_utils as _lu
 import decoimpact.business.utils.dataset_utils as _du
 import decoimpact.business.utils.list_utils as _lu
 from decoimpact.business.entities.i_model import IModel, ModelStatus
@@ -28,7 +26,6 @@ class RuleBasedModel(IModel):
         input_datasets: List[_xr.Dataset],
         rules: List[IRule],
         mapping: Optional[dict[str, str]] = None,
-        mapping: Optional[dict[str, str]] = None,
         name: str = "Rule-Based model",
     ) -> None:
 
@@ -37,8 +34,7 @@ class RuleBasedModel(IModel):
         self._rules = rules
         self._input_datasets: List[_xr.Dataset] = input_datasets
         self._output_dataset: _xr.Dataset
-        self._rule_processor: Optional[Optional[RuleProcessor]
-        self._mappings = mapping]
+        self._rule_processor: Optional[RuleProcessor]
         self._mappings = mapping
 
     @property
@@ -77,11 +73,11 @@ class RuleBasedModel(IModel):
         valid = True
 
         if len(self._input_datasets) < 1:
-            logger.log_error("Model does not contain any datasets..")
+            logger.log_error("Model does not contain any datasets.")
             valid = False
 
         if len(self._rules) < 1:
-            logger.log_error("Model does not contain any rules..")
+            logger.log_error("Model does not contain any rules.")
             valid = False
 
         for rule in self._rules:
@@ -117,7 +113,7 @@ class RuleBasedModel(IModel):
         success = self._rule_processor.initialize(logger)
 
         if not success:
-            logger.log_error("Initialization failed..")
+            logger.log_error("Initialization failed.")
 
     def execute(self, logger: ILogger) -> None:
         """Executes the model"""
