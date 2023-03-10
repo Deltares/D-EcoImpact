@@ -107,6 +107,7 @@ def test_error_initializing_rule_based_model():
     # Arrange
     dataset = _xr.Dataset()
     dataset["test"] = _xr.DataArray([32, 94, 9])
+    dataset["test"].attrs = {"cf_role": "mesh_topology"}
     rule: IRule = Mock(IRule)
     rule.input_variable_names = ["unknown_var"]  # ["unknown_var"]
     rule.name = "rule with unknown var"
