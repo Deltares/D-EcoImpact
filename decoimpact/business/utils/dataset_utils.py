@@ -151,7 +151,7 @@ def merge_list_of_datasets(list_datasets: list[_xr.Dataset]) -> _xr.Dataset:
 
 
 def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
-    """Get the name of he variable that serves as the dummy variable in the UGrid
+    """Get the name of the variable that serves as the dummy variable in the UGrid.
 
     Args:
         dataset (_xr.Dataset): Dataset to search for dummy variable
@@ -167,22 +167,22 @@ def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
 
     if len(dummy) == 0:
         raise ValueError(
-            "No dummy variable defined and therefore not up to UGrid conventions."
+            """No dummy variable defined and therefore input dataset does not comply with UGrid convention."""
         )
 
     return dummy
 
 
 def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> list[str]:
-    """Get all the variables that are described in the attributes of the dummy variable.
-      This goes for the UGrid standard.
+    """Get all the variables that are described in the attributes of the dummy variable,
+    associated with the UGrid standard.
 
     Args:
-        dataset (_xr.Dataset): Dataset to remove variable from
+        dataset (_xr.Dataset): Dataset to get dependent variables from
         var_name (str): the name of the dummy variable
 
     Returns:
-        list[str]: list of the dependent ariables to copy
+        list[str]: list of the dependent variables to copy
     """
 
     vars_to_check = ["_coordinates", "_connectivity", "bounds"]

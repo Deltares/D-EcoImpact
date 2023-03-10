@@ -226,7 +226,7 @@ def test_get_dummy_variable_fails():
     # Assert
     assert (
         error.value.args[0]
-        == "No dummy variable defined and therefore not up to UGrid conventions."
+        == """No dummy variable defined and therefore input dataset does not comply with UGrid convention."""
     )
 
 
