@@ -39,7 +39,8 @@ class ModelBuilder(IModelBuilder):
         self._da_layer = da_layer
 
     def build_model(self, model_data: IModelData) -> IModel:
-        """Creates a model based on model data
+        """Creates a model based on model data.
+        Current mapping works only for one dataset.
 
         Returns:
             IModel: instance of a model based on model data
@@ -50,7 +51,9 @@ class ModelBuilder(IModelBuilder):
         datasets = [self._da_layer.read_input_dataset(ds) for ds in model_data.datasets]
         rules = list(ModelBuilder._create_rules(model_data.rules))
 
-        model: IModel = RuleBasedModel(datasets, rules, model_data.name)
+        mapping = model_data.datasets[0].mapping
+
+        model: IModel = RuleBasedModel(datasets, rules, mapping, model_data.name)
 
         return model
 
@@ -61,7 +64,6 @@ class ModelBuilder(IModelBuilder):
 
     @staticmethod
     def _create_rule(rule_data: IRuleData) -> IRule:
-
         if isinstance(rule_data, IMultiplyRuleData):
             return MultiplyRule(
                 rule_data.name,

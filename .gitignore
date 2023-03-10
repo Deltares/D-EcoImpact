@@ -129,6 +129,6 @@ dmypy.json
 .pyre/
 
 # test files
-input_file.yaml
+*.yaml
 **/*.nc
 !tests/**/*.nc

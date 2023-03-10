@@ -1,14 +1,43 @@
 """Library for utility functions regarding an xarray dataset"""
 
+from typing import List, Optional
+
 import xarray as _xr
 
 
-def remove_variable(dataset: _xr.Dataset, variable: str) -> _xr.Dataset:
+def add_variable(
+    dataset: _xr.Dataset, variable: _xr.DataArray, variable_name: str
+) -> _xr.Dataset:
+    """Add variable to dataset.
+
+    Args:
+        dataset (_xr.Dataset): Dataset to add to
+        variable (_xr.DataArray): Variable containing new data
+        variable_name (str): Name of new variable
+
+    Raises:
+        ValueError: When variable can not be added
+
+    Returns:
+        _xr.Dataset: original dataset
+    """
+    if not isinstance(variable, _xr.DataArray):
+        raise ValueError("ERROR: Cannot add variable to dataset")
+
+    try:
+        dataset[variable_name] = (variable.dims, variable.data)
+    except ValueError as exc:
+        raise ValueError("ERROR: Cannot add variable to dataset") from exc
+
+    return dataset
+
+
+def remove_variables(dataset: _xr.Dataset, variables: list[str]) -> _xr.Dataset:
     """Remove variable from dataset
 
     Args:
         dataset (_xr.Dataset): Dataset to remove variable from
-        variable (str/list): Variable(s) to remove
+        variables (str/list): Variable(s) to remove
 
     Raises:
         ValueError: When variable can not be removed
@@ -17,10 +46,22 @@ def remove_variable(dataset: _xr.Dataset, variable: str) -> _xr.Dataset:
         _xr.Dataset: Original dataset
     """
     try:
-        dataset = dataset.drop_vars(variable)
+        dataset = dataset.drop_vars(variables)
     except ValueError as exc:
-        raise ValueError("ERROR: Cannot remove variable from dataset") from exc
+        raise ValueError(f"ERROR: Cannot remove {variables} from dataset.") from exc
     return dataset
+
+
+def list_vars(dataset: _xr.Dataset) -> list[str]:
+    """List variables in dataset
+
+    Args:
+        dataset (_xr.Dataset): Dataset to list variables from
+
+    Returns:
+        list_variables
+    """
+    return list((dataset.data_vars or {}).keys())
 
 
 def copy_dataset(dataset: _xr.Dataset) -> _xr.Dataset:
@@ -39,5 +80,99 @@ def copy_dataset(dataset: _xr.Dataset) -> _xr.Dataset:
     try:
         output_dataset = dataset.copy(deep=False)
     except ValueError as exc:
-        raise ValueError("ERROR: Cannot copy dataset") from exc
+        raise ValueError("ERROR: Cannot copy dataset.") from exc
     return output_dataset
+
+
+def rename_variable(
+    dataset: _xr.Dataset, variable_old: str, variable_new: str
+) -> _xr.Dataset:
+    """Rename variable in dataset
+
+    Args:
+        dataset (_xr.Dataset): Dataset to remove variable from
+        variable_old (str): Variable to rename, old name
+        variable_new (str): Variable to rename, new name
+
+    Raises:
+        ValueError: When variable can not be renamed
+
+    Returns:
+        _xr.Dataset: Original dataset
+    """
+    mapping_dict = {variable_old: variable_new}
+    try:
+        output_dataset = dataset.rename(mapping_dict)
+    except ValueError as exc:
+        raise ValueError(
+            f"ERROR: Cannot rename variable {variable_old} to {variable_new}."
+        ) from exc
+    return output_dataset
+
+
+def merge_datasets(dataset1: _xr.Dataset, dataset2: _xr.Dataset) -> _xr.Dataset:
+    """Merge two datasets into one dataset.
+
+    Args:
+        dataset1 (_xr.Dataset): Dataset 1 to merge
+        dataset2 (_xr.Dataset): Dataset 2 to merge
+
+    Raises:
+        ValueError: When datasets cannot be merged
+
+    Returns:
+        _xr.Dataset: Original dataset
+    """
+    try:
+        output_dataset = dataset1.merge(dataset2, compat="identical")
+    except ValueError as exc:
+        raise ValueError(f"ERROR: Cannot merge {dataset1} and {dataset2}.") from exc
+    return output_dataset
+
+
+def merge_list_of_datasets(list_datasets: list[_xr.Dataset]) -> _xr.Dataset:
+    """Merge list of datasets into 1 dataset
+
+    Args:
+        list_datasets (list): list of datasets to merge
+
+    Raises:
+        ValueError: When datasets cannot be merged
+
+    Returns:
+        _xr.Dataset: Original dataset
+    """
+    try:
+        output_dataset = _xr.merge(list_datasets, compat="identical")
+    except ValueError as exc:
+        raise ValueError(f"ERROR: Cannot merge {list_datasets}.") from exc
+    return output_dataset
+
+
+def create_composed_dataset(
+    input_datasets: List[_xr.Dataset],
+    variables_to_use: List[str],
+    mapping: Optional[dict[str, str]],
+) -> _xr.Dataset:
+    """Creates a dataset based on the provided input datasets and
+    the selected variables.
+
+    Args:
+        input_datasets (List[_xr.Dataset]): inputs to copy the data from
+        variables_to_use (List[str]): selected variables to copy
+        mapping (dict[str, str]): mapping for variables to rename after copying
+
+    Returns:
+        _xr.Dataset: composed dataset (with selected variables)
+    """
+    merged_dataset = merge_list_of_datasets(input_datasets)
+
+    all_variables = list_vars(merged_dataset)
+
+    variables_to_remove = [x for x in all_variables if x not in variables_to_use]
+
+    cleaned_dataset = remove_variables(merged_dataset, variables_to_remove)
+    if mapping is None or len(mapping) == 0:
+        return cleaned_dataset
+
+    return cleaned_dataset.rename_vars(mapping)

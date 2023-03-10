@@ -8,9 +8,9 @@ Classes:
 
 from pathlib import Path
 
-from decoimpact.business.entities.i_model import ModelStatus
+from decoimpact.business.entities.i_model import ModelStatus as _ModelStatus
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
-from decoimpact.business.workflow.model_runner import ModelRunner
+from decoimpact.business.workflow.model_runner import ModelRunner as _ModelRunner
 
 # only import interfaces to stay loosely coupled
 from decoimpact.crosscutting.i_logger import ILogger
@@ -50,9 +50,9 @@ class Application:
         model_data: IModelData = self._da_layer.read_input_file(input_path)
         model = self._model_builder.build_model(model_data)
 
-        ModelRunner.run_model(model, self._logger)
+        _ModelRunner.run_model(model, self._logger)
 
-        if model.status == ModelStatus.FINALIZED:
+        if model.status == _ModelStatus.FINALIZED:
             self._da_layer.write_output_file(
                 model.output_dataset, model_data.output_path
             )

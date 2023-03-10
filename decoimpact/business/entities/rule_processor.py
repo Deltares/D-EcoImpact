@@ -18,27 +18,28 @@ from decoimpact.business.entities.rules.i_multi_array_based_rule import (
 )
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.dictionary_utils import get_dict_element
 
 
 class RuleProcessor:
     """Model class for processing models based on rules"""
 
-    def __init__(self, rules: List[IRule], input_datasets: List[_xr.Dataset]) -> None:
+    def __init__(self, rules: List[IRule], dataset: _xr.Dataset) -> None:
         """Creates instance of a rule processor using the provided
         rules and input datasets
 
         Args:
             rules (List[IRule]): rules to process
-            input_datasets (List[_xr.Dataset]): list of input datasets to use
+            input_dataset (_xr.Dataset): input dataset to use
         """
         if len(rules) < 1:
             raise ValueError("No rules defined.")
 
-        if len(input_datasets) < 1:
+        if dataset is None:
             raise ValueError("No datasets defined.")
 
         self._rules = rules
-        self._input_datasets = input_datasets
+        self._input_dataset = dataset
         self._processing_list: List[List[IRule]] = []
 
     def initialize(self, logger: ILogger) -> bool:
@@ -52,12 +53,10 @@ class RuleProcessor:
             bool: A boolean to indicate if all the rules can be processed.
         """
         inputs: List[str] = []
-        for dataset in self._input_datasets:
-            for key in dataset:
-                inputs.append(str(key))
 
-        tree, success = self._create_rule_sets(inputs, list(self._rules), [], logger)
+        inputs = [str(key) for key in self._input_dataset]
 
+        tree, success = self._create_rule_sets(inputs, self._rules, [], logger)
         if success:
             self._processing_list = tree
 
@@ -65,7 +64,7 @@ class RuleProcessor:
 
     def process_rules(self, output_dataset: _xr.Dataset, logger: ILogger) -> None:
         """Processes the rules defined in the initialize method
-        and adds the results to the provided output_dataset
+        and adds the results to the provided output_dataset.
 
         Args:
             output_dataset (_xr.Dataset): Dataset to place the rule
@@ -76,7 +75,7 @@ class RuleProcessor:
             RuntimeError: if initialization is not correctly done
         """
         if len(self._processing_list) < 1:
-            message = "Processor is not properly initialized, please initialize"
+            message = "Processor is not properly initialized, please initialize."
             raise RuntimeError(message)
 
         for rule_set in self._processing_list:
@@ -89,6 +88,7 @@ class RuleProcessor:
                 output_dataset[output_name] = (
                     rule_result.dims,
                     rule_result.values,
+                    rule_result.attrs,
                 )
 
     def _create_rule_sets(
@@ -112,7 +112,7 @@ class RuleProcessor:
         solvable_rules = self._get_solvable_rules(inputs, unprocessed_rules)
 
         if len(solvable_rules) == 0:
-            rules_list = [rule.name for rule in unprocessed_rules]
+            rules_list = [str(rule.name) for rule in unprocessed_rules]
             rules_text = ", ".join(rules_list)
             logger.log_warning(f"Some rules can not be resolved: {rules_text}")
             return [], False
@@ -133,7 +133,7 @@ class RuleProcessor:
     def _get_solvable_rules(
         self, inputs: List[str], unprocessed_rules: List[IRule]
     ) -> List[IRule]:
-        """Checks which rules can be resolved using the provided "inputs" list
+        """Checks which rules can be resolved using the provided "inputs" list.
 
         Args:
             inputs (List[str]): available inputs to resolve rules with
@@ -155,7 +155,7 @@ class RuleProcessor:
     def _execute_rule(
         self, rule: IRule, output_dataset: _xr.Dataset, logger: ILogger
     ) -> _xr.DataArray:
-        """Processes the rule with the provided dataset
+        """Processes the rule with the provided dataset.
 
         Returns:
             _xr.DataArray: result data set
@@ -167,17 +167,31 @@ class RuleProcessor:
             return rule.execute(variables, logger)
 
         if len(variables) != 1:
-            raise NotImplementedError("Array based rule only supports one input")
+            raise NotImplementedError("Array based rule only supports one input array.")
 
         input_variable = variables[0]
 
         if isinstance(rule, IArrayBasedRule):
-            return rule.execute(input_variable, logger)
+            result = rule.execute(input_variable, logger)
+            self._copy_definition_attributes(input_variable, result)
+            return result
 
         if isinstance(rule, ICellBasedRule):
-            return self._process_by_cell(rule, input_variable, logger)
+            result = self._process_by_cell(rule, input_variable, logger)
+            self._copy_definition_attributes(input_variable, result)
+            return result
 
         raise NotImplementedError(f"Can not execute rule {rule.name}.")
+
+    def _copy_definition_attributes(
+        self, source_array: _xr.DataArray, target_array: _xr.DataArray
+    ) -> None:
+        attributes_to_copy = ["location", "mesh"]
+
+        for attribute_name in attributes_to_copy:
+            target_array.attrs[attribute_name] = get_dict_element(
+                attribute_name, source_array.attrs, False
+            )
 
     def _process_by_cell(
         self, rule: ICellBasedRule, input_variable: _xr.DataArray, logger: ILogger
@@ -214,15 +228,11 @@ class RuleProcessor:
     def _get_variable_by_name(
         self, name: str, output_dataset: _xr.Dataset
     ) -> _xr.DataArray:
-        # search input datasets
-        for dataset in self._input_datasets:
-            if name in dataset.keys():
-                return dataset[name]
-
         # search output dataset (generated output)
         if name in output_dataset:
             return output_dataset[name]
 
         raise KeyError(
-            f"Key {name} was not found in input datasets or as calculated output"
+            f"Key {name} was not found in input datasets or "
+            "in calculated output dataset.",
         )

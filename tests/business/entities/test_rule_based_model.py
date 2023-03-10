@@ -5,6 +5,7 @@ Tests for RuleBasedModel class
 
 from unittest.mock import Mock
 
+import pytest
 import xarray as _xr
 
 from decoimpact.business.entities.i_model import ModelStatus
@@ -20,7 +21,7 @@ from decoimpact.data.api.i_dataset import IDatasetData
 
 def test_create_rule_based_model_with_defaults():
     """Test that the default properties of a rule-based model
-    is set when creating the model using the default constructor"""
+    are set when creating the model using the default constructor."""
 
     # Arrange
     rule = Mock(IRule)
@@ -39,6 +40,8 @@ def test_create_rule_based_model_with_defaults():
 
 
 def test_status_setter():
+    """Test if status is correctly set for a model"""
+
     # Arrange
     rule = Mock(IRule)
     dataset = Mock(IDatasetData)
@@ -64,20 +67,79 @@ def test_validation_of_rule_based_model():
 
     dataset["test"] = _xr.DataArray([32, 94, 9])
 
-    rule.input_variable_names = ["test"]
+    rule.input_variable_names = ["input"]
     rule.output_variable_name = "output"
 
-    no_rules_and_datasets_model = RuleBasedModel([], [], logger)
-    no_rules_model = RuleBasedModel([dataset], [], logger)
-    no_datasets_model = RuleBasedModel([], [rule], logger)
-    model = RuleBasedModel([dataset], [rule], logger)
+    mapping_usual = {"test": "input"}
+    model_usual = RuleBasedModel([dataset], [rule], mapping_usual)
+
+    map_to_itself = {"test": "test"}
+    model_map_to_itself = RuleBasedModel([dataset], [rule], map_to_itself)
+
+    map_non_existing_var = {"non_existing_var": "input"}
+    model_map_non_existing_var = RuleBasedModel([dataset], [rule], map_non_existing_var)
+
+    map_to_wrong_var = {"test": "incorrect_var"}
+    model_map_to_wrong_var = RuleBasedModel([dataset], [rule], map_to_wrong_var)
+
+    map_from_non_existing_var_to_wrong_var = {"non_existing_var": "incorrect_var"}
+    model_map_from_non_existing_var_to_wrong_var = RuleBasedModel(
+        [dataset], [rule], map_from_non_existing_var_to_wrong_var
+    )
+
+    model_no_rules_and_datasets = RuleBasedModel([], [])
+    model_no_rules = RuleBasedModel([dataset], [])
+    model_no_datasets_model = RuleBasedModel([], [rule])
 
     # Act & Assert
+    assert model_usual.validate(logger)
+    assert not model_map_to_itself.validate(logger)
+    assert not model_map_non_existing_var.validate(logger)
+    assert not model_map_to_wrong_var.validate(logger)
+    assert not model_map_from_non_existing_var_to_wrong_var.validate(logger)
+    assert not model_no_rules_and_datasets.validate(logger)
+    assert not model_no_rules.validate(logger)
+    assert not model_no_datasets_model.validate(logger)
 
-    assert not no_rules_and_datasets_model.validate(logger)
-    assert not no_rules_model.validate(logger)
-    assert not no_datasets_model.validate(logger)
-    assert model.validate(logger)
+
+def test_error_initializing_rule_based_model():
+    """Tests if the error message sent when initializing a rule based model fails."""
+    # Arrange
+    dataset = _xr.Dataset()
+    dataset["test"] = _xr.DataArray([32, 94, 9])
+    rule: IRule = Mock(IRule)
+    rule.input_variable_names = ["unknown_var"]  # ["unknown_var"]
+    rule.name = "rule with unknown var"
+    model = RuleBasedModel([dataset], [rule])
+    logger = Mock(ILogger)
+
+    # Act
+    model.initialize(logger)
+
+    # Assert
+    logger.log_error.assert_called_with("Initialization failed.")
+
+
+def test_error_executing_model_with_processor_none():
+    """
+    Tests the error thrown when the processor of a rule based model is None.
+    """
+    # Arrange
+    dataset = _xr.Dataset()
+    dataset["test"] = _xr.DataArray([32, 94, 9])
+    rule: IRule = Mock(IRule)
+    logger = Mock(ILogger)
+    model = RuleBasedModel([dataset], [rule])
+    model._rule_processor = None
+
+    # Act
+    with pytest.raises(RuntimeError) as exc_info:
+        model.execute(logger)
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = "Processor is not set, please initialize model."
+    assert exception_raised.args[0] == expected_message
 
 
 def test_validation_of_rule_based_model_rule_dependencies():
