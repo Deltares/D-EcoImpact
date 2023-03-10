@@ -86,10 +86,16 @@ class RuleBasedModel(IModel):
         if self._mappings is not None:
             valid = self._validate_mappings(self._mappings, logger) and valid
 
+        if self._mappings is not None:
+            valid = self._validate_mappings(self._mappings, logger) and valid
+
         return valid
 
     def initialize(self, logger: ILogger) -> None:
         """Initializes the model.
+        Creates an output dataset which contains the necessary variables obtained
+        from the input dataset.
+        .
         Creates an output dataset which contains the necessary variables obtained
         from the input dataset.
         """
@@ -107,6 +113,8 @@ class RuleBasedModel(IModel):
         """Executes the model"""
         if self._rule_processor is None:
             raise RuntimeError("Processor is not set, please initialize model.")
+        if self._rule_processor is None:
+            raise RuntimeError("Processor is not set, please initialize model.")
 
         self._output_dataset = self._rule_processor.process_rules(
             self._output_dataset, logger
@@ -120,35 +128,18 @@ class RuleBasedModel(IModel):
 
     def _make_output_variables_list(self):
         """Make the list of variables to be contained in the output dataset.
-        System variables have to be included in results to enable
-        XUgrid support and to prevent invalid topologies.
+        A list of variables needed is conducted from the dummy variable and
+        the dependent variables are recursively looked up. This is doen to
+        support XUgrid and to prevent invalid topologies.
         This also allows QuickPlot to visualize the results.
         """
 
-        checked_vars = []
         var_list = []
         dummy_vars = []
 
-        def rec_search_dep_vars(dataset, var_list, dep_vars):
-            # Recursive function to find all variable dependencies
-            for var_name in var_list:
-                if var_name not in checked_vars:
-                    dep_var = _du.get_dependent_vars_by_var_name(dataset, var_name)
-                    checked_vars.append(var_name)
-                    if len(dep_var) > 0:
-                        dep_vars = list(set(dep_var + dep_vars))
-                        dep_vars = list(
-                            set(
-                                dep_vars
-                                + rec_search_dep_vars(dataset, dep_var, dep_vars)
-                            )
-                        )
-
-            return dep_vars
-
         for dataset in self._input_datasets:
             dummy_vars = _du.get_dummy_variable_in_ugrid(dataset)
-            var_list = rec_search_dep_vars(dataset, dummy_vars, [])
+            var_list = _du.rec_search_dep_vars(dataset, dummy_vars, [], [])
 
         mapping_keys = list((self._mappings or {}).keys())
         all_vars = dummy_vars + var_list + mapping_keys + self._get_direct_rule_inputs()

@@ -179,7 +179,7 @@ class RuleProcessor:
         if isinstance(rule, IArrayBasedRule):
             result = rule.execute(input_variable, logger)
             self._copy_definition_attributes(input_variable, result)
-            # TODO: this should come from the input
+            # TO DO: this should come from the input
             result.attrs["long_name"] = rule.output_variable_name
             result.attrs["standard_name"] = rule.output_variable_name
             return result
@@ -187,7 +187,7 @@ class RuleProcessor:
         if isinstance(rule, ICellBasedRule):
             result = self._process_by_cell(rule, input_variable, logger)
             self._copy_definition_attributes(input_variable, result)
-            # TODO: this should come from the input
+            # TO DO: this should come from the input
             result.attrs["long_name"] = rule.output_variable_name
             result.attrs["standard_name"] = rule.output_variable_name
             return result

@@ -151,7 +151,7 @@ def merge_list_of_datasets(list_datasets: list[_xr.Dataset]) -> _xr.Dataset:
 
 
 def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
-    """Get the name of he variable that serves as the dummy variable in the UGrid
+    """Get the name of the variable that serves as the dummy variable in the UGrid.
 
     Args:
         dataset (_xr.Dataset): Dataset to search for dummy variable
@@ -167,22 +167,23 @@ def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
 
     if len(dummy) == 0:
         raise ValueError(
-            "No dummy variable defined and therefore not up to UGrid conventions."
+            """No dummy variable defined and therefore input dataset does
+            not comply with UGrid convention."""
         )
 
     return dummy
 
 
 def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> list[str]:
-    """Get all the variables that are described in the attributes of the dummy variable.
-      This goes for the UGrid standard.
+    """Get all the variables that are described in the attributes of the dummy variable,
+    associated with the UGrid standard.
 
     Args:
-        dataset (_xr.Dataset): Dataset to remove variable from
+        dataset (_xr.Dataset): Dataset to get dependent variables from
         var_name (str): the name of the dummy variable
 
     Returns:
-        list[str]: list of the dependent ariables to copy
+        list[str]: list of the dependent variables to copy
     """
 
     vars_to_check = ["_coordinates", "_connectivity", "bounds"]
@@ -222,3 +223,40 @@ def create_composed_dataset(
         return cleaned_dataset
 
     return cleaned_dataset.rename_vars(mapping)
+
+
+def rec_search_dep_vars(
+    dataset: _xr.Dataset,
+    var_list: List[str],
+    dep_vars: List[str],
+    checked_vars: List[str],
+) -> list[str]:
+    """Recursive function to loop over all variables defined in the
+    attribute of the dummy variable to find which are dependent and
+    also the variables that are then again dependent on those variables etc.
+
+    Args:
+        dataset (_xr.Dataset): the dataset to check
+        var_list (List[str]): a list of dummy variable names to start the check
+        dep_vars (List[str]): a list of dependent variables found
+        checked_vars (List[str]): a list of variables that have already been
+            checked in this function (it's a check so the function does not endlessly
+            keep searching in the variables)
+
+    Returns:
+        list[str]: list of names of dependent variables
+    """
+    for var_name in var_list:
+        if var_name not in checked_vars:
+            dep_var = get_dependent_vars_by_var_name(dataset, var_name)
+            checked_vars.append(var_name)
+            if len(dep_var) > 0:
+                dep_vars = list(set(dep_var + dep_vars))
+                dep_vars = list(
+                    set(
+                        dep_vars
+                        + rec_search_dep_vars(dataset, dep_var, dep_vars, checked_vars)
+                    )
+                )
+
+    return dep_vars
