@@ -155,7 +155,7 @@ def test_process_rules_given_rule_dependencies():
 
     # Assert
     assert len(dataset) == 4
-    for rule in rules:
+    for rule in [rule1, rule2, rule3]:
         rule.execute.assert_called_once_with(ANY, logger)
         assert rule.output_variable_name in dataset.keys()
 
@@ -381,4 +381,37 @@ def test_process_rules_throws_exception_for_unsupported_rule():
 
     # Assert
     expected_message = f"Can not execute rule {rule.name}."
+    assert exception_raised.args[0] == expected_message
+
+
+def test_execute_rule_throws_error_for_unknown_input_variable():
+    """Tests that trying to execute a rule with an unknown input variable
+    throws an error, and the error message."""
+
+    # Arrange
+    output_dataset = _xr.Dataset()
+    input_array = _xr.DataArray([32, 94, 9])
+
+    output_dataset["test"] = input_array
+
+    logger = Mock(ILogger)
+    rule = Mock(IRule)
+
+    rule.name = "test"
+    rule.input_variable_names = ["unexisting"]
+    rule.output_variable_name = "output"
+
+    processor = RuleProcessor([rule], output_dataset)
+
+    # Act
+    with pytest.raises(KeyError) as exc_info:
+        processor._execute_rule(rule, output_dataset, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = (
+        f"Key {rule.input_variable_names[0]} was not found "
+        + "in input datasets or in calculated output dataset."
+    )
     assert exception_raised.args[0] == expected_message

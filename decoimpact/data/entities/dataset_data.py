@@ -36,7 +36,7 @@ class DatasetData(IDatasetData):
         """Variable name mapping (source to target)"""
         return self._mapping
 
-    def _get_mapping(self, dataset: dict[str, Any]) -> dict[str, Any]:
+    def _get_mapping(self, dataset: dict[str, Any]):
         """Get mapping specified in input file
 
         Args:
