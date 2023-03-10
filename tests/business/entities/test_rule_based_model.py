@@ -5,6 +5,7 @@ Tests for RuleBasedModel class
 
 from unittest.mock import Mock
 
+import pytest
 import xarray as _xr
 
 from decoimpact.business.entities.i_model import ModelStatus
@@ -99,6 +100,46 @@ def test_validation_of_rule_based_model():
     assert not model_no_rules_and_datasets.validate(logger)
     assert not model_no_rules.validate(logger)
     assert not model_no_datasets_model.validate(logger)
+
+
+def test_error_initializing_rule_based_model():
+    """Tests if the error message sent when initializing a rule based model fails."""
+    # Arrange
+    dataset = _xr.Dataset()
+    dataset["test"] = _xr.DataArray([32, 94, 9])
+    rule: IRule = Mock(IRule)
+    rule.input_variable_names = ["unknown_var"]  # ["unknown_var"]
+    rule.name = "rule with unknown var"
+    model = RuleBasedModel([dataset], [rule])
+    logger = Mock(ILogger)
+
+    # Act
+    model.initialize(logger)
+
+    # Assert
+    logger.log_error.assert_called_with("Initialization failed.")
+
+
+def test_error_executing_model_with_processor_none():
+    """
+    Tests the error thrown when the processor of a rule based model is None.
+    """
+    # Arrange
+    dataset = _xr.Dataset()
+    dataset["test"] = _xr.DataArray([32, 94, 9])
+    rule: IRule = Mock(IRule)
+    logger = Mock(ILogger)
+    model = RuleBasedModel([dataset], [rule])
+    model._rule_processor = None
+
+    # Act
+    with pytest.raises(RuntimeError) as exc_info:
+        model.execute(logger)
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = "Processor is not set, please initialize model."
+    assert exception_raised.args[0] == expected_message
 
 
 def test_validation_of_rule_based_model_rule_dependencies():

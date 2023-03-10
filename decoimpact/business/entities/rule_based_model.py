@@ -102,7 +102,7 @@ class RuleBasedModel(IModel):
         success = self._rule_processor.initialize(logger)
 
         if not success:
-            logger.log_error("Initialization failed")
+            logger.log_error("Initialization failed.")
 
     def execute(self, logger: ILogger) -> None:
         """Executes the model"""

@@ -112,7 +112,7 @@ class RuleProcessor:
         solvable_rules = self._get_solvable_rules(inputs, unprocessed_rules)
 
         if len(solvable_rules) == 0:
-            rules_list = [rule.name for rule in unprocessed_rules]
+            rules_list = [str(rule.name) for rule in unprocessed_rules]
             rules_text = ", ".join(rules_list)
             logger.log_warning(f"Some rules can not be resolved: {rules_text}")
             return [], False
@@ -233,6 +233,6 @@ class RuleProcessor:
             return output_dataset[name]
 
         raise KeyError(
-            f"Key {name} was not found in input datasets or ",
+            f"Key {name} was not found in input datasets or "
             "in calculated output dataset.",
         )
