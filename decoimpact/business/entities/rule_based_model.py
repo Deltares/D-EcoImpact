@@ -86,16 +86,10 @@ class RuleBasedModel(IModel):
         if self._mappings is not None:
             valid = self._validate_mappings(self._mappings, logger) and valid
 
-        if self._mappings is not None:
-            valid = self._validate_mappings(self._mappings, logger) and valid
-
         return valid
 
     def initialize(self, logger: ILogger) -> None:
         """Initializes the model.
-        Creates an output dataset which contains the necessary variables obtained
-        from the input dataset.
-        .
         Creates an output dataset which contains the necessary variables obtained
         from the input dataset.
         """
@@ -104,11 +98,6 @@ class RuleBasedModel(IModel):
             self._input_datasets, self._make_output_variables_list(), self._mappings
         )
 
-        self._output_dataset = _du.create_composed_dataset(
-            self._input_datasets, self._make_output_variables_list(), self._mappings
-        )
-
-        self._rule_processor = RuleProcessor(self._rules, self._output_dataset)
         self._rule_processor = RuleProcessor(self._rules, self._output_dataset)
         success = self._rule_processor.initialize(logger)
 
@@ -117,8 +106,6 @@ class RuleBasedModel(IModel):
 
     def execute(self, logger: ILogger) -> None:
         """Executes the model"""
-        if self._rule_processor is None:
-            raise RuntimeError("Processor is not set, please initialize model.")
         if self._rule_processor is None:
             raise RuntimeError("Processor is not set, please initialize model.")
 
