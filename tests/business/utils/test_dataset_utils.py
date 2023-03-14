@@ -7,6 +7,8 @@ import xarray as _xr
 
 import decoimpact.business.utils.dataset_utils as utilities
 
+# ----------- Testing: add_variable -----------
+
 
 def test_dataset_contains_variable_after_addition():
     """Tests if new dataset contains variable after addition."""
@@ -38,6 +40,9 @@ def test_add_incorrect_variable_to_dataset_throws_exception():
 
     # Assert
     assert error.value.args[0] == "ERROR: Cannot add variable to dataset"
+
+
+# ----------- Testing: remove_variables -----------
 
 
 def test_remove_variable_remove_variable_and_keeps_others():
@@ -79,6 +84,9 @@ def test_remove_variable_throws_exception_if_dataset_does_not_contain_variable()
     assert error.value.args[0] == f"ERROR: Cannot remove {list_variables} from dataset."
 
 
+# ----------- Testing: list_vars -----------
+
+
 def test_list_variables_in_dataset():
     """Tests if list dataset returns a list containing all variables."""
 
@@ -95,6 +103,9 @@ def test_list_variables_in_dataset():
 
     # Assert
     assert list_vars == [variable1, variable2, variable3]
+
+
+# ----------- Testing: list_vars -----------
 
 
 def test_copy_dataset_return_xarray_dataset():
@@ -181,3 +192,75 @@ def test_merged_list_of_datasets_is_xarray_dataset_and_contains_all_variables():
     assert variable4 in merged_dataset
     assert variable5 in merged_dataset
     assert variable6 in merged_dataset
+
+
+# ----------- Testing: get_dummy_variable_in_ugrid -----------
+
+
+def test_get_dummy_variable():
+    """Test if you receive the name of the dummy variable in a ugrid dataset"""
+    # Arrange
+    variable1 = "variable1"
+    variable2 = "variable2"
+    ds = _xr.Dataset(data_vars=dict(variable1=variable1, variable2=variable2))
+    ds["variable1"].attrs = {"cf_role": "mesh_topology"}
+
+    # Act
+    dummy_variable = utilities.get_dummy_variable_in_ugrid(ds)
+
+    # Assert
+    assert dummy_variable == ["variable1"]
+
+
+def test_get_dummy_variable_fails():
+    """Test if you receive the name of the dummy variable in a ugrid dataset"""
+    # Arrange
+    variable1 = "variable1"
+    variable2 = "variable2"
+    ds = _xr.Dataset(data_vars=dict(variable1=variable1, variable2=variable2))
+
+    # Act
+    with pytest.raises(ValueError) as error:
+        utilities.get_dummy_variable_in_ugrid(ds)
+
+    # Assert
+    assert (
+        error.value.args[0]
+        == """No dummy variable defined and therefore input dataset does
+            not comply with UGrid convention."""
+    )
+
+
+# ----------- Testing: get_dependent_vars_by_var_name -----------
+
+
+def test_get_dummy_variable():
+    """Test if you receive the name of the dummy variable in a ugrid dataset"""
+    # Arrange
+    vars = ("var1", "var2", "var3", "var4", "var5")
+    ds = _xr.Dataset(data_vars=dict.fromkeys(vars))
+    ds["var1"].attrs = {
+        "cf_role": "mesh_topology",
+        "test_coordinates": "var2 var3",
+        "test_dimension": "var4",
+        "testbounds": "var5",
+    }
+
+    # Act
+    dummy_variable = utilities.get_dependent_vars_by_var_name(ds, "var1")
+
+    # Assert
+    assert sorted(dummy_variable) == sorted(["var2", "var3", "var5"])
+
+
+def test_get_dummy_variable_if_none():
+    """Test if you receive nothing if there is no dependent variables in a ugrid dataset"""
+    # Arrange
+    vars = ("var1", "var2", "var3", "var4", "var5")
+    ds = _xr.Dataset(data_vars=dict.fromkeys(vars))
+
+    # Act
+    dummy_variable = utilities.get_dependent_vars_by_var_name(ds, "var1")
+
+    # Assert
+    assert sorted(dummy_variable) == sorted([])

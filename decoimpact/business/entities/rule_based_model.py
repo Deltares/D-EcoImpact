@@ -86,10 +86,16 @@ class RuleBasedModel(IModel):
         if self._mappings is not None:
             valid = self._validate_mappings(self._mappings, logger) and valid
 
+        if self._mappings is not None:
+            valid = self._validate_mappings(self._mappings, logger) and valid
+
         return valid
 
     def initialize(self, logger: ILogger) -> None:
         """Initializes the model.
+        Creates an output dataset which contains the necessary variables obtained
+        from the input dataset.
+        .
         Creates an output dataset which contains the necessary variables obtained
         from the input dataset.
         """
@@ -98,6 +104,11 @@ class RuleBasedModel(IModel):
             self._input_datasets, self._make_output_variables_list(), self._mappings
         )
 
+        self._output_dataset = _du.create_composed_dataset(
+            self._input_datasets, self._make_output_variables_list(), self._mappings
+        )
+
+        self._rule_processor = RuleProcessor(self._rules, self._output_dataset)
         self._rule_processor = RuleProcessor(self._rules, self._output_dataset)
         success = self._rule_processor.initialize(logger)
 
@@ -106,6 +117,8 @@ class RuleBasedModel(IModel):
 
     def execute(self, logger: ILogger) -> None:
         """Executes the model"""
+        if self._rule_processor is None:
+            raise RuntimeError("Processor is not set, please initialize model.")
         if self._rule_processor is None:
             raise RuntimeError("Processor is not set, please initialize model.")
 
@@ -119,21 +132,21 @@ class RuleBasedModel(IModel):
 
     def _make_output_variables_list(self):
         """Make the list of variables to be contained in the output dataset.
-        System variables have to be included in results to enable
-        XUgrid support and to prevent invalid topologies.
+        A list of variables needed is obtained from the dummy variable and
+        the dependent variables are recursively looked up. This is done to
+        support XUgrid and to prevent invalid topologies.
         This also allows QuickPlot to visualize the results.
         """
-        system_vars = [
-            "mesh2d",
-            "mesh2d_face_nodes",
-            "mesh2d_edge_nodes",
-            "mesh2d_face_x_bnd",
-            "mesh2d_face_y_bnd",
-            "mesh2d_flowelem_bl",
-        ]
+
+        var_list = []
+        dummy_vars = []
+
+        for dataset in self._input_datasets:
+            dummy_vars = _du.get_dummy_variable_in_ugrid(dataset)
+            var_list = _du.rec_search_dep_vars(dataset, dummy_vars, [], [])
 
         mapping_keys = list((self._mappings or {}).keys())
-        all_vars = system_vars + mapping_keys + self._get_direct_rule_inputs()
+        all_vars = dummy_vars + var_list + mapping_keys + self._get_direct_rule_inputs()
         return _lu.remove_duplicates_from_list(all_vars)
 
     def _validate_mappings(self, mappings: dict[str, str], logger: ILogger) -> bool:

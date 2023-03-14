@@ -15,8 +15,10 @@ from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.entities.combine_results_rule_data import CombineResultsRuleData
+from decoimpact.data.entities.layer_filter_rule_data import LayerFilterRuleData
 from decoimpact.data.entities.multiply_rule_data import MultiplyRuleData
 from decoimpact.data.entities.step_function_data import StepFunctionRuleData
+from decoimpact.data.entities.time_aggregation_rule_data import TimeAggregationRuleData
 
 
 def test_create_multiply_rule_based_model():
@@ -42,6 +44,12 @@ def test_create_rule_based_model():
         "descript_step_func_rule",
         "output_step_func_name",
     )
+    rule_data_layer_filter_rule = LayerFilterRuleData(
+        "lfrname", ["var1"], 2, "output_name"
+    )
+    time_aggregation_rule = TimeAggregationRuleData(
+        "taname", ["var1"], "MIN", "output", "Month"
+    )
 
     combine_results_rule_data = CombineResultsRuleData(
         "test_rule_name", ["foo", "hello"], "MULTIPLY", "output"
@@ -53,6 +61,8 @@ def test_create_rule_based_model():
         multiply_rule_data,
         step_function_rule_data,
         combine_results_rule_data,
+        rule_data_layer_filter_rule,
+        time_aggregation_rule,
     ]
 
     da_layer.read_input_dataset.return_value = dataset
@@ -66,7 +76,7 @@ def test_create_rule_based_model():
     assert isinstance(model, RuleBasedModel)
     assert model.name == "Test model"
     assert dataset in model.input_datasets
-    assert len(model.rules) == 3
+    assert len(model.rules) == 5
 
     # logs info about model creation
     logger.log_info.assert_called_once()

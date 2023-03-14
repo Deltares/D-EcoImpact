@@ -3,7 +3,7 @@ Tests for RuleBasedModel class
 """
 
 
-from unittest.mock import Mock
+from unittest.mock import MagicMock, Mock
 
 import pytest
 import xarray as _xr
@@ -107,6 +107,7 @@ def test_error_initializing_rule_based_model():
     # Arrange
     dataset = _xr.Dataset()
     dataset["test"] = _xr.DataArray([32, 94, 9])
+    dataset["test"].attrs = {"cf_role": "mesh_topology"}
     rule: IRule = Mock(IRule)
     rule.input_variable_names = ["unknown_var"]  # ["unknown_var"]
     rule.name = "rule with unknown var"
@@ -178,6 +179,7 @@ def test_run_rule_based_model():
     # Arrange
     dataset = _xr.Dataset()
     dataset["test"] = _xr.DataArray([32, 94, 9])
+    dataset["test"].attrs = {"cf_role": "mesh_topology"}
 
     logger = Mock(ILogger)
     rule1 = Mock(IArrayBasedRule, id="rule1")
@@ -208,3 +210,18 @@ def test_run_rule_based_model():
     assert "out1" in model.output_dataset.keys()
     assert "out2" in model.output_dataset.keys()
     assert "out3" in model.output_dataset.keys()
+
+
+def test_make_output_variables_list():
+    # Arrange
+    vars = ("var1", "var2", "var3", "var4", "var5")
+    dataset = _xr.Dataset(data_vars=dict.fromkeys(vars))
+    dataset["var1"].attrs = {"cf_role": "mesh_topology", "test_bounds": "var2"}
+    dataset["var2"].attrs = {"test_connectivity": "var4"}
+    dataset["var3"].attrs = {"test_connectivity": "var5"}
+    dataset["var4"].attrs = {"test_dimension": "test"}
+
+    model = RuleBasedModel([dataset], [])
+
+    var_list = model._make_output_variables_list()
+    assert sorted(var_list) == sorted(["var1", "var2", "var4"])
