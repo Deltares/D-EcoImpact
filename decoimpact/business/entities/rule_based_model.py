@@ -95,7 +95,7 @@ class RuleBasedModel(IModel):
         """Initializes the model.
         Creates an output dataset which contains the necessary variables obtained
         from the input dataset.
-        .
+
         Creates an output dataset which contains the necessary variables obtained
         from the input dataset.
         """
