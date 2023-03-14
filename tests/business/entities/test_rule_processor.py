@@ -18,7 +18,9 @@ from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
 )
 from decoimpact.business.entities.rules.i_rule import IRule
+from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.api.i_time_aggregation_rule_data import ITimeAggregationRuleData
 
 
 def _create_test_rules() -> List[IRule]:
@@ -382,6 +384,36 @@ def test_process_rules_throws_exception_for_unsupported_rule():
     # Assert
     expected_message = f"Can not execute rule {rule.name}."
     assert exception_raised.args[0] == expected_message
+
+
+def test_process_rules_copies_multi_coods_correctly():
+    """Tests if during processing the coords are copied to the output dataset
+    and there are no duplicates."""
+
+    # Arrange
+    output_dataset = _xr.Dataset()
+    input_array = _xr.DataArray([32, 94, 9])
+
+    output_dataset["test"] = input_array
+
+    logger = Mock(ILogger)
+    rule = Mock(IArrayBasedRule)
+
+    result_dataset = input_array
+    result_dataset = result_dataset.assign_coords({"time_month": input_array})
+
+    rule.input_variable_names = ["test"]
+    rule.output_variable_name = "output"
+    rule.execute.return_value = result_dataset
+
+    processor = RuleProcessor([rule], output_dataset)
+
+    # Act
+    assert processor.initialize(logger)
+    result_dataset = processor.process_rules(output_dataset, logger)
+
+    assert "time_month" in result_dataset.coords
+    assert (result_dataset.time_month.values == input_array).all()
 
 
 def test_execute_rule_throws_error_for_unknown_input_variable():
