@@ -86,16 +86,10 @@ class RuleBasedModel(IModel):
         if self._mappings is not None:
             valid = self._validate_mappings(self._mappings, logger) and valid
 
-        if self._mappings is not None:
-            valid = self._validate_mappings(self._mappings, logger) and valid
-
         return valid
 
     def initialize(self, logger: ILogger) -> None:
         """Initializes the model.
-        Creates an output dataset which contains the necessary variables obtained
-        from the input dataset.
-
         Creates an output dataset which contains the necessary variables obtained
         from the input dataset.
         """
@@ -113,8 +107,6 @@ class RuleBasedModel(IModel):
         """Executes the model"""
         if self._rule_processor is None:
             raise RuntimeError("Processor is not set, please initialize model.")
-        if self._rule_processor is None:
-            raise RuntimeError("Processor is not set, please initialize model.")
 
         self._output_dataset = self._rule_processor.process_rules(
             self._output_dataset, logger
@@ -128,8 +120,8 @@ class RuleBasedModel(IModel):
 
     def _make_output_variables_list(self):
         """Make the list of variables to be contained in the output dataset.
-        A list of variables needed is conducted from the dummy variable and
-        the dependent variables are recursively looked up. This is doen to
+        A list of variables needed is obtained from the dummy variable and
+        the dependent variables are recursively looked up. This is done to
         support XUgrid and to prevent invalid topologies.
         This also allows QuickPlot to visualize the results.
         """
