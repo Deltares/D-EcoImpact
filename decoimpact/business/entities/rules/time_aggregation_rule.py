@@ -81,7 +81,9 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             if value:
                 result[result_time_dim_name].attrs[key] = value
 
-        result = result.assign_coords({result_time_dim_name: result[result_time_dim_name]})
+        result = result.assign_coords({
+            result_time_dim_name: result[result_time_dim_name]
+          })
 
         return result
 
