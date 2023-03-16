@@ -161,7 +161,16 @@ class RuleProcessor:
         variables = list(self._get_rule_input_variables(rule, output_dataset))
 
         if isinstance(rule, IMultiArrayBasedRule):
-            return rule.execute(variables, logger)
+
+            result = rule.execute(variables, logger)
+            input_variable = variables[0]
+            # TODO: is the following function needed? The result dataset already has the mesh and location similar as the input_variable or not?
+            self._copy_definition_attributes(input_variable, result)
+            # TODO: this should come from the input
+            result.attrs["long_name"] = rule.output_variable_name
+            result.attrs["standard_name"] = rule.output_variable_name
+
+            return result
 
         if len(variables) != 1:
             raise NotImplementedError("Array based rule only supports one input array.")
@@ -170,7 +179,7 @@ class RuleProcessor:
         if isinstance(rule, IArrayBasedRule):
             result = rule.execute(input_variable, logger)
             self._copy_definition_attributes(input_variable, result)
-            # TO DO: this should come from the input
+            # TODO: this should come from the input
             result.attrs["long_name"] = rule.output_variable_name
             result.attrs["standard_name"] = rule.output_variable_name
             return result
@@ -178,7 +187,7 @@ class RuleProcessor:
         if isinstance(rule, ICellBasedRule):
             result = self._process_by_cell(rule, input_variable, logger)
             self._copy_definition_attributes(input_variable, result)
-            # TO DO: this should come from the input
+            # TODO: this should come from the input
             result.attrs["long_name"] = rule.output_variable_name
             result.attrs["standard_name"] = rule.output_variable_name
             return result
