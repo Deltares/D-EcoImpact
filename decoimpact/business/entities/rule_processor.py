@@ -164,9 +164,10 @@ class RuleProcessor:
 
             result = rule.execute(variables, logger)
             input_variable = variables[0]
-            # TODO: is the following function needed? The result dataset already has the mesh and location similar as the input_variable or not?
+            # TODO: is the following function needed? The result dataset already has
+            # the mesh and location similar as the input_variable or not?
             self._copy_definition_attributes(input_variable, result)
-            # TODO: this should come from the input
+            # TODO: this should come from the input[
             result.attrs["long_name"] = rule.output_variable_name
             result.attrs["standard_name"] = rule.output_variable_name
 
