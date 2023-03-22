@@ -94,7 +94,8 @@ class RuleProcessor:
                     rule_result.coords,
                 )
                 for coord_key in rule_result.coords:
-                    # the coord_key is overwritten in case we don't have the if statement below
+                    # the coord_key is overwritten in case we don't have the if 
+                    # statement below
                     if coord_key not in output_dataset.coords:
                         output_dataset = output_dataset.assign_coords(
                             {coord_key: rule_result[coord_key]}
