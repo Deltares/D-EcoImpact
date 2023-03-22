@@ -93,10 +93,11 @@ class RuleProcessor:
                     rule_result.attrs,
                     rule_result.coords,
                 )
-                for coord in rule_result.coords:
-                    if coord not in output_dataset.coords:
+                for coord_key in rule_result.coords:
+                    # the coord_key is overwritten in case we don't have the if statement below
+                    if coord_key not in output_dataset.coords:
                         output_dataset = output_dataset.assign_coords(
-                            {coord: rule_result[coord]}
+                            {coord_key: rule_result[coord_key]}
                         )
         return output_dataset
 
