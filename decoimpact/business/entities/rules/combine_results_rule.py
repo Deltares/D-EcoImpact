@@ -75,7 +75,9 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         operation_to_use = self._operations[self._operation_type]
 
         result_variable = _xr.DataArray(
-            data=operation_to_use(np_arrays), dims=value_arrays[0].dims
+            data=operation_to_use(np_arrays),
+            dims=value_arrays[0].dims,
+            attrs=value_arrays[0].attrs,
         )
 
         return result_variable
