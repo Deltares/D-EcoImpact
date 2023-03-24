@@ -21,7 +21,7 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 
 - Create `conda` environment
   ```sh
-  $ conda create -y -c conda-forge --name <env_name> poetry
+  $ conda create -y -c conda-forge --name <env_name> poetry python=3.11
   ```
 - Activate `conda` environment
   ```sh
@@ -32,7 +32,7 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 
 - Create `venv` virtual environment
   ```sh
-  $ py -m venv <env_name>
+  $ python -m venv <env_name>
   ```
 
 - Activate `venv` environment
@@ -52,9 +52,10 @@ $ poetry install
 
 
 ## Run
+Make sure you have a correct input file available in the main folder (eg. input_file.yaml) and use this as the first keyword argument when running the code through command line:
 
   ```sh
-  $ py main.py
+  $ python main.py input_file.yaml
   ```
 
 ## Development
