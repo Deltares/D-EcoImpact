@@ -18,7 +18,9 @@ from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
 )
 from decoimpact.business.entities.rules.i_rule import IRule
+from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.api.i_time_aggregation_rule_data import ITimeAggregationRuleData
 
 
 def _create_test_rules() -> List[IRule]:
@@ -382,6 +384,54 @@ def test_process_rules_throws_exception_for_unsupported_rule():
     # Assert
     expected_message = f"Can not execute rule {rule.name}."
     assert exception_raised.args[0] == expected_message
+
+
+def test_process_rules_copies_multi_coords_correctly():
+    """Tests if during processing the coords are copied to the output array
+    and there are no duplicates."""
+
+    # Arrange
+    output_dataset = _xr.Dataset()
+    output_dataset["test"] = _xr.DataArray([32, 94, 9])
+
+    logger = Mock(ILogger)
+    rule = Mock(IArrayBasedRule)
+    rule_2 = Mock(IArrayBasedRule)
+
+    result_array = _xr.DataArray([27, 45, 93])
+    result_array = result_array.assign_coords({"test": _xr.DataArray([2, 4, 5])})
+
+    result_array_2 = _xr.DataArray([1, 2, 93])
+    result_array_2 = result_array.assign_coords({"test": _xr.DataArray([2, 4, 5])})
+
+    rule.input_variable_names = ["test"]
+    rule.output_variable_name = "output"
+    rule.execute.return_value = result_array
+
+    rule_2.input_variable_names = ["test"]
+    rule_2.output_variable_name = "output_2"
+    rule_2.execute.return_value = result_array_2
+
+    processor = RuleProcessor([rule, rule_2], output_dataset)
+
+    # Act
+    assert processor.initialize(logger)
+    result_dataset = processor.process_rules(output_dataset, logger)
+
+    # Assert
+    assert "test" in result_dataset.coords
+    # compare coords at the level of variable
+    result_array_coords = result_array.coords["test"]
+    result_output_var_coords = result_dataset.output.coords["test"]  # output variable
+    assert (result_output_var_coords == result_array_coords).all()
+
+    # compare coords at the level of dataset /
+    # check if the coordinates are correctly copied to the dataset
+    result_dataset_coords = result_dataset.coords["test"]
+    assert (result_output_var_coords == result_dataset_coords).all()
+
+    # check if havnig an extra rule with coordinates then they are not copy pasted too
+    assert len(result_dataset.output.coords) == 1
 
 
 def test_execute_rule_throws_error_for_unknown_input_variable():
