@@ -127,3 +127,46 @@ def test_limits_must_be_unique(example_rule: StepFunctionRule):
     # Assert
     assert not example_rule.validate(logger)
     logger.log_error.assert_called_with("Limits must be unique.")
+
+
+def test_limits_should_be_ordered(example_rule: StepFunctionRule):
+    """The ParserStepFunctionRule calculate responses if the limits
+    are not sorted."""
+    # Arrange
+    logger = Mock(ILogger)
+
+    # Act
+    example_rule._limits = _np.array([0, 1, 2, 5, 4])
+
+    # Assert
+    assert not example_rule.validate(logger)
+    logger.log_error.assert_called_with("The limits should be given in a sorted order.")
+
+
+@pytest.fixture
+def example_rule_combined():
+    return StepFunctionRule(
+        "step_function_rule_name",
+        "input_variable_name",
+        [0, 1, 2, 5, 10],
+        [22, 15, 10, 12, 20],
+    )
+
+
+@pytest.mark.parametrize(
+    "input_value, expected_output_value",
+    [(-1, 22), (0.5, 22), (1.5, 15), (2.5, 10), (5.5, 12), (10.5, 20)],
+)
+def test_execute_values_combined_dec_inc(
+    example_rule_combined: StepFunctionRule,
+    input_value: int,
+    expected_output_value: int,
+):
+    """
+    Test the function execution with input values between the interval limits.
+    """
+    # Arrange
+    logger = Mock(ILogger)
+
+    # Assert
+    assert example_rule_combined.execute(input_value, logger) == expected_output_value

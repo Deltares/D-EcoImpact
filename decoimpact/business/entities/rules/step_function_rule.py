@@ -54,6 +54,9 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
         if len(self._limits) != len(set(self._limits)):
             logger.log_error("Limits must be unique.")
             return False
+        if not (self._limits == _np.sort(self._limits)).all():
+            logger.log_error("The limits should be given in a sorted order.")
+            return False
         return True
 
     def execute(self, value: float, logger: ILogger) -> float:
@@ -72,6 +75,7 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
         """
 
         bins = self._limits
+
         # bins are constant
         selected_bin = -1
         if value < _np.min(bins):
