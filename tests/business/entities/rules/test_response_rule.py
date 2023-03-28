@@ -58,14 +58,17 @@ def test_execute_response_rule_values_between_limits(
 
 
 @pytest.mark.parametrize(
-    "input_value, expected_log_message",
+    "input_value, expected_output_value, expected_log_message",
     [
-        (-1, "value less than min"),
-        (6000, "value greater than max"),
+        (-1, 0, "value less than min"),
+        (6000, 3, "value greater than max"),
     ],
 )
 def test_execute_response_rule_values_outside_limits(
-    example_rule: ResponseRule, input_value: int, expected_log_message: str
+    example_rule: ResponseRule,
+    input_value: int,
+    expected_output_value: int,
+    expected_log_message: str,
 ):
     """
     Test the function execution with input values outside the interval limits.
@@ -74,7 +77,7 @@ def test_execute_response_rule_values_outside_limits(
     logger = Mock(ILogger)
 
     # Assert
-    assert _np.isnan(example_rule.execute(input_value, logger))
+    assert example_rule.execute(input_value, logger) == expected_output_value
     logger.log_warning.assert_called_with(expected_log_message)
 
 
@@ -91,3 +94,49 @@ def test_inputs_and_outputs_have_different_lengths(example_rule: ResponseRule):
     # Assert
     assert not example_rule.validate(logger)
     logger.log_error.assert_called_with("The input and output values must be equal.")
+
+
+def test_input_values_are_not_sorted(example_rule: ResponseRule):
+    """
+    Test the function execution when input values are not sorted
+    """
+    # Arrange
+    logger = Mock(ILogger)
+
+    # Act
+    example_rule._input_values = _np.array([1, 2, 5, 3])
+
+    # Assert
+    assert not example_rule.validate(logger)
+    logger.log_error.assert_called_with(
+        "The input values should be given in a sorted order."
+    )
+
+
+@pytest.fixture
+def example_rule_combined():
+    return ResponseRule(
+        "name",
+        "input_variable_name",
+        [0, 1, 2, 5, 10],
+        [22, 15, 10, 12, 20],
+    )
+
+
+@pytest.mark.parametrize(
+    "input_value, expected_output_value",
+    [(-1, 22), (0.5, 18.5), (1.5, 12.5), (3.5, 11), (7.5, 16), (10.5, 20)],
+)
+def test_execute_values_combined_dec_inc(
+    example_rule_combined: ResponseRule,
+    input_value: int,
+    expected_output_value: int,
+):
+    """
+    Test the function execution with input values between the interval limits.
+    """
+    # Arrange
+    logger = Mock(ILogger)
+
+    # Assert
+    assert example_rule_combined.execute(input_value, logger) == expected_output_value

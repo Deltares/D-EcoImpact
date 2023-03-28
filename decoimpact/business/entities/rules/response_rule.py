@@ -32,6 +32,9 @@ class ResponseRule(RuleBase, ICellBasedRule):
         if len(self._input_values) != len(self._output_values):
             logger.log_error("The input and output values must be equal.")
             return False
+        if not (self._input_values == _np.sort(self._input_values)).all():
+            logger.log_error("The input values should be given in a sorted order.")
+            return False
         return True
 
     def execute(self, value: float, logger: ILogger) -> float:
@@ -47,19 +50,17 @@ class ResponseRule(RuleBase, ICellBasedRule):
         Returns:
             float: response corresponding to value to classify
         """
+
         values_input = self._input_values
         values_output = self._output_values
 
         # values are constant
         if value < _np.min(values_input):
             logger.log_warning("value less than min")
-            return _np.nan
+            return values_output[0]
 
         if value > _np.max(values_input):
             logger.log_warning("value greater than max")
-            return _np.nan
+            return values_output[-1]
 
-        valuenew = _np.interp(value, values_input, values_output)
-        print(valuenew)
-
-        return valuenew
+        return _np.interp(value, values_input, values_output)
