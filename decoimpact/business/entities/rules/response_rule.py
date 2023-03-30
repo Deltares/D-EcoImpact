@@ -47,8 +47,8 @@ class ResponseRule(RuleBase, ICellBasedRule):
 
     def execute(self, value: float, logger: ILogger):
         """Interpolate a variable, based on given input and output values.
-        Values lower than lowest value will be set to NaN, values larger than the highest value
-        will be set to NaN
+        Values lower than lowest value will be set to NaN, values larger than
+        the highest value will be set to NaN
 
         Args:
             value (float): value to classify
