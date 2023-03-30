@@ -7,14 +7,14 @@ from unittest.mock import Mock
 
 import numpy as _np
 import pytest
-import xarray as _xr
 
 from decoimpact.business.entities.rules.response_rule import ResponseRule
 from decoimpact.crosscutting.i_logger import ILogger
 
 
-@pytest.fixture
-def example_rule():
+@pytest.fixture(name="example_rule")
+def fixture_example_rule():
+    """Inititaion of ResponseRule to be reused in the following tests"""
     return ResponseRule(
         "test_response_name",
         "input_variable_name",
@@ -31,10 +31,10 @@ def test_create_response_rule(example_rule):
     logger = Mock(ILogger)
 
     # Assert
-    assert example_rule._name == "test_response_name"
+    assert example_rule.name == "test_response_name"
     assert example_rule.input_variable_names[0] == "input_variable_name"
-    assert (example_rule._input_values == [0, 50, 300, 5000]).all()
-    assert (example_rule._output_values == [0, 1, 2, 3]).all()
+    assert (example_rule.input_values == [0, 50, 300, 5000]).all()
+    assert (example_rule.output_values == [0, 1, 2, 3]).all()
     assert isinstance(example_rule, ResponseRule)
     assert example_rule.validate(logger)
 
@@ -44,7 +44,7 @@ def test_create_response_rule(example_rule):
     [(25, 0.5), (75, 1.1), (770, 2.1)],
 )
 def test_execute_response_rule_values_between_limits(
-    example_rule: ResponseRule, input_value: int, expected_output_value: float
+    example_rule, input_value: int, expected_output_value: float
 ):
     """
     Test the function execution with input values between the interval limits.
@@ -65,7 +65,7 @@ def test_execute_response_rule_values_between_limits(
     ],
 )
 def test_execute_response_rule_values_outside_limits(
-    example_rule: ResponseRule,
+    example_rule,
     input_value: int,
     expected_output_value: int,
     expected_log_message: str,
@@ -81,7 +81,7 @@ def test_execute_response_rule_values_outside_limits(
     logger.log_warning.assert_called_with(expected_log_message)
 
 
-def test_inputs_and_outputs_have_different_lengths(example_rule: ResponseRule):
+def test_inputs_and_outputs_have_different_lengths(example_rule):
     """
     Test the function execution when input and outputs have different lengths
     """
@@ -96,7 +96,7 @@ def test_inputs_and_outputs_have_different_lengths(example_rule: ResponseRule):
     logger.log_error.assert_called_with("The input and output values must be equal.")
 
 
-def test_input_values_are_not_sorted(example_rule: ResponseRule):
+def test_input_values_are_not_sorted(example_rule):
     """
     Test the function execution when input values are not sorted
     """
@@ -113,8 +113,8 @@ def test_input_values_are_not_sorted(example_rule: ResponseRule):
     )
 
 
-@pytest.fixture
-def example_rule_combined():
+@pytest.fixture(name="example_rule_combined")
+def fixture_example_rule_combined():
     return ResponseRule(
         "name",
         "input_variable_name",
@@ -128,7 +128,7 @@ def example_rule_combined():
     [(-1, 22), (0.5, 18.5), (1.5, 12.5), (3.5, 11), (7.5, 16), (10.5, 20)],
 )
 def test_execute_values_combined_dec_inc(
-    example_rule_combined: ResponseRule,
+    example_rule_combined,
     input_value: int,
     expected_output_value: int,
 ):

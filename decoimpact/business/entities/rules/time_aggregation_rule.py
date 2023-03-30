@@ -34,6 +34,21 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         self._time_scale = time_scale.lower()
         self._time_scale_mapping = {"month": "M", "year": "Y"}
 
+    @property
+    def operation_type(self):
+        """Operation type property"""
+        return self._operation_type
+
+    @property
+    def time_scale(self):
+        """Time scale property"""
+        return self.time_scale
+
+    @property
+    def time_scale_mapping(self):
+        """Time scale mapping property"""
+        return self._time_scale_mapping
+
     def validate(self, logger: ILogger) -> bool:
         """Validates if the rule is valid
 

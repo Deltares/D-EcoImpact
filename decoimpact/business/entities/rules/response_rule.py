@@ -1,7 +1,6 @@
 from typing import List
 
 import numpy as _np
-import xarray as _xr
 
 from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
@@ -19,14 +18,23 @@ class ResponseRule(RuleBase, ICellBasedRule):
         input_values: List[float],
         output_values: List[float],
         output_variable_name="output",
+        description: str = ""
     ):
 
-        super().__init__(name, [input_variable_name], output_variable_name)
+        super().__init__(name, [input_variable_name], output_variable_name, description)
 
-        self._name = name
-        self._input_variable_names[0] = input_variable_name
         self._input_values = _np.array(input_values)
         self._output_values = _np.array(output_values)
+
+    @property
+    def input_values(self):
+        """Input values property"""
+        return self._input_values
+
+    @property
+    def output_values(self):
+        """Output values property"""
+        return self._output_values
 
     def validate(self, logger: ILogger) -> bool:
         if len(self._input_values) != len(self._output_values):
@@ -37,10 +45,10 @@ class ResponseRule(RuleBase, ICellBasedRule):
             return False
         return True
 
-    def execute(self, value: float, logger: ILogger) -> float:
-
+    def execute(self, value: float, logger: ILogger):
         """Interpolate a variable, based on given input and output values.
-        Values lower than lowest value will be set to NaN, values larger than the highest value will be set to NaN
+        Values lower than lowest value will be set to NaN, values larger than the highest value
+        will be set to NaN
 
         Args:
             value (float): value to classify
