@@ -42,7 +42,7 @@ class ParserResponseCurveRule(IParserRuleBase):
 
         return ResponseCurveRuleData(
             name,
-            input_variable_name, 
+            input_variable_name,
             input_values,
             output_values,
             output_variable_name,
