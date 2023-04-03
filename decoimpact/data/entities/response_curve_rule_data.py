@@ -18,9 +18,9 @@ class ResponseCurveRuleData(IResponseCurveRuleData, RuleData):
     def __init__(
         self,
         name: str,
-        input_variable: str,
         input_values: List[float],
         output_values: List[float],
+        input_variable: str,
         output_variable: str = "output",
         description: str = "",
     ):
