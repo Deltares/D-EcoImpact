@@ -35,9 +35,17 @@ class ParserResponseCurveRule(IParserRuleBase):
         description = get_dict_element("description", dictionary)
         input_variable_name = get_dict_element("input_variable", dictionary)
         input_values = get_dict_element("input_values", dictionary)
+        if not all(isinstance(m, (int, float)) for m in input_values):
+            message = (
+                f"""Input values should be a list of floats, received: {input_values}"""
+            )
+            raise ValueError(message)
         output_values = get_dict_element("output_values", dictionary)
-        output_variable_name = get_dict_element("output_variable", dictionary)
+        if not all(isinstance(m, (int, float)) for m in output_values):
+            message = f"""Output values should be a list of floats, received: {output_values}"""
+            raise ValueError(message)
 
+        output_variable_name = get_dict_element("output_variable", dictionary)
         output_variable_name = get_dict_element("output_variable", dictionary)
 
         return ResponseCurveRuleData(

@@ -81,3 +81,61 @@ def test_parser_response_curve_rule_missing_argument(argument_to_remove: str):
 
     # Assert
     assert exception_raised.args[0] == "Missing element " + argument_to_remove
+
+
+def test_parse_input_values_type():
+    """Test if an incorrect dictionary is not parsed"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "test_name",
+            "description": "description",
+            "input_variable": "input",
+            "input_values": ["a", "b", 2],
+            "output_values": [3, 2, 0],
+            "output_variable": "output",
+        }
+    )
+    logger = Mock(ILogger)
+
+    # Act
+    data = ParserResponseCurveRule()
+    with pytest.raises(ValueError) as exc_info:
+        data.parse_dict(contents, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = (
+        "Input values should be a list of floats, received: ['a', 'b', 2]"
+    )
+    assert exception_raised.args[0] == expected_message
+
+
+def test_parse_output_values_type():
+    """Test if an incorrect dictionary is not parsed"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "test_name",
+            "description": "description",
+            "input_variable": "input",
+            "input_values": [1, 2, 3],
+            "output_values": ["a", "b", 2],
+            "output_variable": "output",
+        }
+    )
+    logger = Mock(ILogger)
+
+    # Act
+    data = ParserResponseCurveRule()
+    with pytest.raises(ValueError) as exc_info:
+        data.parse_dict(contents, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = (
+        "Output values should be a list of floats, received: ['a', 'b', 2]"
+    )
+    assert exception_raised.args[0] == expected_message
