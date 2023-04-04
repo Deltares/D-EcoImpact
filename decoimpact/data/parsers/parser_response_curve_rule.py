@@ -45,7 +45,6 @@ class ParserResponseCurveRule(IParserRuleBase):
                           received: {output_values}"""
             raise ValueError(message)
         output_variable_name = get_dict_element("output_variable", dictionary)
-        output_variable_name = get_dict_element("output_variable", dictionary)
 
         return ResponseCurveRuleData(
             name,

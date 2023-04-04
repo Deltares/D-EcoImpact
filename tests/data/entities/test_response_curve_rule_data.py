@@ -20,3 +20,5 @@ def test_response_curve_rule_data_creation_logic():
     assert data.name == "test_name"
     assert data.input_values == [1, 2, 3]
     assert data.output_values == [3, 2, 0]
+    assert data.description == "description"
+    assert data.output_variable == "output"
