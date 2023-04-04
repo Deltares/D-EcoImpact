@@ -11,7 +11,7 @@ from decoimpact.data.api.i_rule_data import IRuleData
 
 
 class IResponseCurveRuleData(IRuleData, ABC):
-    """Data for a responce curve rule"""
+    """Data for a response curve rule"""
 
     @property
     @abstractmethod
