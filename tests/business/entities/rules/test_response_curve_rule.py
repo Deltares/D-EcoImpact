@@ -14,7 +14,7 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 @pytest.fixture(name="example_rule")
 def fixture_example_rule():
-    """Inititaion of ResponseCurveRule to be reused in the following tests"""
+    """Initiation of ResponseCurveRule to be reused in the following tests"""
     return ResponseCurveRule(
         "test_response_name",
         "input_variable_name",
