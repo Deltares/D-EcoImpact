@@ -13,11 +13,12 @@ def test_response_curve_rule_data_creation_logic():
 
     # Act
     data = ResponseCurveRuleData(
-        "test_name", [1, 2, 3], [3, 2, 0], "input", "output", "description"
+        "test_name", "input", [1, 2, 3], [3, 2, 0], "output", "description"
     )
 
     assert isinstance(data, IRuleData)
     assert data.name == "test_name"
+    assert data.input_variable == "input"
     assert data.input_values == [1, 2, 3]
     assert data.output_values == [3, 2, 0]
     assert data.description == "description"
