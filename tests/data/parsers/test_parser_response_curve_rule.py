@@ -84,7 +84,7 @@ def test_parser_response_curve_rule_missing_argument(argument_to_remove: str):
 
 
 def test_parse_input_values_type():
-    """Test if dictionary is not parsed in case of input_values are invalid"""
+    """Test if dictionary is not parsed in case of invalid input_values"""
     # Arrange
     contents = dict(
         {
@@ -112,7 +112,7 @@ def test_parse_input_values_type():
 
 
 def test_parse_output_values_type():
-    """Test if dictionary is not parsed in case of output_values are invalid"""
+    """Test if dictionary is not parsed in case of invalid output_values"""
     # Arrange
     contents = dict(
         {
