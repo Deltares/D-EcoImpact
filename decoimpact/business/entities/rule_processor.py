@@ -43,8 +43,8 @@ class RuleProcessor:
         self._processing_list: List[List[IRule]] = []
 
     def initialize(self, logger: ILogger) -> bool:
-        """Creates an ordered list of rule arrays, where every rule array contains
-        rules that can be processed simultaneously.
+        """Creates an ordered list of rule arrays, where every rule array
+        contains rules that can be processed simultaneously.
 
         Args:
             logger (ILogger): logger for reporting messages
@@ -94,7 +94,7 @@ class RuleProcessor:
                     rule_result.coords,
                 )
                 for coord_key in rule_result.coords:
-                    # the coord_key is overwritten in case we don't have the if 
+                    # the coord_key is overwritten in case we don't have the if
                     # statement below
                     if coord_key not in output_dataset.coords:
                         output_dataset = output_dataset.assign_coords(

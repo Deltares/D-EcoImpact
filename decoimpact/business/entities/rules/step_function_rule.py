@@ -42,10 +42,18 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
     ):
         super().__init__(name, [input_variable_name], output_variable_name)
 
-        self._name = name
-        self._input_variable_name = input_variable_name
         self._limits = _np.array(limits)
         self._responses = _np.array(responses)
+
+    @property
+    def limits(self):
+        """Limits property"""
+        return self._limits
+
+    @property
+    def responses(self):
+        """Responses property"""
+        return self._responses
 
     def validate(self, logger: ILogger) -> bool:
         if len(self._limits) != len(self._responses):
@@ -53,6 +61,9 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
             return False
         if len(self._limits) != len(set(self._limits)):
             logger.log_error("Limits must be unique.")
+            return False
+        if not (self._limits == _np.sort(self._limits)).all():
+            logger.log_error("The limits should be given in a sorted order.")
             return False
         return True
 
@@ -72,6 +83,7 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
         """
 
         bins = self._limits
+
         # bins are constant
         selected_bin = -1
         if value < _np.min(bins):
