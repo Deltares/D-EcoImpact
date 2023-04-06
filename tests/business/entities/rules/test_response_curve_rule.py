@@ -8,14 +8,14 @@ from unittest.mock import Mock
 import numpy as _np
 import pytest
 
-from decoimpact.business.entities.rules.response_rule import ResponseRule
+from decoimpact.business.entities.rules.response_curve_rule import ResponseCurveRule
 from decoimpact.crosscutting.i_logger import ILogger
 
 
 @pytest.fixture(name="example_rule")
 def fixture_example_rule():
-    """Inititaion of ResponseRule to be reused in the following tests"""
-    return ResponseRule(
+    """Initiation of ResponseCurveRule to be reused in the following tests"""
+    return ResponseCurveRule(
         "test_response_name",
         "input_variable_name",
         [0, 50, 300, 5000],
@@ -35,7 +35,7 @@ def test_create_response_rule(example_rule):
     assert example_rule.input_variable_names[0] == "input_variable_name"
     assert (example_rule.input_values == [0, 50, 300, 5000]).all()
     assert (example_rule.output_values == [0, 1, 2, 3]).all()
-    assert isinstance(example_rule, ResponseRule)
+    assert isinstance(example_rule, ResponseCurveRule)
     assert example_rule.validate(logger)
 
 
@@ -115,7 +115,7 @@ def test_input_values_are_not_sorted(example_rule):
 
 @pytest.fixture(name="example_rule_combined")
 def fixture_example_rule_combined():
-    return ResponseRule(
+    return ResponseCurveRule(
         "name",
         "input_variable_name",
         [0, 1, 2, 5, 10],

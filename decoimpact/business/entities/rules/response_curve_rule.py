@@ -7,7 +7,7 @@ from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.crosscutting.i_logger import ILogger
 
 
-class ResponseRule(RuleBase, ICellBasedRule):
+class ResponseCurveRule(RuleBase, ICellBasedRule):
 
     """Rule for response function"""
 
@@ -18,7 +18,7 @@ class ResponseRule(RuleBase, ICellBasedRule):
         input_values: List[float],
         output_values: List[float],
         output_variable_name="output",
-        description: str = ""
+        description: str = "",
     ):
 
         super().__init__(name, [input_variable_name], output_variable_name, description)
