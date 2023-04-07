@@ -30,5 +30,8 @@ extra:
   social:
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/deltares/
+  version:
+    provider: mike
+
 copyright: |
   Copyright &copy; 2023 <a href="https://www.deltares.nl/en/"  target="_blank" rel="noopener">Deltares</a>
