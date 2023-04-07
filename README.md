@@ -71,3 +71,19 @@ When adding a new dependency, do so using `poetry`
     ```sh
     $ poetry add <package> --dev
     ```
+
+## Documentation
+There are mkdocs available for documentation on how to use this code. 
+For now these are available offline by running the command: 
+
+```
+$ mkdocs serve
+```
+
+The pages will be served locally and available on one of you local ports. When executing this command in the INFO messages the location will be shown where the docs are available: 
+
+```
+INFO     -  [10:44:34] Serving on http://127.0.0.1:8000/
+```
+
+In this case the docs are available on http://127.0.0.1:8000/ or http://localhost:8000: 
