@@ -89,6 +89,6 @@ def test_parse_multipliers_type():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = "Multipliers should be a list of floats, \
-                          received: ['a', 'b', 2]"
+    expected_message = "Multipliers should be a list of int or floats, \
+                          received <class 'str'>: ['a', 'b', 2]"
     assert exception_raised.args[0] == expected_message
