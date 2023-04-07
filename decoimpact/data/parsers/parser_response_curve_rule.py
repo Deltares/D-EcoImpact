@@ -34,21 +34,37 @@ class ParserResponseCurveRule(IParserRuleBase):
         name = get_dict_element("name", dictionary)
         description = get_dict_element("description", dictionary)
         input_variable_name = get_dict_element("input_variable", dictionary)
-        input_values = get_dict_element("input_values", dictionary)
 
-        for input_value in input_values:
-            if not isinstance(input_value, (int, float)):
-                message = f"""Input values should be a list of int or floats, \
-                          received {type(input_value)}: {input_values}"""
-                raise ValueError(message)
+        input_values = get_dict_element("input_values", dictionary)
+        if not all(isinstance(m, (int, float)) for m in input_values):
+            message = (
+                "Input values should be a list of int or floats,"
+                f"received: {input_values}"
+            )
+            position_error = "".join(
+                [
+                    f"ERROR in position {index} is type {type(m)}. "
+                    for (index, m) in enumerate(input_values)
+                    if not isinstance(m, (int, float))
+                ]
+            )
+            raise ValueError(f"{position_error}{message}")
 
         output_values = get_dict_element("output_values", dictionary)
+        if not all(isinstance(m, (int, float)) for m in output_values):
+            message = (
+                "Output values should be a list of int or floats,"
+                f"received: {output_values}"
+            )
+            position_error = "".join(
+                [
+                    f"ERROR in position {index} is type {type(m)}. "
+                    for (index, m) in enumerate(output_values)
+                    if not isinstance(m, (int, float))
+                ]
+            )
+            raise ValueError(f"{position_error}{message}")
 
-        for output_value in output_values:
-            if not isinstance(output_value, (int, float)):
-                message = f"""Output values should be a list of int or floats, \
-                          received {type(output_value)}: {output_values}"""
-                raise ValueError(message)
         output_variable_name = get_dict_element("output_variable", dictionary)
 
         return ResponseCurveRuleData(

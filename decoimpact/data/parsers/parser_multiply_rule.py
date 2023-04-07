@@ -34,11 +34,19 @@ class ParserMultiplyRule(IParserRuleBase):
         input_variable_name = get_dict_element("input_variable", dictionary)
         multipliers = get_dict_element("multipliers", dictionary)
 
-        for multiplier in multipliers:
-            if not isinstance(multiplier, (int, float)):
-                message = f"""Multipliers should be a list of int or floats, \
-                          received {type(multiplier)}: {multipliers}"""
-                raise ValueError(message)
+        if not all(isinstance(m, (int, float)) for m in multipliers):
+            message = (
+                "Multipliers should be a list of int or floats,"
+                f"received: {multipliers}"
+            )
+            position_error = "".join(
+                [
+                    f"ERROR in position {index} is type {type(m)}. "
+                    for (index, m) in enumerate(multipliers)
+                    if not isinstance(m, (int, float))
+                ]
+            )
+            raise ValueError(f"{position_error}{message}")
         output_variable_name = get_dict_element("output_variable", dictionary)
 
         return MultiplyRuleData(
