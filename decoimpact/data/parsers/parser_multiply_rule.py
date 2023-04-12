@@ -36,7 +36,7 @@ class ParserMultiplyRule(IParserRuleBase):
 
         if not all(isinstance(m, (int, float)) for m in multipliers):
             message = (
-                "Multipliers should be a list of int or floats,"
+                "Multipliers should be a list of int or floats, "
                 f"received: {multipliers}"
             )
             position_error = "".join(

@@ -38,7 +38,7 @@ class ParserResponseCurveRule(IParserRuleBase):
         input_values = get_dict_element("input_values", dictionary)
         if not all(isinstance(m, (int, float)) for m in input_values):
             message = (
-                "Input values should be a list of int or floats,"
+                "Input values should be a list of int or floats, "
                 f"received: {input_values}"
             )
             position_error = "".join(
@@ -53,7 +53,7 @@ class ParserResponseCurveRule(IParserRuleBase):
         output_values = get_dict_element("output_values", dictionary)
         if not all(isinstance(m, (int, float)) for m in output_values):
             message = (
-                "Output values should be a list of int or floats,"
+                "Output values should be a list of int or floats, "
                 f"received: {output_values}"
             )
             position_error = "".join(
