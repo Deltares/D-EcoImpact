@@ -94,6 +94,5 @@ def test_parse_layer_number_type():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = "Layer number should be an integer, \
-                received: 3"
+    expected_message = "Layer number should be an integer, received a <class 'str'>: 3"
     assert exception_raised.args[0] == expected_message
