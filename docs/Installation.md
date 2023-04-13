@@ -1,5 +1,5 @@
 # Installation 
-D-EcoImpact is a command line operated model. To use D-EcoImpact (currently) an installation of Python and the used libraries is required. This is best achieved by installing D-EcoImpact in an virtual environment.
+D-EcoImpact is a command line operated model. To use D-EcoImpact (currently) an installation of Python and the used libraries is required. This is best achieved by installing D-EcoImpact in a virtual environment.
 
 
 ## Anaconda, miniConda or Visual Studio Code
