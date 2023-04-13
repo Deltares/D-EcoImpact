@@ -69,5 +69,10 @@ nav:
           - "Application.py": "api/business/application.md"
   - Print: "print_page"
 
+extra:
+  social:
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/deltares/
+
 copyright: |
   Copyright &copy; 2023 <a href="https://www.deltares.nl/en/"  target="_blank" rel="noopener">Deltares</a>
