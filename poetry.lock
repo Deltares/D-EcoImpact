@@ -366,6 +366,24 @@ python-dateutil = ">=2.8.1"
 dev = ["flake8", "markdown", "twine", "wheel"]
 
 [[package]]
+name = "griffe"
+version = "0.27.0"
+description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "griffe-0.27.0-py3-none-any.whl", hash = "sha256:f3a5726e2d5876ac882d48ff9ca1a95c5bc267196a8f114263e66e234141bb84"},
+    {file = "griffe-0.27.0.tar.gz", hash = "sha256:dcf3cc4205f33cbb16095324803a6904e0b293cd1630ceab4b66a9115af6b818"},
+]
+
+[package.dependencies]
+colorama = ">=0.4"
+
+[package.extras]
+async = ["aiofiles (>=0.7,<1.0)"]
+
+[[package]]
 name = "idna"
 version = "3.4"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -661,6 +679,18 @@ Markdown = ">=3.3"
 mkdocs = ">=1.1"
 
 [[package]]
+name = "mkdocs-include-markdown-plugin"
+version = "4.0.4"
+description = "Mkdocs Markdown includer plugin."
+category = "main"
+optional = false
+python-versions = "<3.12,>=3.7"
+files = [
+    {file = "mkdocs_include_markdown_plugin-4.0.4-py3-none-any.whl", hash = "sha256:792caa91c2c46fa174ad44caa786656ac3f475f2cef5ad33ad28a106f7bc4086"},
+    {file = "mkdocs_include_markdown_plugin-4.0.4.tar.gz", hash = "sha256:a5d569a653a610cbbe5b9c0ebb257ce7f94b453e93c3ae2c503b682e77465773"},
+]
+
+[[package]]
 name = "mkdocs-material"
 version = "9.1.5"
 description = "Documentation that simply works"
@@ -696,6 +726,21 @@ files = [
 ]
 
 [[package]]
+name = "mkdocs-print-site-plugin"
+version = "2.3.4"
+description = "MkDocs plugin that combines all pages into one, allowing for easy export to PDF and standalone HTML."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "mkdocs-print-site-plugin-2.3.4.tar.gz", hash = "sha256:40c8c918a58f66c1f44b97512433fefd28a7ae74f8aa6c1633ddf14a6c04aa7f"},
+    {file = "mkdocs_print_site_plugin-2.3.4-py3-none-any.whl", hash = "sha256:a74540cc3098695ae4623effc2c0be1631d0d1061344dcce283e775044cca0b4"},
+]
+
+[package.dependencies]
+mkdocs-material = ">=7.3.0"
+
+[[package]]
 name = "mkdocstrings"
 version = "0.21.2"
 description = "Automatic documentation from sources, for MkDocs."
@@ -720,6 +765,22 @@ typing-extensions = {version = ">=4.1", markers = "python_version < \"3.10\""}
 crystal = ["mkdocstrings-crystal (>=0.3.4)"]
 python = ["mkdocstrings-python (>=0.5.2)"]
 python-legacy = ["mkdocstrings-python-legacy (>=0.2.1)"]
+
+[[package]]
+name = "mkdocstrings-python"
+version = "0.9.0"
+description = "A Python handler for mkdocstrings."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "mkdocstrings-python-0.9.0.tar.gz", hash = "sha256:da0a54d7d46523a25a5227f0ecc74b491291bd9d36fc71445bfb0ea64283e287"},
+    {file = "mkdocstrings_python-0.9.0-py3-none-any.whl", hash = "sha256:00e02b5d3d444f9abdec2398f9ba0c73e15deab78685f793f5801fd4d62a5b6f"},
+]
+
+[package.dependencies]
+griffe = ">=0.24"
+mkdocstrings = ">=0.20"
 
 [[package]]
 name = "mock"
@@ -1611,4 +1672,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9, <3.12" # max 3.11 because of scipy
-content-hash = "4ecabac2fbfe85bd4a7e3904d9a9aa6666f9708836764aeaddd1c61c588e0eba"
+content-hash = "648a7322c0a53269311de35cae98a71866aede1b48dab3cad95679ab6994af31"

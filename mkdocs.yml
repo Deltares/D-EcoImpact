@@ -25,6 +25,7 @@ theme:
 
 plugins:
   - search
+  - include-markdown
   - mkdocstrings:
       default_handler: python
       handlers:
@@ -38,10 +39,13 @@ plugins:
             group_by_category: false
           selection:
             inherited_members: false
+  - print-site
 
-      custom_templates: templates
+markdown_extensions:
+  - attr_list
+
 repo_url: https://github.com/Deltares/D-EcoImpact
-repo_name: deltares/D-EcoImpact
+repo_name: Deltares/D-EcoImpact
 edit_uri: edit/main/docs/
 
 extra:
@@ -50,6 +54,19 @@ extra:
   social:
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/deltares/
+
+nav:
+  - Home: "index.md"
+  - Installation: "Installation.md"
+  - Tutorials:
+      - Visualization: "tutorials/visualization.md"
+      - Input files: "tutorials/input.md"
+  - Examples:
+      - Valkerak zoommeer: "examples/valkerak.md"
+      - Meusse: "examples/maas.md"
+  - API reference:
+      - Business:
+          - "Application.py": "api/business/application.md"
 
 copyright: |
   Copyright &copy; 2023 <a href="https://www.deltares.nl/en/"  target="_blank" rel="noopener">Deltares</a>

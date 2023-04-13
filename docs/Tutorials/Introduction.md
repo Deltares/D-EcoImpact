@@ -1,1 +1,0 @@
-Step by step tutorials are provided to help the user to set up a D-EcoImpact model, handle the data and create input files. To follow these tutorials make sure the system is working on your computer by following the installation instructions. 
