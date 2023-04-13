@@ -62,11 +62,12 @@ nav:
       - Visualization: "tutorials/visualization.md"
       - Input files: "tutorials/input.md"
   - Examples:
-      - Valkerak zoommeer: "examples/valkerak.md"
+      - Volkerak zoommeer: "examples/volkerak.md"
       - Meusse: "examples/maas.md"
   - API reference:
       - Business:
           - "Application.py": "api/business/application.md"
+  - Print: "print_page"
 
 copyright: |
   Copyright &copy; 2023 <a href="https://www.deltares.nl/en/"  target="_blank" rel="noopener">Deltares</a>
