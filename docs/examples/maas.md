@@ -11,7 +11,7 @@ Based on the knowledgerules available through the KRW-Verkenner Rijkswateren the
 | Potamogeton pectinatus | Water        | Stroomsnelheid | m/s       | 0          | 2,5        |
 | Potamogeton pectinatus | Water        | Droogval       | Categorie | 1          | 2          |
 
-Habitat suitability criteria for flow velocity, water depth and dessication for Potamogeton nodosus and Potamogeton pectinatus.
+Habitat suitability criteria for flow velocity, water depth and desiccation for Potamogeton nodosus and Potamogeton pectinatus.
 
 
 ![Maas](/assets/images/4_case_maas.png)
