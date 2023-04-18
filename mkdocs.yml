@@ -2,15 +2,12 @@ site_name: D-EcoImpact documentation
 theme:
   name: material
   features:
+    - navigation.instant
+    - navigation.tracking
     - navigation.tabs
     - navigation.sections
-    - toc.integrate
+    - navigation.expand
     - navigation.top
-    - search.suggest
-    - search.highlight
-    - content.tabs.link
-    - content.code.annotation
-    - content.code.copy
   language: en
   palette:
     - scheme: default
@@ -26,9 +23,56 @@ theme:
       primary: teal
       accent: lime
 
+plugins:
+  - search
+  - include-markdown
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          rendering:
+            show_root_toc_entry: false
+            show_source: true
+            show_signature_annotations: true
+            heading_level: 3
+            show_category_heading: false
+            group_by_category: false
+          selection:
+            inherited_members: false
+  - print-site
+
+markdown_extensions:
+  - attr_list
+
+repo_url: https://github.com/Deltares/D-EcoImpact
+repo_name: Deltares/D-EcoImpact
+edit_uri: edit/main/docs/
+
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/deltares/
+
+nav:
+  - Home: "index.md"
+  - Installation: "Installation.md"
+  - Tutorials:
+      - Visualization: "tutorials/visualization.md"
+      - Input files: "tutorials/input.md"
+  - Examples:
+      - Volkerak zoommeer: "examples/volkerak.md"
+      - Meuse: "examples/maas.md"
+  - API reference:
+      - Business:
+          - "Application.py": "api/business/application.md"
+  - Print: "print_page"
+
 extra:
   social:
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/deltares/
+
 copyright: |
   Copyright &copy; 2023 <a href="https://www.deltares.nl/en/"  target="_blank" rel="noopener">Deltares</a>
