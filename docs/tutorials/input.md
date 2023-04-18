@@ -38,8 +38,8 @@ output-data:
 ```
 #EXAMPLE  : Reading and writing a example model of the Volkerak-Zoommeer
 # Mapping: mesh2d_sa1              : Salinity (PSU)
-#                 mesh2d_s1                : Water level (m NAP)
-#                 mesh2d_waterdepth : Water depth (m NAP) 
+#          mesh2d_s1                : Water level (m NAP)
+#          mesh2d_waterdepth : Water depth (m NAP) 
 input-data:
   - dataset:
       filename: examples/data/FM-VZM_0000_map.nc
@@ -190,7 +190,7 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
     - step_function_rule:
       name: Classify salinity
       description: Make distinction between 0.0 – 0.5 , 0.5 – 1.2, 1.2 – 1.3 and >1.3 psu
-      limits:         [-999.0, 0.0,  0.5, 1.2, 1.3, 999.0]
+      limits:    [  -999.0, 0.0,  0.5, 1.2, 1.3,   999.0]
       responses: [     0.0, 1.0,  2.0, 3.0, 4.0,     4.0]
       input_variable: salinity      
       output_variable: salinity_class
@@ -205,8 +205,8 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
       name: Check water level policy
       description: Check if water level is within -0.10 (minimum) and +0.15 (maximum) m NAP
       description: Get boundaries water level
-      limits:          [ -999.0, -0.10 , 0.15, 999.0]
-      responses: [       0.0,     1.0,    0.0,     0.0]
+      limits:    [ -999.0, -0.10, 0.15, 999.0]
+      responses: [    0.0,   1.0,  0.0,   0.0]
       input_variable: water_level
       output_variable : water_level_policy
 ```
@@ -237,8 +237,8 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
 - response_curve_rule:
       name: HSI Pond weed water depth
       description: Reponse of Pond weed (Potamogeton nodosus) to water depth
-      input_values:         [-999.0, 0.0,  0.5, 1.0, 2.0, 999.0]
-      output_values:      [      0.0, 0.0,  1.0, 1.0, 0.0,     0.0]
+      input_values:      [-999.0, 0.0,  0.5, 1.0, 2.0, 999.0]
+      output_values:     [   0.0, 0.0,  1.0, 1.0, 0.0,   0.0]
       input_variable: water_depth      
 
 ```

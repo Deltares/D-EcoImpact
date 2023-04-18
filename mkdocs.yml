@@ -63,7 +63,7 @@ nav:
       - Input files: "tutorials/input.md"
   - Examples:
       - Volkerak zoommeer: "examples/volkerak.md"
-      - Meusse: "examples/maas.md"
+      - Meuse: "examples/maas.md"
   - API reference:
       - Business:
           - "Application.py": "api/business/application.md"
