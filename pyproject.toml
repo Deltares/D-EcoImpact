@@ -61,6 +61,7 @@ markers = [
     "data_access: tests using the file system",
 ]
 testpaths = ["tests/**/test_*.py"]
+pythonpath = ["."]
 junit_logging = "all"
 log_cli = "True"
 log_cli_level = "DEBUG"
