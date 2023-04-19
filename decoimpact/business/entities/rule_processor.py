@@ -216,7 +216,7 @@ class RuleProcessor:
             )
 
     def _process_by_cell(
-        self, rule: ICellBasedRule, input_variable: _xr.DataArray, logger: ILogger
+        self, rule: ICellBasedRule, input_variables: _xr.DataArray, logger: ILogger
     ) -> _xr.DataArray:
         """Processes every value of the input_variable and creates a
         new one from it
