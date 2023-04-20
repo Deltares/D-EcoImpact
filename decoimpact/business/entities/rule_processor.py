@@ -6,7 +6,7 @@ Classes:
 
 """
 
-from typing import Iterable, List, Tuple
+from typing import Dict, Iterable, List, Tuple
 
 import numpy as _np
 import xarray as _xr
@@ -15,6 +15,9 @@ from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRul
 from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
+)
+from decoimpact.business.entities.rules.i_multi_cell_based_rule import (
+    IMultiCellBasedRule,
 )
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.crosscutting.i_logger import ILogger
@@ -174,16 +177,14 @@ class RuleProcessor:
         variables = list(variable_lookup.values())
 
         if isinstance(rule, IMultiArrayBasedRule):
-
             result = rule.execute(variable_lookup, logger)
-            # use first array to retrieve attribute names
-            input_variable = variables[0]
-
-            self._copy_definition_attributes(input_variable, result)
-            # TODO: this should come from the input
-            result.attrs["long_name"] = rule.output_variable_name
-            result.attrs["standard_name"] = rule.output_variable_name
-
+            # set output attributes, based on first array (to retrieve attribute names)
+            self._set_output_attributes(rule, result, variables[0])
+            return result
+        
+        if isinstance(rule, IMultiCellBasedRule):
+            result = self._process_by_multi_cell(rule, variable_lookup, logger)
+            self._set_output_attributes(rule, result, variables[0])
             return result
 
         if len(variables) != 1:
@@ -192,21 +193,21 @@ class RuleProcessor:
         input_variable = variables[0]
         if isinstance(rule, IArrayBasedRule):
             result = rule.execute(input_variable, logger)
-            self._copy_definition_attributes(input_variable, result)
-            # TODO: this should come from the input
-            result.attrs["long_name"] = rule.output_variable_name
-            result.attrs["standard_name"] = rule.output_variable_name
+            self._set_output_attributes(rule, result, input_variable)
             return result
 
         if isinstance(rule, ICellBasedRule):
             result = self._process_by_cell(rule, input_variable, logger)
-            self._copy_definition_attributes(input_variable, result)
-            # TODO: this should come from the input
-            result.attrs["long_name"] = rule.output_variable_name
-            result.attrs["standard_name"] = rule.output_variable_name
+            self._set_output_attributes(rule, result, input_variable)
             return result
 
         raise NotImplementedError(f"Can not execute rule {rule.name}.")
+
+    def _set_output_attributes(self, rule: IRule, result: _xr.DataArray, input_variable: _xr.DataArray):
+        self._copy_definition_attributes(input_variable, result)
+        # TODO: this should come from the input
+        result.attrs["long_name"] = rule.output_variable_name
+        result.attrs["standard_name"] = rule.output_variable_name
 
     def _copy_definition_attributes(
         self, source_array: _xr.DataArray, target_array: _xr.DataArray
@@ -241,6 +242,38 @@ class RuleProcessor:
         # use copy to get the same dimensions as the
         # original input variable
         return input_variable.copy(data=result_variable)
+
+    def _process_by_multi_cell(
+        self, rule: IMultiCellBasedRule, input_variables: Dict[str, _xr.DataArray], logger: ILogger
+    ) -> _xr.DataArray:
+        """Processes every value of the input_variable and creates a
+        new one from it
+
+        Args:
+            rule (IMultiCellBasedRule): rule to process
+            input_variable (_xr.DataArray): input variable/data
+            logger (ILogger): logger for log messages
+
+        Returns:
+            _xr.DataArray: _description_
+        """
+        if (len(input_variables) < 1):
+            raise NotImplementedError(f"Can not execute rule {rule.name} with no input variables.")
+
+        value_arrays = list(input_variables.values())
+        np_array = value_arrays[0].to_numpy()
+        result_variable = _np.zeros_like(np_array)
+
+        for indices in _np.ndenumerate(np_array):
+            cell_values = {}
+            for input in input_variables.items():
+                cell_values[input[0]] = input[1][indices].to_numpy()
+                result_variable[indices] = rule.execute(cell_values, logger)
+
+        # use copy to get the same dimensions as the
+        # original input variable
+        return value_arrays[0].copy(data=result_variable)
+
 
     def _get_rule_input_variables(
         self, rule: IRule, output_dataset: _xr.Dataset
