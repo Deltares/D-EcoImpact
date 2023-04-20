@@ -194,9 +194,9 @@ def test_run_rule_based_model():
     rule2.output_variable_name = "out2"
     rule3.output_variable_name = "out3"
 
-    rule1.execute.return_value = _xr.DataArray([32, 94, 9])
-    rule2.execute.return_value = _xr.DataArray([32, 94, 9])
-    rule3.execute.return_value = _xr.DataArray([32, 94, 9])
+    rule1.execute_single_input.return_value = _xr.DataArray([32, 94, 9])
+    rule2.execute_single_input.return_value = _xr.DataArray([32, 94, 9])
+    rule3.execute_single_input.return_value = _xr.DataArray([32, 94, 9])
 
     model = RuleBasedModel([dataset], [rule1, rule2, rule3])
 

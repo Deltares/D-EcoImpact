@@ -38,7 +38,7 @@ def test_execute_adding_value_arrays():
     }
 
     # Act
-    formula_array = rule.execute(value_arrays, logger)
+    formula_array = rule.execute_multiple_input(value_arrays, logger)
 
     result_data = [5, 5, 5, 5]
     result_array = _xr.DataArray(result_data)
@@ -59,7 +59,7 @@ def test_execute_multiplying_value_arrays():
     }
 
     # Act
-    formula_array = rule.execute(value_arrays, logger)
+    formula_array = rule.execute_multiple_input(value_arrays, logger)
 
     result_data = [4, 6, 6, 4]
     result_array = _xr.DataArray(result_data)
@@ -80,7 +80,7 @@ def test_execute_comparing_value_arrays():
     }
 
     # Act
-    formula_array = rule.execute(value_arrays, logger)
+    formula_array = rule.execute_multiple_input(value_arrays, logger)
 
     result_data = [0, 0, 1, 1]
     result_array = _xr.DataArray(result_data)
@@ -98,7 +98,7 @@ def test_execute_comparing_array_with_number():
     value_arrays = {"foo": _xr.DataArray([0, 1, 2, 3, 4])}
 
     # Act
-    formula_array = rule.execute(value_arrays, logger)
+    formula_array = rule.execute_multiple_input(value_arrays, logger)
 
     result_data = [0, 1, 1, 1, 1]
     result_array = _xr.DataArray(result_data)
@@ -116,7 +116,7 @@ def test_execute_if_else_on_array():
     value_arrays = {"foo": _xr.DataArray([0, 1, 2, 3, 4])}
 
     # Act
-    formula_array = rule.execute(value_arrays, logger)
+    formula_array = rule.execute_multiple_input(value_arrays, logger)
 
     result_data = [0, 1, 1, 1, 1]
     result_array = _xr.DataArray(result_data)
@@ -138,7 +138,7 @@ def test_execute_unwanted_python_code():
 
     # Act
     with pytest.raises(NameError) as exc_info:
-        rule.execute(value_arrays, logger)
+        rule.execute_multiple_input(value_arrays, logger)
 
     exception_raised = exc_info.value
 
@@ -160,7 +160,7 @@ def test_formula_has_incorrect_variable_names():
 
     # Act
     with pytest.raises(NameError) as exc_info:
-        rule.execute(value_arrays, logger)
+        rule.execute_multiple_input(value_arrays, logger)
 
     exception_raised = exc_info.value
 
@@ -182,7 +182,7 @@ def test_incorrect_variable_names_in_values_dict():
 
     # Act
     with pytest.raises(NameError) as exc_info:
-        rule.execute(value_arrays, logger)
+        rule.execute_multiple_input(value_arrays, logger)
 
     exception_raised = exc_info.value
 

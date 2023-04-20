@@ -35,7 +35,7 @@ def test_execute_value_array_multiplied_by_multipliers():
     value_array = _xr.DataArray(data)
 
     # Act
-    multiplied_array = rule.execute(value_array, logger)
+    multiplied_array = rule.execute_single_input(value_array, logger)
 
     result_data = [2.0, 4.0, 6.0, 8.0]
     result_array = _xr.DataArray(result_data)

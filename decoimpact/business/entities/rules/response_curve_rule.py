@@ -45,7 +45,7 @@ class ResponseCurveRule(RuleBase, ICellBasedRule):
             return False
         return True
 
-    def execute_single_input(self, value_dict: Dict[str, float], logger: ILogger):
+    def execute_multiple_input(self, value_dict: Dict[str, float], logger: ILogger):
         raise NotImplementedError("Response curve rule only supports one input array.")
 
     def execute_single_input(self, value: float, logger: ILogger):

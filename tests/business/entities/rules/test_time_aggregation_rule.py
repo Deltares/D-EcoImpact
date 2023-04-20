@@ -56,7 +56,7 @@ def test_aggregate_time_rule_without_time_dimension():
     test_array = _xr.DataArray(test_data, name="test_with_error")
 
     with pytest.raises(ValueError) as exc_info:
-        rule.execute(test_array, logger)
+        rule.execute_single_input(test_array, logger)
 
     exception_raised = exc_info.value
 
@@ -76,7 +76,7 @@ def test_execute_value_array_aggregate_time_yearly_add():
         operation_type=TimeOperationType.ADD,
     )
 
-    time_aggregation = rule.execute(value_array_yearly, logger)
+    time_aggregation = rule.execute_single_input(value_array_yearly, logger)
 
     result_data = [1.2, 0.4]
     result_array = _xr.DataArray(
@@ -98,7 +98,7 @@ def test_execute_value_array_aggregate_time_yearly_min():
         operation_type=TimeOperationType.MIN,
     )
 
-    time_aggregation = rule.execute(value_array_yearly, logger)
+    time_aggregation = rule.execute_single_input(value_array_yearly, logger)
 
     result_data = [0.1, 0.1]
     result_array = _xr.DataArray(
@@ -120,7 +120,7 @@ def test_execute_value_array_aggregate_time_yearly_max():
         operation_type=TimeOperationType.MAX,
     )
 
-    time_aggregation = rule.execute(value_array_yearly, logger)
+    time_aggregation = rule.execute_single_input(value_array_yearly, logger)
 
     result_data = [0.7, 0.3]
     result_array = _xr.DataArray(
@@ -142,7 +142,7 @@ def test_execute_value_array_aggregate_time_yearly_average():
         operation_type=TimeOperationType.AVERAGE,
     )
 
-    time_aggregation = rule.execute(value_array_yearly, logger)
+    time_aggregation = rule.execute_single_input(value_array_yearly, logger)
 
     result_data = [0.3, 0.2]
     result_array = _xr.DataArray(
@@ -164,7 +164,7 @@ def test_execute_value_array_aggregate_time_yearly_median():
         operation_type=TimeOperationType.MEDIAN,
     )
 
-    time_aggregation = rule.execute(value_array_yearly, logger)
+    time_aggregation = rule.execute_single_input(value_array_yearly, logger)
 
     result_data = [0.2, 0.2]
     result_array = _xr.DataArray(
@@ -197,6 +197,7 @@ result_time_monthly = [np.datetime64(t) for t in result_time_monthly]
 
 ####################################################################
 
+
 def test_execute_value_array_aggregate_time_monthly_add():
     """Aggregate input_variable_names of a TimeAggregationRule (add, monthly)"""
 
@@ -209,7 +210,7 @@ def test_execute_value_array_aggregate_time_monthly_add():
         time_scale="month",
     )
 
-    time_aggregation = rule.execute(value_array_monthly, logger)
+    time_aggregation = rule.execute_single_input(value_array_monthly, logger)
 
     result_data = [0.1, 0.9, 0.5]
     result_array = _xr.DataArray(
@@ -234,7 +235,7 @@ def test_execute_value_array_aggregate_time_monthly_min():
         operation_type=TimeOperationType.MIN,
     )
 
-    time_aggregation = rule.execute(value_array_monthly, logger)
+    time_aggregation = rule.execute_single_input(value_array_monthly, logger)
 
     result_data = [0.1, 0.2, 0.2]
     result_array = _xr.DataArray(
@@ -257,7 +258,7 @@ def test_execute_value_array_aggregate_time_monthly_max():
         operation_type=TimeOperationType.MAX,
     )
 
-    time_aggregation = rule.execute(value_array_monthly, logger)
+    time_aggregation = rule.execute_single_input(value_array_monthly, logger)
 
     result_data = [0.1, 0.7, 0.3]
     result_array = _xr.DataArray(
@@ -286,7 +287,7 @@ def test_execute_value_array_aggregate_time_monthly_average():
         operation_type=TimeOperationType.AVERAGE,
     )
 
-    time_aggregation = rule.execute(value_array_monthly, logger)
+    time_aggregation = rule.execute_single_input(value_array_monthly, logger)
 
     result_data = [0.1, 0.45, 0.25]
     result_array = _xr.DataArray(
@@ -311,7 +312,7 @@ def test_execute_value_array_aggregate_time_monthly_median():
         operation_type=TimeOperationType.MEDIAN,
     )
 
-    time_aggregation = rule.execute(value_array_monthly, logger)
+    time_aggregation = rule.execute_single_input(value_array_monthly, logger)
 
     result_data = [0.1, 0.45, 0.25]
     result_array = _xr.DataArray(

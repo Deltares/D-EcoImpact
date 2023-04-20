@@ -171,7 +171,7 @@ class RuleProcessor:
             _xr.DataArray: result data set
         """
         value_arrays = self._get_rule_input_variables(rule, output_dataset)
-        print(value_arrays)
+        values_list = list(value_arrays.values())
         # if isinstance(rule, IMultiArrayBasedRule):
 
         #     result = rule.execute(variables, logger)
@@ -200,21 +200,19 @@ class RuleProcessor:
         elif isinstance(rule, IMultiArrayBasedRule) or isinstance(
             rule, IArrayBasedRule
         ):
-            if len(value_arrays.values() == 1):
-                value = value_arrays.values()[0]
-                rule.execute_single_input(value, logger)
+            if len(values_list) == 1:
+                result = rule.execute_single_input(values_list[0], logger)
             else:
-                result = rule.execute_multiple_input()(value_arrays, logger)
+                result = rule.execute_multiple_input(value_arrays, logger)
         else:
-            assert (ValueError, "No instance found for this rule.")
+            raise NotImplementedError(f"Can not execute rule {rule.name}.")
 
-        self._copy_definition_attributes(value_arrays, result)
+        for val in values_list:
+            self._copy_definition_attributes(val, result)
         # TODO: this should come from the input
         result.attrs["long_name"] = rule.output_variable_name
         result.attrs["standard_name"] = rule.output_variable_name
         return result
-
-        raise NotImplementedError(f"Can not execute rule {rule.name}.")
 
     def _copy_definition_attributes(
         self, source_array: _xr.DataArray, target_array: _xr.DataArray
@@ -243,20 +241,20 @@ class RuleProcessor:
         Returns:
             _xr.DataArray: _description_
         """
-        values = input_variables.values()
+        values = list(input_variables.values())
         np_array = values[0].to_numpy()
         result_variable = _np.zeros_like(np_array)
 
-        for indices, value in _np.ndenumerate(np_array):
+        for indices in _np.ndenumerate(np_array):
             cell_values = {}
             for input in input_variables.items():
                 cell_values[input[0]] = input[1][indices].to_numpy()
             if len(values) == 1:
-                result_variable[indices] = rule.execute_single_input()(
-                    cell_values.values()[0], logger
+                result_variable[indices] = rule.execute_single_input(
+                    list(cell_values.values())[0], logger
                 )
             else:
-                result_variable[indices] = rule.execute_multiple_input()(
+                result_variable[indices] = rule.execute_multiple_input(
                     cell_values, logger
                 )
 

@@ -56,7 +56,9 @@ def test_execute_values_between_limits(
     logger = Mock(ILogger)
 
     # Assert
-    assert example_rule.execute(input_value, logger) == expected_output_value
+    assert (
+        example_rule.execute_single_input(input_value, logger) == expected_output_value
+    )
     logger.log_warning.assert_not_called()
 
 
@@ -74,7 +76,9 @@ def test_execute_values_at_limits(
     logger = Mock(ILogger)
 
     # Assert
-    assert example_rule.execute(input_value, logger) == expected_output_value
+    assert (
+        example_rule.execute_single_input(input_value, logger) == expected_output_value
+    )
     logger.log_warning.assert_not_called()
 
 
@@ -95,7 +99,9 @@ def test_execute_values_outside_limits(
     logger = Mock(ILogger)
 
     # Assert
-    assert example_rule.execute(input_value, logger) == expected_output_value
+    assert (
+        example_rule.execute_single_input(input_value, logger) == expected_output_value
+    )
     logger.log_warning.assert_called_with(expected_log_message)
 
 
@@ -172,4 +178,7 @@ def test_execute_values_combined_dec_inc(
     logger = Mock(ILogger)
 
     # Assert
-    assert example_rule_combined.execute(input_value, logger) == expected_output_value
+    assert (
+        example_rule_combined.execute_single_input(input_value, logger)
+        == expected_output_value
+    )

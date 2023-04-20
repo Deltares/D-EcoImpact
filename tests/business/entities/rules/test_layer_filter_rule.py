@@ -31,7 +31,7 @@ def test_execute_value_array_filtered():
     rule = LayerFilterRule("test", ["foo"], 3, "output", "description")
     data = [[[1, 2, 3, 4]]]
     value_array = _xr.DataArray(data)
-    filtered_array = rule.execute(value_array, logger)
+    filtered_array = rule.execute_single_input(value_array, logger)
 
     result_data = [[3]]
     result_array = _xr.DataArray(result_data)

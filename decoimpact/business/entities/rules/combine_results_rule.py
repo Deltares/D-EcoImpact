@@ -71,11 +71,11 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         Returns:
             DataArray: Input arrays
         """
-        value_arrays = value_arrays.values()
+        values = list(value_arrays.values())
         if len(value_arrays) != len(self._input_variable_names):
             raise ValueError("Not all expected arrays where provided.")
 
-        np_arrays = [a_array.to_numpy() for a_array in value_arrays]
+        np_arrays = [a_array.to_numpy() for a_array in values]
         if not self._check_dimensions(np_arrays):
             raise ValueError("The arrays must have the same dimensions.")
 
@@ -83,8 +83,8 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
 
         result_variable = _xr.DataArray(
             data=operation_to_use(np_arrays),
-            dims=value_arrays[0].dims,
-            attrs=value_arrays[0].attrs,
+            dims=values[0].dims,
+            attrs=values[0].attrs,
         )
 
         return result_variable
