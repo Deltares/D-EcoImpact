@@ -33,6 +33,18 @@ class ParserLayerFilterRule(IParserRuleBase):
         name = get_dict_element("name", dictionary)
         description = get_dict_element("description", dictionary)
         input_variable_name = get_dict_element("input_variable", dictionary)
+
+        if "layer_name" in dictionary:
+            layer_name = get_dict_element("layer_name", dictionary)
+            if not isinstance(layer_name, str):
+                message = (
+                    "Layer name should be an string, "
+                    f"received a {type(layer_name)}: {layer_name}"
+                )
+                raise ValueError(message)
+        else:
+            layer_name = "mesh2d_nLayers"
+
         layer_number = get_dict_element("layer_number", dictionary)
         if not isinstance(layer_number, int):
             message = (
@@ -43,5 +55,10 @@ class ParserLayerFilterRule(IParserRuleBase):
         output_variable_name = get_dict_element("output_variable", dictionary)
 
         return LayerFilterRuleData(
-            name, layer_number, input_variable_name, output_variable_name, description
+            name,
+            layer_number,
+            input_variable_name,
+            output_variable_name,
+            layer_name,
+            description,
         )

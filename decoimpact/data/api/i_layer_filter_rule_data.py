@@ -18,9 +18,14 @@ class ILayerFilterRuleData(IRuleData, ABC):
     @property
     @abstractmethod
     def input_variable(self) -> str:
-        """Property for the nput variable"""
+        """Property for the input variable"""
 
     @property
     @abstractmethod
     def layer_number(self) -> int:
         """Property for the layer number"""
+
+    @property
+    @abstractmethod
+    def layer_name(self) -> int:
+        """Property for the layer name"""

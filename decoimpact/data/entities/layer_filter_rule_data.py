@@ -18,12 +18,14 @@ class LayerFilterRuleData(ILayerFilterRuleData, RuleData):
         name: str,
         layer_number: int,
         input_variable: str,
+        layer_name: str,
         output_variable: str = "output",
         description: str = "",
     ):
         super().__init__(name, output_variable, description)
         self._input_variable = input_variable
         self._layer_number = layer_number
+        self._layer_name = layer_name
 
     @property
     def input_variable(self) -> str:
@@ -34,3 +36,8 @@ class LayerFilterRuleData(ILayerFilterRuleData, RuleData):
     def layer_number(self) -> int:
         """Property for the layer number"""
         return self._layer_number
+
+    @property
+    def layer_name(self) -> str:
+        """Property for the layer name"""
+        return self._layer_name
