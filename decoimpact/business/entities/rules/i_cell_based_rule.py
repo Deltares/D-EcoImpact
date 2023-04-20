@@ -21,6 +21,6 @@ class ICellBasedRule(IRule, ABC):
 
     @abstractmethod
     def execute_multiple_input(
-        self, values: Dict[str, float], logger: ILogger
+        self, value_dict: Dict[str, float], logger: ILogger
     ) -> float:
-        """Executes the rule based on the provided value"""
+        """Executes the rule based on the provided dictionary of values"""

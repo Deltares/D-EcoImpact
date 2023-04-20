@@ -7,7 +7,7 @@ Interfaces:
 """
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import Dict
 
 import xarray as _xr
 
@@ -19,7 +19,13 @@ class IMultiArrayBasedRule(IRule, ABC):
     """Rule applied to an a set of arrays"""
 
     @abstractmethod
-    def execute(
-        self, value_arrays: List[_xr.DataArray], logger: ILogger
+    def execute_single_input(
+        self, value_array: _xr.DataArray, logger: ILogger
     ) -> _xr.DataArray:
-        """Executes the rule based on the provided array"""
+        """Executes the rule based on the provided dictionary of arrays"""
+
+    @abstractmethod
+    def execute_multiple_input(
+        self, value_dict: Dict[str, _xr.DataArray], logger: ILogger
+    ) -> _xr.DataArray:
+        """Executes the rule based on the provided dictionary of arrays"""

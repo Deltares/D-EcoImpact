@@ -5,7 +5,7 @@ Classes:
     LayerFilterRule
 """
 
-from typing import List
+from typing import List, Dict
 
 import xarray as _xr
 
@@ -34,7 +34,14 @@ class LayerFilterRule(RuleBase, IArrayBasedRule):
         """Layer number property"""
         return self._layer_number
 
-    def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
+    def execute_multiple_input(
+        self, value_dict: Dict[str, _xr.DataArray], logger: ILogger
+    ):
+        raise NotImplementedError("Layer filter rule only supports one input array.")
+
+    def execute_single_input(
+        self, value_array: _xr.DataArray, logger: ILogger
+    ) -> _xr.DataArray:
 
         """Obtain a 2D layer from a 3D variable
 

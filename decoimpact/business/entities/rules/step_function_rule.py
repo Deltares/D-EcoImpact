@@ -6,7 +6,7 @@ Classes:
 
 """
 
-from typing import List
+from typing import List, Dict
 
 import numpy as _np
 
@@ -67,7 +67,10 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
             return False
         return True
 
-    def execute(self, value: float, logger: ILogger) -> float:
+    def execute_multiple_input(self, value_dict: Dict[str, float], logger: ILogger):
+        raise NotImplementedError("Step function rule only supports one input array.")
+
+    def execute_single_input(self, value: float, logger: ILogger) -> float:
         """Classify a variable, based on given bins.
         Values lower than lowest bin will produce a warning and will
         be assigned class 0.

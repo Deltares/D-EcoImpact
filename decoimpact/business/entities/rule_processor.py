@@ -6,9 +6,10 @@ Classes:
 
 """
 
-from typing import Iterable, List, Tuple
+from typing import Iterable, List, Tuple, Dict
 
 import numpy as _np
+from tomlkit import value
 import xarray as _xr
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
@@ -169,39 +170,49 @@ class RuleProcessor:
         Returns:
             _xr.DataArray: result data set
         """
-        variables = list(self._get_rule_input_variables(rule, output_dataset))
+        value_arrays = self._get_rule_input_variables(rule, output_dataset)
+        print(value_arrays)
+        # if isinstance(rule, IMultiArrayBasedRule):
 
-        if isinstance(rule, IMultiArrayBasedRule):
+        #     result = rule.execute(variables, logger)
 
-            result = rule.execute(variables, logger)
-            input_variable = variables[0]
+        # self._copy_definition_attributes(variables, result)
+        # TODO: this should come from the input[
+        # result.attrs["long_name"] = rule.output_variable_name
+        # result.attrs["standard_name"] = rule.output_variable_name
 
-            self._copy_definition_attributes(input_variable, result)
-            # TODO: this should come from the input[
-            result.attrs["long_name"] = rule.output_variable_name
-            result.attrs["standard_name"] = rule.output_variable_name
+        # return result
 
-            return result
+        # if len(variables) != 1:
+        #     raise NotImplementedError("Array based rule only supports one input array.")
 
-        if len(variables) != 1:
-            raise NotImplementedError("Array based rule only supports one input array.")
-
-        input_variable = variables[0]
-        if isinstance(rule, IArrayBasedRule):
-            result = rule.execute(input_variable, logger)
-            self._copy_definition_attributes(input_variable, result)
-            # TODO: this should come from the input
-            result.attrs["long_name"] = rule.output_variable_name
-            result.attrs["standard_name"] = rule.output_variable_name
-            return result
+        # input_variable = variables[0]
+        # if isinstance(rule, IArrayBasedRule):
+        #     result = rule.execute(input_variable, logger)
+        # self._copy_definition_attributes(input_variable, result)
+        # # TODO: this should come from the input
+        # result.attrs["long_name"] = rule.output_variable_name
+        # result.attrs["standard_name"] = rule.output_variable_name
+        # return result
 
         if isinstance(rule, ICellBasedRule):
-            result = self._process_by_cell(rule, input_variable, logger)
-            self._copy_definition_attributes(input_variable, result)
-            # TODO: this should come from the input
-            result.attrs["long_name"] = rule.output_variable_name
-            result.attrs["standard_name"] = rule.output_variable_name
-            return result
+            result = self._process_by_cell(rule, value_arrays, logger)
+        elif isinstance(rule, IMultiArrayBasedRule) or isinstance(
+            rule, IArrayBasedRule
+        ):
+            if len(value_arrays.values() == 1):
+                value = value_arrays.values()[0]
+                rule.execute_single_input(value, logger)
+            else:
+                result = rule.execute_multiple_input()(value_arrays, logger)
+        else:
+            assert (ValueError, "No instance found for this rule.")
+
+        self._copy_definition_attributes(value_arrays, result)
+        # TODO: this should come from the input
+        result.attrs["long_name"] = rule.output_variable_name
+        result.attrs["standard_name"] = rule.output_variable_name
+        return result
 
         raise NotImplementedError(f"Can not execute rule {rule.name}.")
 
@@ -216,7 +227,10 @@ class RuleProcessor:
             )
 
     def _process_by_cell(
-        self, rule: ICellBasedRule, input_variables: _xr.DataArray, logger: ILogger
+        self,
+        rule: ICellBasedRule,
+        input_variables: Dict[str, _xr.DataArray],
+        logger: ILogger,
     ) -> _xr.DataArray:
         """Processes every value of the input_variable and creates a
         new one from it
@@ -229,23 +243,38 @@ class RuleProcessor:
         Returns:
             _xr.DataArray: _description_
         """
-        np_array = input_variable.to_numpy()
+        values = input_variables.values()
+        np_array = values[0].to_numpy()
         result_variable = _np.zeros_like(np_array)
 
         for indices, value in _np.ndenumerate(np_array):
-            result_variable[indices] = rule.execute(value, logger)
+            cell_values = {}
+            for input in input_variables.items():
+                cell_values[input[0]] = input[1][indices].to_numpy()
+            if len(values) == 1:
+                result_variable[indices] = rule.execute_single_input()(
+                    cell_values.values()[0], logger
+                )
+            else:
+                result_variable[indices] = rule.execute_multiple_input()(
+                    cell_values, logger
+                )
 
         # use copy to get the same dimensions as the
         # original input variable
-        return input_variable.copy(data=result_variable)
+        return np_array.copy(data=result_variable)
 
     def _get_rule_input_variables(
         self, rule: IRule, output_dataset: _xr.Dataset
-    ) -> Iterable[_xr.DataArray]:
+    ) -> Dict[str, _xr.DataArray]:
         input_variable_names = rule.input_variable_names
 
+        result = {}
         for input_variable_name in input_variable_names:
-            yield self._get_variable_by_name(input_variable_name, output_dataset)
+            result[input_variable_name] = self._get_variable_by_name(
+                input_variable_name, output_dataset
+            )
+        return result
 
     def _get_variable_by_name(
         self, name: str, output_dataset: _xr.Dataset

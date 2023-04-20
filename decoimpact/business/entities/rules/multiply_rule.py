@@ -5,7 +5,7 @@ Classes:
     MultiplyRule
 """
 
-from typing import List
+from typing import List, Dict
 
 import xarray as _xr
 
@@ -33,7 +33,14 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
         """Multiplier property"""
         return self._multipliers
 
-    def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
+    def execute_multiple_input(
+        self, value_dict: Dict[str, _xr.DataArray], logger: ILogger
+    ):
+        raise NotImplementedError("Multiply rule only supports one input array.")
+
+    def execute_single_input(
+        self, value_array: _xr.DataArray, logger: ILogger
+    ) -> _xr.DataArray:
 
         """Multiplies the value with the specified multipliers
         Args:

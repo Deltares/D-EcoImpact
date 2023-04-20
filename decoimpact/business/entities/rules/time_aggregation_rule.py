@@ -5,7 +5,7 @@ Classes:
     TimeAggregationRule
 """
 
-from typing import List
+from typing import List, Dict
 
 import xarray as _xr
 from xarray.core.resample import DataArrayResample
@@ -70,7 +70,16 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         return valid
 
-    def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
+    def execute_multiple_input(
+        self, value_dict: Dict[str, _xr.DataArray], logger: ILogger
+    ):
+        raise NotImplementedError(
+            "Time aggreagation rule only supports one input array."
+        )
+
+    def execute_single_input(
+        self, value_array: _xr.DataArray, logger: ILogger
+    ) -> _xr.DataArray:
 
         """Aggregates the values for the specified start and end date
 
@@ -96,11 +105,11 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             if value:
                 result[result_time_dim_name].attrs[key] = value
 
-        result = result.assign_coords({
-            result_time_dim_name: result[result_time_dim_name]
-        })
-        result[result_time_dim_name].attrs['long_name'] = result_time_dim_name
-        result[result_time_dim_name].attrs['standard_name'] = result_time_dim_name
+        result = result.assign_coords(
+            {result_time_dim_name: result[result_time_dim_name]}
+        )
+        result[result_time_dim_name].attrs["long_name"] = result_time_dim_name
+        result[result_time_dim_name].attrs["standard_name"] = result_time_dim_name
 
         return result
 

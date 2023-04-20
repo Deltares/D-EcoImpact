@@ -5,7 +5,7 @@ Classes:
     CombineResultsRule
 """
 
-from typing import Callable, List
+from typing import Callable, List, Dict
 
 import numpy as _np
 import xarray as _xr
@@ -56,8 +56,14 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
 
         return True
 
-    def execute(
-        self, value_arrays: List[_xr.DataArray], logger: ILogger
+    def execute_single_input(
+        self, value: _xr.DataArray, logger: ILogger
+    ) -> _xr.DataArray:
+        value_arrays = {self.input_variable_names[0]: value}
+        return self.execute_multiple_input(value_arrays, logger)
+
+    def execute_multiple_input(
+        self, value_arrays: Dict[str, _xr.DataArray], logger: ILogger
     ) -> _xr.DataArray:
         """Calculate simple statistical operations with two or more input arrays
         Args:
@@ -65,6 +71,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         Returns:
             DataArray: Input arrays
         """
+        value_arrays = value_arrays.values()
         if len(value_arrays) != len(self._input_variable_names):
             raise ValueError("Not all expected arrays where provided.")
 

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 import numpy as _np
 
@@ -45,7 +45,10 @@ class ResponseCurveRule(RuleBase, ICellBasedRule):
             return False
         return True
 
-    def execute(self, value: float, logger: ILogger):
+    def execute_single_input(self, value_dict: Dict[str, float], logger: ILogger):
+        raise NotImplementedError("Response curve rule only supports one input array.")
+
+    def execute_single_input(self, value: float, logger: ILogger):
         """Interpolate a variable, based on given input and output values.
         Values lower than lowest value will be set to NaN, values larger than
         the highest value will be set to NaN
