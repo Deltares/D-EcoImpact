@@ -3,7 +3,7 @@ Tests for RuleBasedModel class
 """
 
 
-from typing import List
+from typing import Dict, List
 from unittest.mock import Mock
 
 import numpy as _np
@@ -16,6 +16,9 @@ from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRul
 from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
+)
+from decoimpact.business.entities.rules.i_multi_cell_based_rule import (
+    IMultiCellBasedRule,
 )
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
@@ -230,13 +233,13 @@ def test_process_rules_calls_multi_array_based_rule_execute_correctly():
     array1 = _xr.DataArray([32, 94, 9])
     array2 = _xr.DataArray([7, 93, 6])
 
-    dataset["test"] = array1
+    dataset["test1"] = array1
     dataset["test2"] = array2
 
     logger = Mock(ILogger)
     rule = Mock(IMultiArrayBasedRule)
 
-    rule.input_variable_names = ["test", "test2"]
+    rule.input_variable_names = ["test1", "test2"]
     rule.output_variable_name = "output"
     rule.execute.return_value = _xr.DataArray([4, 3, 2])
 
@@ -253,10 +256,10 @@ def test_process_rules_calls_multi_array_based_rule_execute_correctly():
     rule.execute.assert_called_once_with(ANY, logger)
 
     # get first call, first argument
-    array_list: List[_xr.DataArray] = rule.execute.call_args[0][0]
+    array_lookup: Dict[str, _xr.DataArray] = rule.execute.call_args[0][0]
 
-    _xr.testing.assert_equal(array_list[0], array1)
-    _xr.testing.assert_equal(array_list[1], array2)
+    _xr.testing.assert_equal(array_lookup["test1"], array1)
+    _xr.testing.assert_equal(array_lookup["test2"], array2)
 
 
 def test_process_rules_calls_cell_based_rule_execute_correctly():
@@ -289,6 +292,37 @@ def test_process_rules_calls_cell_based_rule_execute_correctly():
 
     assert rule.execute.call_count == 6
 
+def test_process_rules_calls_multi_cell_based_rule_execute_correctly():
+    """Tests if during processing the rule its execute method of
+    an IMultiCellBasedRule is called with the right parameter."""
+
+    # Arrange
+    dataset = _xr.Dataset()
+    input_array1 = _xr.DataArray(_np.array([[1, 2, 3], [4, 5, 6]], _np.int32))
+    input_array2 = _xr.DataArray(_np.array([[1, 2, 3], [4, 5, 6]], _np.int32))
+
+    dataset["test1"] = input_array1
+    dataset["test2"] = input_array2
+
+    logger = Mock(ILogger)
+    rule = Mock(IMultiCellBasedRule)
+
+    rule.input_variable_names = ["test1", "test2"]
+    rule.output_variable_name = "output"
+
+    rule.execute.return_value = 1
+
+    processor = RuleProcessor([rule], dataset)
+
+    # Act
+    assert processor.initialize(logger)
+    processor.process_rules(dataset, logger)
+
+    # Assert
+    assert len(dataset) == 3
+    assert rule.output_variable_name in dataset.keys()
+
+    assert rule.execute.call_count == 6
 
 def test_process_rules_calls_array_based_rule_execute_correctly():
     """Tests if during processing the rule its execute method of
