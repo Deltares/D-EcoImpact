@@ -264,16 +264,16 @@ class RuleProcessor:
         np_array = value_arrays[0].to_numpy()
         result_variable = _np.zeros_like(np_array)
 
-        for indices in _np.ndenumerate(np_array):
+        for indices, _ in _np.ndenumerate(np_array):
             cell_values = {}
-            for input in input_variables.items():
-                cell_values[input[0]] = input[1][indices].to_numpy()
-                result_variable[indices] = rule.execute(cell_values, logger)
+            for name, value_array in input_variables.items():
+                cell_values[name] = value_array.data[indices]
+
+            result_variable[indices] = rule.execute(cell_values, logger)
 
         # use copy to get the same dimensions as the
         # original input variable
         return value_arrays[0].copy(data=result_variable)
-
 
     def _get_rule_input_variables(
         self, rule: IRule, output_dataset: _xr.Dataset

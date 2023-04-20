@@ -17,6 +17,9 @@ from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
 )
+from decoimpact.business.entities.rules.i_multi_cell_based_rule import (
+    IMultiCellBasedRule,
+)
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
 from decoimpact.crosscutting.i_logger import ILogger
@@ -289,6 +292,37 @@ def test_process_rules_calls_cell_based_rule_execute_correctly():
 
     assert rule.execute.call_count == 6
 
+def test_process_rules_calls_multi_cell_based_rule_execute_correctly():
+    """Tests if during processing the rule its execute method of
+    an IMultiCellBasedRule is called with the right parameter."""
+
+    # Arrange
+    dataset = _xr.Dataset()
+    input_array1 = _xr.DataArray(_np.array([[1, 2, 3], [4, 5, 6]], _np.int32))
+    input_array2 = _xr.DataArray(_np.array([[1, 2, 3], [4, 5, 6]], _np.int32))
+
+    dataset["test1"] = input_array1
+    dataset["test2"] = input_array2
+
+    logger = Mock(ILogger)
+    rule = Mock(IMultiCellBasedRule)
+
+    rule.input_variable_names = ["test1", "test2"]
+    rule.output_variable_name = "output"
+
+    rule.execute.return_value = 1
+
+    processor = RuleProcessor([rule], dataset)
+
+    # Act
+    assert processor.initialize(logger)
+    processor.process_rules(dataset, logger)
+
+    # Assert
+    assert len(dataset) == 3
+    assert rule.output_variable_name in dataset.keys()
+
+    assert rule.execute.call_count == 6
 
 def test_process_rules_calls_array_based_rule_execute_correctly():
     """Tests if during processing the rule its execute method of
