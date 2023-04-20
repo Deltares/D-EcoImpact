@@ -7,7 +7,7 @@ Interfaces:
 """
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import Dict
 
 import xarray as _xr
 
@@ -16,10 +16,10 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 
 class IMultiArrayBasedRule(IRule, ABC):
-    """Rule applied to an a set of arrays"""
+    """Rule applied to an a set of (named) arrays"""
 
     @abstractmethod
     def execute(
-        self, value_arrays: List[_xr.DataArray], logger: ILogger
+        self, value_arrays: Dict[str, _xr.DataArray], logger: ILogger
     ) -> _xr.DataArray:
         """Executes the rule based on the provided array"""

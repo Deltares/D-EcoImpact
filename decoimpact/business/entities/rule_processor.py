@@ -169,15 +169,18 @@ class RuleProcessor:
         Returns:
             _xr.DataArray: result data set
         """
-        variables = list(self._get_rule_input_variables(rule, output_dataset))
+        # variables = dict.fromkeys(self._get_rule_input_variables(rule, output_dataset))
+        variable_lookup = dict((x, y) for x, y in self._get_rule_input_variables(rule, output_dataset))
+        variables = list(variable_lookup.values())
 
         if isinstance(rule, IMultiArrayBasedRule):
 
-            result = rule.execute(variables, logger)
+            result = rule.execute(variable_lookup, logger)
+            # use first array to retrieve attribute names
             input_variable = variables[0]
 
             self._copy_definition_attributes(input_variable, result)
-            # TODO: this should come from the input[
+            # TODO: this should come from the input
             result.attrs["long_name"] = rule.output_variable_name
             result.attrs["standard_name"] = rule.output_variable_name
 
@@ -241,11 +244,11 @@ class RuleProcessor:
 
     def _get_rule_input_variables(
         self, rule: IRule, output_dataset: _xr.Dataset
-    ) -> Iterable[_xr.DataArray]:
+    ) -> Iterable[Tuple[str, _xr.DataArray]]:
         input_variable_names = rule.input_variable_names
 
         for input_variable_name in input_variable_names:
-            yield self._get_variable_by_name(input_variable_name, output_dataset)
+            yield input_variable_name, self._get_variable_by_name(input_variable_name, output_dataset)
 
     def _get_variable_by_name(
         self, name: str, output_dataset: _xr.Dataset

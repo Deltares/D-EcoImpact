@@ -3,7 +3,7 @@ Tests for RuleBasedModel class
 """
 
 
-from typing import List
+from typing import Dict, List
 from unittest.mock import Mock
 
 import numpy as _np
@@ -230,13 +230,13 @@ def test_process_rules_calls_multi_array_based_rule_execute_correctly():
     array1 = _xr.DataArray([32, 94, 9])
     array2 = _xr.DataArray([7, 93, 6])
 
-    dataset["test"] = array1
+    dataset["test1"] = array1
     dataset["test2"] = array2
 
     logger = Mock(ILogger)
     rule = Mock(IMultiArrayBasedRule)
 
-    rule.input_variable_names = ["test", "test2"]
+    rule.input_variable_names = ["test1", "test2"]
     rule.output_variable_name = "output"
     rule.execute.return_value = _xr.DataArray([4, 3, 2])
 
@@ -253,10 +253,10 @@ def test_process_rules_calls_multi_array_based_rule_execute_correctly():
     rule.execute.assert_called_once_with(ANY, logger)
 
     # get first call, first argument
-    array_list: List[_xr.DataArray] = rule.execute.call_args[0][0]
+    array_lookup: Dict[str, _xr.DataArray] = rule.execute.call_args[0][0]
 
-    _xr.testing.assert_equal(array_list[0], array1)
-    _xr.testing.assert_equal(array_list[1], array2)
+    _xr.testing.assert_equal(array_lookup["test1"], array1)
+    _xr.testing.assert_equal(array_lookup["test2"], array2)
 
 
 def test_process_rules_calls_cell_based_rule_execute_correctly():
