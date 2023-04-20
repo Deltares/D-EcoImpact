@@ -172,16 +172,17 @@ class RuleProcessor:
         Returns:
             _xr.DataArray: result data set
         """
-        # variables = dict.fromkeys(self._get_rule_input_variables(rule, output_dataset))
-        variable_lookup = dict((x, y) for x, y in self._get_rule_input_variables(rule, output_dataset))
+
+        variable_lookup = dict(self._get_rule_input_variables(rule, output_dataset))
         variables = list(variable_lookup.values())
 
         if isinstance(rule, IMultiArrayBasedRule):
             result = rule.execute(variable_lookup, logger)
-            # set output attributes, based on first array (to retrieve attribute names)
+
+            # set output attributes, based on first array
             self._set_output_attributes(rule, result, variables[0])
             return result
-        
+
         if isinstance(rule, IMultiCellBasedRule):
             result = self._process_by_multi_cell(rule, variable_lookup, logger)
             self._set_output_attributes(rule, result, variables[0])
@@ -203,7 +204,9 @@ class RuleProcessor:
 
         raise NotImplementedError(f"Can not execute rule {rule.name}.")
 
-    def _set_output_attributes(self, rule: IRule, result: _xr.DataArray, input_variable: _xr.DataArray):
+    def _set_output_attributes(
+        self, rule: IRule, result: _xr.DataArray, input_variable: _xr.DataArray
+    ):
         self._copy_definition_attributes(input_variable, result)
         # TODO: this should come from the input
         result.attrs["long_name"] = rule.output_variable_name
@@ -244,28 +247,33 @@ class RuleProcessor:
         return input_variable.copy(data=result_variable)
 
     def _process_by_multi_cell(
-        self, rule: IMultiCellBasedRule, input_variables: Dict[str, _xr.DataArray], logger: ILogger
+        self,
+        rule: IMultiCellBasedRule,
+        input_variables: Dict[str, _xr.DataArray],
+        logger: ILogger,
     ) -> _xr.DataArray:
         """Processes every value of the input_variable and creates a
         new one from it
 
         Args:
             rule (IMultiCellBasedRule): rule to process
-            input_variable (_xr.DataArray): input variable/data
+            input_variables (_xr.DataArray): input variables/data
             logger (ILogger): logger for log messages
 
         Returns:
             _xr.DataArray: _description_
         """
-        if (len(input_variables) < 1):
-            raise NotImplementedError(f"Can not execute rule {rule.name} with no input variables.")
+        if len(input_variables) < 1:
+            raise NotImplementedError(
+                f"Can not execute rule {rule.name} with no input variables."
+            )
 
         value_arrays = list(input_variables.values())
         np_array = value_arrays[0].to_numpy()
         result_variable = _np.zeros_like(np_array)
+        cell_values = {}
 
         for indices, _ in _np.ndenumerate(np_array):
-            cell_values = {}
             for name, value_array in input_variables.items():
                 cell_values[name] = value_array.data[indices]
 
@@ -281,7 +289,9 @@ class RuleProcessor:
         input_variable_names = rule.input_variable_names
 
         for input_variable_name in input_variable_names:
-            yield input_variable_name, self._get_variable_by_name(input_variable_name, output_dataset)
+            yield input_variable_name, self._get_variable_by_name(
+                input_variable_name, output_dataset
+            )
 
     def _get_variable_by_name(
         self, name: str, output_dataset: _xr.Dataset
