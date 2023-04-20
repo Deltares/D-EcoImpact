@@ -96,11 +96,11 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             if value:
                 result[result_time_dim_name].attrs[key] = value
 
-        result = result.assign_coords({
-            result_time_dim_name: result[result_time_dim_name]
-        })
-        result[result_time_dim_name].attrs['long_name'] = result_time_dim_name
-        result[result_time_dim_name].attrs['standard_name'] = result_time_dim_name
+        result = result.assign_coords(
+            {result_time_dim_name: result[result_time_dim_name]}
+        )
+        result[result_time_dim_name].attrs["long_name"] = result_time_dim_name
+        result[result_time_dim_name].attrs["standard_name"] = result_time_dim_name
 
         return result
 
@@ -131,6 +131,15 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         if self._operation_type is TimeOperationType.MEDIAN:
             result = aggregated_values.median()
+
+        if self._operation_type is TimeOperationType.STDEV:
+            result = aggregated_values.std()
+
+        if self._operation_type is TimeOperationType.QUANT10:
+            result = aggregated_values.quantile(0.1)
+
+        if self._operation_type is TimeOperationType.QUANT90:
+            result = aggregated_values.quantile(0.9)
 
         if result is None:
             raise NotImplementedError(
