@@ -76,12 +76,12 @@ def test_execute_error_combine_results_rule_different_lengths():
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
     )
-    value_array1 = _xr.DataArray([1, 2, 3])
-    value_array2 = _xr.DataArray([4, 3, 2, 1])
+    value_array = {"foo_data": _xr.DataArray([1, 2, 3]),
+                   "hello_data": _xr.DataArray([4, 3, 2, 1])}
 
     # Assert
     with pytest.raises(ValueError) as exc_info:
-        rule.execute([value_array1, value_array2], logger=Mock(ILogger))
+        rule.execute(value_array, logger=Mock(ILogger))
 
     exception_raised = exc_info.value
     assert exception_raised.args[0] == "The arrays must have the same dimensions."
@@ -94,12 +94,12 @@ def test_execute_error_combine_results_rule_different_shapes():
     rule = CombineResultsRule(
         "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
     )
-    value_array1 = _xr.DataArray([[1, 2], [3, 4]])
-    value_array2 = _xr.DataArray([4, 3, 2, 1])
+    value_array = {"foo_data": _xr.DataArray([[1, 2], [3, 4]]),
+                   "hello_data": _xr.DataArray([4, 3, 2, 1])}
 
     # Assert
     with pytest.raises(ValueError) as exc_info:
-        rule.execute([value_array1, value_array2], logger=Mock(ILogger))
+        rule.execute(value_array, logger=Mock(ILogger))
 
     exception_raised = exc_info.value
     assert exception_raised.args[0] == "The arrays must have the same dimensions."
@@ -123,8 +123,11 @@ def test_all_operations_combine_results_rule(
     """Test the outcome of each operand for the combine results rule"""
     # Arrange
     logger = Mock(ILogger)
-    raw_data = [[20, 7, 3], [4, 5, 6], [15, 12, 24]]
-    xarray_data = [_xr.DataArray(arr) for arr in raw_data]
+    dict_vars = {"var1_name": _xr.DataArray([20, 7, 3]), 
+                 "var2_name": _xr.DataArray([4, 5, 6]), 
+                 "var3_name": _xr.DataArray([15, 12, 24])}
+    # raw_data = [[20, 7, 3], [4, 5, 6], [15, 12, 24]]
+    # xarray_data = [_xr.DataArray(arr) for arr in raw_data]
 
     # Act
     rule = CombineResultsRule(
@@ -133,7 +136,7 @@ def test_all_operations_combine_results_rule(
         operation,
         "output",
     )
-    obtained_result = rule.execute(xarray_data, logger)
+    obtained_result = rule.execute(dict_vars, logger)
 
     # Assert
     _xr.testing.assert_equal(obtained_result, _xr.DataArray(expected_result))
@@ -150,6 +153,7 @@ def test_dims_present_in_result():
         _xr.DataArray(data=arr, dims=["test_dimension_1", "test_dimension_2"])
         for arr in raw_data
     ]
+    dict_data = {"var1_name": xarray_data[0], "var2_name": xarray_data[1]}
 
     # Act
     rule = CombineResultsRule(
@@ -158,7 +162,7 @@ def test_dims_present_in_result():
         MultiArrayOperationType.ADD,
         "output",
     )
-    obtained_result = rule.execute(xarray_data, logger)
+    obtained_result = rule.execute(dict_data, logger)
 
     # Assert
     # _xr.testing.assert_equal(obtained_result.dims, xarray_data[0].dims)
