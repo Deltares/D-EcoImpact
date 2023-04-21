@@ -5,7 +5,6 @@ Tests for RuleBase class
 
 from unittest.mock import Mock
 
-import xarray as _xr
 import pytest
 
 from decoimpact.business.entities.rules.formula_rule import FormulaRule
@@ -32,19 +31,13 @@ def test_execute_adding_value_arrays():
     # Arrange
     logger = Mock(ILogger)
     rule = FormulaRule("test", ["foo", "bar"], "foo + bar", "outputname")
-    value_arrays = {
-        "foo": _xr.DataArray([1, 2, 3, 4]),
-        "bar": _xr.DataArray([4, 3, 2, 1]),
-    }
+    values = {"foo": 1.0, "bar": 4.0}
 
     # Act
-    formula_array = rule.execute(value_arrays, logger)
-
-    result_data = [5, 5, 5, 5]
-    result_array = _xr.DataArray(result_data)
+    result_value = rule.execute(values, logger)
 
     # Assert
-    assert _xr.testing.assert_equal(formula_array, result_array) is None
+    assert result_value == 5.0
 
 
 def test_execute_multiplying_value_arrays():
@@ -53,40 +46,40 @@ def test_execute_multiplying_value_arrays():
     # Arrange
     logger = Mock(ILogger)
     rule = FormulaRule("test", ["foo", "bar"], "foo * bar", "outputname")
-    value_arrays = {
-        "foo": _xr.DataArray([1, 2, 3, 4]),
-        "bar": _xr.DataArray([4, 3, 2, 1]),
+    values = {
+        "foo": 2.0,
+        "bar": 3.0,
     }
 
     # Act
-    formula_array = rule.execute(value_arrays, logger)
-
-    result_data = [4, 6, 6, 4]
-    result_array = _xr.DataArray(result_data)
+    result_value = rule.execute(values, logger)
 
     # Assert
-    assert _xr.testing.assert_equal(formula_array, result_array) is None
+    assert result_value == 6.0
 
 
-def test_execute_comparing_value_arrays():
+@pytest.mark.parametrize(
+    "input_value1, input_value2, expected_output_value",
+    [(0.5, 10, 0.0), (11, 1.5, 1.0)],
+)
+def test_execute_comparing_value_arrays(
+    input_value1: float, input_value2: float, expected_output_value: float
+):
     """Test formula on value_arrays of a RuleBase"""
 
     # Arrange
     logger = Mock(ILogger)
     rule = FormulaRule("test", ["foo", "bar"], "foo > bar", "outputname")
-    value_arrays = {
-        "foo": _xr.DataArray([1, 2, 3, 4]),
-        "bar": _xr.DataArray([4, 3, 2, 1]),
+    values = {
+        "foo": input_value1,
+        "bar": input_value2,
     }
 
     # Act
-    formula_array = rule.execute(value_arrays, logger)
-
-    result_data = [0, 0, 1, 1]
-    result_array = _xr.DataArray(result_data)
+    result_value = rule.execute(values, logger)
 
     # Assert
-    assert _xr.testing.assert_equal(formula_array, result_array) is None
+    assert result_value == expected_output_value
 
 
 def test_execute_unwanted_python_code():
@@ -95,14 +88,14 @@ def test_execute_unwanted_python_code():
     # Arrange
     logger = Mock(ILogger)
     rule = FormulaRule("test", ["foo", "bar"], "print('hoi')", "outputname")
-    value_arrays = {
-        "foo": _xr.DataArray([1, 2, 3, 4]),
-        "bar": _xr.DataArray([4, 3, 2, 1]),
+    values = {
+        "foo": 2.0,
+        "bar": 3.0,
     }
 
     # Act
     with pytest.raises(NameError) as exc_info:
-        rule.execute(value_arrays, logger)
+        rule.execute(values, logger)
 
     exception_raised = exc_info.value
 
@@ -117,14 +110,14 @@ def test_formula_has_incorrect_variable_names():
     # Arrange
     logger = Mock(ILogger)
     rule = FormulaRule("test", ["foo", "bar"], "foo + bas", "outputname")
-    value_arrays = {
-        "foo": _xr.DataArray([1, 2, 3, 4]),
-        "bar": _xr.DataArray([4, 3, 2, 1]),
+    values = {
+        "foo": 2.0,
+        "bar": 3.0,
     }
 
     # Act
     with pytest.raises(NameError) as exc_info:
-        rule.execute(value_arrays, logger)
+        rule.execute(values, logger)
 
     exception_raised = exc_info.value
 
@@ -133,23 +126,19 @@ def test_formula_has_incorrect_variable_names():
     assert exception_raised.args[0] == expected_message
 
 
-def test_incorrect_variable_names_in_values_dict():
+@pytest.mark.parametrize(
+    "formula, expected_output_value",
+    [("print('hoi')", False), ("foo + bar", True), ("output=foo + bar", True)],
+)
+def test_validate_of_invalid_python_code(formula: str, expected_output_value: bool):
     """Test formula on value_arrays of a RuleBase"""
 
     # Arrange
     logger = Mock(ILogger)
-    rule = FormulaRule("test", ["foo", "bas"], "foo + bar", "outputname")
-    value_arrays = {
-        "foo": _xr.DataArray([1, 2, 3, 4]),
-        "bas": _xr.DataArray([4, 3, 2, 1]),
-    }
+    rule = FormulaRule("test", ["foo", "bar"], formula, "outputname")
 
     # Act
-    with pytest.raises(NameError) as exc_info:
-        rule.execute(value_arrays, logger)
-
-    exception_raised = exc_info.value
+    result = rule.validate(logger)
 
     # Assert
-    expected_message = "name 'bar' is not defined"
-    assert exception_raised.args[0] == expected_message
+    assert result == expected_output_value
