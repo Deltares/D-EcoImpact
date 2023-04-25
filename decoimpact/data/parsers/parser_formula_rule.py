@@ -33,8 +33,7 @@ class ParserFormulaRule(IParserRuleBase):
         name = get_dict_element("name", dictionary, True)
         input_variable_names = get_dict_element("input_variables", dictionary, True)
         formula: str = get_dict_element("formula", dictionary, True)
-        self._validate_operation_type(operation_type)
-        operation_type = operation_type.upper()
+        self._validate_formula(formula)
         output_variable_name = get_dict_element("output_variable", dictionary)
         description = get_dict_element("description", dictionary, False)
         if not description:
@@ -50,7 +49,7 @@ class ParserFormulaRule(IParserRuleBase):
 
     def _validate_formula(self, formula: str):
         """
-        Validates if the operation type is well formed (a string)."""
+        Validates if the formula is well formed (a string)."""
         if not isinstance(formula, str):
             message = f"""Formula must be a string, \
                 received: {formula}"""

@@ -11,6 +11,7 @@ from typing import Iterable, List
 from decoimpact.business.entities.i_model import IModel
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
+from decoimpact.business.entities.rules.formula_rule import FormulaRule
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.layer_filter_rule import LayerFilterRule
 from decoimpact.business.entities.rules.multi_array_operation_type import (
@@ -24,6 +25,7 @@ from decoimpact.business.workflow.i_model_builder import IModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_combine_results_rule_data import ICombineResultsRuleData
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
+from decoimpact.data.api.i_formula_rule_data import IFormulaRuleData
 from decoimpact.data.api.i_layer_filter_rule_data import ILayerFilterRuleData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
@@ -116,7 +118,14 @@ class ModelBuilder(IModelBuilder):
                 rule_data.output_variable,
                 rule_data.description,
             )
-
+        if isinstance(rule_data, IFormulaRuleData):
+            return FormulaRule(
+                rule_data.name,
+                rule_data.input_variable_names,
+                rule_data.formula,
+                rule_data.output_variable,
+                rule_data.description,
+            )
         error_str = (
             f"The rule type of rule '{rule_data.name}' is currently " "not implemented"
         )
