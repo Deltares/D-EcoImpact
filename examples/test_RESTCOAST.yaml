@@ -1,0 +1,216 @@
+input-data:
+  - dataset:
+      filename: examples/data/ems_0003_map.nc
+      variable_mapping:
+        mesh2d_s1:         "waterlevel_mNAP"
+        mesh2d_waterdepth: "waterdepth_mNAP"
+        mesh2d_mor_bl:     "bottomlevel_mNAP"
+        mesh2d_ucmag:      "flowvelocity_ms"
+        mesh2d_taus :      "bed_shear_stress_Nm2"
+        mesh2d_sa1:       "salinity_PSU"
+        mesh2d_bodsed:     "sediment_kgm2"
+#    mesh2d_bodsed.isel(nSedTot=0):  "sand1_kgm2"
+#	mesh2d_bodsed.isel(nSedTot=1):  "mud1_kgm2"
+#	mesh2d_bodsed.isel(nSedTot=2):  "mud2_kgm2"         
+
+
+rules:
+
+  - layer_filter_rule:
+      name: Get sand layer
+      description: get sand layer from nSedTot
+      layer_name: nSedTot
+      layer_number: 1
+      input_variable: sediment_kgm2
+      output_variable: sand1_kgm2
+
+  - layer_filter_rule:
+      name: Get mud1 layer
+      description: get mud1 layer from nSedTot
+      layer_name: nSedTot
+      layer_number: 2
+      input_variable: sediment_kgm2
+      output_variable: mud1_kgm2
+
+  - layer_filter_rule:
+      name: Get mud2 layer
+      description: get mud2 layer from nSedTot
+      layer_name: nSedTot
+      layer_number: 3
+      input_variable: sediment_kgm2
+      output_variable: mud2_kgm2
+
+    # Determine ZES.1 SaltClass
+  - time_aggregation_rule:
+      name: Mean salinity
+      description: Get mean salinity
+      operation: AVERAGE
+      time_scale: year
+      input_variable: salinity_PSU
+      output_variable: mean_salinity_PSU
+
+  - step_function_rule:
+      name: Mean salinity class
+      description: Apply a salinity class from mean salinity
+      limits:    [-999.0, 0.5, 18.0, 999.0]
+      responses: [   0.0, 1.0,  2.0,   2.0]
+      input_variable: mean_salinity_PSU
+      output_variable: SaltClass
+
+# Determine ZES.1 SaltVarib
+  - time_aggregation_rule:
+      name: Standard deviation salinity
+      description: Get standard deviation of salinity
+      operation: STDEV    
+      time_scale: year
+      input_variable: salinity_PSU
+      output_variable: std_salinity_PSU
+
+#  - combine_results_rule:
+#      name: Salinity variability
+#      description: Get variability of salinity (per year)
+#      operation: Divide   
+#      input_variables: ["std_salinity_PSU","mean_salinity_PSU"]
+#      output_variable: salinity_variability
+#
+#  - step_function_rule:
+#      name: Salinity variability class
+#      description: Apply a salinity class from variability of salinity
+#      limits:    [-999.0, 0.25, 999.0]
+#      responses: [   0.0,  1.0,   1.0]
+#      input_variable: salinity_variability
+#      output_variable: SaltVarib
+#
+### Determine ZES.1 HardSubCod
+###  - import_mask:
+###      name: Pressence of structures like dikes, dams, quays, etc.
+###      description: Apply a mask of structures from a shapefile onto the FM grid, setting cells entirely contained by the shape (specified by method) to 1.0. Other option would be CONTAINS where a cell only needs to be partially inside the shape, and the reverse operation OUTSIDE  
+###      method: WITHIN
+###      input_file: test_ems/data/ems_dummy_structures.shp
+###      output_variable:  HardSubCod  
+###
+# Determine ZES.1 LitoralCod
+##  - time_aggregation_rule:
+##      name: Low tide
+##      description: Get low tide per tidal cycle (= 12.42 hours)
+##      operation: MIN
+##      time_duration: 12.42  
+##      time_scale: hour
+##      input_variable: waterlevel_mNAP
+##      output_variable: low_water_mNAP
+##
+#  - time_aggregation_rule:
+#      name: Mean Low tide
+#      description: Get mean low tide per year
+#      operation: AVERAGE
+#      time_scale: year
+#      input_variable: low_water_mNAP
+#      output_variable: mean_low_water_mNAP
+#
+#  - addition_rule:   
+#      name: Mean Low tide minus 5 meters
+#      description: Get mean low tide per year - 5 for the classification
+#      values: -5
+#      input_variable: mean_low_water_mNAP
+#      output_variable: mean_low_water_minus_5_mNAP
+#
+##  - comparisson_rule:  
+##      name: deep sublittoral 
+##      description: return 1 when depth > -5 m MLWS, otherwise return 0
+##      operation: <
+##      input_variables: ["bottomlevel_mNAP", "mean_low_water_minus_5_mNAP"]
+##      output_variable: deep_sublittoral 
+##
+  - step_function_rule:
+      name: Dry land
+      description: analyseer wat onder water staat in de tijd.
+      limits:    [-999.0, 0.001, 999.0]
+      responses: [   1.0, 1.0  ,   0.0]
+      input_variable: waterdepth_mNAP
+      output_variable: dry_time
+
+  - time_aggregation_rule:
+      name: Exposure
+      description: Get fraction of time cell is dry
+      operation: AVERAGE
+      time_scale: year
+      input_variable: dry_time
+      output_variable: exposure_time
+
+  - step_function_rule:
+      name: Littoral class minus sublittoral
+      description: Classify littoral zones by exposure (excluding sublittoral)
+      limits:    [ 0.0, 0.04, 0.25, 0.75, 0.85, 1.0]
+      responses: [   0,    2,    3,    4,    5, 5]
+      input_variable: exposure_time
+      output_variable: LitoralCod_min_sublittoral
+
+#  - comparisson_rule:
+#      name: Sublittoral 
+#      description: Classify sublittoral when exposure_time <= 0.04
+#      operation: <=
+#      input_variables: [exposure_time,  0.04]
+#      output_variable: sublittoral 
+#
+#  - combine_results_rule:
+#      name: Sublittoral classes
+#      description: Classify sublittoral zone in deep (0) and shallow zone (1)
+#      operation: Subtract
+#      input_variables: ["sublittoral","deep_sublittoral"]
+#      output_variable: sub_littoral_classes
+#
+#  - combine_results_rule:
+#      name: Littoral class
+#      description: Classify littoral zone
+#      operation: Add
+#      input_variables: ["LitoralCod_min_sublittoral","sub_littoral_classes"]
+#      output_variable: LitoralCod
+#
+# Determine ZES.1 Hydrodynamics class
+  - time_aggregation_rule:
+      name: max current velocity
+      description: Get maximum current velocity
+      operation: MAX
+      time_scale: year
+      input_variable: flowvelocity_ms
+      output_variable: max_flowvelocity_ms
+
+##  - comparisson_rule:
+##      name: Hydrodynamics class
+##      description: Classify as high dynamic when umax >= 0.8 m/s
+##      operation: >=
+##      input_variables: [max_flowvelocity_ms,  0.8]
+##      output_variable: DynamicCod 
+##
+# Determine ZES.1 sediment composition class
+#  - combine_results_rule:
+#      name: Mass of mud
+#      description: Add mud fractions
+#      operation: Add
+#      input_variables: ["mud1_kgm2","mud2_kgm2"]
+#      output_variable: mud_kgm2
+#
+#  - combine_results_rule:
+#      name: Total mass of sediment
+#      description: Add sand and mud fractions
+#      operation: Add
+#      input_variables: ["mud_kgm2","sand1_kgm2"]
+#      output_variable: sediment_kgm2
+#
+#  - combine_results_rule:
+#      name: Fraction mud
+#      description: mud fraction
+#      operation: Divide
+#      input_variables: ["mud_kgm2","sediment_kgm2"]
+#      output_variable: mud_frac 
+#
+#  - step_function_rule:
+#      name: Sediment composition class
+#      description: Classify sediment composition
+#      limits:    [ 0.0, 0.25, 1.0]
+#      responses: [   2,    1,   1]
+#      input_variable:  mud_frac
+#      output_variable: SedCode
+      
+output-data:
+  filename: examples/data_out/results_Ems_map.nc
