@@ -67,8 +67,8 @@ rule4B = TimeAggregationRule("Mean Low tide", ["low_water_mNAP"],TimeOperationTy
 rule4C = FormulaRule("Mean Low tide minus 5 meters",["mean_low_water_mNAP"], "mean_low_water_mNAP - 5", "mean_low_water_minus_5_mNAP")
 # Currently the FormulaRule does not allow operations between arrays of different axes.
 #rule4D = FormulaRule("deep sublittoral ",["mesh2d_mor_bl","mean_low_water_minus_5_mNAP"], "mesh2d_mor_bl < mean_low_water_minus_5_mNAP", "deep_sublittoral")
-rule4D1 = TimeAggregationRule("calculate waterdepth", ["mesh2d_waterdepth"], TimeOperationType.AVERAGE, "year","mean_waterdepth_mNAP")
-rule4D2 = FormulaRule("deep sublittoral ",["mean_waterdepth_mNAP","mean_low_water_minus_5_mNAP"], "mean_waterdepth_mNAP < mean_low_water_minus_5_mNAP", "deep_sublittoral")
+rule4D1 = TimeAggregationRule("calculate bottom level", ["mesh2d_mor_bl"], TimeOperationType.AVERAGE, "year","mean_bottomlevel_mNAP")
+rule4D2 = FormulaRule("deep sublittoral ",["mean_bottomlevel_mNAP","mean_low_water_minus_5_mNAP"], "mean_bottomlevel_mNAP < mean_low_water_minus_5_mNAP", "deep_sublittoral")
 rule4E = StepFunctionRule("Dry land", "mesh2d_s1", [-999.0, 0.001, 999.0], [1.0, 1.0, 0.0], "dry_time")
 rule4F = TimeAggregationRule("Exposure", ["dry_time"],TimeOperationType.AVERAGE, "year","exposure_time")
 rule4G = StepFunctionRule("Littoral class minus sublittoral", "exposure_time", [0.0, 0.04, 0.25, 0.75, 0.85, 1.0], [0.0, 2.0, 3.0, 4.0, 5.0, 5.0], "LitoralCod_min_sublittoral")
