@@ -1319,6 +1319,22 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
+name = "restrictedpython"
+version = "6.0"
+description = "RestrictedPython is a defined subset of the Python language which allows to provide a program input into a trusted environment."
+category = "main"
+optional = false
+python-versions = ">=3.6, <3.12"
+files = [
+    {file = "RestrictedPython-6.0-py3-none-any.whl", hash = "sha256:3479303f7bff48a7dedad76f96e7704993c5e86c5adbd67f607295d5352f0fb8"},
+    {file = "RestrictedPython-6.0.tar.gz", hash = "sha256:405cf0bd9eec2f19b1326b5f48228efe56d6590b4e91826b8cc3b2cd400a96ad"},
+]
+
+[package.extras]
+docs = ["Sphinx", "sphinx-rtd-theme"]
+test = ["pytest", "pytest-mock"]
+
+[[package]]
 name = "ruamel-yaml"
 version = "0.17.21"
 description = "ruamel.yaml is a YAML parser/emitter that supports roundtrip preservation of comments, seq/map flow style, and map key order"
@@ -1683,4 +1699,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9, <3.12" # max 3.11 because of scipy
-content-hash = "648a7322c0a53269311de35cae98a71866aede1b48dab3cad95679ab6994af31"
+content-hash = "6e880a1748199cd6a39cd67ff6f844218590e7cf4c1a5ecb972b95a5f9346325"
