@@ -52,5 +52,5 @@ class ParserFormulaRule(IParserRuleBase):
         Validates if the formula is well formed (a string)."""
         if not isinstance(formula, str):
             message = f"""Formula must be a string, \
-                received: {formula}"""
+                received: {formula} (type: {type(formula)})"""
             raise ValueError(message)

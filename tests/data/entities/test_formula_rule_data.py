@@ -7,7 +7,7 @@ from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.entities.formula_rule_data import FormulaRuleData
 
 
-def test_combine_results_rule_data_creation_logic():
+def test_formula_rule_data_creation_logic():
     """The FormulaRuleData should parse the provided dictionary
     to correctly initialize itself during creation"""
 

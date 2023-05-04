@@ -119,5 +119,5 @@ def test_error_if_parse_formula_not_given_by_string():
 
     # Assert
     expected_message = f"""Formula must be a string, \
-                received: {str(formula)}"""
+                received: {str(formula)} (type: <class 'int'>)"""
     assert exception_raised.args[0] == expected_message
