@@ -8,6 +8,7 @@ from typing import Iterator
 
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.data.parsers.parser_combine_results_rule import ParserCombineResultsRule
+from decoimpact.data.parsers.parser_formula_rule import ParserFormulaRule
 from decoimpact.data.parsers.parser_layer_filter_rule import ParserLayerFilterRule
 from decoimpact.data.parsers.parser_multiply_rule import ParserMultiplyRule
 from decoimpact.data.parsers.parser_response_curve_rule import ParserResponseCurveRule
@@ -25,3 +26,4 @@ def rule_parsers() -> Iterator[IParserRuleBase]:
     yield ParserTimeAggregationRule()
     yield ParserStepFunctionRule()
     yield ParserResponseCurveRule()
+    yield ParserFormulaRule()
