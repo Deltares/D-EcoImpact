@@ -136,10 +136,10 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             result = aggregated_values.std()
 
         if self._operation_type is TimeOperationType.QUANT10:
-            result = aggregated_values.quantile(0.1)
+            result = aggregated_values.quantile(0.1).drop_vars('quantile')
 
         if self._operation_type is TimeOperationType.QUANT90:
-            result = aggregated_values.quantile(0.9)
+            result = aggregated_values.quantile(0.9).drop_vars('quantile')
 
         if result is None:
             raise NotImplementedError(
