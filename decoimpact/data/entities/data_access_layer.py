@@ -9,8 +9,8 @@ Classes:
 from pathlib import Path
 from typing import Any
 
-import ruamel.yaml as _yaml
 import xarray as _xr
+import yaml as _yaml
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
@@ -45,7 +45,7 @@ class DataAccessLayer(IDataAccessLayer):
             raise FileExistsError(msg)
 
         with open(path, "r", encoding="utf-8") as stream:
-            contents: dict[Any, Any] = _yaml.load(stream, Loader=_yaml.Loader)
+            contents: dict[Any, Any] = _yaml.load(stream, Loader=_yaml.FullLoader)
             model_data_builder = ModelDataBuilder(self._logger)
             return model_data_builder.parse_yaml_data(contents)
 
