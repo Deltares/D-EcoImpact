@@ -124,7 +124,7 @@ rules:
   - step_function_rule:
       name: Dry land
       description: analyseer wat onder water staat in de tijd.
-      limits:    [-999.0, 0.001, 999.0]
+      limits:    [-999.0, 0.05, 999.0]
       responses: [   1.0, 1.0  ,   0.0]
       input_variable: waterdepth_mNAP
       output_variable: dry_time
