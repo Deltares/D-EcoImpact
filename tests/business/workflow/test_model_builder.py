@@ -15,6 +15,7 @@ from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.entities.combine_results_rule_data import CombineResultsRuleData
+from decoimpact.data.entities.formula_rule_data import FormulaRuleData
 from decoimpact.data.entities.layer_filter_rule_data import LayerFilterRuleData
 from decoimpact.data.entities.multiply_rule_data import MultiplyRuleData
 from decoimpact.data.entities.step_function_data import StepFunctionRuleData
@@ -55,6 +56,10 @@ def test_create_rule_based_model():
         "test_rule_name", ["foo", "hello"], "MULTIPLY", "output"
     )
 
+    formula_rule_data = FormulaRuleData(
+        "test_rule_name", ["foo", "bar"], "foo + bar", "output"
+    )
+
     model_data.name = "Test model"
     model_data.datasets = [dataset_data]
     model_data.rules = [
@@ -63,6 +68,7 @@ def test_create_rule_based_model():
         combine_results_rule_data,
         rule_data_layer_filter_rule,
         time_aggregation_rule,
+        formula_rule_data,
     ]
 
     da_layer.read_input_dataset.return_value = dataset
@@ -76,7 +82,7 @@ def test_create_rule_based_model():
     assert isinstance(model, RuleBasedModel)
     assert model.name == "Test model"
     assert dataset in model.input_datasets
-    assert len(model.rules) == 5
+    assert len(model.rules) == 6
 
     # logs info about model creation
     logger.log_info.assert_called_once()
