@@ -70,4 +70,4 @@ class LayerFilterRule(RuleBase, IArrayBasedRule):
             logger.log_error(message)
             raise IndexError(message)
 
-        return value_array[:, :, self._layer_number - 1]
+        return value_array.sel({dim_name : self._layer_number - 1})
