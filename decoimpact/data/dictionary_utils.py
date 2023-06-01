@@ -3,7 +3,7 @@ Module for dictionary utilities
 
 """
 
-from typing import Dict, Optional, TypeVar
+from typing import Dict, List, Optional, TypeVar
 
 import pandas as pd
 
@@ -13,7 +13,6 @@ TValue = TypeVar("TValue")
 def get_dict_element(
     key: str, contents: Dict[str, TValue], required: bool = True
 ) -> Optional[TValue]:
-
     """Tries to get an element from the provided dictionary.
 
     Args:
@@ -38,33 +37,26 @@ def get_dict_element(
     return None
 
 
-def get_dict_table(
-    key: str, contents: Dict[str, TValue], required: bool = True
-) -> Optional[TValue]:
-
-    """Tries to get a table element from the provided dictionary.
+def convert_table_element(table: List) -> Dict:
+    """Convert a table element into a dictionary
 
     Args:
-        key (str): Name of the table element to search for
-        contents (Dict[str, Any]): Dictionary to search
-        required (bool, optional): If the key  needs to be there. Defaults
-        to True.
+        table (list): Table to convert
     Raises:
-        AttributeError: Thrown when the key is required but is missing).
+        ValueError: When table is not correctly defined
 
     Returns:
-        T: Value for the specified key
+        Dict: readable dictionary with parsed headers and values.
     """
-    has_table_element = key in contents.keys()
 
-    if has_table_element:
+    print(len)
 
-        table_yaml = contents[key]
-        table_df = pd.DataFrame(data=table_yaml[1:], columns=table_yaml[0])
+    if len(table) <= 1:
+        raise ValueError(
+            "Define a correct table with the headers in the first row and values in \
+            the others."
+        )
 
-        return table_df.to_dict("list")
-
-    if required:
-        raise AttributeError(f"Missing table element {key}")
-
-    return None
+    headers = table[0]
+    values = list(map(list, zip(*table[1:])))  # transpose list
+    return dict(zip(headers, values))
