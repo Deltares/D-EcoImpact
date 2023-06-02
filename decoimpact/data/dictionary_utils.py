@@ -5,8 +5,6 @@ Module for dictionary utilities
 
 from typing import Dict, List, Optional, TypeVar
 
-import pandas as pd
-
 TValue = TypeVar("TValue")
 
 
