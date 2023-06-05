@@ -2,11 +2,11 @@
 Tests for dictionary utilities
 """
 
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import pytest
 
-from decoimpact.data.dictionary_utils import get_dict_element
+from decoimpact.data.dictionary_utils import convert_table_element, get_dict_element
 
 
 def test_get_dict_element():
@@ -53,3 +53,74 @@ def test_get_dict_element_should_return_none_if_key_is_missing():
 
     # Assert
     assert result is None
+
+
+def test_get_table_element():
+    """Test if converting a table to a dict works"""
+
+    # Arrange
+    test_list: List = [["header1", "header2"], ["val1", "val2"], ["val3", "val4"]]
+
+    # Act
+    result = convert_table_element(test_list)
+
+    # Assert
+    assert result == {"header1": ["val1", "val3"], "header2": ["val2", "val4"]}
+
+
+def test_table_without_values():
+    """Test if incorrect table raises error"""
+
+    # Arrange
+    test_list: List = [["header1", "header2"]]
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        convert_table_element(test_list)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    assert (
+        exception_raised.args[0]
+        == "Define a correct table with the headers in the first row and values in \
+            the others."
+    )
+    
+
+def test_incorrect_table_shape():
+    """Test if incorrect table shape raises an error"""
+
+    # Arrange
+    test_list: List = [["header1", "header2", "header1"], ["val1", "val2", "val4"]]
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        convert_table_element(test_list)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    assert (
+        exception_raised.args[0]
+        == "There should only be unique headers. Duplicate values: ['header1']"
+    )
+
+
+def test_table_lentgh_all_rows():
+    """Test if all rows have the same lenght."""
+
+    # Arrange
+    test_list: List = [["header1", "header2", "header1"], ["val1", "val2", "val4"], ["val1", "val2"]]
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        convert_table_element(test_list)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    assert (
+        exception_raised.args[0]
+        == "Make sure that all rows in the table have the same length."
+    )
