@@ -20,23 +20,6 @@ from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.entities.model_data_builder import ModelDataBuilder
 
-# from yamlinclude import YamlIncludeConstructor
-
-class Loader(_yaml.FullLoader):
-
-    def __init__(self, stream):
-
-        self._root = os.path.split(stream.name)[0]
-
-        super(Loader, self).__init__(stream)
-
-    def include(self, node):
-
-        filename = os.path.join(self._root, self.construct_scalar(node))
-
-        with open(filename, 'r') as f:
-            return _yaml.load(f, Loader)
-
 
 class DataAccessLayer(IDataAccessLayer):
     """Implementation of the data layer"""
@@ -143,9 +126,8 @@ class DataAccessLayer(IDataAccessLayer):
 
         return None
 
-    # constructor function to make !include possible
     def yaml_include_constructor(self, loader: _yaml.Loader, node: _yaml.Node) -> Any:
-        """Include file referenced with !include node"""
+        """constructor function to make !include (referencedfile) possible"""
 
         file_path = Path(loader.name).parent
         file_path = file_path.joinpath(loader.construct_yaml_str(node)).resolve()
@@ -153,6 +135,7 @@ class DataAccessLayer(IDataAccessLayer):
             return _yaml.load(incl_file, type(loader))
 
     def __create_yaml_loader(self):
+        """create yaml loader"""
 
         loader = _yaml.FullLoader
         loader.add_constructor("!include", self.yaml_include_constructor)
