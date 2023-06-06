@@ -6,6 +6,7 @@ Classes:
 
 """
 
+import os
 import re
 from pathlib import Path
 from typing import Any
@@ -19,13 +20,30 @@ from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.entities.model_data_builder import ModelDataBuilder
 
+# from yamlinclude import YamlIncludeConstructor
+
+class Loader(_yaml.FullLoader):
+
+    def __init__(self, stream):
+
+        self._root = os.path.split(stream.name)[0]
+
+        super(Loader, self).__init__(stream)
+
+    def include(self, node):
+
+        filename = os.path.join(self._root, self.construct_scalar(node))
+
+        with open(filename, 'r') as f:
+            return _yaml.load(f, Loader)
+
 
 class DataAccessLayer(IDataAccessLayer):
     """Implementation of the data layer"""
 
     def __init__(self, logger: ILogger):
         self._logger = logger
-
+   
     def read_input_file(self, path: Path) -> IModelData:
         """Reads input file from provided path
 
@@ -51,7 +69,7 @@ class DataAccessLayer(IDataAccessLayer):
             )
             model_data_builder = ModelDataBuilder(self._logger)
             return model_data_builder.parse_yaml_data(contents)
-
+       
     def read_input_dataset(self, dataset_data: IDatasetData) -> _xr.Dataset:
         """Uses the provided dataset_data to create/read a xarray Dataset
 
@@ -125,9 +143,19 @@ class DataAccessLayer(IDataAccessLayer):
 
         return None
 
+    # constructor function to make !include possible
+    def yaml_include_constructor(self, loader: _yaml.Loader, node: _yaml.Node) -> Any:
+        """Include file referenced with !include node"""
+
+        file_path = Path(loader.name).parent
+        file_path = file_path.joinpath(loader.construct_yaml_str(node)).resolve()
+        with open(file=file_path, mode='r', encoding="utf-8") as incl_file:
+            return _yaml.load(incl_file, type(loader))
+
     def __create_yaml_loader(self):
 
         loader = _yaml.FullLoader
+        loader.add_constructor("!include", self.yaml_include_constructor)
         # Add support for scientific notation (example 1e5=100000)
         loader.add_implicit_resolver(
             "tag:yaml.org,2002:float",
