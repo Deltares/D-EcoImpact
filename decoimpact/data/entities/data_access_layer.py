@@ -6,11 +6,12 @@ Classes:
 
 """
 
+import re
 from pathlib import Path
 from typing import Any
 
-import ruamel.yaml as _yaml
 import xarray as _xr
+import yaml as _yaml
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
@@ -45,7 +46,9 @@ class DataAccessLayer(IDataAccessLayer):
             raise FileExistsError(msg)
 
         with open(path, "r", encoding="utf-8") as stream:
-            contents: dict[Any, Any] = _yaml.load(stream, Loader=_yaml.Loader)
+            contents: dict[Any, Any] = _yaml.load(
+                stream, Loader=self.__create_yaml_loader()
+            )
             model_data_builder = ModelDataBuilder(self._logger)
             return model_data_builder.parse_yaml_data(contents)
 
@@ -121,3 +124,34 @@ class DataAccessLayer(IDataAccessLayer):
             raise OSError(msg) from exc
 
         return None
+
+    def yaml_include_constructor(self, loader: _yaml.Loader, node: _yaml.Node) -> Any:
+        """constructor function to make !include (referencedfile) possible"""
+
+        file_path = Path(loader.name).parent
+        file_path = file_path.joinpath(loader.construct_yaml_str(node)).resolve()
+        with open(file=file_path, mode="r", encoding="utf-8") as incl_file:
+            return _yaml.load(incl_file, type(loader))
+
+    def __create_yaml_loader(self):
+        """create yaml loader"""
+
+        loader = _yaml.FullLoader
+        loader.add_constructor("!include", self.yaml_include_constructor)
+        # Add support for scientific notation (example 1e5=100000)
+        loader.add_implicit_resolver(
+            "tag:yaml.org,2002:float",
+            re.compile(
+                """^(?:
+            [-+]?(?:[0-9][0-9_]*)\\.[0-9_]*(?:[eE][-+]?[0-9]+)?
+            |[-+]?(?:[0-9][0-9_]*)(?:[eE][-+]?[0-9]+)
+            |\\.[0-9_]+(?:[eE][-+][0-9]+)?
+            |[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*
+            |[-+]?\\.(?:inf|Inf|INF)
+            |\\.(?:nan|NaN|NAN))$""",
+                re.X,
+            ),
+            list("-+0123456789."),
+        )
+
+        return loader
