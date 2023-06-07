@@ -28,11 +28,11 @@ class ModelDataBuilder:
 
     def parse_yaml_data(self, contents: dict[Any, Any]) -> IModelData:
         """Parse the Yaml input file into a data object"""
-        intput_datasets = list(self._parse_input_datasets(contents))
+        input_datasets = list(self._parse_input_datasets(contents))
         output_dataset = self._parse_output_dataset(contents)
         rules = list(self._parse_rules(contents))
 
-        return YamlModelData("Model 1", intput_datasets, output_dataset, rules)
+        return YamlModelData("Model 1", input_datasets, output_dataset, rules)
 
     def _parse_input_datasets(self, contents: dict[str, Any]) -> Iterable[IDatasetData]:
         input_datasets: List[dict[str, Any]] = get_dict_element("input-data", contents)
