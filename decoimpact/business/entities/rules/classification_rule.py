@@ -23,44 +23,42 @@ class ClassificationRule(RuleBase, IMultiCellBasedRule):
         self,
         name: str,
         input_variable_names: List[str],
-        criteria: Dict[str, List],
+        criteria_table: Dict[str, List],
         output_variable_name: str = "output",
         description: str = "",
     ):
         super().__init__(name, input_variable_names, output_variable_name, description)
-        self._criteria = criteria
+        self._criteria_table = criteria_table
 
     @property
-    def criteria(self) -> Dict:
+    def criteria_table(self) -> Dict:
         """Criteria property"""
-        return self._criteria
+        return self._criteria_table
 
-    def execute(self, criteria: Dict[str, List], values: Dict[str, float], logger: ILogger) -> int:
+    def execute(self, values: Dict[str, float], logger: ILogger) -> int:
 
         """Determine the classification based on the table with criteria
         Args:
-            criteria (Dict[str, Any]): Dictionary holding the values
+            values (Dict[str, float]): Dictionary holding the values
                                          for making the rule
         Returns:
             integer: classification
         """
-        rows = len(criteria["output"])
-        # print('rows:',rows)
+        rows = len(self._criteria_table["output"])
         output_result = []
-
-        rule = None
+        # TODO: add ranges comparison
+        # TODO: check existance of output column
+        # TODO: do we always expect floats?
+        criteria_comparison = None
         for r in range(rows):
-            print('--- row ', r)
-            rules = []
-            for par_name, par_values in criteria.items():
-                if par_name != 'output':
-                    # print(par_name, '=', par_values[r])
-                    # TODO: change this below: we can never use 'r' (row) in relation to the values
-                    rule = values[par_name][r] == par_values[r]
-                    # print('value:',values[par_name][r],', par_value:', par_values[r], ', result:', rule)
-                    rules.append(rule)
-            # print('rules:',rules)
-            if all(rules):
-                output_result.append(criteria['output'][r])
 
-        return output_result
+            criteria_comparisons = []
+            for par_name, par_values in self._criteria_table.items():
+                if par_name != "output":
+                    criteria_comparison = values[par_name] == par_values[r]
+                    criteria_comparisons.append(criteria_comparison)
+
+            if all(criteria_comparisons):
+                output_result.append(self._criteria_table["output"][r])
+        # if there are multiple classifications we return the first one for now
+        return output_result[0]
