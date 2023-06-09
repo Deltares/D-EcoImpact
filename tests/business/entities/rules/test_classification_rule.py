@@ -9,6 +9,7 @@ from decoimpact.business.entities.rules.classification_rule import Classificatio
 from decoimpact.crosscutting.i_logger import ILogger
 
 # TODO: add test for multiple possible results (/rules)
+# TODO: add test for dummy value "-" in criteria table
 
 
 def test_create_classification_rule_should_set_defaults():

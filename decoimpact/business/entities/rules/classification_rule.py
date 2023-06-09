@@ -55,10 +55,14 @@ class ClassificationRule(RuleBase, IMultiCellBasedRule):
             criteria_comparisons = []
             for par_name, par_values in self._criteria_table.items():
                 if par_name != "output":
-                    criteria_comparison = values[par_name] == par_values[r]
+                    if par_values[r] == '-':
+                        criteria_comparison = True
+                    else:
+                        criteria_comparison = values[par_name] == par_values[r]
                     criteria_comparisons.append(criteria_comparison)
 
             if all(criteria_comparisons):
                 output_result = self._criteria_table["output"][r]
-        # if there are multiple classifications we return the first one for now
+        
+        # if there are multiple classifications we return the last one for now
         return output_result
