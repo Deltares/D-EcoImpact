@@ -10,6 +10,7 @@ from typing import Iterable, List
 
 from decoimpact.business.entities.i_model import IModel
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
+from decoimpact.business.entities.rules.classification_rule import ClassificationRule
 from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
 from decoimpact.business.entities.rules.formula_rule import FormulaRule
 from decoimpact.business.entities.rules.i_rule import IRule
@@ -23,6 +24,7 @@ from decoimpact.business.entities.rules.step_function_rule import StepFunctionRu
 from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.api.i_classification_rule_data import IClassificationRuleData
 from decoimpact.data.api.i_combine_results_rule_data import ICombineResultsRuleData
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_formula_rule_data import IFormulaRuleData
@@ -126,6 +128,14 @@ class ModelBuilder(IModelBuilder):
                 rule_data.output_variable,
                 rule_data.description,
             )
+        if isinstance(rule_data, IClassificationRuleData):
+            return ClassificationRule(
+                rule_data.name,
+                rule_data.input_variable_names,
+                rule_data.criteria_table,
+                rule_data.output_variable,
+                rule_data.description,
+            ) 
         error_str = (
             f"The rule type of rule '{rule_data.name}' is currently " "not implemented"
         )

@@ -45,7 +45,7 @@ class ClassificationRule(RuleBase, IMultiCellBasedRule):
             integer: classification
         """
         rows = len(self._criteria_table["output"])
-        output_result = []
+        output_result = None
         # TODO: add ranges comparison
         # TODO: check existance of output column
         # TODO: do we always expect floats?
@@ -59,6 +59,6 @@ class ClassificationRule(RuleBase, IMultiCellBasedRule):
                     criteria_comparisons.append(criteria_comparison)
 
             if all(criteria_comparisons):
-                output_result.append(self._criteria_table["output"][r])
+                output_result = self._criteria_table["output"][r]
         # if there are multiple classifications we return the first one for now
-        return output_result[0]
+        return output_result
