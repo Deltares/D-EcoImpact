@@ -35,8 +35,31 @@ class ClassificationRule(RuleBase, IMultiCellBasedRule):
         """Criteria property"""
         return self._criteria_table
 
-    def execute(self, values: Dict[str, float], logger: ILogger) -> int:
+    def str_range_to_list(self, s: str) -> List:
+        """
+        Convert a string with a range in the form "x:y" of floats to two elements (begin and end of range).
+        """
+        s = s.strip()
+        try:
+            begin, end = s.split(":")
+            return float(begin), float(end)
+        except ValueError:
+            return print(f'Input "{s}" is not a valid range')
 
+    def type_of_classification(self, s) -> str:
+        """Determine which type of classification is required: number, range, or NA (not applicable)"""
+        try:
+            float(s)
+            return "number"
+        except:
+            pass
+        if ":" in s:
+            return "range"
+            # TODO: regexp gebruiken, controleren op: "GETAL:GETAL"
+        if s == "-" or s == "":
+            return "NA"
+
+    def execute(self, values: Dict[str, float], logger: ILogger) -> int:
         """Determine the classification based on the table with criteria
         Args:
             values (Dict[str, float]): Dictionary holding the values
@@ -44,25 +67,37 @@ class ClassificationRule(RuleBase, IMultiCellBasedRule):
         Returns:
             integer: classification
         """
-        rows = len(self._criteria_table["output"])
         output_result = None
-        # TODO: add ranges comparison
         # TODO: check existance of output column
         # TODO: do we always expect floats?
+        # TODO: too many indices for array: array is 2-dimensional, but 3 were indexed (salinity)
+
         criteria_comparison = None
-        for r in range(rows):
-
+        # loop through all rules (=row)
+        for r, outp in enumerate(self._criteria_table["output"]):
             criteria_comparisons = []
+            # check all criteria (per rule)
             for par_name, par_values in self._criteria_table.items():
-                if par_name != "output":
-                    if par_values[r] == '-':
-                        criteria_comparison = True
-                    else:
-                        criteria_comparison = values[par_name] == par_values[r]
-                    criteria_comparisons.append(criteria_comparison)
+                # the output column can be ignored because it contains the result:
+                if par_name == "output":
+                    continue
 
+                # determine type of criterium (range/value/ignore)
+                if self.type_of_classification(par_values[r]) == "range":
+                    min_val, max_val = str_range_to_list(par_values[r])
+                    criteria_comparison = (
+                        values[par_name] > min_val and values[par_name] < max_val
+                    )
+                elif self.type_of_classification(par_values[r]) == "number":
+                    criteria_comparison = values[par_name] == par_values[r]
+                elif self.type_of_classification(par_values[r]) == "NA":
+                    criteria_comparison = True
+                # add result of each equation to the list of criteria_comparisons = result list for one row/rule:
+                criteria_comparisons.append(criteria_comparison)
+
+            # if the results of all equation for one rule are true, then the rule applies:
             if all(criteria_comparisons):
                 output_result = self._criteria_table["output"][r]
-        
+
         # if there are multiple classifications we return the last one for now
         return output_result
