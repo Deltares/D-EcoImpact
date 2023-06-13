@@ -23,17 +23,17 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
         self,
         name: str,
         input_variable_names: List[str],
-        multipliers: List[float],
+        multipliers: List[List[float]],
         output_variable_name: str = "output",
-        description: str = "",
         date_range: List[List[str]] = [],
+        description: str = "",
     ):
         super().__init__(name, input_variable_names, output_variable_name, description)
         self._multipliers = multipliers
         self._date_range = date_range
 
     @property
-    def multipliers(self) -> List[float]:
+    def multipliers(self) -> List[List[float]]:
         """Multiplier property"""
         return self._multipliers
 
