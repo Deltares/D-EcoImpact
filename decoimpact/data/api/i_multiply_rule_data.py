@@ -23,5 +23,10 @@ class IMultiplyRuleData(IRuleData, ABC):
 
     @property
     @abstractmethod
-    def multipliers(self) -> List[float]:
+    def multipliers(self) -> List[List[float]]:
         """Name of the input variable"""
+
+    @property
+    @abstractmethod
+    def date_range(self) -> List[List[str]]:
+        """Array with date ranges"""
