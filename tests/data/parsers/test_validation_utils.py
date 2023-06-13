@@ -6,24 +6,20 @@ from typing import Any, List
 
 import pytest
 
-from decoimpact.data.parsers.validation_utils import validate_all_instances_number
+from decoimpact.data.parsers.validation_utils import validate_all_instances_number, validate_type_date
 
 
-def validate_all_instances_number_correct():
+def test_validate_all_instances_number_correct():
     """Test if all values in a List are numbers"""
 
     # Arrange
     test_list: List[Any] = [1, 2, 3, 4.0]
 
-    # Act
-    with pytest.raises(ValueError) as err:
-        validate_all_instances_number(test_list, "test")
-
-    # Assert
-    assert str(err.value) == 'Invalid parameter -1'
+    # # Act
+    assert validate_all_instances_number(test_list, "test") is None
 
 
-def validate_all_instances_number_incorrect():
+def test_validate_all_instances_number_incorrect():
     """Validation gives error when not all values in List
     are numbers."""
 
@@ -37,4 +33,68 @@ def validate_all_instances_number_incorrect():
     exception_raised = exc_info.value
 
     # Assert
-    assert exception_raised.args[0] == 'ERROR in position 5 is type <string>.'
+    assert exception_raised.args[0] == "ERROR in position 4 is type <class 'str'>. \
+test should be a list of int or floats, received: [1, 2, 3, 4.0, 'test']"
+
+
+def test_validate_all_types_dates():
+    """Test if all values in a List are dates"""
+
+    # Arrange
+    test_list: List[Any] = ["02-03", "12-12"]
+
+    # # Act
+    assert validate_type_date(test_list, "test") is None
+
+
+def test_validate_type_date_with_not_all_strings():
+    """First check if all elements in a list are strings"""
+
+    # Arrange
+    test_list: List[Any] = [1, 2, "test"]
+
+    # Act
+    with pytest.raises(TypeError) as exc_info:
+        validate_type_date(test_list, "test")
+
+    exception_raised = exc_info.value
+
+    # Assert
+    assert exception_raised.args[0] == "test should be a list of \
+strings, received: [1, 2, 'test']. ERROR in position 0 is type <class 'int'>."
+
+
+def test_validate_type_date_with_not_all_correct_date_strings():
+    """First check if all elements in a list are strings"""
+
+    # Arrange
+    test_list: List[Any] = ["01-01", "12-12-2021"]
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        validate_type_date(test_list, "test")
+
+    exception_raised = exc_info.value
+
+    # Assert
+    assert exception_raised.args[0] == "test should be a list of date strings \
+with Format DD-MM , received: ['01-01', '12-12-2021']. ERROR in position 1, \
+string: 12-12-2021."
+
+
+def test_validate_type_date_with_not_all_correct_date_strings_2():
+    """First check if all elements in a list are strings"""
+
+    # Arrange
+    test_list: List[Any] = ["10-31"]
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        validate_type_date(test_list, "test")
+
+    exception_raised = exc_info.value
+
+    # Assert
+    assert exception_raised.args[0] == "test should be a list \
+of date strings with Format DD-MM , received: ['10-31']. ERROR \
+in position 0, string: 10-31."
