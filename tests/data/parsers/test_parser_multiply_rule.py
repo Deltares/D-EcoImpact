@@ -64,7 +64,7 @@ def test_parse_wrong_dict_to_rule_data_logic():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = "Missing element multipliers"
+    expected_message = "Missing element multipliers_table"
     assert exception_raised.args[0] == expected_message
 
 
