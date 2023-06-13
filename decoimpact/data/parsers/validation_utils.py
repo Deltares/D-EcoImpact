@@ -5,6 +5,7 @@ Module for Validation functions
 from typing import List
 from datetime import datetime
 
+
 def validate_all_instances_number(data: List, name: str):
     """Check if all instances in a list are of type int of float
 
@@ -79,4 +80,3 @@ def validate_start_before_end(start_list: List[str], end_list: List[str]):
                 f"{start} and end: {end}."
             )
             raise ValueError(message)
-

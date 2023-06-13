@@ -6,7 +6,11 @@ from typing import Any, List
 
 import pytest
 
-from decoimpact.data.parsers.validation_utils import validate_all_instances_number, validate_start_before_end, validate_type_date
+from decoimpact.data.parsers.validation_utils import (
+    validate_all_instances_number,
+    validate_start_before_end,
+    validate_type_date
+)
 
 
 def test_validate_all_instances_number_correct():
