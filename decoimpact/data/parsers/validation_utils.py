@@ -62,7 +62,7 @@ def validate_type_date(data: List[str], name: str):
 
 
 def validate_start_before_end(start_list: List[str], end_list: List[str]):
-    """Validate ifg for each row in the table the start date is before the end date.
+    """Validate if for each row in the table the start date is before the end date.
 
     Args:
         start_list (List[str]): list of dates
@@ -70,8 +70,8 @@ def validate_start_before_end(start_list: List[str], end_list: List[str]):
     """
 
     for (index, (start, end)) in enumerate(zip(start_list, end_list)):
-        start_str = datetime.strptime(start, r"%d-%m").strftime(r"%m-%d")
-        end_str = datetime.strptime(end, r"%d-%m").strftime(r"%m-%d")
+        start_str = datetime.strptime(start, r"%d-%m")
+        end_str = datetime.strptime(end, r"%d-%m").replace()
 
         if not start_str < end_str:
             message = (
