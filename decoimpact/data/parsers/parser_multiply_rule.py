@@ -46,9 +46,7 @@ class ParserMultiplyRule(IParserRuleBase):
             multipliers = get_dict_element("multipliers", multipliers_dict)
             start_date = get_dict_element("start_date", multipliers_dict)
             end_date = get_dict_element("end_date", multipliers_dict)
-            if not start_date or not end_date:
-                raise ValueError("Define a column for start_date and end_date!")
-
+            
             validate_type_date(start_date, "start_date")
             validate_type_date(end_date, "end_date")
 

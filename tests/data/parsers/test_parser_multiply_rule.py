@@ -96,3 +96,58 @@ def test_parse_multipliers_type():
         "received: ['a', 'b', 2]"
     )
     assert exception_raised.args[0] == expected_message
+
+
+def test_multiply_parser_with_multipliers_table():
+    """Test when multipliers table is available"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variable": "input",
+            "output_variable": "output",
+            "multipliers_table": [
+                ["start_date", "end_date", "multipliers"],
+                ["01-01", "15-07", [1, 100]],
+                ["16-07", "31-12", [0]]
+            ]
+        }
+    )
+    logger = Mock(ILogger)
+
+    # Act
+    data = ParserMultiplyRule()
+    parsed_dict = data.parse_dict(contents, logger)
+
+    assert isinstance(parsed_dict, IRuleData)
+
+
+def test_multiply_parser_with_multipliers_table_without_strt_date():
+    """Test when multipliers table is available"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variable": "input",
+            "output_variable": "output",
+            "multipliers_table": [
+                ["date", "end_date", "multipliers"],
+                ["01-01", "15-07", [1, 100]],
+                ["16-07", "31-12", [0]]
+            ]
+        }
+    )
+    logger = Mock(ILogger)
+
+    # Act
+    data = ParserMultiplyRule()
+    with pytest.raises(AttributeError) as exc_info:
+        data.parse_dict(contents, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = (
+        "Missing element start_date"
+    )
+    assert exception_raised.args[0] == expected_message
