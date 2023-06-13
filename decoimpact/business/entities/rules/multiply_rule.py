@@ -61,9 +61,9 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
             if (len(self.date_range) != 0):
                 # Date is given in DD-MM, convert to MM-DD for comparison
                 start = datetime.strptime(self.date_range[index][0], r"%d-%m")
-                start = start.strftime(r"%m-$d")
+                start = start.strftime(r"%m-%d")
                 end = datetime.strptime(self.date_range[index][1], r"%d-%m")
-                end = end.strftime(r"%m-$d")
+                end = end.strftime(r"%m-%d")
                 dr_date = dr.time.dt.strftime(r"%m-%d")
                 dr = _xr.where((start < dr_date) & (dr_date < end), dr * multiplier, dr)
             else:
