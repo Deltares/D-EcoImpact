@@ -37,8 +37,11 @@ def test_validate_all_instances_number_incorrect():
     exception_raised = exc_info.value
 
     # Assert
-    assert exception_raised.args[0] == "ERROR in position 4 is type <class 'str'>. \
-test should be a list of int or floats, received: [1, 2, 3, 4.0, 'test']"
+    assert exception_raised.args[0] == (
+        "ERROR in position 4 is type <class 'str'>. "
+        "test should be a list of int or floats, received: "
+        "[1, 2, 3, 4.0, 'test']"
+    )
 
 
 def test_validate_all_types_dates():
@@ -52,7 +55,8 @@ def test_validate_all_types_dates():
 
 
 def test_validate_type_date_with_not_all_strings():
-    """First check if all elements in a list are strings"""
+    """Raise a TypeError if an element in the list is
+    not a string."""
 
     # Arrange
     test_list: List[Any] = [1, 2, "test"]
@@ -64,12 +68,15 @@ def test_validate_type_date_with_not_all_strings():
     exception_raised = exc_info.value
 
     # Assert
-    assert exception_raised.args[0] == "test should be a list of \
-strings, received: [1, 2, 'test']. ERROR in position 0 is type <class 'int'>."
+    assert exception_raised.args[0] == (
+        "test should be a list of strings, received: [1, 2, 'test']. "
+        "ERROR in position 0 is type <class 'int'>."
+    )
 
 
 def test_validate_type_date_with_not_all_correct_date_strings():
-    """First check if all elements in a list are strings"""
+    """Raise a ValueError if an element in the list is
+    not a in the correct date string format DD-MM."""
 
     # Arrange
     test_list: List[Any] = ["01-01", "12-12-2021"]
@@ -81,9 +88,11 @@ def test_validate_type_date_with_not_all_correct_date_strings():
     exception_raised = exc_info.value
 
     # Assert
-    assert exception_raised.args[0] == "test should be a list of date strings \
-with Format DD-MM , received: ['01-01', '12-12-2021']. ERROR in position 1, \
-string: 12-12-2021."
+    assert exception_raised.args[0] == (
+        "test should be a list of date strings with Format DD-MM, "
+        "received: ['01-01', '12-12-2021']. ERROR in position 1, "
+        "string: 12-12-2021."
+    )
 
 
 def test_validate_type_date_with_not_all_correct_date_strings_2():
@@ -99,9 +108,10 @@ def test_validate_type_date_with_not_all_correct_date_strings_2():
     exception_raised = exc_info.value
 
     # Assert
-    assert exception_raised.args[0] == "test should be a list \
-of date strings with Format DD-MM , received: ['10-31']. ERROR \
-in position 0, string: 10-31."
+    assert exception_raised.args[0] == (
+        "test should be a list of date strings with Format DD-MM, "
+        "received: ['10-31']. ERROR in position 0, string: 10-31."
+    )
 
 
 def test_validate_start_before_end_correct():
@@ -128,5 +138,7 @@ def test_validate_start_before_end_incorrect():
     exception_raised = exc_info.value
 
     # Assert
-    assert exception_raised.args[0] == "All start dates should be before \
-the end dates. ERROR in position 1 where start: 10-01 and end: 03-01."
+    assert exception_raised.args[0] == (
+        "All start dates should be before the end dates. ERROR in "
+        "position 1 where start: 10-01 and end: 03-01."
+    )

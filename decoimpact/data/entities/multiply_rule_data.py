@@ -36,10 +36,10 @@ class MultiplyRuleData(IMultiplyRuleData, RuleData):
 
     @property
     def multipliers(self) -> List[List[float]]:
-        """Name of the input variable"""
+        """List of list with the multipliers"""
         return self._multipliers
 
     @property
     def date_range(self) -> List[List[str]]:
-        """List of list with start and end date"""
+        """List of list with start and end dates"""
         return self._date_range

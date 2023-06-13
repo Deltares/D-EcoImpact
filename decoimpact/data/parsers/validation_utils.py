@@ -7,14 +7,14 @@ from datetime import datetime
 
 
 def validate_all_instances_number(data: List, name: str):
-    """Check if all instances in a list are of type int of float
+    """Check if all instances in a list are of type int or float
 
     Args:
         data (List): List to check
         name (str): Name to give in the error message
 
     Raises:
-        ValueError: Raise an error to feine which value is incorrect
+        ValueError: Raise an error to define which value is incorrect
     """
     if not all(isinstance(m, (int, float)) for m in data):
         message = (
@@ -40,7 +40,8 @@ def validate_type_date(data: List[str], name: str):
         name (str): Name of data to address in error message
 
     Raises:
-        ValueError: Raise this error to indicate which value is not a date
+        ValueError: Raise this error to indicate which value is not
+        a date in the proper format.
     """
 
     for (index, m) in enumerate(data):
@@ -54,14 +55,14 @@ def validate_type_date(data: List[str], name: str):
             raise TypeError(message)
         except ValueError:
             message = (
-                f"{name} should be a list of date strings with Format DD-MM , "
+                f"{name} should be a list of date strings with Format DD-MM, "
                 f"received: {data}. ERROR in position {index}, string: {m}."
             )
             raise ValueError(message)
 
 
 def validate_start_before_end(start_list: List[str], end_list: List[str]):
-    """Validate is for each  row in the table the start date is before the end date!
+    """Validate ifg for each row in the table the start date is before the end date.
 
     Args:
         start_list (List[str]): list of dates
@@ -69,7 +70,6 @@ def validate_start_before_end(start_list: List[str], end_list: List[str]):
     """
 
     for (index, (start, end)) in enumerate(zip(start_list, end_list)):
-        print(index, start, end)
         start_str = datetime.strptime(start, r"%d-%m").strftime(r"%m-%d")
         end_str = datetime.strptime(end, r"%d-%m").strftime(r"%m-%d")
 

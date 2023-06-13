@@ -6,14 +6,14 @@ Tests for RuleBase class
 from unittest.mock import Mock
 
 import xarray as _xr
-import numpy as np
+import numpy as _np
 
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
 from decoimpact.crosscutting.i_logger import ILogger
 
 
 def test_create_multiply_rule_should_set_defaults():
-    """Test creating a Multiply Rule with defaults"""
+    """Test creating a multiply rule with defaults"""
 
     # Arrange & Act
     rule = MultiplyRule("test", ["foo"], [[0.5, 3.0]])
@@ -68,7 +68,7 @@ def test_execute_value_array_multiplied_by_multipliers_with_dates():
         "2022-01-04",
         "2022-01-14",
     ]
-    time = [np.datetime64(t) for t in time]
+    time = [_np.datetime64(t) for t in time]
     value_array = _xr.DataArray(values, coords=[time], dims=["time"])
 
     # Act
