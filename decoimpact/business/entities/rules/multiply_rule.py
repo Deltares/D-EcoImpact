@@ -7,10 +7,10 @@ Classes:
 
 from typing import List
 
-import xarray as _xr
+from datetime import datetime
 import numpy as np
+import xarray as _xr
 
-from datetime import date, datetime
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.crosscutting.i_logger import ILogger
@@ -43,10 +43,10 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
         return self._date_range
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
-        """Multiplies the value with the specified multipliers. If there is no date range,
-        multiply the whole DataArray with the same multiplier. If there is table format with
-        date range, make sure that the correct values in time are multiplied with the
-        corresponding multipliers.
+        """Multiplies the value with the specified multipliers. If there is no
+        date range, multiply the whole DataArray with the same multiplier. If
+        there is table format with date range, make sure that the correct values
+        in time are multiplied with the corresponding multipliers.
         Args:
             value_array (DataArray): values to multiply
         Returns:

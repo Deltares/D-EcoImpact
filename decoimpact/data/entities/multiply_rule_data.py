@@ -8,8 +8,6 @@ Classes:
 
 from typing import List
 
-from tomlkit import date
-
 from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
 from decoimpact.data.entities.rule_data import RuleData
 
