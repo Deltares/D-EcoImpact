@@ -12,7 +12,7 @@ from decoimpact.data.dictionary_utils import convert_table_element, get_dict_ele
 from decoimpact.data.entities.multiply_rule_data import MultiplyRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.data.parsers.validation_utils import (
-    validate_all_instances_number, validate_type_date
+    validate_all_instances_number, validate_start_before_end, validate_type_date
 )
 
 
@@ -46,9 +46,10 @@ class ParserMultiplyRule(IParserRuleBase):
             multipliers = get_dict_element("multipliers", multipliers_dict)
             start_date = get_dict_element("start_date", multipliers_dict)
             end_date = get_dict_element("end_date", multipliers_dict)
-            
+
             validate_type_date(start_date, "start_date")
             validate_type_date(end_date, "end_date")
+            validate_start_before_end(start_date, end_date)
 
             date_range = list(zip(start_date, end_date))
         validate_all_instances_number(sum(multipliers, []), "Multipliers")

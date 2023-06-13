@@ -57,3 +57,26 @@ def validate_type_date(data: List[str], name: str):
                 f"received: {data}. ERROR in position {index}, string: {m}."
             )
             raise ValueError(message)
+
+
+def validate_start_before_end(start_list: List[str], end_list: List[str]):
+    """Validate is for each  row in the table the start date is before the end date!
+
+    Args:
+        start_list (List[str]): list of dates
+        end_list (List[str]): list of dates
+    """
+
+    for (index, (start, end)) in enumerate(zip(start_list, end_list)):
+        print(index, start, end)
+        start_str = datetime.strptime(start, r"%d-%m").strftime(r"%m-%d")
+        end_str = datetime.strptime(end, r"%d-%m").strftime(r"%m-%d")
+
+        if not start_str < end_str:
+            message = (
+                f"All start dates should be before the end dates. "
+                f"ERROR in position {index} where start: "
+                f"{start} and end: {end}."
+            )
+            raise ValueError(message)
+
