@@ -43,7 +43,7 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
             begin, end = range_string.split(":")
             return float(begin), float(end)
         except ValueError:
-            return print(f'Input "{s}" is not a valid range')
+            return print(f'Input "{range_string}" is not a valid range')
 
     def type_of_classification(self, class_val) -> str:
         """Determine which type of classification is required: number, range, or NA (not applicable)"""
@@ -53,12 +53,17 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
             class_val = class_val.strip()
             if class_val == "-" or class_val == "":
                 return "NA"
-            if ":" in class_val:
-                class_range = class_val.split(":")
-                # len(class_range)
+            elif ":" in class_val:
+                self.str_range_to_list(class_val)
                 return "range"
-                # TODO: regexp gebruiken, controleren op: "GETAL:GETAL"
-        return ""
+            else:
+                try:
+                    float(class_val)
+                    return "number"
+                except ValueError:
+                    pass
+
+        raise ValueError(f"No valid criteria is given: {class_val}")
 
     def execute(self,  value_arrays: Dict[str, _xr.DataArray], logger: ILogger) -> _xr.DataArray:
         """Determine the classification based on the table with criteria
@@ -69,13 +74,15 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
             integer: classification
         """
 
+        # Get all the headers in the criteria_table representing a value to be checked
         column_names = list(self._criteria_table.keys())
         column_names.remove("output")
 
-        dr = _xr.DataArray(value_arrays[self.input_variable_names[0]]).copy()
+        # Create an empty result_array to be filled
+        result_array = _xr.zeros_like(value_arrays[column_names[0]])
 
         for (row, out) in enumerate(self._criteria_table["output"]):
-            criteria_comparison = _xr.where(value_arrays[column_names[0]], True, True)
+            criteria_comparison = _xr.full_like(value_arrays[column_names[0]], True)
             for column_name in column_names:
                 criteria = self.criteria_table[column_name][row]
                 criteria_class = self.type_of_classification(criteria)
@@ -87,12 +94,16 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
                         False
                     )
 
-            default_val = dr
+            # For the first row set the default to None, for all the other
+            # rows use the already created dataarray
+            default_val = None
             if (row == 0):
-                default_val = None
-            dr = _xr.where(criteria_comparison, out, default_val)
-        print(dr)
-        return dr
+                default_val = result_array
+
+            result_array = _xr.where(criteria_comparison, out, default_val)
+
+        print(result_array)
+        return result_array
 
         # output_result = None
         # # TODO: check existance of output column
