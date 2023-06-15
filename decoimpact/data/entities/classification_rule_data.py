@@ -32,7 +32,6 @@ class ClassificationRuleData(IClassificationRuleData, RuleData):
         """Criteria property"""
         return self._criteria_table
 
-    # TODO: could we remove input_variable_names here?
     @property
     def input_variable_names(self) -> List[str]:
         return self._input_variable_names

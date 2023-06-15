@@ -16,12 +16,15 @@ def test_create_classification_rule_should_set_defaults():
     """Test creating a classification rule with defaults"""
 
     # test data
-    criteria_test_table = {'output':[100, 200, 300, 400, 500],
-            'water_depth': [11, 12, 13, 14, 15],
-            'salinity': [6, 7, 8, 9, 10]}
+    criteria_test_table = {
+        "output": [100, 200, 300, 400, 500],
+        "water_depth": [11, 12, 13, 14, 15],
+        "salinity": [6, 7, 8, 9, 10]
+    }
 
     # Arrange and act
     rule = ClassificationRule("test", ["water_depth", "salinity"], criteria_test_table)
+
     # assert
     assert rule.name == "test"
     assert rule.input_variable_names == ["water_depth", "salinity"]
@@ -35,9 +38,11 @@ def test_execute_classification():
     """Test executing a classification of values"""
 
     # test data
-    criteria_test_table = {'output':[100, 200, 300, 400, 500],
-            'water_depth': [11.1, 12, 13, 14, 15],
-            'salinity': [6.0, 7, 8, 9, 10]}
+    criteria_test_table = {
+        "output": [100, 200, 300, 400, 500],
+        "water_depth": [11.1, 12, 13, 14, 15],
+        "salinity": [6.0, 7, 8, 9, 10]
+    }
 
     # arrange
     logger = Mock(ILogger)
