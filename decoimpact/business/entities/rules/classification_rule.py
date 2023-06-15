@@ -43,7 +43,7 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
             begin, end = range_string.split(":")
             return float(begin), float(end)
         except ValueError:
-            return print(f'Input "{range_string}" is not a valid range')
+            raise ValueError(f'Input "{range_string}" is not a valid range')
 
     def type_of_classification(self, class_val) -> str:
         """Determine which type of classification is required: number, range, or NA (not applicable)"""
@@ -84,20 +84,30 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
         for (row, out) in enumerate(self._criteria_table["output"]):
             criteria_comparison = _xr.full_like(value_arrays[column_names[0]], True)
             for column_name in column_names:
+                # DataArray on which the criteria needs to be checked
+                data = value_arrays[column_name]
+
+                # Retrieving criteria and applying it in correct format (number, range or comparison)
                 criteria = self.criteria_table[column_name][row]
                 criteria_class = self.type_of_classification(criteria)
-                data = value_arrays[column_name]
-                if criteria_class == "number":
-                    criteria_comparison = _xr.where(
-                        (data == float(criteria)) & (criteria_comparison == True),
-                        True,
-                        False
-                    )
 
+                comparison = True
+                if criteria_class == "number":
+                    comparison = data == float(criteria)
+
+                elif criteria_class == "range":
+                    begin, end = self.str_range_to_list(criteria)
+                    comparison = (begin < data) & (data > end)
+
+                criteria_comparison = _xr.where(
+                    comparison & (criteria_comparison == True),
+                    True,
+                    False
+                )
             # For the first row set the default to None, for all the other
             # rows use the already created dataarray
             default_val = None
-            if (row == 0):
+            if (row != 0):
                 default_val = result_array
 
             result_array = _xr.where(criteria_comparison, out, default_val)
