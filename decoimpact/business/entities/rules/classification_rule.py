@@ -146,7 +146,7 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
 
                 elif criteria_class == "range":
                     begin, end = self.str_range_to_list(criteria)
-                    comparison = (begin < data) & (data > end)
+                    comparison = (data > begin) & (data < end)
 
                 elif criteria_class == "larger":
                     comparison_val = self.read_str_comparison(criteria, ">")
