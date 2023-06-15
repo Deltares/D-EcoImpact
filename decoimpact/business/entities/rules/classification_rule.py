@@ -130,7 +130,7 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
         # Create an empty result_array to be filled
         result_array = _xr.zeros_like(value_arrays[column_names[0]])
 
-        for (row, out) in enumerate(self._criteria_table["output"]):
+        for (row, out) in reversed(list(enumerate(self._criteria_table["output"]))):
             criteria_comparison = _xr.full_like(value_arrays[column_names[0]], True)
             for column_name in column_names:
                 # DataArray on which the criteria needs to be checked
@@ -164,7 +164,7 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
             # For the first row set the default to None, for all the other
             # rows use the already created dataarray
             default_val = None
-            if (row != 0):
+            if (row != len(self._criteria_table["output"])-1):
                 default_val = result_array
 
             result_array = _xr.where(criteria_comparison, out, default_val)
