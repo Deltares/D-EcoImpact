@@ -4,7 +4,6 @@ Module for ParserClassificationRule class
 Classes:
     ParserClassificationRule
 """
-from lib2to3.pytree import convert
 from typing import Any, Dict
 
 from decoimpact.crosscutting.i_logger import ILogger
@@ -44,5 +43,9 @@ class ParserClassificationRule(IParserRuleBase):
         description = get_dict_element("description", dictionary)
 
         return ClassificationRuleData(
-            name, input_variable_names, criteria_table, output_variable_name, description
+            name,
+            input_variable_names,
+            criteria_table,
+            output_variable_name,
+            description
         )

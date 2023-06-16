@@ -136,7 +136,7 @@ class ModelBuilder(IModelBuilder):
                 rule_data.criteria_table,
                 rule_data.output_variable,
                 rule_data.description,
-            ) 
+            )
         error_str = (
             f"The rule type of rule '{rule_data.name}' is currently " "not implemented"
         )

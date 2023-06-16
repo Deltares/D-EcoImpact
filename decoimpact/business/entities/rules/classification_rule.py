@@ -9,7 +9,9 @@ from typing import Dict, List
 
 import xarray as _xr
 
-from decoimpact.business.entities.rules.i_multi_array_based_rule import IMultiArrayBasedRule
+from decoimpact.business.entities.rules.i_multi_array_based_rule import (
+    IMultiArrayBasedRule
+)
 
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.business.entities.rules.string_parser_utils import (
@@ -39,7 +41,11 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
         """Criteria property"""
         return self._criteria_table
 
-    def execute(self,  value_arrays: Dict[str, _xr.DataArray], logger: ILogger) -> _xr.DataArray:
+    def execute(
+            self,
+            value_arrays: Dict[str, _xr.DataArray],
+            logger: ILogger
+            ) -> _xr.DataArray:
         """Determine the classification based on the table with criteria
         Args:
             values (Dict[str, float]): Dictionary holding the values
@@ -61,7 +67,8 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
                 # DataArray on which the criteria needs to be checked
                 data = value_arrays[column_name]
 
-                # Retrieving criteria and applying it in correct format (number, range or comparison)
+                # Retrieving criteria and applying it in correct format (number,
+                # range or comparison)
                 criteria = self.criteria_table[column_name][row]
                 criteria_class = type_of_classification(criteria)
 
@@ -95,39 +102,3 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
             result_array = _xr.where(criteria_comparison, out, default_val)
 
         return result_array
-
-        # output_result = None
-        # # TODO: check existance of output column
-        # # TODO: do we always expect floats?
-        # # TODO: too many indices for array: array is 2-dimensional, but 3 were indexed (salinity)
-
-        # print(values)
-        # criteria_comparison = None
-        # # loop through all rules (=row)
-        # for r, outp in enumerate(self._criteria_table["output"]):
-        #     criteria_comparisons = []
-        #     # check all criteria (per rule)
-        #     for par_name, par_values in self._criteria_table.items():
-        #         # the output column can be ignored because it contains the result:
-        #         if par_name == "output":
-        #             continue
-
-        #         # determine type of criterium (range/value/ignore)
-        #         if self.type_of_classification(par_values[r]) == "range":
-        #             min_val, max_val = str_range_to_list(par_values[r])
-        #             criteria_comparison = (
-        #                 values[par_name] > min_val and values[par_name] < max_val
-        #             )
-        #         elif self.type_of_classification(par_values[r]) == "number":
-        #             criteria_comparison = values[par_name] == par_values[r]
-        #         elif self.type_of_classification(par_values[r]) == "NA":
-        #             criteria_comparison = True
-        #         # add result of each equation to the list of criteria_comparisons = result list for one row/rule:
-        #         criteria_comparisons.append(criteria_comparison)
-
-        #     # if the results of all equation for one rule are true, then the rule applies:
-        #     if all(criteria_comparisons):
-        #         output_result = self._criteria_table["output"][r]
-
-        # # if there are multiple classifications we return the last one for now
-        # return output_result

@@ -101,4 +101,4 @@ def validate_table_with_input(table, input_variable_names):
                               f"variables {input_variable_names} should match. "
                               f"Mismatch: {difference}")
     if difference[0] != "output":
-        raise ValidationError(f"Define an output column with the header 'output'.")
+        raise ValidationError("Define an output column with the header 'output'.")

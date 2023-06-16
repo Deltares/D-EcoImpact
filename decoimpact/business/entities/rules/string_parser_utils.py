@@ -43,7 +43,8 @@ def read_str_comparison(compare_str: str, operator: str):
         compare_list = compare_str.split(operator)
         if (len(compare_list) != 2):
             raise IndexError(
-                f'Input "{compare_str}" is not a valid comparison with operator: {operator}'
+                f'Input "{compare_str}" is not a valid comparison '
+                f'with operator: {operator}'
             )
         compare_val = compare_list[1]
         return float(compare_val)
