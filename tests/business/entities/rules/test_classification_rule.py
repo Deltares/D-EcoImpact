@@ -38,18 +38,18 @@ def test_execute_classification():
 
     # test data
     criteria_test_table = {
-        "output": [100, 200, 300, 400, 500, 900],
-        "water_depth": [11, 12, 13, 13, 15, 0],
-        "salinity": ['-', '0.5: 5.5', 8.8, 8.8, 9, 0],
-        "temperature": ['-', '-', '-', '-', '>25.0', 0],
+        "output": [100, 200, 300, 400, 500, 900, 111],
+        "water_depth": [11, 12, 13, 13, 15, 0, '-'],
+        "salinity": ['-', '0.5: 5.5', 8.8, 8.8, 9, 0, ">10"],
+        "temperature": ['-', '-', '-', '-', '>25.0', 0, "<0"],
     }
 
     # arrange
     logger = Mock(ILogger)
     rule = ClassificationRule("test", ["water_depth", "salinity"], criteria_test_table)
-    test_data = {"water_depth": _xr.DataArray([13, 0, 11, 15, 12]),
-        "salinity": _xr.DataArray([8.8, 0, 2, 9, 2.5]),
-        "temperature": _xr.DataArray([20, -5, 20, 28, 1])}
+    test_data = {"water_depth": _xr.DataArray([13, 0, 11, 15, 12, 20]),
+        "salinity": _xr.DataArray([8.8, 0, 2, 9, 2.5, 11]),
+        "temperature": _xr.DataArray([20, -5, 20, 28, 1, -5])}
 
     # expected results:
     # 1: take first when multiple apply --> 300
@@ -57,7 +57,8 @@ def test_execute_classification():
     # 3: allow '-' --> 100
     # 4: greater than '>' --> 500
     # 5: range --> 200
-    expected_result = _xr.DataArray([300, None, 100, 500, 200])
+    # 6: smaller than '<' --> 111
+    expected_result = _xr.DataArray([300, None, 100, 500, 200, 111])
 
     # act
     test_result = rule.execute(test_data, logger)

@@ -85,7 +85,9 @@ def test_read_str_comparison_fails_multiple_operators(test_string: str, operator
         ["0", "number"],
         ["-", "NA"],
         [">5", "larger"],
-        ["<5", "smaller"]
+        ["<5", "smaller"],
+        [5, "number"],
+        [-8.0, "number"]
     ]
 )
 def test_type_of_classification(test_string: str, result: str):

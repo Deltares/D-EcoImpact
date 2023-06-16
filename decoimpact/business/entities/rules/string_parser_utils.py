@@ -2,6 +2,7 @@
 Module for parser strings
 """
 
+
 def str_range_to_list(range_string: str):
     """Convert a string with a range in the form "x:y" of floats to
     two elements (begin and end of range).
@@ -86,6 +87,6 @@ def type_of_classification(class_val) -> str:
                 float(class_val)
                 return "number"
             except ValueError:
-                pass
+                raise ValueError(f"No valid criteria is given: {class_val}")
 
     raise ValueError(f"No valid criteria is given: {class_val}")
