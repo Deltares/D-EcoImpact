@@ -5,6 +5,7 @@ Module for Validation functions
 from typing import List
 from datetime import datetime
 
+
 def validate_all_instances_number(data: List, name: str):
     """Check if all instances in a list are of type int or float
 
