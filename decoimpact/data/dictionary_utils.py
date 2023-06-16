@@ -60,7 +60,7 @@ def convert_table_element(table: List) -> Dict:
 
     if len(headers) != len(set(headers)):
         seen = set()
-        dupes = [x for x in headers if x in seen or seen.add(x)] 
+        dupes = [x for x in headers if x in seen or seen.add(x)]
         raise ValueError(
             f"There should only be unique headers. Duplicate values: {dupes}"
         )
