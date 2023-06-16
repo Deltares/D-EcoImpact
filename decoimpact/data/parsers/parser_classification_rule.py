@@ -12,6 +12,7 @@ from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.dictionary_utils import convert_table_element, get_dict_element
 from decoimpact.data.entities.classification_rule_data import ClassificationRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
+from decoimpact.data.parsers.validation_utils import validate_table_with_input
 
 
 class ParserClassificationRule(IParserRuleBase):
@@ -36,7 +37,8 @@ class ParserClassificationRule(IParserRuleBase):
         criteria_table_list = get_dict_element("criteria_table", dictionary)
         criteria_table = convert_table_element(criteria_table_list)
 
-        # TODO: check whether all parameters (columns) of the criteria_table contain floats?
+        validate_table_with_input(criteria_table, input_variable_names)
+        # validate_table_value_formats()
 
         output_variable_name = get_dict_element("output_variable", dictionary)
         description = get_dict_element("description", dictionary)

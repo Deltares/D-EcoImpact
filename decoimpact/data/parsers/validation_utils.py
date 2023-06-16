@@ -5,6 +5,8 @@ Module for Validation functions
 from typing import List
 from datetime import datetime
 
+from jsonschema import ValidationError
+
 
 def validate_all_instances_number(data: List, name: str):
     """Check if all instances in a list are of type int or float
@@ -80,3 +82,23 @@ def validate_start_before_end(start_list: List[str], end_list: List[str]):
                 f"{start} and end: {end}."
             )
             raise ValueError(message)
+
+
+def validate_table_with_input(table, input_variable_names):
+    """Check if the headers of the input table and the input variable names match
+
+    Args:
+        table (_type_): Table to check the headers from
+        input_variable_names (_type_): Variable input names
+
+    Raises:
+        ValidationError: If there is a mismatch notify the user.
+    """
+    headers = list(table.keys())
+    difference = list(set(headers) - set(input_variable_names))
+    if len(difference) != 1:
+        raise ValidationError(f"The headers of the table {headers} and the input "
+                              f"variables {input_variable_names} should match. "
+                              f"Mismatch: {difference}")
+    if difference[0] != "output":
+        raise ValidationError(f"Define an output column with the header 'output'.")
