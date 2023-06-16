@@ -50,7 +50,8 @@ def validate_type_date(data: List[str], name: str):
         except TypeError:
             message = (
                 f"{name} should be a list of strings, "
-                f"received: {data}. ERROR in position {index} is type {type(date_string)}."
+                f"received: {data}. ERROR in position {index} is "
+                f"type {type(date_string)}."
             )
             raise TypeError(message)
         except ValueError:
