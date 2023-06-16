@@ -17,7 +17,7 @@ def flatten_list(_2d_list: list[Any]) -> list:
     # Iterate through the outer list
     for element in _2d_list:
         if isinstance(element, list):
-            flat_list = flat_list + [item for item in element]
+            flat_list = flat_list + list(element)
         else:
             flat_list.append(element)
 

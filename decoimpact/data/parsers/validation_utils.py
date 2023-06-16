@@ -5,9 +5,6 @@ Module for Validation functions
 from typing import List
 from datetime import datetime
 
-from jsonschema import ValidationError
-
-
 def validate_all_instances_number(data: List, name: str):
     """Check if all instances in a list are of type int or float
 
@@ -46,19 +43,19 @@ def validate_type_date(data: List[str], name: str):
         a date in the proper format.
     """
 
-    for (index, m) in enumerate(data):
+    for (index, date_string) in enumerate(data):
         try:
-            datetime.strptime(m, r"%d-%m")
+            datetime.strptime(date_string, r"%d-%m")
         except TypeError:
             message = (
                 f"{name} should be a list of strings, "
-                f"received: {data}. ERROR in position {index} is type {type(m)}."
+                f"received: {data}. ERROR in position {index} is type {type(date_string)}."
             )
             raise TypeError(message)
         except ValueError:
             message = (
                 f"{name} should be a list of date strings with Format DD-MM, "
-                f"received: {data}. ERROR in position {index}, string: {m}."
+                f"received: {data}. ERROR in position {index}, string: {date_string}."
             )
             raise ValueError(message)
 
@@ -92,13 +89,15 @@ def validate_table_with_input(table, input_variable_names):
         input_variable_names (_type_): Variable input names
 
     Raises:
-        ValidationError: If there is a mismatch notify the user.
+        ValueError: If there is a mismatch notify the user.
     """
     headers = list(table.keys())
     difference = list(set(headers) - set(input_variable_names))
     if len(difference) != 1:
-        raise ValidationError(f"The headers of the table {headers} and the input "
-                              f"variables {input_variable_names} should match. "
-                              f"Mismatch: {difference}")
+        raise ValueError(
+            f"The headers of the table {headers} and the input "
+            f"variables {input_variable_names} should match. "
+            f"Mismatch: {difference}"
+        )
     if difference[0] != "output":
-        raise ValidationError("Define an output column with the header 'output'.")
+        raise ValueError("Define an output column with the header 'output'.")

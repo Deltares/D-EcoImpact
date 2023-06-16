@@ -3,7 +3,6 @@ Tests for validation utilities
 """
 
 from typing import Any, Dict, List
-from jsonschema import ValidationError
 
 import pytest
 
@@ -175,7 +174,7 @@ def test_validate_table_with_input_incorrect():
     difference = list(set(headers) - set(test_inputs))
 
     # Act
-    with pytest.raises(ValidationError) as exc_info:
+    with pytest.raises(ValueError) as exc_info:
         validate_table_with_input(test_table, test_inputs)
 
     exception_raised = exc_info.value
@@ -200,7 +199,7 @@ def test_validate_table_with_input_incorrect_output():
     test_inputs: List[str] = ["a", "b"]
 
     # Act
-    with pytest.raises(ValidationError) as exc_info:
+    with pytest.raises(ValueError) as exc_info:
         validate_table_with_input(test_table, test_inputs)
 
     exception_raised = exc_info.value

@@ -70,24 +70,23 @@ def type_of_classification(class_val) -> str:
 
     if type(class_val) == int or type(class_val) == float:
         return "number"
-    elif type(class_val) == str:
+    if type(class_val) == str:
         class_val = class_val.strip()
-        if class_val == "-" or class_val == "":
+        if class_val in ("-", ""):
             return "NA"
-        elif ":" in class_val:
+        if ":" in class_val:
             str_range_to_list(class_val)
             return "range"
-        elif ">" in class_val:
+        if ">" in class_val:
             read_str_comparison(class_val, ">")
             return "larger"
-        elif "<" in class_val:
+        if "<" in class_val:
             read_str_comparison(class_val, "<")
             return "smaller"
-        else:
-            try:
-                float(class_val)
-                return "number"
-            except ValueError:
-                raise ValueError(f"No valid criteria is given: {class_val}")
+        try:
+            float(class_val)
+            return "number"
+        except ValueError:
+            raise ValueError(f"No valid criteria is given: {class_val}")
 
     raise ValueError(f"No valid criteria is given: {class_val}")
