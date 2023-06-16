@@ -39,11 +39,17 @@ def read_str_comparison(compare_str: str, operator: str):
     """
     compare_str = compare_str.strip()
     try:
-        compare_val = compare_str.split(operator)[-1]
-        print(compare_val)
+        compare_list = compare_str.split(operator)
+        if (len(compare_list) != 2):
+            raise IndexError(
+                f'Input "{compare_str}" is not a valid comparison with operator: {operator}'
+            )
+        compare_val = compare_list[1]
         return float(compare_val)
     except ValueError:
-        raise ValueError(f'Input "{compare_str}" is not a valid comparison with either > or <')
+        raise ValueError(
+            f'Input "{compare_str}" is not a valid comparison with operator: {operator}'
+        )
 
 
 def type_of_classification(class_val) -> str:
