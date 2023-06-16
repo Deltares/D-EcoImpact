@@ -88,8 +88,9 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
                     comparison_val = read_str_comparison(criteria, "<")
                     comparison = (data < float(comparison_val))
 
+                # Criteria_comparison == 1 -> to check where the value is True
                 criteria_comparison = _xr.where(
-                    comparison & (criteria_comparison == True),
+                    comparison & (criteria_comparison == 1),
                     True,
                     False
                 )
@@ -100,5 +101,5 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
                 default_val = result_array
 
             result_array = _xr.where(criteria_comparison, out, default_val)
-
+            print(result_array)
         return result_array
