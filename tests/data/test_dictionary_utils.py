@@ -86,7 +86,7 @@ def test_table_without_values():
         == "Define a correct table with the headers in the first row and values in \
             the others."
     )
-    
+
 
 def test_incorrect_table_shape():
     """Test if incorrect table shape raises an error"""
