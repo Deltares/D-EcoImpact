@@ -101,5 +101,4 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
                 default_val = result_array
 
             result_array = _xr.where(criteria_comparison, out, default_val)
-            print(result_array)
         return result_array
