@@ -82,11 +82,20 @@ The output of the following functionalities have been shown for a section of the
 
 ### Multiply rule
 ```
-#FORMAT : to-be filled  
 - multiply_rule:
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
       multipliers: [<value_to_multiply_with>]
+      input_variable: <one_input_variable_name>
+      output_variable: <one_output_variable_name>
+
+- multiply_rule:
+      name: <name_of_rule_in_text>
+      description: <description_of_rule_in_text>
+      multipliers_table:
+            - ["start_date", "end_date", "multipliers"]
+            - [<DD-MM>, <DD-MM>, [<value_to_multiply_with>]]
+            - [<DD-MM>, <DD-MM>, [<value_to_multiply_with>]]
       input_variable: <one_input_variable_name>
       output_variable: <one_output_variable_name>
 ```
@@ -101,6 +110,16 @@ The multiply rule allows for multiplication of variables. This could be used for
       multipliers: [0.0018066, 1e5]
       input_variable: salinity
       output_variable: chloride
+
+- multiply_rule:
+      name: Multiply salinity to chloride
+      description: Converts salinity to chloride
+      multipliers_table:
+            - ["start_date", "end_date", "multipliers"]
+            - ["01-01", "15-07", [1, 100]]
+            - ["16-07", "31-12", [0]]
+      input_variable:  mesh2d_sa1
+      output_variable: chloride2
 
 ```
 

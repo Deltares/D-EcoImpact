@@ -17,12 +17,12 @@ class IResponseCurveRuleData(IRuleData, ABC):
     @abstractmethod
     def input_variable(self) -> str:
         """Property for the input variable"""
-    
+
     @property
     @abstractmethod
     def input_values(self) -> List[float]:
         """Property for the input values"""
-    
+
     @property
     @abstractmethod
     def output_values(self) -> List[float]:
