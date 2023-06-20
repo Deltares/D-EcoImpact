@@ -10,14 +10,13 @@ from typing import Dict, List
 import xarray as _xr
 
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
-    IMultiArrayBasedRule
+    IMultiArrayBasedRule,
 )
-
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.business.entities.rules.string_parser_utils import (
     read_str_comparison,
     str_range_to_list,
-    type_of_classification
+    type_of_classification,
 )
 from decoimpact.crosscutting.i_logger import ILogger
 
@@ -78,7 +77,7 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
 
                 elif criteria_class == "range":
                     begin, end = str_range_to_list(criteria)
-                    comparison = (data > begin) & (data < end)
+                    comparison = (data >= begin) & (data <= end)
 
                 elif criteria_class == "larger":
                     comparison_val = read_str_comparison(criteria, ">")
