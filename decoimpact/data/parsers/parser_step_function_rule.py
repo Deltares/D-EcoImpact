@@ -37,7 +37,7 @@ class ParserStepFunctionRule(IParserRuleBase):
         responses = limit_response_table["response"]
 
         output_variable_name: str = get_dict_element("output_variable", dictionary)
-        rule_description: str = get_dict_element("description", dictionary, False)
+        description: str = get_dict_element("description", dictionary, False)
 
         if not all(a < b for a, b in zip(limits, limits[1:])):
             logger.log_warning(
@@ -53,8 +53,8 @@ class ParserStepFunctionRule(IParserRuleBase):
             limits,
             responses,
             input_variable_name,
-            description=rule_description,
-            output_variable=output_variable_name,
+            description,
+            output_variable_name,
         )
 
     def _are_sorted(self, list_numbers: List[float]):
