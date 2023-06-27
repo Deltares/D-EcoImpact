@@ -15,3 +15,4 @@ class TimeOperationType(IntEnum):
     MAX = 3
     AVERAGE = 4
     MEDIAN = 5
+    COUNT_PERIODS = 6
