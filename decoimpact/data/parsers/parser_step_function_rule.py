@@ -7,7 +7,7 @@ from typing import Any, List
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
-from decoimpact.data.dictionary_utils import get_dict_element
+from decoimpact.data.dictionary_utils import convert_table_element, get_dict_element
 from decoimpact.data.entities.step_function_data import StepFunctionRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
@@ -31,8 +31,11 @@ class ParserStepFunctionRule(IParserRuleBase):
         """
         name: str = get_dict_element("name", dictionary)
         input_variable_name: str = get_dict_element("input_variable", dictionary)
-        limits: List[float] = get_dict_element("limits", dictionary)
-        responses: List[float] = get_dict_element("responses", dictionary)
+        criteria_table_list = get_dict_element("criteria_table", dictionary)
+        criteria_table = convert_table_element(criteria_table_list)
+        limits = criteria_table["limit"]
+        responses = criteria_table["response"]
+
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         rule_description: str = get_dict_element("description", dictionary, False)
 
