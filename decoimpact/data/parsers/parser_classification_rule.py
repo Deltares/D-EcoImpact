@@ -37,7 +37,6 @@ class ParserClassificationRule(IParserRuleBase):
         criteria_table = convert_table_element(criteria_table_list)
 
         validate_table_with_input(criteria_table, input_variable_names)
-        # validate_table_value_formats()
 
         output_variable_name = get_dict_element("output_variable", dictionary)
         description = get_dict_element("description", dictionary)
@@ -47,5 +46,5 @@ class ParserClassificationRule(IParserRuleBase):
             input_variable_names,
             criteria_table,
             output_variable_name,
-            description
+            description,
         )

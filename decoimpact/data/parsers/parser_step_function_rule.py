@@ -31,10 +31,10 @@ class ParserStepFunctionRule(IParserRuleBase):
         """
         name: str = get_dict_element("name", dictionary)
         input_variable_name: str = get_dict_element("input_variable", dictionary)
-        criteria_table_list = get_dict_element("criteria_table", dictionary)
-        criteria_table = convert_table_element(criteria_table_list)
-        limits = criteria_table["limit"]
-        responses = criteria_table["response"]
+        limit_response_table_list = get_dict_element("limit_response_table", dictionary)
+        limit_response_table = convert_table_element(limit_response_table_list)
+        limits = limit_response_table["limit"]
+        responses = limit_response_table["response"]
 
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         rule_description: str = get_dict_element("description", dictionary, False)
