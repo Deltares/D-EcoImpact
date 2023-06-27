@@ -30,8 +30,11 @@ contents: dict[str, Any] = dict(
                 "step_function_rule": {
                     "name": "test_name_step_function_rule",
                     "description": "test_sfr_description",
-                    "limits": [1, 2.0],
-                    "responses": [10, 20],
+                    "limit_response_table": [
+                        ["limit", "response"],
+                        [1, 10],
+                        [2.0, 20],
+                    ],
                     "input_variable": "test_in_sfr",
                     "output_variable": "test_out_sfr",
                 }
