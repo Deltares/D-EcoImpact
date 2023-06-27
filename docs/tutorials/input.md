@@ -207,12 +207,12 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
 ```
 #EXAMPLE  : Salinity classes.
     - step_function_rule:
-      name: Classify salinity
-      description: Make distinction between 0.0 – 0.5 , 0.5 – 1.2, 1.2 – 1.3 and >1.3 psu
-      limits:    [  -999.0, 0.0,  0.5, 1.2, 1.3,   999.0]
-      responses: [     0.0, 1.0,  2.0, 3.0, 4.0,     4.0]
-      input_variable: salinity      
-      output_variable: salinity_class
+        name: Classify salinity
+        description: Make distinction between 0.0 – 0.5 , 0.5 – 1.2, 1.2 – 1.3 and >1.3 psu
+        limits:    [  -999.0, 0.0,  0.5, 1.2, 1.3,   999.0]
+        responses: [     0.0, 1.0,  2.0, 3.0, 4.0,     4.0]
+        input_variable: salinity      
+        output_variable: salinity_class
 
 ```
 
