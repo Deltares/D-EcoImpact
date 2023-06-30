@@ -193,8 +193,10 @@ FORMAT
 - step_function_rule::
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
-      limits: [<list_with_the_limit_values>]
-      responses: [<list_with_the_response_values>]
+      limit_response_table:
+            - [ "limit", "response"]
+            - [<limit_value>, <response_value>]
+            - [<limit_value>, <response_value>]
       input_variable: <one_input_variable_name>
       output_variable: <one_output_variable_name>
 ```
@@ -209,8 +211,14 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
     - step_function_rule:
       name: Classify salinity
       description: Make distinction between 0.0 – 0.5 , 0.5 – 1.2, 1.2 – 1.3 and >1.3 psu
-      limits:    [  -999.0, 0.0,  0.5, 1.2, 1.3,   999.0]
-      responses: [     0.0, 1.0,  2.0, 3.0, 4.0,     4.0]
+      limit_response_table:
+            - [ limit, response]
+            - [-999.0 , 0.0 ]
+            - [   0.0 , 1.0 ]
+            - [   0.5 , 2.0 ]
+            - [   1.2 , 3.0 ]
+            - [   1.3 , 4.0 ]
+            - [ 999.0 , 4.0 ]
       input_variable: salinity      
       output_variable: salinity_class
 
@@ -224,8 +232,12 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
       name: Check water level policy
       description: Check if water level is within -0.10 (minimum) and +0.15 (maximum) m NAP
       description: Get boundaries water level
-      limits:    [ -999.0, -0.10, 0.15, 999.0]
-      responses: [    0.0,   1.0,  0.0,   0.0]
+      limit_response_table:
+            - [ limit, response]
+            - [-999.0  , 0.0 ]
+            - [  -0.10 , 1.0 ]
+            - [   0.15 , 0.0 ]
+            - [ 999.0  , 0.0 ]
       input_variable: water_level
       output_variable : water_level_policy
 ```
