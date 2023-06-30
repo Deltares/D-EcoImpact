@@ -231,7 +231,6 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
   - step_function_rule:
       name: Check water level policy
       description: Check if water level is within -0.10 (minimum) and +0.15 (maximum) m NAP
-      description: Get boundaries water level
       limit_response_table:
             - [ limit, response]
             - [-999.0  , 0.0 ]
