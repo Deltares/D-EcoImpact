@@ -8,17 +8,23 @@ Classes:
 from itertools import groupby
 from typing import List
 
+import numpy as np
 import xarray as _xr
 from xarray.core.resample import DataArrayResample
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
+from decoimpact.business.entities.rules.test import count_changes
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.dictionary_utils import get_dict_element
 
-# from xarray.dataset import from_dataframe
-
+# TODO: de count-groups-function moet wel rekening houden met de tijd-dimensie en de tijdseenheid (jaar)
+# TODO: de count-groups-function hoeft niet de volledige datarray te retourneren, maar alleen het resultaat per jaar
+# TODO: de count-groups-function moet de input (dry) wel gebruiken (alleen daarover groeperen)
+# TODO: het resultaat van de count-groups-function moet in de output-variable komen
+# TODO: in de unit test is geen rekening gehouden met doorgeven van de input en retourneren van de output-var
+# TODO: in de unit test is de input 'data', maar de input moet o.b.v. (bijv) dim 'dry' zijn
 
 
 class TimeConditionRule(RuleBase, IArrayBasedRule):
@@ -90,18 +96,12 @@ class TimeConditionRule(RuleBase, IArrayBasedRule):
             DataArray: Aggregated values
         """
 
-        # TODO: time aggregation eruit halen: enkel de count_periods toepassen
         dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
 
         time_dim_name = self._get_time_dimension_name(value_array, logger)
-        av = value_array.resample({time_dim_name: dim_name})
-        # aggregated_values = _xr.DataArray(av)
-        # aggregated_values = _xr.DataArray(av, value_array.dims, value_array.coords)
-        # values_per_time_scale = value_array.groupby({time_dim_name: dim_name})
-        aggregated_values = self.to_data_array(av)
+        aggregated_values = value_array.resample({time_dim_name: dim_name})
 
         result = self._perform_operation(aggregated_values)
-        # result = self._perform_operation(av)
         # create a new aggregated time dimension based on original time dimension
 
         result_time_dim_name = f"{time_dim_name}_{self._time_scale}"
@@ -119,9 +119,13 @@ class TimeConditionRule(RuleBase, IArrayBasedRule):
 
         return result
 
-    def count_groups(self, array: _xr.DataArray, group_value=1):
-        groups = groupby(array)
-        return sum(1 for key, group in groups if key == group_value)
+    def count_changes(self, x, axis, **kwargs):
+        """use this in the reduce method to count changes from 0 to 1"""
+
+        # TODO: enkel overgangen van 0 naar 1 tellen (rekening houdend met begin en eind)
+        new_var = np.where(np.roll(x, 1) != x)
+        detected_changes = new_var[0]
+        return len(detected_changes)
 
     def _perform_operation(self, aggregated_values: _xr.DataArray) -> _xr.DataArray:
         """Returns the values based on the operation type
@@ -137,7 +141,8 @@ class TimeConditionRule(RuleBase, IArrayBasedRule):
         """
         result = None
         if self._operation_type is TimeOperationType.COUNT_PERIODS:
-            result = self.count_groups(aggregated_values)
+            # result = self.count_groups(aggregated_values)
+            result = aggregated_values.reduce(self.count_changes)
 
         # if self._operation_type is TimeOperationType.MIN:
         #     result = aggregated_values.min()
