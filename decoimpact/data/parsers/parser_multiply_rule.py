@@ -59,5 +59,5 @@ class ParserMultiplyRule(IParserRuleBase):
             multipliers,
             input_variable_name,
             output_variable_name,
-            date_range=date_range
+            date_range
         )
