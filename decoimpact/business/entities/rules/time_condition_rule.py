@@ -20,13 +20,6 @@ from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.dictionary_utils import get_dict_element
 
-# TODO: de count-groups-function moet wel rekening houden met de tijd-dimensie en de tijdseenheid (jaar)
-# TODO: de count-groups-function hoeft niet de volledige datarray te retourneren, maar alleen het resultaat per jaar
-# TODO: de count-groups-function moet de input (dry) wel gebruiken (alleen daarover groeperen)
-# TODO: het resultaat van de count-groups-function moet in de output-variable komen
-# TODO: in de unit test is geen rekening gehouden met doorgeven van de input en retourneren van de output-var
-# TODO: in de unit test is de input 'data', maar de input moet o.b.v. (bijv) dim 'dry' zijn
-
 
 class TimeConditionRule(RuleBase, IArrayBasedRule):
     """Implementation for the time aggregation rule"""
@@ -81,13 +74,8 @@ class TimeConditionRule(RuleBase, IArrayBasedRule):
 
         return valid
 
-    def to_data_array(self, aggregated_values: DataArrayResample) -> _xr.DataArray:
-        result = aggregated_values
-        return _xr.DataArray(result)
-
-
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
-        """Count number of periods 
+        """Count number of periods
 
         Args:
             value_array (DataArray): value to aggregate
@@ -97,9 +85,8 @@ class TimeConditionRule(RuleBase, IArrayBasedRule):
         """
 
         dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
-
         time_dim_name = self._get_time_dimension_name(value_array, logger)
-        aggregated_values = value_array.resample({time_dim_name: dim_name}) # type: ignore
+        aggregated_values = value_array.resample({time_dim_name: dim_name})  # type: ignore
 
         result = self._perform_operation(aggregated_values)
         # create a new aggregated time dimension based on original time dimension
@@ -119,16 +106,16 @@ class TimeConditionRule(RuleBase, IArrayBasedRule):
 
         return result
 
-    def count_changes(self, x, axis, **kwargs):
+    def count_periods(self, elem, axis, **kwargs):
         """use this in the reduce method to count changes from 0 to 1"""
 
-        # TODO: enkel overgangen van 0 naar 1 tellen
+        # TODO: enkel overgangen van 0/niks naar 1 tellen
         # TODO: rekening houdend met begin en eind
-        new_var = np.where(np.roll(x, 1) != x)
+        new_var = np.where(np.roll(elem, 1) != elem)
         detected_changes = new_var[0]
         return len(detected_changes)
 
-    def _perform_operation(self, aggregated_values: _xr.DataArray) -> _xr.DataArray:
+    def _perform_operation(self, aggregated_values: DataArrayResample) -> _xr.DataArray:
         """Returns the values based on the operation type
 
         Args:
@@ -142,20 +129,7 @@ class TimeConditionRule(RuleBase, IArrayBasedRule):
         """
         result = None
         if self._operation_type is TimeOperationType.COUNT_PERIODS:
-            # result = self.count_groups(aggregated_values)
-            result = aggregated_values.reduce(self.count_changes)
-
-        # if self._operation_type is TimeOperationType.MIN:
-        #     result = aggregated_values.min()
-
-        # if self._operation_type is TimeOperationType.MAX:
-        #     result = aggregated_values.max()
-
-        # if self._operation_type is TimeOperationType.AVERAGE:
-        #     result = aggregated_values.mean()
-
-        # if self._operation_type is TimeOperationType.MEDIAN:
-        #     result = aggregated_values.median()
+            result = aggregated_values.reduce(self.count_periods)
 
         if result is None:
             raise NotImplementedError(
