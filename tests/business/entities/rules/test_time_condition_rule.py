@@ -2,7 +2,8 @@
 Tests for time condition rule
 """
 import numpy as np
-import pytest
+
+# import pytest
 import xarray as _xr
 from mock import Mock
 
@@ -39,7 +40,7 @@ td_time = [
 ]
 td_time = [np.datetime64(t) for t in td_time]
 # value_array_yearly = _xr.DataArray(data_yearly, coords=[time_yearly], dims=["time"])
-ds = _xr.Dataset(
+test_data_yearly = _xr.Dataset(
     {'water_level': ('time', td_water_level),
      'dry': ('time', td_dry)
      }, coords={
@@ -90,10 +91,6 @@ def test_create_time_condition_rule_should_set_defaults():
 #     expected_message = "No time dimension found for test_with_error"
 #     assert exception_raised.args[0] == expected_message
 
-# def test_execute_count_groups():
-    """test function count_groups"""
-    
-
 
 def test_execute_value_array_condition_time_yearly_count_periods():
     """condition input_variable_names of a TimeConditionRule (min, yearly)"""
@@ -102,14 +99,13 @@ def test_execute_value_array_condition_time_yearly_count_periods():
     logger = Mock(ILogger)
     rule = TimeConditionRule(
         name="test",
-        operation_type='COUNT_PERIODS',
         input_variable_names=["dry"],
         output_variable_name='number_of_dry_periods',
         operation_type=TimeOperationType.COUNT_PERIODS
     )
 
-    assert isinstance(rule, TimeConditionRule())
-    time_condition = rule.execute(value_array_yearly, logger)
+    assert isinstance(rule, TimeConditionRule)
+    time_condition = rule.execute(test_data_yearly['dry'], logger)
 
     result_data = [2.0, 0.0]
     result_array = _xr.DataArray(

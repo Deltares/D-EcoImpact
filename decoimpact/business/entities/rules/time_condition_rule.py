@@ -5,7 +5,7 @@ Classes:
     TimeConditionRule
 """
 
-from itertools import groupby
+# from itertools import groupby
 from typing import List
 
 import numpy as np
@@ -14,7 +14,8 @@ from xarray.core.resample import DataArrayResample
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
-from decoimpact.business.entities.rules.test import count_changes
+
+# from decoimpact.business.entities.rules.test import count_changes
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.dictionary_utils import get_dict_element
@@ -86,7 +87,6 @@ class TimeConditionRule(RuleBase, IArrayBasedRule):
 
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
-
         """Count number of periods 
 
         Args:
@@ -99,7 +99,7 @@ class TimeConditionRule(RuleBase, IArrayBasedRule):
         dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
 
         time_dim_name = self._get_time_dimension_name(value_array, logger)
-        aggregated_values = value_array.resample({time_dim_name: dim_name})
+        aggregated_values = value_array.resample({time_dim_name: dim_name}) # type: ignore
 
         result = self._perform_operation(aggregated_values)
         # create a new aggregated time dimension based on original time dimension
@@ -122,7 +122,8 @@ class TimeConditionRule(RuleBase, IArrayBasedRule):
     def count_changes(self, x, axis, **kwargs):
         """use this in the reduce method to count changes from 0 to 1"""
 
-        # TODO: enkel overgangen van 0 naar 1 tellen (rekening houdend met begin en eind)
+        # TODO: enkel overgangen van 0 naar 1 tellen
+        # TODO: rekening houdend met begin en eind
         new_var = np.where(np.roll(x, 1) != x)
         detected_changes = new_var[0]
         return len(detected_changes)
