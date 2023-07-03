@@ -109,11 +109,14 @@ class TimeConditionRule(RuleBase, IArrayBasedRule):
     def count_periods(self, elem, axis, **kwargs):
         """use this in the reduce method to count changes from 0 to 1"""
 
-        # TODO: enkel overgangen van 0/niks naar 1 tellen
-        # TODO: rekening houdend met begin en eind
-        new_var = np.where(np.roll(elem, 1) != elem)
-        detected_changes = new_var[0]
-        return len(detected_changes)
+        # Split the array at indices where consecutive values change
+        split_indices = np.where(elem[:-1] != elem[1:])[0] + 1
+        groups = np.split(elem, split_indices)
+        
+        # Count the number of groups with occurrences of the value
+        group_value = 1
+        group_count = sum(np.any(group == group_value) for group in groups)
+        return group_count
 
     def _perform_operation(self, aggregated_values: DataArrayResample) -> _xr.DataArray:
         """Returns the values based on the operation type

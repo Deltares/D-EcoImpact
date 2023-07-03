@@ -101,11 +101,11 @@ def test_count_periods_function():
     result = input_array.resample(time="Y").reduce(rule.count_periods)
     
     # expected results
-    expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-01-01"]
+    expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
     expected_result_time = [np.datetime64(t) for t in expected_result_time]
     expected_result_data = [2, 2, 2, 2]
     expected_result = _xr.DataArray(
-        expected_result_data, coords=[expected_result_time], dims=["time_year"]
+        expected_result_data, coords=[expected_result_time], dims=["time"]
     )
     
     assert _xr.testing.assert_equal(expected_result, result) is None
