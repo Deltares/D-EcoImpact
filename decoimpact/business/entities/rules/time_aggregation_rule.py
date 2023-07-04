@@ -104,7 +104,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         result[result_time_dim_name].attrs['standard_name'] = result_time_dim_name
 
         return result
-    
+
     def _perform_operation(self, aggregated_values: DataArrayResample) -> _xr.DataArray:
         """Returns the values based on the operation type
 
@@ -132,11 +132,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         if self._operation_type is TimeOperationType.MEDIAN:
             result = aggregated_values.median()
-
-        # if self._operation_type is TimeOperationType.COUNT_PERIODS:
-        #     # result = self.count_groups(aggregated_values)
-        #     av = _xr.DataArray(aggregated_values)
-        #     result = self.count_groups(av)
 
         if result is None:
             raise NotImplementedError(

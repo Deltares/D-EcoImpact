@@ -1,8 +1,6 @@
 """
 Tests for time condition rule
 """
-import datetime
-
 import numpy as np
 import pytest
 import xarray as _xr
@@ -81,6 +79,7 @@ def test_time_condition_rule_without_time_dimension():
     expected_message = "No time dimension found for test_with_error"
     assert exception_raised.args[0] == expected_message
 
+
 def test_count_periods_function():
     """test function to count periods with simple example"""
     rule = TimeConditionRule(
@@ -88,18 +87,18 @@ def test_count_periods_function():
         input_variable_names=["foo"],
         operation_type=TimeOperationType.COUNT_PERIODS,
     )
-    td_data = [0, 1, 0, 1, 1,
-               1, 0, 1, 1, 0,
-               1, 0, 1, 1, 1,
-               1, 1, 1, 0, 1]
-    td_time = ['2000-01-01', '2000-01-02', '2000-01-03', '2000-01-04', '2000-01-05',
-               '2001-01-01', '2001-01-02', '2001-01-03', '2001-01-04', '2001-01-05',
-               '2002-01-01', '2002-01-02', '2002-01-03', '2002-01-04', '2002-01-05',
-               '2003-01-01', '2003-01-02', '2003-01-03', '2003-01-04', '2003-01-05']
-    td_time = [np.datetime64(t) for t in td_time]
-    input_array = _xr.DataArray(td_data, coords=[td_time], dims=["time"])
+    t_data = [0, 1, 0, 1, 1,
+              1, 0, 1, 1, 0,
+              1, 0, 1, 1, 1,
+              1, 1, 1, 0, 1]
+    t_time = ['2000-01-01', '2000-01-02', '2000-01-03', '2000-01-04', '2000-01-05',
+              '2001-01-01', '2001-01-02', '2001-01-03', '2001-01-04', '2001-01-05',
+              '2002-01-01', '2002-01-02', '2002-01-03', '2002-01-04', '2002-01-05',
+              '2003-01-01', '2003-01-02', '2003-01-03', '2003-01-04', '2003-01-05']
+    t_time = [np.datetime64(t) for t in t_time]
+    input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
     result = input_array.resample(time="Y").reduce(rule.count_periods)
-    
+
     # expected results
     expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
     expected_result_time = [np.datetime64(t) for t in expected_result_time]
@@ -107,8 +106,9 @@ def test_count_periods_function():
     expected_result = _xr.DataArray(
         expected_result_data, coords=[expected_result_time], dims=["time"]
     )
-    
+
     assert _xr.testing.assert_equal(expected_result, result) is None
+
 
 def test_execute_value_array_condition_time_yearly_count_periods():
     """condition input_variable_names of a TimeConditionRule (min, yearly)"""
