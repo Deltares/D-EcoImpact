@@ -86,9 +86,9 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
 
         time_dim_name = self._get_time_dimension_name(value_array, logger)
-        aggregated_values = value_array.resample({time_dim_name: dim_name})
+        aggr_values = value_array.resample({time_dim_name: dim_name})  # type: ignore
 
-        result = self._perform_operation(aggregated_values)
+        result = self._perform_operation(aggr_values)
         # create a new aggregated time dimension based on original time dimension
 
         result_time_dim_name = f"{time_dim_name}_{self._time_scale}"
