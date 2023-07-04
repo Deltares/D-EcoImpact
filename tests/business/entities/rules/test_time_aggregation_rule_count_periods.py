@@ -1,14 +1,31 @@
 """
-Tests for time condition rule
+Tests for time aggregation rule
 """
 import numpy as np
 import pytest
 import xarray as _xr
 from mock import Mock
 
-from decoimpact.business.entities.rules.time_condition_rule import TimeConditionRule
+from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.time_operation_type import TimeOperationType
+
+
+def test_create_time_aggregation_rule_should_set_defaults():
+    """Test creating a time aggregation rule with defaults"""
+
+    # Arrange & Act
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
+    )
+
+    # Assert
+    assert rule.name == "test"
+    assert rule.description == ""
+    assert isinstance(rule, TimeAggregationRule)
+
 
 ################################################################
 # test data yearly:
@@ -40,27 +57,11 @@ result_data_yearly = [2.0, 0.0, 1.0]
 ################################################################
 
 
-def test_create_time_condition_rule_should_set_defaults():
-    """Test creating a time condition rule with defaults"""
-
-    # Arrange & Act
-    rule = TimeConditionRule(
-        name="test",
-        input_variable_names=["foo"],
-        operation_type=TimeOperationType.COUNT_PERIODS,
-    )
-
-    # Assert
-    assert rule.name == "test"
-    assert rule.description == ""
-    assert isinstance(rule, TimeConditionRule)
-
-
-def test_time_condition_rule_without_time_dimension():
-    """TimeConditionRule should give an error when no time dim is defined"""
+def test_time_aggregation_rule_without_time_dimension():
+    """TimeAggregationRule should give an error when no time dim is defined"""
     # create test set
     logger = Mock(ILogger)
-    rule = TimeConditionRule(
+    rule = TimeAggregationRule(
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.ADD,
@@ -82,7 +83,7 @@ def test_time_condition_rule_without_time_dimension():
 
 def test_count_periods_function():
     """test function to count periods with simple example"""
-    rule = TimeConditionRule(
+    rule = TimeAggregationRule(
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.COUNT_PERIODS,
@@ -111,18 +112,18 @@ def test_count_periods_function():
 
 
 def test_execute_value_array_condition_time_yearly_count_periods():
-    """condition input_variable_names of a TimeConditionRule (min, yearly)"""
+    """condition input_variable_names of a TimeAggregationRule (min, yearly)"""
 
     # create test set
     logger = Mock(ILogger)
-    rule = TimeConditionRule(
+    rule = TimeAggregationRule(
         name="test",
         input_variable_names=["dry"],
         operation_type=TimeOperationType.COUNT_PERIODS,
         output_variable_name='number_of_dry_periods'
         )
 
-    assert isinstance(rule, TimeConditionRule)
+    assert isinstance(rule, TimeAggregationRule)
     time_condition = rule.execute(test_array_yearly, logger)
 
     result_array = _xr.DataArray(
@@ -155,11 +156,11 @@ result_time_monthly = [np.datetime64(t) for t in result_time_monthly]
 
 
 def test_execute_value_array_condition_time_monthly_count_periods():
-    """condition input_variable_names of a TimeConditionRule (count_periods, monthly)"""
+    """condition input_variable_names of a TimeAggregationRule (count_periods, monthly)"""
 
     # create test set
     logger = Mock(ILogger)
-    rule = TimeConditionRule(
+    rule = TimeAggregationRule(
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.COUNT_PERIODS,
