@@ -17,8 +17,11 @@ def _get_example_step_function_dict():
         {
             "name": "Apply chloride policy",
             "description": "this rules indicates whether the chloride policy should be applied (1.0) or not (0.0) depending on the chloride concentration.",
-            "limits": [1.0, 450],
-            "responses": [1.0, 0.0],
+            "limit_response_table": [
+                ["limit", "response"],
+                [1.0, 1.0],
+                [450, 0.0],
+            ],
             "input_variable": "chloride_top_layer",
             "output_variable": "response_chloride_top_layer",
         }
@@ -34,8 +37,13 @@ def test_parser_step_function_rule_correct_input():
         {
             "name": "Test name",
             "description": "Test description",
-            "limits": [0.0, 1.0, 2.0, 10.0],
-            "responses": [10.0, 20.0, 30.0, 40.0],
+            "limit_response_table": [
+                ["limit", "response"],
+                [0.0, 10.0],
+                [1.0, 20.0],
+                [2.0, 30.0],
+                [10.0, 40.0],
+            ],
             "input_variable": "test input variable name",
             "output_variable": "test output variable name",
         }
@@ -60,7 +68,7 @@ def test_parser_step_function_rule_correct_input():
 
 @pytest.mark.parametrize(
     "argument_to_remove",
-    ["name", "responses", "limits", "input_variable", "output_variable"],
+    ["name", "limit_response_table", "input_variable", "output_variable"],
 )
 def test_parser_step_function_rule_missing_argument(argument_to_remove: str):
     """If an argument is missing, the ParserStepFunctionRule
@@ -90,19 +98,19 @@ def test_parser_does_not_change_ordered__limits():
         {
             "name": "Test name",
             "description": "Test description",
-            "limits": [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0],
-            "responses": [
-                0.0,
-                10.0,
-                20.0,
-                30.0,
-                40.0,
-                50.0,
-                60.0,
-                70.0,
-                80.0,
-                90.0,
-                100.0,
+            "limit_response_table": [
+                ["limit", "response"],
+                [0.0, 0.0],
+                [1.0, 10.0],
+                [2.0, 20.0],
+                [3.0, 30.0],
+                [4.0, 40.0],
+                [5.0, 50.0],
+                [6.0, 60.0],
+                [7.0, 70.0],
+                [8.0, 80.0],
+                [9.0, 90.0],
+                [10.0, 100.0],
             ],
             "input_variable": "test input variable name",
             "output_variable": "test output variable name",
@@ -127,19 +135,19 @@ def test_parser_sorts_unordered_limits():
         {
             "name": "Test name",
             "description": "Test description",
-            "limits": [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0],
-            "responses": [
-                0.0,
-                10.0,
-                20.0,
-                30.0,
-                40.0,
-                50.0,
-                60.0,
-                70.0,
-                80.0,
-                90.0,
-                100.0,
+            "limit_response_table": [
+                ["limit", "response"],
+                [0.0, 0.0],
+                [1.0, 10.0],
+                [2.0, 20.0],
+                [3.0, 30.0],
+                [4.0, 40.0],
+                [5.0, 50.0],
+                [6.0, 60.0],
+                [7.0, 70.0],
+                [8.0, 80.0],
+                [9.0, 90.0],
+                [10.0, 100.0],
             ],
             "input_variable": "test input variable name",
             "output_variable": "test output variable name",
@@ -154,24 +162,24 @@ def test_parser_sorts_unordered_limits():
     original_step_function_data = parser.parse_dict(rule_dict, logger)
     dictionary_shuffled = dict(rule_dict)
 
-    # shuffle limits and responses
-    temp_limits = dictionary_shuffled["limits"]
-    temp_responses = dictionary_shuffled["responses"]
-    temp_tuple = list(zip(temp_limits, temp_responses))
-    random.shuffle(temp_tuple)
+    # shuffle limits and responses (but keep the header)
+    limit_response_table_shuffled = dictionary_shuffled["limit_response_table"][1:]
+    random.shuffle(limit_response_table_shuffled)
+    dictionary_shuffled["limit_response_table"][1:] = limit_response_table_shuffled
 
-    temp_limits, temp_responses = map(list, zip(*temp_tuple))
-    dictionary_shuffled["limits"] = temp_limits
-    dictionary_shuffled["responses"] = temp_responses
-    comparison_step_function_data = parser.parse_dict(dictionary_shuffled, logger)
+    shuffled_step_function_data = parser.parse_dict(dictionary_shuffled, logger)
+
+    # get shuffled limits and responses for comparison
+    shuffled_limits = list(list(zip(*limit_response_table_shuffled))[0])
+    shuffled_responses = list(list(zip(*limit_response_table_shuffled))[1])
 
     # Assert
     assert isinstance(original_step_function_data, StepFunctionRuleData)
-    assert isinstance(comparison_step_function_data, StepFunctionRuleData)
-    assert not original_step_function_data.limits == temp_limits
-    assert not original_step_function_data.responses == temp_responses
-    assert original_step_function_data.limits == comparison_step_function_data.limits
+    assert isinstance(shuffled_step_function_data, StepFunctionRuleData)
+    assert not original_step_function_data.limits == shuffled_limits
+    assert not original_step_function_data.responses == shuffled_responses
+    assert original_step_function_data.limits == shuffled_step_function_data.limits
     assert (
-        original_step_function_data.responses == comparison_step_function_data.responses
+        original_step_function_data.responses == shuffled_step_function_data.responses
     )
     logger.log_warning.assert_called_with(expected_log_message)

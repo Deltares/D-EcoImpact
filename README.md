@@ -21,7 +21,7 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 
 - Create `conda` environment
   ```sh
-  $ conda create -y -c conda-forge --name <env_name> poetry python=3.11
+  $ conda create -y -c conda-forge --name <env_name> python=3.11
   ```
 - Activate `conda` environment
   ```sh

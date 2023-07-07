@@ -7,7 +7,7 @@ from typing import Any, List
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
-from decoimpact.data.dictionary_utils import get_dict_element
+from decoimpact.data.dictionary_utils import convert_table_element, get_dict_element
 from decoimpact.data.entities.step_function_data import StepFunctionRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
@@ -31,10 +31,13 @@ class ParserStepFunctionRule(IParserRuleBase):
         """
         name: str = get_dict_element("name", dictionary)
         input_variable_name: str = get_dict_element("input_variable", dictionary)
-        limits: List[float] = get_dict_element("limits", dictionary)
-        responses: List[float] = get_dict_element("responses", dictionary)
+        limit_response_table_list = get_dict_element("limit_response_table", dictionary)
+        limit_response_table = convert_table_element(limit_response_table_list)
+        limits = limit_response_table["limit"]
+        responses = limit_response_table["response"]
+
         output_variable_name: str = get_dict_element("output_variable", dictionary)
-        rule_description: str = get_dict_element("description", dictionary, False)
+        description: str = get_dict_element("description", dictionary, False)
 
         if not all(a < b for a, b in zip(limits, limits[1:])):
             logger.log_warning(
@@ -50,8 +53,8 @@ class ParserStepFunctionRule(IParserRuleBase):
             limits,
             responses,
             input_variable_name,
-            description=rule_description,
-            output_variable=output_variable_name,
+            description,
+            output_variable_name,
         )
 
     def _are_sorted(self, list_numbers: List[float]):
