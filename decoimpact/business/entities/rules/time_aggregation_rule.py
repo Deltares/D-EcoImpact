@@ -146,7 +146,8 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         return _xr.DataArray(result)
 
     def count_groups(self, elem, axis, **kwargs):
-        """Count groups with value 1,  this function can be used inside xarray.DataArray.reduce()"""
+        """Count groups with value 1.
+        This function can be used inside xarray.DataArray.reduce()"""
 
         # Split the array at indices where consecutive values change
         split_indices = _np.where(elem[:-1] != elem[1:])[0] + 1
