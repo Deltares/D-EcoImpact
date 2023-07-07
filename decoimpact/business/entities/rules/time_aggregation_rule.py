@@ -8,7 +8,7 @@ Classes:
 # from itertools import groupby
 from typing import List
 
-import numpy as np
+import numpy as _np
 import xarray as _xr
 from xarray.core.resample import DataArrayResample
 
@@ -86,9 +86,9 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
 
         time_dim_name = self._get_time_dimension_name(value_array, logger)
-        aggr_values = value_array.resample({time_dim_name: dim_name})  # type: ignore
+        aggregated_values = value_array.resample({time_dim_name: dim_name})
 
-        result = self._perform_operation(aggr_values)
+        result = self._perform_operation(aggregated_values)
         # create a new aggregated time dimension based on original time dimension
 
         result_time_dim_name = f"{time_dim_name}_{self._time_scale}"
@@ -135,7 +135,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             result = aggregated_values.median()
 
         if self._operation_type is TimeOperationType.COUNT_PERIODS:
-            result = aggregated_values.reduce(self.count_periods)
+            result = aggregated_values.reduce(self.count_groups)
 
         if result is None:
             raise NotImplementedError(
@@ -145,16 +145,16 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         return _xr.DataArray(result)
 
-    def count_periods(self, elem, axis, **kwargs):
-        """use this in the reduce method to count groups with value 1"""
+    def count_groups(self, elem, axis, **kwargs):
+        """Count groups with value 1,  this function can be used inside xarray.DataArray.reduce()"""
 
         # Split the array at indices where consecutive values change
-        split_indices = np.where(elem[:-1] != elem[1:])[0] + 1
-        groups = np.split(elem, split_indices)
+        split_indices = _np.where(elem[:-1] != elem[1:])[0] + 1
+        groups = _np.split(elem, split_indices)
 
         # Count the number of groups with occurrences of the value
         group_value = 1
-        group_count = sum(np.any(group == group_value) for group in groups)
+        group_count = sum(_np.any(group == group_value) for group in groups)
         return group_count
 
     def _get_time_dimension_name(self, variable: _xr.DataArray, logger: ILogger) -> str:

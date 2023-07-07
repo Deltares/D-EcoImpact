@@ -1,7 +1,7 @@
 """
 Tests for time aggregation rule
 """
-import numpy as np
+import numpy as _np
 import pytest
 import xarray as _xr
 from mock import Mock
@@ -42,7 +42,7 @@ td_time = [
     "2022-11-11",
     "2022-12-12",
 ]
-td_time = [np.datetime64(t) for t in td_time]
+td_time = [_np.datetime64(t) for t in td_time]
 test_dataset_yearly = _xr.Dataset(
     {'water_level': ('time', td_water_level),
      'dry': ('time', td_dry)
@@ -52,7 +52,7 @@ test_dataset_yearly = _xr.Dataset(
 )
 test_array_yearly = test_dataset_yearly['dry']
 result_time_yearly = ["2020-12-31", "2021-12-31", "2022-12-31"]
-result_time_yearly = [np.datetime64(t) for t in result_time_yearly]
+result_time_yearly = [_np.datetime64(t) for t in result_time_yearly]
 result_data_yearly = [2.0, 0.0, 1.0]
 ################################################################
 
@@ -96,13 +96,13 @@ def test_count_periods_function():
               '2001-01-01', '2001-01-02', '2001-01-03', '2001-01-04', '2001-01-05',
               '2002-01-01', '2002-01-02', '2002-01-03', '2002-01-04', '2002-01-05',
               '2003-01-01', '2003-01-02', '2003-01-03', '2003-01-04', '2003-01-05']
-    t_time = [np.datetime64(t) for t in t_time]
+    t_time = [_np.datetime64(t) for t in t_time]
     input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
-    result = input_array.resample(time="Y").reduce(rule.count_periods)
+    result = input_array.resample(time="Y").reduce(rule.count_groups)
 
     # expected results
     expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
-    expected_result_time = [np.datetime64(t) for t in expected_result_time]
+    expected_result_time = [_np.datetime64(t) for t in expected_result_time]
     expected_result_data = [2, 2, 2, 2]
     expected_result = _xr.DataArray(
         expected_result_data, coords=[expected_result_time], dims=["time"]
@@ -144,14 +144,14 @@ time_monthly = [
     "2020-03-04",
     "2020-03-10",
 ]
-time_monthly = [np.datetime64(t) for t in time_monthly]
+time_monthly = [_np.datetime64(t) for t in time_monthly]
 value_array_monthly = _xr.DataArray(data_monthly, coords=[time_monthly], dims=["time"])
 result_time_monthly = [
     "2020-01-31",
     "2020-02-29",
     "2020-03-31",
 ]
-result_time_monthly = [np.datetime64(t) for t in result_time_monthly]
+result_time_monthly = [_np.datetime64(t) for t in result_time_monthly]
 ####################################################################
 
 
@@ -175,6 +175,4 @@ def test_execute_value_array_condition_time_monthly_count_periods():
     )
 
     # Assert
-    assert (
-        _xr.testing.assert_allclose(time_condition, result_array, atol=1e-11) is None
-    )
+    assert _xr.testing.assert_equal(time_condition, result_array) is None
