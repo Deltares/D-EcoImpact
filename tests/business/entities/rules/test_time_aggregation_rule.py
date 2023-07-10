@@ -197,6 +197,7 @@ result_time_monthly = [np.datetime64(t) for t in result_time_monthly]
 
 ####################################################################
 
+
 def test_execute_value_array_aggregate_time_monthly_add():
     """Aggregate input_variable_names of a TimeAggregationRule (add, monthly)"""
 

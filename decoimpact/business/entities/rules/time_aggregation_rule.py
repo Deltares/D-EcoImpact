@@ -5,8 +5,10 @@ Classes:
     TimeAggregationRule
 """
 
+# from itertools import groupby
 from typing import List
 
+import numpy as _np
 import xarray as _xr
 from xarray.core.resample import DataArrayResample
 
@@ -132,6 +134,9 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         if self._operation_type is TimeOperationType.MEDIAN:
             result = aggregated_values.median()
 
+        if self._operation_type is TimeOperationType.COUNT_PERIODS:
+            result = aggregated_values.reduce(self.count_groups)
+
         if result is None:
             raise NotImplementedError(
                 f"The operation type '{self._operation_type}'"
@@ -139,6 +144,19 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             )
 
         return _xr.DataArray(result)
+
+    def count_groups(self, elem, axis, **kwargs):
+        """Count groups with value 1.
+        This function can be used inside xarray.DataArray.reduce()"""
+
+        # Split the array at indices where consecutive values change
+        split_indices = _np.where(elem[:-1] != elem[1:])[0] + 1
+        groups = _np.split(elem, split_indices)
+
+        # Count the number of groups with occurrences of the value
+        group_value = 1
+        group_count = sum(_np.any(group == group_value) for group in groups)
+        return group_count
 
     def _get_time_dimension_name(self, variable: _xr.DataArray, logger: ILogger) -> str:
         """Retrieves the dimension name
