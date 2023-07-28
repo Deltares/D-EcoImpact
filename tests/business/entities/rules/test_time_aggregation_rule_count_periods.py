@@ -78,7 +78,7 @@ def test_count_groups_function():
     assert _xr.testing.assert_equal(expected_result, result) is None
 
 
-def test_count_groups_function_nd():
+def test_count_groups_function_2d():
     """Test the count_groups to count groups for several examples.
 
     This function is being used when 'count_periods' is given
@@ -104,7 +104,7 @@ def test_count_groups_function_nd():
         "2000-01-03",
         "2000-01-04",
         "2000-01-05",
-        "2000-01-06",
+        "2001-01-01",
         "2001-01-02",
         "2001-01-03",
         "2001-01-04",
@@ -131,14 +131,89 @@ def test_count_groups_function_nd():
     expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
     expected_result_time = [_np.datetime64(t) for t in expected_result_time]
     expected_result_data = [
-        [2, 1, 2, 2],
-        [2, 1, 2, 2],
+        [2, 2, 2, 2],
+        [1, 2, 2, 2],
         [2, 1, 2, 2],
     ]
     expected_result = _xr.DataArray(
         expected_result_data,
         coords=[t_cells, expected_result_time],
         dims=["cells", "time"],
+    )
+
+    assert _xr.testing.assert_equal(expected_result, result) is None
+
+
+def test_count_groups_function_3d():
+    """Test the count_groups to count groups for several examples.
+
+    This function is being used when 'count_periods' is given
+      as aggregation in the TimeAggregationRule.
+    The result should be aggregated per year.
+    The count_periods should result in a number of the groups with value 1.
+    This test should show that the count_periods accounts for begin and end of the year.
+    """
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
+    )
+
+    t_data = [[
+        [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+    ], [
+        [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+    ]]
+    t_time = [
+        "2000-01-01",
+        "2000-01-02",
+        "2000-01-03",
+        "2000-01-04",
+        "2000-01-05",
+        "2001-01-01",
+        "2001-01-02",
+        "2001-01-03",
+        "2001-01-04",
+        "2001-01-05",
+        "2002-01-01",
+        "2002-01-02",
+        "2002-01-03",
+        "2002-01-04",
+        "2002-01-05",
+        "2003-01-01",
+        "2003-01-02",
+        "2003-01-03",
+        "2003-01-04",
+        "2003-01-05",
+    ]
+    t_time = [_np.datetime64(t) for t in t_time]
+    t_cells = [0, 1, 2]
+    t_cols = [0, 1]
+    input_array = _xr.DataArray(
+        t_data, coords=[t_cols, t_cells, t_time], dims=["cols", "cells", "time"]
+    )
+    result = input_array.resample(time="Y").reduce(rule.count_groups)
+
+    # expected results
+    expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
+    expected_result_time = [_np.datetime64(t) for t in expected_result_time]
+    expected_result_data = [[
+        [2, 2, 2, 2],
+        [1, 2, 2, 2],
+        [2, 1, 2, 2],
+    ], [
+        [2, 2, 2, 2],
+        [1, 2, 2, 2],
+        [2, 1, 2, 2],
+    ]]
+    expected_result = _xr.DataArray(
+        expected_result_data,
+        coords=[t_cols, t_cells, expected_result_time],
+        dims=["cols", "cells", "time"],
     )
 
     assert _xr.testing.assert_equal(expected_result, result) is None
