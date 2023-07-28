@@ -40,14 +40,29 @@ def test_count_groups_function():
         input_variable_names=["foo"],
         operation_type=TimeOperationType.COUNT_PERIODS,
     )
-    t_data = [0, 1, 0, 1, 1,
-              1, 0, 1, 1, 0,
-              1, 0, 1, 1, 1,
-              1, 1, 1, 0, 1]
-    t_time = ['2000-01-01', '2000-01-02', '2000-01-03', '2000-01-04', '2000-01-05',
-              '2001-01-01', '2001-01-02', '2001-01-03', '2001-01-04', '2001-01-05',
-              '2002-01-01', '2002-01-02', '2002-01-03', '2002-01-04', '2002-01-05',
-              '2003-01-01', '2003-01-02', '2003-01-03', '2003-01-04', '2003-01-05']
+    t_data = [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
+    t_time = [
+        "2000-01-01",
+        "2000-01-02",
+        "2000-01-03",
+        "2000-01-04",
+        "2000-01-05",
+        "2001-01-01",
+        "2001-01-02",
+        "2001-01-03",
+        "2001-01-04",
+        "2001-01-05",
+        "2002-01-01",
+        "2002-01-02",
+        "2002-01-03",
+        "2002-01-04",
+        "2002-01-05",
+        "2003-01-01",
+        "2003-01-02",
+        "2003-01-03",
+        "2003-01-04",
+        "2003-01-05",
+    ]
     t_time = [_np.datetime64(t) for t in t_time]
     input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
     result = input_array.resample(time="Y").reduce(rule.count_groups)
@@ -58,6 +73,72 @@ def test_count_groups_function():
     expected_result_data = [2, 2, 2, 2]
     expected_result = _xr.DataArray(
         expected_result_data, coords=[expected_result_time], dims=["time"]
+    )
+
+    assert _xr.testing.assert_equal(expected_result, result) is None
+
+
+def test_count_groups_function_nd():
+    """Test the count_groups to count groups for several examples.
+
+    This function is being used when 'count_periods' is given
+      as aggregation in the TimeAggregationRule.
+    The result should be aggregated per year.
+    The count_periods should result in a number of the groups with value 1.
+    This test should show that the count_periods accounts for begin and end of the year.
+    """
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
+    )
+
+    t_data = [
+        [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+    ]
+    t_time = [
+        "2000-01-01",
+        "2000-01-02",
+        "2000-01-03",
+        "2000-01-04",
+        "2000-01-05",
+        "2000-01-06",
+        "2001-01-02",
+        "2001-01-03",
+        "2001-01-04",
+        "2001-01-05",
+        "2002-01-01",
+        "2002-01-02",
+        "2002-01-03",
+        "2002-01-04",
+        "2002-01-05",
+        "2003-01-01",
+        "2003-01-02",
+        "2003-01-03",
+        "2003-01-04",
+        "2003-01-05",
+    ]
+    t_time = [_np.datetime64(t) for t in t_time]
+    t_cells = [0, 1, 2]
+    input_array = _xr.DataArray(
+        t_data, coords=[t_cells, t_time], dims=["cells", "time"]
+    )
+    result = input_array.resample(time="Y").reduce(rule.count_groups)
+
+    # expected results
+    expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
+    expected_result_time = [_np.datetime64(t) for t in expected_result_time]
+    expected_result_data = [
+        [2, 1, 2, 2],
+        [2, 1, 2, 2],
+        [2, 1, 2, 2],
+    ]
+    expected_result = _xr.DataArray(
+        expected_result_data,
+        coords=[t_cells, expected_result_time],
+        dims=["cells", "time"],
     )
 
     assert _xr.testing.assert_equal(expected_result, result) is None
@@ -80,13 +161,10 @@ td_time = [
 ]
 td_time = [_np.datetime64(t) for t in td_time]
 test_dataset_yearly = _xr.Dataset(
-    {'water_level': ('time', td_water_level),
-     'dry': ('time', td_dry)
-     }, coords={
-         'time': td_time
-     }
+    {"water_level": ("time", td_water_level), "dry": ("time", td_dry)},
+    coords={"time": td_time},
 )
-test_array_yearly = test_dataset_yearly['dry']
+test_array_yearly = test_dataset_yearly["dry"]
 result_time_yearly = ["2020-12-31", "2021-12-31", "2022-12-31"]
 result_time_yearly = [_np.datetime64(t) for t in result_time_yearly]
 result_data_yearly = [2.0, 0.0, 1.0]
@@ -102,8 +180,8 @@ def test_execute_value_array_condition_time_yearly_count_periods():
         name="test",
         input_variable_names=["dry"],
         operation_type=TimeOperationType.COUNT_PERIODS,
-        output_variable_name='number_of_dry_periods'
-        )
+        output_variable_name="number_of_dry_periods",
+    )
 
     assert isinstance(rule, TimeAggregationRule)
     time_condition = rule.execute(test_array_yearly, logger)

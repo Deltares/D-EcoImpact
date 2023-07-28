@@ -98,11 +98,11 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             if value:
                 result[result_time_dim_name].attrs[key] = value
 
-        result = result.assign_coords({
-            result_time_dim_name: result[result_time_dim_name]
-        })
-        result[result_time_dim_name].attrs['long_name'] = result_time_dim_name
-        result[result_time_dim_name].attrs['standard_name'] = result_time_dim_name
+        result = result.assign_coords(
+            {result_time_dim_name: result[result_time_dim_name]}
+        )
+        result[result_time_dim_name].attrs["long_name"] = result_time_dim_name
+        result[result_time_dim_name].attrs["standard_name"] = result_time_dim_name
 
         return result
 
@@ -147,16 +147,26 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
     def count_groups(self, elem, axis, **kwargs):
         """Count groups with value 1.
+
         This function can be used inside xarray.DataArray.reduce()"""
 
         # Split the array at indices where consecutive values change
-        split_indices = _np.where(elem[:-1] != elem[1:])[0] + 1
-        groups = _np.split(elem, split_indices)
-
-        # Count the number of groups with occurrences of the value
         group_value = 1
-        group_count = sum(_np.any(group == group_value) for group in groups)
-        return group_count
+        if elem.ndim == 1:
+            split_indices = _np.where(elem[:-1] != elem[1:])[0] + 1
+            groups = _np.split(elem, split_indices)
+            group_count = sum(_np.any(group == group_value) for group in groups)
+            return group_count
+        else:
+
+            group_count = []
+            for sub_elem in elem:
+                group_count_row = self.count_groups(sub_elem, axis=None)
+                group_count.append(group_count_row)
+            print(len(group_count))
+
+            print(len(elem))
+            return group_count
 
     def _get_time_dimension_name(self, variable: _xr.DataArray, logger: ILogger) -> str:
         """Retrieves the dimension name
