@@ -25,10 +25,49 @@ def test_create_time_aggregation_rule_should_set_defaults():
     assert rule.name == "test"
     assert rule.description == ""
     assert isinstance(rule, TimeAggregationRule)
+    assert rule.operation_type == TimeOperationType.COUNT_PERIODS
+    assert rule.time_scale == "year"
+    assert rule.time_scale_mapping == {"month": "M", "year": "Y"}
+
+
+def test_validation_when_valid():
+    """Test if the rule is validated properly"""
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
+        time_scale="month"
+    )
+
+    valid = rule.validate(logger)
+    assert valid
+
+
+def test_validation_when_not_valid():
+    """Test if the rule is validated properly"""
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
+        time_scale="awhile"
+    )
+
+    valid = rule.validate(logger)
+    allowed_time_scales = rule._time_scale_mapping.keys()
+    options = ",".join(allowed_time_scales)
+    logger.log_error.assert_called_with(
+        f"The provided time scale '{rule.time_scale}' "
+        f"of rule '{rule.name}' is not supported.\n"
+        f"Please select one of the following types: "
+        f"{options}"
+    )
+    assert not valid
 
 
 def test_count_groups_function_not_only_1_and_0():
-    """Test whether it gives an error if the data array contains 
+    """Test whether it gives an error if the data array contains
     other values than 0 and 1"""
     logger = Mock(ILogger)
     rule = TimeAggregationRule(

@@ -44,7 +44,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
     @property
     def time_scale(self):
         """Time scale property"""
-        return self.time_scale
+        return self._time_scale
 
     @property
     def time_scale_mapping(self):
@@ -90,7 +90,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
                     "The value array for the time aggregation rule with operaion type COUNT_PERIODS"
                     "should only contain the values 0 and 1."
                 )
-            
+
         dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
 
         time_dim_name = self._get_time_dimension_name(value_array, logger)
@@ -126,28 +126,27 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             DataArray: Values of operation type
         """
-        result = None
         if self._operation_type is TimeOperationType.ADD:
             result = aggregated_values.sum()
 
-        if self._operation_type is TimeOperationType.MIN:
+        elif self._operation_type is TimeOperationType.MIN:
             result = aggregated_values.min()
 
-        if self._operation_type is TimeOperationType.MAX:
+        elif self._operation_type is TimeOperationType.MAX:
             result = aggregated_values.max()
 
-        if self._operation_type is TimeOperationType.AVERAGE:
+        elif self._operation_type is TimeOperationType.AVERAGE:
             result = aggregated_values.mean()
 
-        if self._operation_type is TimeOperationType.MEDIAN:
+        elif self._operation_type is TimeOperationType.MEDIAN:
             result = aggregated_values.median()
 
-        if self._operation_type is TimeOperationType.COUNT_PERIODS:
+        elif self._operation_type is TimeOperationType.COUNT_PERIODS:
             result = aggregated_values.reduce(self.count_groups, dim="time")
 
-        if result is None:
+        else:
             raise NotImplementedError(
-                f"The operation type '{self._operation_type}'"
+                f"The operation type '{self._operation_type}' "
                 "is currently not supported"
             )
 
