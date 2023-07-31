@@ -2,6 +2,7 @@
 Tests for time aggregation rule
 """
 import numpy as _np
+import pytest
 import xarray as _xr
 from mock import Mock
 
@@ -24,6 +25,55 @@ def test_create_time_aggregation_rule_should_set_defaults():
     assert rule.name == "test"
     assert rule.description == ""
     assert isinstance(rule, TimeAggregationRule)
+
+
+def test_count_groups_function_not_only_1_and_0():
+    """Test whether it gives an error if the data array contains 
+    other values than 0 and 1"""
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
+    )
+    t_data = [2, 3, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
+    t_time = [
+        "2000-01-01",
+        "2000-01-02",
+        "2000-01-03",
+        "2000-01-04",
+        "2000-01-05",
+        "2001-01-01",
+        "2001-01-02",
+        "2001-01-03",
+        "2001-01-04",
+        "2001-01-05",
+        "2002-01-01",
+        "2002-01-02",
+        "2002-01-03",
+        "2002-01-04",
+        "2002-01-05",
+        "2003-01-01",
+        "2003-01-02",
+        "2003-01-03",
+        "2003-01-04",
+        "2003-01-05",
+    ]
+    t_time = [_np.datetime64(t) for t in t_time]
+    input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        rule.execute(input_array, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = (
+        "The value array for the time aggregation rule with operaion type COUNT_PERIODS"
+        "should only contain the values 0 and 1."
+    )
+    assert exception_raised.args[0] == expected_message
 
 
 def test_count_groups_function():
@@ -79,14 +129,7 @@ def test_count_groups_function():
 
 
 def test_count_groups_function_2d():
-    """Test the count_groups to count groups for several examples.
-
-    This function is being used when 'count_periods' is given
-      as aggregation in the TimeAggregationRule.
-    The result should be aggregated per year.
-    The count_periods should result in a number of the groups with value 1.
-    This test should show that the count_periods accounts for begin and end of the year.
-    """
+    """Test if functional for 2d arrays"""
     rule = TimeAggregationRule(
         name="test",
         input_variable_names=["foo"],
@@ -145,14 +188,7 @@ def test_count_groups_function_2d():
 
 
 def test_count_groups_function_3d():
-    """Test the count_groups to count groups for several examples.
-
-    This function is being used when 'count_periods' is given
-      as aggregation in the TimeAggregationRule.
-    The result should be aggregated per year.
-    The count_periods should result in a number of the groups with value 1.
-    This test should show that the count_periods accounts for begin and end of the year.
-    """
+    """Test if functional for multiple dimensions"""
     rule = TimeAggregationRule(
         name="test",
         input_variable_names=["foo"],

@@ -82,7 +82,15 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             DataArray: Aggregated values
         """
-
+        if self._operation_type is TimeOperationType.COUNT_PERIODS:
+            # Check if all values in a COUNT_PERIODS value array are either 0 or 1
+            check_values = _xr.where((value_array == 0) | (value_array == 1), True, False)
+            if False in check_values:
+                raise ValueError(
+                    "The value array for the time aggregation rule with operaion type COUNT_PERIODS"
+                    "should only contain the values 0 and 1."
+                )
+            
         dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
 
         time_dim_name = self._get_time_dimension_name(value_array, logger)
