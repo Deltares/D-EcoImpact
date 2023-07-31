@@ -165,7 +165,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         """
         if axis == 0:
             differences = elem[1:] - elem[:-1]
-            group_count = sum(map(lambda x : x == 1, differences)) + elem[0]
+            group_count = sum(map(lambda x: x == 1, differences)) + elem[0]
         else:
             group_count = []
             for sub_elem in elem:
