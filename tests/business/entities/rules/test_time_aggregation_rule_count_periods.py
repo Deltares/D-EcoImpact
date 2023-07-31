@@ -109,7 +109,7 @@ def test_count_groups_function_not_only_1_and_0():
 
     # Assert
     expected_message = (
-        "The value array for the time aggregation rule with operaion type COUNT_PERIODS"
+        "The value array for the time aggregation rule with operaion type COUNT_PERIODS "
         "should only contain the values 0 and 1."
     )
     assert exception_raised.args[0] == expected_message
