@@ -15,6 +15,7 @@ class TimeOperationType(IntEnum):
     MAX = 3
     AVERAGE = 4
     MEDIAN = 5
-    STDEV = 6
-    QUANT10 = 7
-    QUANT90 = 8
+    COUNT_PERIODS = 6
+    STDEV = 7
+    QUANT10 = 8
+    QUANT90 = 9

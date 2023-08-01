@@ -76,7 +76,7 @@ output-data:
 The output of the following functionalities have been shown for a section of the Lake Volkerak 3D hydrodynamic model in the Netherlands. This hydrodynamic model output contains 6 years of data (2011 – 2016), with a timestep of 10 days. The 3D hydrodynamic model has been setup with 22 vertical layers and 3290 horizontal flexible mesh grid cells.
 
 
-![Valkerak](/assets/images/3_valkerak_result.png "Spatial location of the Lake Volkerak hydrodynamic model output that has been used to show the effect of each function.")
+![Volkerak](/assets/images/3_volkerak_result.png "Spatial location of the Lake Volkerak hydrodynamic model output that has been used to show the effect of each function.")
 
 ## Rules
 
@@ -167,7 +167,7 @@ FORMAT
 ```
 
 The time aggregation rule rule allows for calculating a statistical summary over the time axes of 3D and 2D variables. This could be used for calculating the maximum value over a year (e.g. for water level) or the minimum value over a month (e.g. oxygen concentration). The rule operates both on  3D variables and 2D variables as long as they have a time axes and returns a 3D or 2D result depending on input with the statistic calculated for a new time axis (e.g, year or month). 
-Operations available: Add, Average, Median, Min, Max
+Operations available: Add, Average, Median, Min, Max and count_periods
 
 Time aggregation available: Year, Month
 
@@ -186,6 +186,34 @@ The rule needs to be applied to an existing 2D/3D variable with time axis. A new
 
 ![Result Time aggregation rule](/assets/images/3_result_time_aggregation.png "Water level (in m NAP, left-hand side) with a timestep every 10 days has been summarized to the maximum for each year (right-hand side) while maintaining the face dimension (layer dimension is not present in this example, but would be maintained).")
 
+Time aggregation rule with COUNT_PERIODS
+
+When the operation type count_periods is used, the user needs to make sure that the input data is always consisting of only 1 and 0. If there is no such layer, the user can make a combination of for example the classification rule together with the time aggregation rule. For example, waterdepth can be used to check whether the cells are dry or not (this can be done with a classification rule) and with the COUNT_PERIODS operation type in the time aggregation rule the amount of periods within a year or month can be calculated.
+
+
+```
+#EXAMPLE:
+
+Calculate the amount of periods of dry time monthly
+    - classification_rule:
+        name: Classify dry time
+        description: Classify to 0 and 1 the dry time
+        criteria_table:
+            - ["output", "water_depth"]
+            - [0, ">0.10"]
+            - [1, "<0.10"]
+        input_variables: ["water_depth"]
+        output_variable: dry_time_classified
+
+    - time_aggregation_rule:
+        name: Count periods
+        description: Count periods
+        operation: COUNT_PERIODS
+        time_scale: month
+        input_variable: dry_time_classified
+        output_variable: COUNT_PERIODS_water_level_month
+```
+
 ### Step function rule
 
 ```
@@ -193,8 +221,10 @@ FORMAT
 - step_function_rule::
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
-      limits: [<list_with_the_limit_values>]
-      responses: [<list_with_the_response_values>]
+      limit_response_table:
+            - [ "limit", "response"]
+            - [<limit_value>, <response_value>]
+            - [<limit_value>, <response_value>]
       input_variable: <one_input_variable_name>
       output_variable: <one_output_variable_name>
 ```
@@ -209,8 +239,14 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
     - step_function_rule:
       name: Classify salinity
       description: Make distinction between 0.0 – 0.5 , 0.5 – 1.2, 1.2 – 1.3 and >1.3 psu
-      limits:    [  -999.0, 0.0,  0.5, 1.2, 1.3,   999.0]
-      responses: [     0.0, 1.0,  2.0, 3.0, 4.0,     4.0]
+      limit_response_table:
+            - [ limit, response]
+            - [-999.0 , 0.0 ]
+            - [   0.0 , 1.0 ]
+            - [   0.5 , 2.0 ]
+            - [   1.2 , 3.0 ]
+            - [   1.3 , 4.0 ]
+            - [ 999.0 , 4.0 ]
       input_variable: salinity      
       output_variable: salinity_class
 
@@ -223,9 +259,12 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
   - step_function_rule:
       name: Check water level policy
       description: Check if water level is within -0.10 (minimum) and +0.15 (maximum) m NAP
-      description: Get boundaries water level
-      limits:    [ -999.0, -0.10, 0.15, 999.0]
-      responses: [    0.0,   1.0,  0.0,   0.0]
+      limit_response_table:
+            - [ limit, response]
+            - [-999.0  , 0.0 ]
+            - [  -0.10 , 1.0 ]
+            - [   0.15 , 0.0 ]
+            - [ 999.0  , 0.0 ]
       input_variable: water_level
       output_variable : water_level_policy
 ```
@@ -371,3 +410,4 @@ When a formula results in a boolean, it will be converted to a float result. Mea
 | >> | Signed right shift | Shift right by pushing copies of the leftmost bit in from the left, and let the rightmost bits fall off | x >> 2 |
 
 For more information on these operators click [here](https://www.w3schools.com/python/python_operators.asp).
+

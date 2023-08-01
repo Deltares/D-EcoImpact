@@ -197,6 +197,7 @@ result_time_monthly = [np.datetime64(t) for t in result_time_monthly]
 
 ####################################################################
 
+
 def test_execute_value_array_aggregate_time_monthly_add():
     """Aggregate input_variable_names of a TimeAggregationRule (add, monthly)"""
 
@@ -322,3 +323,27 @@ def test_execute_value_array_aggregate_time_monthly_median():
     assert (
         _xr.testing.assert_allclose(time_aggregation, result_array, atol=1e-11) is None
     )
+
+
+def test_operation_type_not_implemented():
+    """Test that the time aggregation rule gives an error if no operation_type is given"""
+
+    # create test set
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        time_scale="month",
+        input_variable_names=["foo"],
+        operation_type="test"
+    )
+
+    with pytest.raises(NotImplementedError) as exc_info:
+        rule.execute(value_array_monthly, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = (
+        "The operation type 'test' is currently not supported"
+    )
+    assert exception_raised.args[0] == expected_message
