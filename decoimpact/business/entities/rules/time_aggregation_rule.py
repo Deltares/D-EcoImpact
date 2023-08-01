@@ -8,7 +8,6 @@ Classes:
 # from itertools import groupby
 from typing import List
 
-import numpy as _np
 import xarray as _xr
 from xarray.core.resample import DataArrayResample
 
@@ -44,7 +43,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
     @property
     def time_scale(self):
         """Time scale property"""
-        return self.time_scale
+        return self._time_scale
 
     @property
     def time_scale_mapping(self):
@@ -82,6 +81,15 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             DataArray: Aggregated values
         """
+        if self._operation_type is TimeOperationType.COUNT_PERIODS:
+            # Check if all values in a COUNT_PERIODS value array are either 0 or 1
+            compare_values = (value_array == 0) | (value_array == 1)
+            check_values = _xr.where(compare_values, True, False)
+            if False in check_values:
+                raise ValueError(
+                    "The value array for the time aggregation rule with operaion type"
+                    "COUNT_PERIODS should only contain the values 0 and 1."
+                )
 
         dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
 
@@ -98,11 +106,11 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             if value:
                 result[result_time_dim_name].attrs[key] = value
 
-        result = result.assign_coords({
-            result_time_dim_name: result[result_time_dim_name]
-        })
-        result[result_time_dim_name].attrs['long_name'] = result_time_dim_name
-        result[result_time_dim_name].attrs['standard_name'] = result_time_dim_name
+        result = result.assign_coords(
+            {result_time_dim_name: result[result_time_dim_name]}
+        )
+        result[result_time_dim_name].attrs["long_name"] = result_time_dim_name
+        result[result_time_dim_name].attrs["standard_name"] = result_time_dim_name
 
         return result
 
@@ -118,44 +126,62 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             DataArray: Values of operation type
         """
-        result = None
         if self._operation_type is TimeOperationType.ADD:
             result = aggregated_values.sum()
 
-        if self._operation_type is TimeOperationType.MIN:
+        elif self._operation_type is TimeOperationType.MIN:
             result = aggregated_values.min()
 
-        if self._operation_type is TimeOperationType.MAX:
+        elif self._operation_type is TimeOperationType.MAX:
             result = aggregated_values.max()
 
-        if self._operation_type is TimeOperationType.AVERAGE:
+        elif self._operation_type is TimeOperationType.AVERAGE:
             result = aggregated_values.mean()
 
-        if self._operation_type is TimeOperationType.MEDIAN:
+        elif self._operation_type is TimeOperationType.MEDIAN:
             result = aggregated_values.median()
 
-        if self._operation_type is TimeOperationType.COUNT_PERIODS:
-            result = aggregated_values.reduce(self.count_groups)
+        elif self._operation_type is TimeOperationType.COUNT_PERIODS:
+            result = aggregated_values.reduce(self.count_groups, dim="time")
 
-        if result is None:
+        else:
             raise NotImplementedError(
-                f"The operation type '{self._operation_type}'"
+                f"The operation type '{self._operation_type}' "
                 "is currently not supported"
             )
 
         return _xr.DataArray(result)
 
     def count_groups(self, elem, axis, **kwargs):
-        """Count groups with value 1.
-        This function can be used inside xarray.DataArray.reduce()"""
+        """In an array with 0 and 1, count the amount of times the
+        groups of 1 occur.
 
-        # Split the array at indices where consecutive values change
-        split_indices = _np.where(elem[:-1] != elem[1:])[0] + 1
-        groups = _np.split(elem, split_indices)
+        Args:
+            elem (Array): the data array in N-dimensions
+            axis (integer): the number of axis of the array
 
-        # Count the number of groups with occurrences of the value
-        group_value = 1
-        group_count = sum(_np.any(group == group_value) for group in groups)
+        Returns:
+            array: array with the counted periods, with the same dimensions as elem
+        """
+        # in case of 1 dimension:
+        if axis == 0:
+            # in case of an example array with 5 values [1,1,0,1,0]:
+            # subtract last 4 values from the first 4 values: [1,0,1,0] - [1,1,0,1]:
+            # (the result of this example differences: [0,-1,1,0])
+            differences = elem[1:] - elem[:-1]
+            # when the difference of two neighbouring elements is 1,
+            # this indicates the start of a group; to count the number of groups:
+            # count the occurences of difference=1, and then add the first value:
+            # (the result of this examples: 1 + 1 = 2)
+            group_count = sum(map(lambda x: x == 1, differences)) + elem[0]
+        # in case of multiple dimensions:
+        else:
+            group_count = []
+            for sub_elem in elem:
+                # loop through this recursive function, determine output per axis:
+                group_count_row = self.count_groups(sub_elem, axis - 1)
+                # add the result to the list of results, per axis:
+                group_count.append(group_count_row)
         return group_count
 
     def _get_time_dimension_name(self, variable: _xr.DataArray, logger: ILogger) -> str:

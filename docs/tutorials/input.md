@@ -167,7 +167,7 @@ FORMAT
 ```
 
 The time aggregation rule rule allows for calculating a statistical summary over the time axes of 3D and 2D variables. This could be used for calculating the maximum value over a year (e.g. for water level) or the minimum value over a month (e.g. oxygen concentration). The rule operates both on  3D variables and 2D variables as long as they have a time axes and returns a 3D or 2D result depending on input with the statistic calculated for a new time axis (e.g, year or month). 
-Operations available: Add, Average, Median, Min, Max
+Operations available: Add, Average, Median, Min, Max and count_periods
 
 Time aggregation available: Year, Month
 
@@ -185,6 +185,34 @@ The rule needs to be applied to an existing 2D/3D variable with time axis. A new
 ```
 
 ![Result Time aggregation rule](/assets/images/3_result_time_aggregation.png "Water level (in m NAP, left-hand side) with a timestep every 10 days has been summarized to the maximum for each year (right-hand side) while maintaining the face dimension (layer dimension is not present in this example, but would be maintained).")
+
+Time aggregation rule with COUNT_PERIODS
+
+When the operation type count_periods is used, the user needs to make sure that the input data is always consisting of only 1 and 0. If there is no such layer, the user can make a combination of for example the classification rule together with the time aggregation rule. For example, waterdepth can be used to check whether the cells are dry or not (this can be done with a classification rule) and with the COUNT_PERIODS operation type in the time aggregation rule the amount of periods within a year or month can be calculated.
+
+
+```
+#EXAMPLE:
+
+Calculate the amount of periods of dry time monthly
+    - classification_rule:
+        name: Classify dry time
+        description: Classify to 0 and 1 the dry time
+        criteria_table:
+            - ["output", "water_depth"]
+            - [0, ">0.10"]
+            - [1, "<0.10"]
+        input_variables: ["water_depth"]
+        output_variable: dry_time_classified
+
+    - time_aggregation_rule:
+        name: Count periods
+        description: Count periods
+        operation: COUNT_PERIODS
+        time_scale: month
+        input_variable: dry_time_classified
+        output_variable: COUNT_PERIODS_water_level_month
+```
 
 ### Step function rule
 
@@ -382,3 +410,4 @@ When a formula results in a boolean, it will be converted to a float result. Mea
 | >> | Signed right shift | Shift right by pushing copies of the leftmost bit in from the left, and let the rightmost bits fall off | x >> 2 |
 
 For more information on these operators click [here](https://www.w3schools.com/python/python_operators.asp).
+

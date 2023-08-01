@@ -2,6 +2,7 @@
 Tests for time aggregation rule
 """
 import numpy as _np
+import pytest
 import xarray as _xr
 from mock import Mock
 
@@ -24,6 +25,94 @@ def test_create_time_aggregation_rule_should_set_defaults():
     assert rule.name == "test"
     assert rule.description == ""
     assert isinstance(rule, TimeAggregationRule)
+    assert rule.operation_type == TimeOperationType.COUNT_PERIODS
+    assert rule.time_scale == "year"
+    assert rule.time_scale_mapping == {"month": "M", "year": "Y"}
+
+
+def test_validation_when_valid():
+    """Test if the rule is validated properly"""
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
+        time_scale="month"
+    )
+
+    valid = rule.validate(logger)
+    assert valid
+
+
+def test_validation_when_not_valid():
+    """Test if the rule is validated properly"""
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
+        time_scale="awhile"
+    )
+
+    valid = rule.validate(logger)
+    allowed_time_scales = rule._time_scale_mapping.keys()
+    options = ",".join(allowed_time_scales)
+    logger.log_error.assert_called_with(
+        f"The provided time scale '{rule.time_scale}' "
+        f"of rule '{rule.name}' is not supported.\n"
+        f"Please select one of the following types: "
+        f"{options}"
+    )
+    assert not valid
+
+
+def test_count_groups_function_not_only_1_and_0():
+    """Test whether it gives an error if the data array contains
+    other values than 0 and 1"""
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
+    )
+    t_data = [2, 3, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
+    t_time = [
+        "2000-01-01",
+        "2000-01-02",
+        "2000-01-03",
+        "2000-01-04",
+        "2000-01-05",
+        "2001-01-01",
+        "2001-01-02",
+        "2001-01-03",
+        "2001-01-04",
+        "2001-01-05",
+        "2002-01-01",
+        "2002-01-02",
+        "2002-01-03",
+        "2002-01-04",
+        "2002-01-05",
+        "2003-01-01",
+        "2003-01-02",
+        "2003-01-03",
+        "2003-01-04",
+        "2003-01-05",
+    ]
+    t_time = [_np.datetime64(t) for t in t_time]
+    input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        rule.execute(input_array, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = (
+        "The value array for the time aggregation rule with operaion type COUNT_PERIODS "
+        "should only contain the values 0 and 1."
+    )
+    assert exception_raised.args[0] == expected_message
 
 
 def test_count_groups_function():
@@ -40,14 +129,29 @@ def test_count_groups_function():
         input_variable_names=["foo"],
         operation_type=TimeOperationType.COUNT_PERIODS,
     )
-    t_data = [0, 1, 0, 1, 1,
-              1, 0, 1, 1, 0,
-              1, 0, 1, 1, 1,
-              1, 1, 1, 0, 1]
-    t_time = ['2000-01-01', '2000-01-02', '2000-01-03', '2000-01-04', '2000-01-05',
-              '2001-01-01', '2001-01-02', '2001-01-03', '2001-01-04', '2001-01-05',
-              '2002-01-01', '2002-01-02', '2002-01-03', '2002-01-04', '2002-01-05',
-              '2003-01-01', '2003-01-02', '2003-01-03', '2003-01-04', '2003-01-05']
+    t_data = [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
+    t_time = [
+        "2000-01-01",
+        "2000-01-02",
+        "2000-01-03",
+        "2000-01-04",
+        "2000-01-05",
+        "2001-01-01",
+        "2001-01-02",
+        "2001-01-03",
+        "2001-01-04",
+        "2001-01-05",
+        "2002-01-01",
+        "2002-01-02",
+        "2002-01-03",
+        "2002-01-04",
+        "2002-01-05",
+        "2003-01-01",
+        "2003-01-02",
+        "2003-01-03",
+        "2003-01-04",
+        "2003-01-05",
+    ]
     t_time = [_np.datetime64(t) for t in t_time]
     input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
     result = input_array.resample(time="Y").reduce(rule.count_groups)
@@ -58,6 +162,133 @@ def test_count_groups_function():
     expected_result_data = [2, 2, 2, 2]
     expected_result = _xr.DataArray(
         expected_result_data, coords=[expected_result_time], dims=["time"]
+    )
+
+    assert _xr.testing.assert_equal(expected_result, result) is None
+
+
+def test_count_groups_function_2d():
+    """Test if functional for 2d arrays"""
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
+    )
+
+    t_data = [
+        [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+    ]
+    t_time = [
+        "2000-01-01",
+        "2000-01-02",
+        "2000-01-03",
+        "2000-01-04",
+        "2000-01-05",
+        "2001-01-01",
+        "2001-01-02",
+        "2001-01-03",
+        "2001-01-04",
+        "2001-01-05",
+        "2002-01-01",
+        "2002-01-02",
+        "2002-01-03",
+        "2002-01-04",
+        "2002-01-05",
+        "2003-01-01",
+        "2003-01-02",
+        "2003-01-03",
+        "2003-01-04",
+        "2003-01-05",
+    ]
+    t_time = [_np.datetime64(t) for t in t_time]
+    t_cells = [0, 1, 2]
+    input_array = _xr.DataArray(
+        t_data, coords=[t_cells, t_time], dims=["cells", "time"]
+    )
+    result = input_array.resample(time="Y").reduce(rule.count_groups)
+
+    # expected results
+    expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
+    expected_result_time = [_np.datetime64(t) for t in expected_result_time]
+    expected_result_data = [
+        [2, 2, 2, 2],
+        [1, 2, 2, 2],
+        [2, 1, 2, 2],
+    ]
+    expected_result = _xr.DataArray(
+        expected_result_data,
+        coords=[t_cells, expected_result_time],
+        dims=["cells", "time"],
+    )
+
+    assert _xr.testing.assert_equal(expected_result, result) is None
+
+
+def test_count_groups_function_3d():
+    """Test if functional for multiple dimensions"""
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
+    )
+
+    t_data = [[
+        [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+    ], [
+        [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+    ]]
+    t_time = [
+        "2000-01-01",
+        "2000-01-02",
+        "2000-01-03",
+        "2000-01-04",
+        "2000-01-05",
+        "2001-01-01",
+        "2001-01-02",
+        "2001-01-03",
+        "2001-01-04",
+        "2001-01-05",
+        "2002-01-01",
+        "2002-01-02",
+        "2002-01-03",
+        "2002-01-04",
+        "2002-01-05",
+        "2003-01-01",
+        "2003-01-02",
+        "2003-01-03",
+        "2003-01-04",
+        "2003-01-05",
+    ]
+    t_time = [_np.datetime64(t) for t in t_time]
+    t_cells = [0, 1, 2]
+    t_cols = [0, 1]
+    input_array = _xr.DataArray(
+        t_data, coords=[t_cols, t_cells, t_time], dims=["cols", "cells", "time"]
+    )
+    result = input_array.resample(time="Y").reduce(rule.count_groups)
+
+    # expected results
+    expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
+    expected_result_time = [_np.datetime64(t) for t in expected_result_time]
+    expected_result_data = [[
+        [2, 2, 2, 2],
+        [1, 2, 2, 2],
+        [2, 1, 2, 2],
+    ], [
+        [2, 2, 2, 2],
+        [1, 2, 2, 2],
+        [2, 1, 2, 2],
+    ]]
+    expected_result = _xr.DataArray(
+        expected_result_data,
+        coords=[t_cols, t_cells, expected_result_time],
+        dims=["cols", "cells", "time"],
     )
 
     assert _xr.testing.assert_equal(expected_result, result) is None
@@ -80,13 +311,10 @@ td_time = [
 ]
 td_time = [_np.datetime64(t) for t in td_time]
 test_dataset_yearly = _xr.Dataset(
-    {'water_level': ('time', td_water_level),
-     'dry': ('time', td_dry)
-     }, coords={
-         'time': td_time
-     }
+    {"water_level": ("time", td_water_level), "dry": ("time", td_dry)},
+    coords={"time": td_time},
 )
-test_array_yearly = test_dataset_yearly['dry']
+test_array_yearly = test_dataset_yearly["dry"]
 result_time_yearly = ["2020-12-31", "2021-12-31", "2022-12-31"]
 result_time_yearly = [_np.datetime64(t) for t in result_time_yearly]
 result_data_yearly = [2.0, 0.0, 1.0]
@@ -102,8 +330,8 @@ def test_execute_value_array_condition_time_yearly_count_periods():
         name="test",
         input_variable_names=["dry"],
         operation_type=TimeOperationType.COUNT_PERIODS,
-        output_variable_name='number_of_dry_periods'
-        )
+        output_variable_name="number_of_dry_periods",
+    )
 
     assert isinstance(rule, TimeAggregationRule)
     time_condition = rule.execute(test_array_yearly, logger)
