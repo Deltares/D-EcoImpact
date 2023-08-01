@@ -15,6 +15,7 @@ from decoimpact.business.entities.rules.combine_results_rule import CombineResul
 from decoimpact.business.entities.rules.formula_rule import FormulaRule
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.layer_filter_rule import LayerFilterRule
+from decoimpact.business.entities.rules.layer_subset_rule import LayerSubsetRule
 from decoimpact.business.entities.rules.multi_array_operation_type import (
     MultiArrayOperationType,
 )
@@ -29,6 +30,7 @@ from decoimpact.data.api.i_combine_results_rule_data import ICombineResultsRuleD
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_formula_rule_data import IFormulaRuleData
 from decoimpact.data.api.i_layer_filter_rule_data import ILayerFilterRuleData
+from decoimpact.data.api.i_layer_subset_rule_data import ILayerSubsetRuleData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
 from decoimpact.data.api.i_response_curve_rule_data import IResponseCurveRuleData
@@ -76,7 +78,7 @@ class ModelBuilder(IModelBuilder):
                 [rule_data.input_variable],
                 rule_data.multipliers,
                 rule_data.output_variable,
-                rule_data.date_range
+                rule_data.date_range,
             )
 
         if isinstance(rule_data, ILayerFilterRuleData):
@@ -84,6 +86,16 @@ class ModelBuilder(IModelBuilder):
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.layer_number,
+                rule_data.output_variable,
+                rule_data.layer_name,
+            )
+
+        if isinstance(rule_data, ILayerSubsetRuleData):
+            return LayerSubsetRule(
+                rule_data.name,
+                [rule_data.input_variable],
+                rule_data.start_layer_number,
+                rule_data.end_layer_number,
                 rule_data.output_variable,
                 rule_data.layer_name,
             )

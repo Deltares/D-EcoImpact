@@ -11,6 +11,7 @@ from decoimpact.data.parsers.parser_classification_rule import ParserClassificat
 from decoimpact.data.parsers.parser_combine_results_rule import ParserCombineResultsRule
 from decoimpact.data.parsers.parser_formula_rule import ParserFormulaRule
 from decoimpact.data.parsers.parser_layer_filter_rule import ParserLayerFilterRule
+from decoimpact.data.parsers.parser_layer_subset_rule import ParserLayerSubsetRule
 from decoimpact.data.parsers.parser_multiply_rule import ParserMultiplyRule
 from decoimpact.data.parsers.parser_response_curve_rule import ParserResponseCurveRule
 from decoimpact.data.parsers.parser_step_function_rule import ParserStepFunctionRule
@@ -24,6 +25,7 @@ def rule_parsers() -> Iterator[IParserRuleBase]:
     yield ParserMultiplyRule()
     yield ParserCombineResultsRule()
     yield ParserLayerFilterRule()
+    yield ParserLayerSubsetRule()
     yield ParserTimeAggregationRule()
     yield ParserStepFunctionRule()
     yield ParserResponseCurveRule()
