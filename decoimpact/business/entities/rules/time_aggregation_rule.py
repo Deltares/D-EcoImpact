@@ -163,13 +163,24 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             array: array with the counted periods, with the same dimensions as elem
         """
+        # in case of 1 dimension:
         if axis == 0:
+            # in case of an example array with 5 values [1,1,0,1,0]:
+            # subtract last 4 values from the first 4 values: [1,0,1,0] - [1,1,0,1]:
+            # (the result of this example differences: [0,-1,1,0])
             differences = elem[1:] - elem[:-1]
+            # when the difference of two neighbouring elements is 1,
+            # this indicates the start of a group; to count the number of groups:
+            # count the occurences of difference=1, and then add the first value:
+            # (the result of this examples: 1 + 1 = 2)
             group_count = sum(map(lambda x: x == 1, differences)) + elem[0]
+        # in case of multiple dimensions:
         else:
             group_count = []
             for sub_elem in elem:
+                # loop through this recursive function, determine output per axis:
                 group_count_row = self.count_groups(sub_elem, axis - 1)
+                # add the result to the list of results, per axis:
                 group_count.append(group_count_row)
         return group_count
 
