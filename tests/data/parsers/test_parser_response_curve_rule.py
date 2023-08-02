@@ -186,6 +186,6 @@ def test_parse_response_table_items():
 
     # Assert
     expected_message = (
-        "ERROR: response table does not consist of exactly 2 columns (input and output)"
+        "ERROR: response table should have exactly 2 columns"
     )
     assert exception_raised.args[0] == expected_message
