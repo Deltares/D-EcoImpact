@@ -19,9 +19,9 @@ def _get_example_response_curve_rule_dict():
             "input_variable": "input",
             "response_table": [
                     ["input", "output"],
-                    [1,3],
-                    [2,2],
-                    [3,0],
+                    [1, 3],
+                    [2, 2],
+                    [3, 0],
                 ],
             "output_variable": "output",
         }
