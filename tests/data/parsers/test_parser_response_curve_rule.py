@@ -23,7 +23,7 @@ def _get_example_response_curve_rule_dict():
                     [2, 2],
                     [3, 0],
                 ],
-            "output_variable": "output",
+            "output_variable": "outputvar",
         }
     )
 
@@ -96,9 +96,9 @@ def test_parse_input_values_type():
             "input_variable": "input",
             "response_table": [
                     ["input", "output"],
-                    ["a",3],
-                    ["b",2],
-                    [2,0],
+                    ["a", 3],
+                    ["b", 2],
+                    [2, 0],
                 ],
             "output_variable": "output",
         }
@@ -158,7 +158,7 @@ def test_parse_output_values_type():
     assert exception_raised.args[0] == expected_message
 
 
-def test_parse_response_table_items():
+def test_parse_response_table_columns():
     """Test columns of response table to consist of only input and output"""
     # Arrange
     contents = dict(
@@ -168,9 +168,9 @@ def test_parse_response_table_items():
             "input_variable": "input",
             "response_table": [
                     ["input", "output", "extra"],
-                    [1,4,7],
-                    [2,5,8],
-                    [3,6,9],
+                    [1, 4, 7],
+                    [2, 5, 8],
+                    [3, 6, 9],
                 ],
             "output_variable": "output",
         }
