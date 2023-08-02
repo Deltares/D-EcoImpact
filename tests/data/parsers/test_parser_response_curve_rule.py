@@ -148,13 +148,44 @@ def test_parse_output_values_type():
 
     exception_raised = exc_info.value
 
-    print(exception_raised.args[0])
-
     # Assert
     expected_message = (
         "ERROR in position 0 is type <class 'str'>. "
         "ERROR in position 1 is type <class 'str'>. "
         "Output values should be a list of int or floats, "
         "received: ['a', 'b', 2]"
+    )
+    assert exception_raised.args[0] == expected_message
+
+
+def test_parse_response_table_items():
+    """Test columns of response table to consist of only input and output"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "test_name",
+            "description": "description",
+            "input_variable": "input",
+            "response_table": [
+                    ["input", "output", "extra"],
+                    [1,4,7],
+                    [2,5,8],
+                    [3,6,9],
+                ],
+            "output_variable": "output",
+        }
+    )
+    logger = Mock(ILogger)
+
+    # Act
+    data = ParserResponseCurveRule()
+    with pytest.raises(ValueError) as exc_info:
+        data.parse_dict(contents, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = (
+        "ERROR: response table does not consist of exactly 2 columns (input and output)"
     )
     assert exception_raised.args[0] == expected_message

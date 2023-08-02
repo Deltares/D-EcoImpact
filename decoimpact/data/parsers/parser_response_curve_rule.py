@@ -41,6 +41,10 @@ class ParserResponseCurveRule(IParserRuleBase):
         input_values = response_table["input"]
         output_values = response_table["output"]
 
+        # check that response table has exactly two columns:
+        if not len(response_table_list)==2:
+            raise ValueError("ERROR: response table does not consist of exactly 2 columns (input and output)")
+
         # validate input values to be int/float
         if not all(isinstance(m, (int, float)) for m in input_values):
             message = (
