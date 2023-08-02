@@ -17,8 +17,14 @@ def _get_example_response_curve_rule_dict():
             "name": "test_name",
             "description": "description",
             "input_variable": "input",
-            "input_values": [1, 2, 3],
-            "output_values": [3, 2, 0],
+            "response_table": [
+                    ["input", "output"],
+                    [1,3],
+                    [2,2],
+                    [3,0],
+                ],
+            # "input_values": [1, 2, 3],
+            # "output_values": [3, 2, 0],
             "output_variable": "output",
         }
     )
@@ -55,8 +61,9 @@ def test_parse_dict_to_rule_data_logic():
     "argument_to_remove",
     [
         "name",
-        "input_values",
-        "output_values",
+        # "input_values",
+        # "output_values",
+        "response_table",
         "input_variable",
         "output_variable",
         "description",
@@ -91,8 +98,14 @@ def test_parse_input_values_type():
             "name": "test_name",
             "description": "description",
             "input_variable": "input",
-            "input_values": ["a", "b", 2],
-            "output_values": [3, 2, 0],
+            # "input_values": ["a", "b", 2],
+            # "output_values": [3, 2, 0],
+            "response_table": [
+                    ["input", "output"],
+                    ["a",3],
+                    ["b",2],
+                    [2,0],
+                ],
             "output_variable": "output",
         }
     )
@@ -123,8 +136,14 @@ def test_parse_output_values_type():
             "name": "test_name",
             "description": "description",
             "input_variable": "input",
-            "input_values": [1, 2, 3],
-            "output_values": ["a", "b", 2],
+            # "input_values": [1, 2, 3],
+            # "output_values": ["a", "b", 2],
+            "response_table": [
+                ["input", "output"],
+                [1, "a"],
+                [2, "b"],
+                [3, 2],
+            ],
             "output_variable": "output",
         }
     )
@@ -136,6 +155,8 @@ def test_parse_output_values_type():
         data.parse_dict(contents, logger)
 
     exception_raised = exc_info.value
+
+    print(exception_raised.args[0])
 
     # Assert
     expected_message = (
