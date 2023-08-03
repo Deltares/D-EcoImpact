@@ -277,8 +277,10 @@ FORMAT
 - response_curve_rule:
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
-      input_values: [<list_with_the_limit_values>]
-      output_values: [<list_with_the_response_values>]
+      response_table:
+            - [ "input", "output"]
+            - [<limit_value>, <response_value>]
+            - [<limit_value>, <response_value>]
       input_variable: <one_input_variable_name>
       output_variable: <one_output_variable_name>
 ```
@@ -295,9 +297,16 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
 - response_curve_rule:
       name: HSI Pond weed water depth
       description: Reponse of Pond weed (Potamogeton nodosus) to water depth
-      input_values:      [-999.0, 0.0,  0.5, 1.0, 2.0, 999.0]
-      output_values:     [   0.0, 0.0,  1.0, 1.0, 0.0,   0.0]
+      response_table:
+           - ["input",   "output"]
+           - [-999.0 ,   0.0 ]
+           - [   0.0 ,   0.0 ]
+           - [   0.5 ,   1.0 ]
+           - [   1.0 ,   1.0 ]
+           - [   2.0 ,   0.0 ]
+           - [ 999.0 ,   0.0 ]
       input_variable: water_depth      
+      output_variable: HSI_Pnodosus_water_depth
 
 ```
 
