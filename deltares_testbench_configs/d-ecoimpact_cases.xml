@@ -1,0 +1,17 @@
+  <testCases>
+    <testCase name="dei001" ref="DEI">
+      <path>dei001</path>
+      <arguments>
+        <argument>input.yaml</argument>
+      </arguments>
+      <checks>
+        <file name="results_test.nc" type="netcdf">
+          <parameters>
+            <parameter name="HSI_Pnodosus_water_depth" toleranceAbsolute="0.0001" />
+          </parameters>
+
+        </file>
+      </checks>
+    </testCase>
+  </testCases>
+
