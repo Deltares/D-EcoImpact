@@ -9,7 +9,7 @@ from typing import Any, Dict
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
-from decoimpact.data.dictionary_utils import get_dict_element
+from decoimpact.data.dictionary_utils import convert_table_element, get_dict_element
 from decoimpact.data.entities.response_curve_rule_data import ResponseCurveRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
@@ -35,7 +35,19 @@ class ParserResponseCurveRule(IParserRuleBase):
         description = get_dict_element("description", dictionary)
         input_variable_name = get_dict_element("input_variable", dictionary)
 
-        input_values = get_dict_element("input_values", dictionary)
+        # read response_table and convert it to dicts with input and output values
+        response_table_list = get_dict_element("response_table", dictionary)
+        response_table = convert_table_element(response_table_list)
+        input_values = response_table["input"]
+        output_values = response_table["output"]
+
+        # check that response table has exactly two columns:
+        if not len(response_table) == 2:
+            raise ValueError(
+                "ERROR: response table should have exactly 2 columns"
+            )
+
+        # validate input values to be int/float
         if not all(isinstance(m, (int, float)) for m in input_values):
             message = (
                 "Input values should be a list of int or floats, "
@@ -50,7 +62,7 @@ class ParserResponseCurveRule(IParserRuleBase):
             )
             raise ValueError(f"{position_error}{message}")
 
-        output_values = get_dict_element("output_values", dictionary)
+        # validate output_values to be int/float
         if not all(isinstance(m, (int, float)) for m in output_values):
             message = (
                 "Output values should be a list of int or floats, "
