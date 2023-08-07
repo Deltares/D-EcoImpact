@@ -9,6 +9,7 @@ Classes:
 from typing import List
 
 import xarray as _xr
+import numpy as _np
 from xarray.core.resample import DataArrayResample
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
@@ -126,6 +127,8 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             DataArray: Values of operation type
         """
+        period_operations = [TimeOperationType.COUNT_PERIODS,TimeOperationType.MAX_DURATION_PERIODS, TimeOperationType.AVG_DURATION_PERIODS]
+
         if self._operation_type is TimeOperationType.ADD:
             result = aggregated_values.sum()
 
@@ -141,8 +144,8 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         elif self._operation_type is TimeOperationType.MEDIAN:
             result = aggregated_values.median()
 
-        elif self._operation_type is TimeOperationType.COUNT_PERIODS:
-            result = aggregated_values.reduce(self.count_groups, dim="time")
+        elif self._operation_type in period_operations:
+            result = aggregated_values.reduce(self.analyze_groups, dim="time")
 
         else:
             raise NotImplementedError(
@@ -152,9 +155,42 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         return _xr.DataArray(result)
 
-    def count_groups(self, elem, axis, **kwargs):
-        """In an array with 0 and 1, count the amount of times the
-        groups of 1 occur.
+    def count_groups(self, elem: List) -> List:
+        """
+        Count the amount of times the groups of 1 occur.
+
+        Args:
+            elem (Array): the data array in N-dimensions
+
+        Returns:
+            List: list with the counted periods
+        """
+        # in case of an example array with 5 values [1,1,0,1,0]:
+        # subtract last 4 values from the first 4 values: [1,0,1,0] - [1,1,0,1]:
+        # (the result of this example differences: [0,-1,1,0])
+        differences = _np.diff(elem)
+        # when the difference of two neighbouring elements is 1,
+        # this indicates the start of a group; to count the number of groups:
+        # count the occurences of difference=1, and then add the first value:
+        # (the result of this examples: 1 + 1 = 2)
+        return _np.sum(differences, where=differences == 1) + elem[0]
+
+    def duration_groups(self, elem: List) -> List:
+        """
+            Count the amount of times the groups of 1 occur.
+
+            Args:
+                elem (List): the data array in N-dimensions
+
+            Returns:
+                List: List with the counted periods
+        """
+        # Function to create a cumsum over the groups (where the elements in elem are 1)
+        cumsum_groups = _np.frompyfunc(lambda a, b: a + b if b == 1 else 0, 2, 1)
+        return cumsum_groups.accumulate(elem)
+
+    def analyze_groups(self, elem, axis, **kwargs):
+        """In an array with 0 and 1,
 
         Args:
             elem (Array): the data array in N-dimensions
@@ -165,21 +201,17 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         """
         # in case of 1 dimension:
         if axis == 0:
-            # in case of an example array with 5 values [1,1,0,1,0]:
-            # subtract last 4 values from the first 4 values: [1,0,1,0] - [1,1,0,1]:
-            # (the result of this example differences: [0,-1,1,0])
-            differences = elem[1:] - elem[:-1]
-            # when the difference of two neighbouring elements is 1,
-            # this indicates the start of a group; to count the number of groups:
-            # count the occurences of difference=1, and then add the first value:
-            # (the result of this examples: 1 + 1 = 2)
-            group_count = sum(map(lambda x: x == 1, differences)) + elem[0]
+            if self._operation_type is TimeOperationType.COUNT_PERIODS:
+                group_count = self.count_groups(elem)
+            elif self._operation_type is TimeOperationType.MAX_DURATION_PERIODS:
+                group_count = _np.max((self.duration_groups(elem)))
+
         # in case of multiple dimensions:
         else:
             group_count = []
             for sub_elem in elem:
                 # loop through this recursive function, determine output per axis:
-                group_count_row = self.count_groups(sub_elem, axis - 1)
+                group_count_row = self.analyze_groups(sub_elem, axis - 1)
                 # add the result to the list of results, per axis:
                 group_count.append(group_count_row)
         return group_count
