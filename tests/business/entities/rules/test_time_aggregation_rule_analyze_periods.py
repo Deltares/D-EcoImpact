@@ -1,5 +1,9 @@
 """
 Tests for time aggregation rule
+for operation types:
+ - COUNT_PERIODS
+ - MAX_DURATION_PERIODS
+ - AVG_DURATION_PERIODS
 """
 import numpy as _np
 import pytest
@@ -65,8 +69,7 @@ def test_validation_when_not_valid():
     )
     assert not valid
 
-
-def test_count_groups_function_not_only_1_and_0():
+def test_analyze_groups_function_not_only_1_and_0():
     """Test whether it gives an error if the data array contains
     other values than 0 and 1"""
     logger = Mock(ILogger)
@@ -115,7 +118,15 @@ def test_count_groups_function_not_only_1_and_0():
     assert exception_raised.args[0] == expected_message
 
 
-def test_count_groups_function():
+@pytest.mark.parametrize(
+    "operation_type, expected_result_data",
+    [
+        ("COUNT_PERIODS", [2, 2, 2, 2]),
+        ("MAX_DURATION_PERIODS", [2, 2, 3, 3]),
+        ("AVG_DURATION_PERIODS", [1.5, 1.5, 2, 2])
+    ],
+)
+def test_analyze_groups_function(operation_type, expected_result_data):
     """Test the count_groups to count groups for several examples.
 
     This function is being used when 'count_periods' is given
@@ -127,7 +138,7 @@ def test_count_groups_function():
     rule = TimeAggregationRule(
         name="test",
         input_variable_names=["foo"],
-        operation_type=TimeOperationType.COUNT_PERIODS,
+        operation_type=TimeOperationType[operation_type],
     )
     t_data = [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
     t_time = [
@@ -154,12 +165,11 @@ def test_count_groups_function():
     ]
     t_time = [_np.datetime64(t) for t in t_time]
     input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
-    result = input_array.resample(time="Y").reduce(rule.count_groups)
+    result = input_array.resample(time="Y").reduce(rule.analyze_groups)
 
     # expected results
     expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
     expected_result_time = [_np.datetime64(t) for t in expected_result_time]
-    expected_result_data = [2, 2, 2, 2]
     expected_result = _xr.DataArray(
         expected_result_data, coords=[expected_result_time], dims=["time"]
     )
@@ -207,7 +217,7 @@ def test_count_groups_function_2d():
     input_array = _xr.DataArray(
         t_data, coords=[t_cells, t_time], dims=["cells", "time"]
     )
-    result = input_array.resample(time="Y").reduce(rule.count_groups)
+    result = input_array.resample(time="Y").reduce(rule.analyze_groups)
 
     # expected results
     expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
@@ -271,7 +281,7 @@ def test_count_groups_function_3d():
     input_array = _xr.DataArray(
         t_data, coords=[t_cols, t_cells, t_time], dims=["cols", "cells", "time"]
     )
-    result = input_array.resample(time="Y").reduce(rule.count_groups)
+    result = input_array.resample(time="Y").reduce(rule.analyze_groups)
 
     # expected results
     expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
