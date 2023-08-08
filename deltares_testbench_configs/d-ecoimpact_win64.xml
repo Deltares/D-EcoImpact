@@ -8,12 +8,12 @@
   <config>
     <localPaths>
       <testCasesDir>.\data\cases</testCasesDir>
-      <enginesDir>.\data\engines</enginesDir>
+      <enginesDir>D:\git\D-EcoImpact\</enginesDir>
       <referenceDir>.\data\references</referenceDir>
     </localPaths>
 
     <locations>
-      <location name="dsctestbench-cases">
+      <location name="cases">
         <credential ref="commandline" />
         <root>D:\git\D-EcoImpact\</root>
       </location>
@@ -37,20 +37,19 @@
     <program name="python" seq="1">
       <shell ref="command_prompt"/> 
       <path>python.exe</path>
-        <arguments>
-          <argument>D:\git\D-EcoImpact\main.py</argument>
-        </arguments>
+      <arguments>
+        <argument>D:\git\D-EcoImpact\main.py</argument>
+      </arguments>
     </program>
   </programs>
 
   <defaultTestCases>
-    <testCase name="DEI">
+    <testCase name="dei_acc">
       <programs>
-        <program ref="python">
-        </program>  
       </programs>
-      <location ref="dsctestbench-cases" type="input">
+      <location ref="cases" type="input">
         <from>acc_tests\cases</from>
+        <to>acc_tests\cases\dei001\result</to>
         <!-- if "to" is not specified, "from" is used as target -->
       </location>
       <location ref="dsctestbench-references" type="reference">

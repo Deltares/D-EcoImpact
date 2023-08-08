@@ -1,10 +1,15 @@
   <testCases>
-    <testCase name="dei001" ref="DEI">
+    <testCase name="dei001" ref="dei_acc">
       <path>dei001</path>
-      <arguments>
-        <argument>input.yaml</argument>
-      </arguments>
-      <checks>
+        <program name="python" seq="1">
+          <shell ref="command_prompt"/> 
+          <path>python.exe</path>
+          <arguments>
+            <argument>D:\git\D-EcoImpact\main.py</argument>
+            <argument>input_file.yaml</argument>
+          </arguments>
+        </program>
+        <checks>
         <file name="results_test.nc" type="netcdf">
           <parameters>
             <parameter name="HSI_Pnodosus_water_depth" toleranceAbsolute="0.0001" />

@@ -9,8 +9,6 @@ rules:
     - response_curve_rule:
         name: Response pond weed
         description: Reponse of Pond weed (Potamogeton nodosus) to water depth
-        # input_values:       [-999.0, 0.0,  0.5, 1.0, 2.0, 999.0]
-        # output_values:      [   0.0, 0.0,  1.0, 1.0, 0.0,   0.0]
         response_table:
            - [  input,  output ]
            - [-999.0 ,     0.0 ]
@@ -23,4 +21,4 @@ rules:
         output_variable: HSI_Pnodosus_water_depth
 
 output-data:
-  filename: results_test.nc
+  filename: result\results_test.nc
