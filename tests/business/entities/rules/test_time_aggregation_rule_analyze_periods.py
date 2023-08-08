@@ -69,6 +69,7 @@ def test_validation_when_not_valid():
     )
     assert not valid
 
+
 def test_analyze_groups_function_not_only_1_and_0():
     """Test whether it gives an error if the data array contains
     other values than 0 and 1"""
@@ -177,12 +178,20 @@ def test_analyze_groups_function(operation_type, expected_result_data):
     assert _xr.testing.assert_equal(expected_result, result) is None
 
 
-def test_count_groups_function_2d():
+@pytest.mark.parametrize(
+    "operation_type, expected_result_data",
+    [
+        ("COUNT_PERIODS", [[2, 2, 2, 2], [1, 2, 2, 2], [2, 1, 2, 2]]),
+        ("MAX_DURATION_PERIODS", [[2, 2, 3, 3], [1, 2, 3, 3], [2, 2, 3, 3]]),
+        ("AVG_DURATION_PERIODS", [[1.5, 1.5, 2, 2], [1, 1.5, 2, 2], [1.5, 2, 2, 2]])
+    ],
+)
+def test_analyze_groups_function_2d(operation_type, expected_result_data):
     """Test if functional for 2d arrays"""
     rule = TimeAggregationRule(
         name="test",
         input_variable_names=["foo"],
-        operation_type=TimeOperationType.COUNT_PERIODS,
+        operation_type=TimeOperationType[operation_type],
     )
 
     t_data = [
@@ -222,11 +231,6 @@ def test_count_groups_function_2d():
     # expected results
     expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
     expected_result_time = [_np.datetime64(t) for t in expected_result_time]
-    expected_result_data = [
-        [2, 2, 2, 2],
-        [1, 2, 2, 2],
-        [2, 1, 2, 2],
-    ]
     expected_result = _xr.DataArray(
         expected_result_data,
         coords=[t_cells, expected_result_time],
@@ -236,12 +240,29 @@ def test_count_groups_function_2d():
     assert _xr.testing.assert_equal(expected_result, result) is None
 
 
-def test_count_groups_function_3d():
+@pytest.mark.parametrize(
+    "operation_type, expected_result_data",
+    [
+        ("COUNT_PERIODS", [
+            [[2, 2, 2, 2], [1, 2, 2, 2], [2, 1, 2, 2]],
+            [[2, 2, 2, 2], [1, 2, 2, 2], [2, 1, 2, 2]]
+        ]),
+        ("MAX_DURATION_PERIODS", [
+            [[2, 2, 3, 3], [1, 2, 3, 3], [2, 2, 3, 3]],
+            [[2, 2, 3, 3], [1, 2, 3, 3], [2, 2, 3, 3]]
+        ]),
+        ("AVG_DURATION_PERIODS", [
+            [[1.5, 1.5, 2, 2], [1, 1.5, 2, 2], [1.5, 2, 2, 2]],
+            [[1.5, 1.5, 2, 2], [1, 1.5, 2, 2], [1.5, 2, 2, 2]]
+        ])
+    ],
+)
+def test_count_groups_function_3d(operation_type, expected_result_data):
     """Test if functional for multiple dimensions"""
     rule = TimeAggregationRule(
         name="test",
         input_variable_names=["foo"],
-        operation_type=TimeOperationType.COUNT_PERIODS,
+        operation_type=TimeOperationType[operation_type],
     )
 
     t_data = [[
@@ -286,15 +307,6 @@ def test_count_groups_function_3d():
     # expected results
     expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
     expected_result_time = [_np.datetime64(t) for t in expected_result_time]
-    expected_result_data = [[
-        [2, 2, 2, 2],
-        [1, 2, 2, 2],
-        [2, 1, 2, 2],
-    ], [
-        [2, 2, 2, 2],
-        [1, 2, 2, 2],
-        [2, 1, 2, 2],
-    ]]
     expected_result = _xr.DataArray(
         expected_result_data,
         coords=[t_cols, t_cells, expected_result_time],

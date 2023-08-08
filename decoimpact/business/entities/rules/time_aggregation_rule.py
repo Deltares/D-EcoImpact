@@ -159,7 +159,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         return _xr.DataArray(result)
 
-    def count_groups(self, elem: List) -> List:
+    def count_groups(self, elem):
         """
         Count the amount of times the groups of 1 occur.
 
@@ -177,9 +177,10 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         # this indicates the start of a group; to count the number of groups:
         # count the occurences of difference=1, and then add the first value:
         # (the result of this examples: 1 + 1 = 2)
-        return _np.sum(differences, where=differences == 1) + elem[0]
+        differences = _np.append(differences, elem[0])
+        return _np.count_nonzero(differences == 1)
 
-    def duration_groups(self, elem: List) -> List:
+    def duration_groups(self, elem):
         """
             Count the amount of times the groups of 1 occur.
 
@@ -204,7 +205,13 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             array: array with the analyzed periods, with the same dimensions as elem
         """
         # in case of 1 dimension:
-        if axis == 0:
+        no_axis = len(_np.shape(elem))
+
+        if axis != -1:
+            elem = _np.moveaxis(elem, axis, -1)
+            axis = -1
+
+        if no_axis == 1:
             if self._operation_type is TimeOperationType.COUNT_PERIODS:
                 group_result = self.count_groups(elem)
             elif self._operation_type is TimeOperationType.MAX_DURATION_PERIODS:
@@ -213,14 +220,16 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
                 period = _np.sum(elem)
                 group_count = self.count_groups(elem)
                 group_result = period / group_count
+
         # in case of multiple dimensions:
         else:
             group_result = []
             for sub_elem in elem:
                 # loop through this recursive function, determine output per axis:
-                group_result_row = self.analyze_groups(sub_elem, axis - 1)
+                group_result_row = self.analyze_groups(sub_elem, axis)
                 # add the result to the list of results, per axis:
                 group_result.append(group_result_row)
+
         return group_result
 
     def _get_time_dimension_name(self, variable: _xr.DataArray, logger: ILogger) -> str:
