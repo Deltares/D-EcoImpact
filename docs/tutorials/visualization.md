@@ -9,7 +9,7 @@ Panoply is a NetCDF viewer developed by NASA GISS. Panoply can be downloaded [he
 
 Panoply is useful for exploring the content of NetCDF files. It allows the user to see which variables are present in the file, over which dimensions these variables contain values (e.g. x, y, z, time) and what metadata is supplied with each variable. Especially when you have gotten a NetCDF file that you are not familiar with on which data it contains it can be useful to open it first with Panoply.
 
-![Panoply](/assets/images/3_netcdf.png "The FM-VZM_0000_map.nc opened in Panoply. The variable “mesh2d_sa1” (Salinity) has been selected for viewing. On the right hand-side the metadata attached to this variable is visible, among which the first line showing that this variable has values allocated to 3 dimensions (time, mesh2d_nFaces and mesh2d_nLayers).")
+![Panoply](/images/3_netcdf.png "The FM-VZM_0000_map.nc opened in Panoply. The variable “mesh2d_sa1” (Salinity) has been selected for viewing. On the right hand-side the metadata attached to this variable is visible, among which the first line showing that this variable has values allocated to 3 dimensions (time, mesh2d_nFaces and mesh2d_nLayers).")
 
 ## Quickplot
 Quickplot is a Deltares visualization tool used amongst others for Delft3D 4 and Delft3D-FM models. Intern Deltares the latest version of Quickplot can be gathered here:
