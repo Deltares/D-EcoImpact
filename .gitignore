@@ -133,5 +133,6 @@ dmypy.json
 **/*.nc
 !tests/**/*.nc
 /examples/data_out/
-!tests_acceptance/**/*.nc
-!tests_acceptance/**/*.yaml
+!tests_acceptance/input_nc_files/*.nc
+!tests_acceptance/reference_nc_files/*.nc
+!tests_acceptance/input_yaml_files/*.yaml
