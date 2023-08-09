@@ -12,10 +12,11 @@ input_files = pathlib.Path(__file__, "..", "data").resolve().glob("*.yaml")
 script = pathlib.Path(__file__, "..", "main.py")
 
 
-# @pytest.mark.parametrize("input_file", input_files)
-# def test_script_execution(script, input_file):
-#     sys.argv = ["", input_file]
-#     runpy.run_path(script)
+@pytest.mark.parametrize("input_file", input_files)
+def test_script_execution(script, input_file):
+    sys.argv = ["", input_file]
+    print("qq", sys.argv)
+    runpy.run_path(script)
 
 
 # def pytest_collect_yaml_file(parent, path):
