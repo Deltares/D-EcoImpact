@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-input_files_path = Path(__file__).parent / "input_files"
+input_files_path = Path(__file__).parent / "input_yaml_files"
 input_filenames = [file.name for file in input_files_path.glob("*.yaml")]
 main_script_name = "main.py"
 
