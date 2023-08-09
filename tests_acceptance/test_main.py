@@ -7,6 +7,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
+import xarray as _xr
 
 input_files_path = Path(__file__).parent / "input_yaml_files"
 input_filenames = [file.name for file in input_files_path.glob("*.yaml")]
@@ -32,3 +33,14 @@ def test_process_input(input_filename):
     assert (
         process.returncode == 0
     ), f"Script {main_script_path} failed for {input_filename}\n{stderr}"
+
+    # Load the generated and reference NetCDF files using xarray
+    generated_nc = _xr.open_dataset("output.nc")  # Update the filename accordingly
+    reference_nc = _xr.open_dataset(
+        reference_files_path / input_filename.replace(".yaml", ".nc")
+    )
+
+    # Compare the datasets
+    assert generated_nc.identical(
+        reference_nc
+    ), f"Generated output does not match reference for {input_filename}"
