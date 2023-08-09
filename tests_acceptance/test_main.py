@@ -19,8 +19,9 @@ def test_process_input(input_filename):
     input_file_path = input_files_path / input_filename
 
     # Set up command line arguments for the script
-    sys.argv = ["", str(input_file_path)]
-
+    sys.argv = ["", input_file_path]
+    print("QQ", sys.argv)
+    print("QQ", sys.argv)
     # Run the script within the same Python process
     result = runpy.run_path(main_script_name)
 
