@@ -3,6 +3,7 @@ Tests for acceptance tests
 """
 
 
+import os
 import subprocess
 from pathlib import Path
 
@@ -26,7 +27,8 @@ def test_process_input(input_filename):
 
     # Run the script in a separate Python process
     process = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+        env=os.environ
     )
     stdout, stderr = process.communicate()
 
