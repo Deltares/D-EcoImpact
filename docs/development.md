@@ -39,11 +39,17 @@
 6. Add your review comments (see [comment on a PR documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/commenting-on-a-pull-request) ).
 
     Some points to analyse during the review are:
+    * does the code work, including corner cases?
     * is the code in the right place?
     * is it readable?
     * is the code documented (all public methods and classes should have doc strings)?
-    * are all tests and checks green?
+    * are nameing conventions used properly?
+    * is there any duplication of the code?
+    * Is the code maintainable?
     * is the code covered by tests?
+    * are all tests and checks green?
+    * are the commit messages clear enough and do the satisfy the conventions?
+    
     ![codeCoverage](assets/images/2_code_coverage.png "Code coverage of each file which has been changed during a commit. Details indicating how many statements are present, how many of those are missing from being testedhow many are excluded and what the resulting code coverage is for that file. The total code coverage is shown as well.")
 7. Set the status of the issue (comment, approve or request changes).
     ![statusIssue](assets/images/2_status_of_issue.png "Based on the outcome of the review process, indicate if the issue has been simply commented, approved or rejected because some changes are requested.")
@@ -56,17 +62,19 @@
 ### Tester:
 1. Change issue status from "in test" to "being tested". This should make you the assignee.
  
-1. (For a bug) -> Checkout the main branch and try to reproduce the issue.
+1. For a bug or improvement, check out the main branch and try to reproduce the issue or to get familiar with the previous functionality.
  
-1. Change your local checkout to the development branch (from which pull-request was created).
+1. Change your local check-out to the development branch (from which the pull-request was created).
  
-1. Test the new functionality or bug fix by running the main script from python in a clean python environment.
+1. Test now the new functionality or bug fix by running the main script from python in a clean python environment.
+
+1. Try to think of situations or conditions that may have been forgotten to implement properly, and test these as well.
  
-1. Add comment in the issue with the findings (ok or not because ....).
+1. Add comments in the issue with your findings (ok or not because ...). Describe enough in detail so that other people can easily reproduce any problems found. If needed, provide any required (additioonal) data.
  
-1. Move the issue in Jira to the corresponding new state:
-    * Test ok -> _Merge_
-    * Not ok -> _To do_
+1. Move the issue in Jira to the new corresponding state:
+    * If the test is ok, to _Merge_.
+    * If the test is not ok, move to _To do_.
 
 ### If test is succesful
 
@@ -91,14 +99,14 @@
 #### Coding:
 
 * We use the [PEP8 style guide](https://pep8.org/) for python development.
-* We use [typing}(https://docs.python.org/3/library/typing.html) where possible.
+* We use [typing](https://docs.python.org/3/library/typing.html) where possible.
 * We avoid using global variables.
 * We use encapsulation by only making the necessary imports and variables public.
  
-* For testing we use the pytest module.
-* For checking the style guide we use flake8 and pylint.
-* For managing external dependencies we use poetry (.toml file).
+* For testing, we use the _pytest_ module.
+* For checking the style guide, we use _flake8_ and _pylint_.
+* For managing external dependencies, we use poetry (.toml file).
  
-* We prefer to use vscode for development (sharing settings using .vscode folder) usinge the following plugins:
+* We prefer to use VS Code for development (sharing settings using vscode folder) with the following plugins:
     * [autoDocstring](https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring)
     * [python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
