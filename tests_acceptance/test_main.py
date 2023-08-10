@@ -3,8 +3,8 @@ Tests for acceptance tests
 """
 
 
-import os
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -23,13 +23,11 @@ def test_process_input(input_filename):
     input_file_path = input_yaml_files_path / input_filename
 
     # Build the subprocess command
-    command = ["python", str(main_script_path), str(input_file_path)]
+    command = [sys.executable, str(main_script_path), str(input_file_path)]
 
     # Run the script in a separate Python process
     process = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-        env=os.environ
-    )
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) 
     stdout, stderr = process.communicate()
 
     # Check the exit code
