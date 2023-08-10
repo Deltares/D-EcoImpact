@@ -20,6 +20,8 @@ reference_files_path = Path(__file__).parent / "reference_nc_files"
 
 @pytest.mark.parametrize("input_filename", input_yaml_filenames)
 def test_process_input(input_filename):
+    """Execute acceptance test using a python subprocess
+    using all input yaml files available"""
     input_file_path = input_yaml_files_path / input_filename
 
     # Build the subprocess command
@@ -27,7 +29,7 @@ def test_process_input(input_filename):
 
     # Run the script in a separate Python process
     process = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) 
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     stdout, stderr = process.communicate()
 
     # Check the exit code
