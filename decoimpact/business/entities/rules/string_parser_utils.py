@@ -41,7 +41,7 @@ def read_str_comparison(compare_str: str, operator: str):
     compare_str = compare_str.strip()
     try:
         compare_list = compare_str.split(operator)
-        if (len(compare_list) != 2):
+        if len(compare_list) != 2:
             raise IndexError(
                 f'Input "{compare_str}" is not a valid comparison '
                 f'with operator: {operator}'
@@ -68,9 +68,9 @@ def type_of_classification(class_val) -> str:
         str: Type of classification
     """
 
-    if type(class_val) == int or type(class_val) == float:
+    if isinstance(class_val, int) or isinstance(class_val, float):
         return "number"
-    if type(class_val) == str:
+    if isinstance(class_val, str):
         class_val = class_val.strip()
         if class_val in ("-", ""):
             return "NA"
