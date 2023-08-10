@@ -184,8 +184,8 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
     def duration_groups(self, elem):
         """
-            Create an array that cumulative sums the values of the groups in the array, 
-            but restarts when a 0 occurs. For example the array: [0, 1, 1, 0, 1, 1, 1, 0, 1]
+            Create an array that cumulative sums the values of the groups in the array,
+            but restarts when a 0 occurs. For example: [0, 1, 1, 0, 1, 1, 1, 0, 1]
             This function will return: [0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 0, 1]
 
             Args:
