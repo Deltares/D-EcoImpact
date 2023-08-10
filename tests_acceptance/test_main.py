@@ -33,7 +33,7 @@ def test_process_input(input_filename):
     stdout, stderr = process.communicate()
 
     # do not use stdout ;-)
-    if 1 == 0:
+    if MAIN_SCRIPT_NAME != '':
         print(stdout)
 
     # Check the exit code
