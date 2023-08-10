@@ -12,8 +12,8 @@ import xarray as _xr
 
 input_yaml_files_path = Path(__file__).parent / "input_yaml_files"
 input_yaml_filenames = [file.name for file in input_yaml_files_path.glob("*.yaml")]
-main_script_name = "main.py"
-main_script_path = Path(__file__).parent.parent / main_script_name
+MAIN_SCRIPT_NAME = "main.py"
+main_script_path = Path(__file__).parent.parent / MAIN_SCRIPT_NAME
 output_nc_files_path = Path(__file__).parent / "output_nc_files"
 reference_files_path = Path(__file__).parent / "reference_nc_files"
 
@@ -31,6 +31,10 @@ def test_process_input(input_filename):
     process = subprocess.Popen(
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     stdout, stderr = process.communicate()
+
+    # do not use stdout ;-)
+    if 1 == 0:
+        print(stdout)
 
     # Check the exit code
     assert (
