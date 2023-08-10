@@ -173,44 +173,63 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         # subtract last 4 values from the first 4 values: [1,0,1,0] - [1,1,0,1]:
         # (the result of this example differences: [0,-1,1,0])
         differences = _np.diff(elem)
-        # when the difference of two neighbouring elements is 1,
-        # this indicates the start of a group; to count the number of groups:
-        # count the occurences of difference=1, and then add the first value:
-        # (the result of this examples: 1 + 1 = 2)
+        # First add the first element of the array to the difference array (as this
+        # could also indicate a beginning of a group or not and the diff is calculated
+        # from the second element)
+        # when the difference of two neighbouring elements is 1, this indicates the
+        # start of a group. to count the number of groups: count the occurences of
+        # difference == 1: (the result of this examples: 1 + 1 = 2)
         differences = _np.append(differences, elem[0])
         return _np.count_nonzero(differences == 1)
 
     def duration_groups(self, elem):
         """
-            Count the amount of times the groups of 1 occur.
+            Create an array that cumulative sums the values of the groups in the array, 
+            but restarts when a 0 occurs. For example the array: [0, 1, 1, 0, 1, 1, 1, 0, 1]
+            This function will return: [0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 0, 1]
 
             Args:
                 elem (List): the data array in N-dimensions
 
             Returns:
-                List: List with the counted periods
+                List: List with the duration of the periods
         """
         # Function to create a cumsum over the groups (where the elements in elem are 1)
         cumsum_groups = _np.frompyfunc(lambda a, b: a + b if b == 1 else 0, 2, 1)
         return cumsum_groups.accumulate(elem)
 
     def analyze_groups(self, elem, axis, **kwargs):
-        """In an array with 0 and 1,
+        """This function analyzes the input array (N-dimensional array containing 0
+        and 1) The function will reduce the array over the time axis, depending on a
+        certain time operation type. Below are the operation types with what this
+        function will do to this example input array: [0, 1, 1, 0, 1, 0]. A period
+        is all consecutive 1 values.
+            - COUNT_PERIODS: count the amount of periods (result: 2)
+            - MAX_DURATION_PERIODS: gives the longest period (result: 2)
+            - AVG_DURATION_PERIODS: gives the average of periods (result: 1.5)
 
         Args:
             elem (Array): the data array in N-dimensions
-            axis (integer): the number of axis of the array
+            axis (integer): the value describing the time axis
 
         Returns:
             array: array with the analyzed periods, with the same dimensions as elem
         """
-        # in case of 1 dimension:
         no_axis = len(_np.shape(elem))
 
+        # The reduce function that calls this analyze_groups function should be reduces
+        # over the time axis. The argument axis in this function gives a number of which
+        # axis is in fact the time axis. This axis needs to move to the last position,
+        # because we need to reduce the N-dimensional arary to a 1D array with all the
+        # values in time for a specific cell in order to do the calculation for that
+        # cell. Because we are looping over the N-dimensional array iteratively, we
+        # should only move the time axis the first time this function is called (so when
+        # the axis is not yet set to -1!)
         if axis != -1:
             elem = _np.moveaxis(elem, axis, -1)
             axis = -1
 
+        #  in case of 1 dimension:
         if no_axis == 1:
             if self._operation_type is TimeOperationType.COUNT_PERIODS:
                 group_result = self.count_groups(elem)
