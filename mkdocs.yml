@@ -57,7 +57,7 @@ extra:
 
 nav:
   - Home: "index.md"
-  - Installation: "Iinstallation.md"
+  - Installation: "installation.md"
   - Development: "development.md"
   - Tutorials:
       - Visualization: "tutorials/visualization.md"
