@@ -17,6 +17,8 @@ input_yaml_filenames = [file.name for file in input_yaml_files_path.glob("*.yaml
 MAIN_SCRIPT_NAME = "main.py"
 main_script_path = parent_path.parent / MAIN_SCRIPT_NAME
 output_nc_files_path = parent_path / "output_nc_files"
+# Create output folder if not already there
+Path(output_nc_files_path).mkdir(exist_ok=True) 
 reference_files_path = parent_path / "reference_nc_files"
 
 
