@@ -1,5 +1,5 @@
 """
-Tests for acceptance tests
+Run all acceptance tests available in the input_yaml_files folder
 """
 
 
@@ -10,18 +10,25 @@ from pathlib import Path
 import pytest
 import xarray as _xr
 
-input_yaml_files_path = Path(__file__).parent / "input_yaml_files"
+parent_path = Path(__file__).parent
+
+input_yaml_files_path = parent_path / "input_yaml_files"
 input_yaml_filenames = [file.name for file in input_yaml_files_path.glob("*.yaml")]
 MAIN_SCRIPT_NAME = "main.py"
-main_script_path = Path(__file__).parent.parent / MAIN_SCRIPT_NAME
-output_nc_files_path = Path(__file__).parent / "output_nc_files"
-reference_files_path = Path(__file__).parent / "reference_nc_files"
+main_script_path = parent_path.parent / MAIN_SCRIPT_NAME
+output_nc_files_path = parent_path / "output_nc_files"
+reference_files_path = parent_path / "reference_nc_files"
 
 
 @pytest.mark.parametrize("input_filename", input_yaml_filenames)
 def test_process_input(input_filename):
     """Execute acceptance test using a python subprocess
-    using all input yaml files available"""
+    using all input yaml files available
+
+    Args:
+        input_filename (str): name of input file
+    """
+
     input_file_path = input_yaml_files_path / input_filename
 
     # Build the subprocess command
@@ -29,11 +36,12 @@ def test_process_input(input_filename):
 
     # Run the script in a separate Python process
     process = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+    )
     stdout, stderr = process.communicate()
 
     # do not use stdout ;-)
-    if MAIN_SCRIPT_NAME != '':
+    if MAIN_SCRIPT_NAME != "":
         print(stdout)
 
     # Check the exit code
