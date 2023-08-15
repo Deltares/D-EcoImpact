@@ -236,9 +236,14 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             elif self._operation_type is TimeOperationType.MAX_DURATION_PERIODS:
                 group_result = _np.max((self.duration_groups(elem)))
             elif self._operation_type is TimeOperationType.AVG_DURATION_PERIODS:
-                period = _np.sum(elem)
-                group_count = self.count_groups(elem)
-                group_result = period / group_count
+                period = float(_np.sum(elem))
+                group_count = float(self.count_groups(elem))
+                group_result = _np.divide(
+                    period,
+                    group_count,
+                    out=_np.zeros_like(period),
+                    where=group_count != 0
+                )
 
         # in case of multiple dimensions:
         else:
