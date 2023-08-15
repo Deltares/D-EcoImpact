@@ -1,0 +1,269 @@
+#Description of the potential growth locations for Long-leaf pond weed (Potamogeton nodosus)
+# Rules derived for hard boundaries from : https://repos.deltares.nl/repos/KRWV-Ecologie/trunk/Data_macrofyten/KRWVEco_Preferenties_Macrofyten_Totaal_20190219.xlsx
+# Data based on KRW-Verkenner Ecology model:
+#| SoortId | WetenschappelijkeNaam  | Compartiment | VariabeleId | VariabeleNaam  | Eenheid   | Ondergrens | Bovengrens | Preferentie | Abundantie |
+#|---------|------------------------|--------------|-------------|----------------|-----------|------------|------------|-------------|------------|
+#| 9436    | Potamogeton nodosus    | Omgeving     | 22          | GemDiepte      | m         | 0,05       | 2          | 1           | 1          |
+#| 9436    | Potamogeton nodosus    | Water        | 27          | Stroomsnelheid | m/s       | 0          | 2          | 1           | 1          |
+#| 9436    | Potamogeton nodosus    | Water        | 30          | Droogval       | Categorie | 1          | 2          | 1           | 1          |
+#| 9436    | Potamogeton nodosus    | Water        |  9          | Chloride       | C mg/l    | 0          | 405.6      | 1           | 1          |
+#| 9438    | Potamogeton pectinatus | Omgeving     | 22          | GemDiepte      | m         | 0,05       | 10         | 1           | 29,72414   |
+#| 9438    | Potamogeton pectinatus | Water        | 27          | Stroomsnelheid | m/s       | 0          | 2,5        | 1           | 1          |
+#| 9438    | Potamogeton pectinatus | Water        | 30          | Droogval       | Categorie | 1          | 2          | 1           | 1          |
+#| 9438    | Potamogeton pectinatus | Water        |  9          | Chloride       | C mg/l    | 16.3       | 15286.6    | 1           | 1          |
+#
+# Rules derived for fuzzy logic from : https://publicwiki.deltares.nl/display/HBTHOME/Rivierfonteinkruid+-+Potamogeton+nodosus
+# Rules derived for fuzzy logic from : https://publicwiki.deltares.nl/display/HBTHOME/Schedefonteinkruid+-+Potamogeton+pectinatus
+#
+# Not realistic result as in application there is no selection for grow period (April - September).
+# Input is subsetted data and made smaller for TESTBANK.
+#
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
+      variable_mapping:
+        water_level_mNAP:   "INPUT_water_level_mNAP"
+        water_depth_mNAP:   "INPUT_water_depth_mNAP"
+        flow_velocity_ms:   "INPUT_flow_velocity_ms"
+        salinity_PSU:       "INPUT_salinity_PSU"
+
+rules:
+
+  # Prepare Chloride content and select layered data, and select correct periods
+  - multiply_rule:
+      name: calculate chloride
+      description: Converts salinity to chloride
+      multipliers: [0.0018066, 1e5]
+      input_variable: INPUT_salinity_PSU
+      output_variable: chloride_mgL
+      
+  - layer_filter_rule:
+      name: Select top layer chloride
+      description: get first layer of model
+      layer_number: 22
+      input_variable: chloride_mgL
+      output_variable: chloride_mgL_toplayer
+
+  - layer_filter_rule:
+      name: Select top layer flow velocity
+      description: get first layer of model
+      layer_number: 22
+      input_variable: INPUT_flow_velocity_ms
+      output_variable: flow_velocity_ms_toplayer
+
+  # Prepare averages
+  - time_aggregation_rule:
+      name: Average water depth
+      description: Get the averaged water depth per year
+      operation: AVERAGE
+      time_scale: year
+      input_variable: INPUT_water_depth_mNAP
+      output_variable: water_depth_averaged
+
+  - time_aggregation_rule:
+      name: Average flow velocity top layer
+      description: Get the averaged flow velocity per year
+      operation: AVERAGE
+      time_scale: year
+      input_variable: flow_velocity_ms_toplayer
+      output_variable: flow_velocity_averaged
+      
+  - time_aggregation_rule:
+      name: Average chloride top layer
+      description: Get the averaged water depth per year
+      operation: AVERAGE
+      time_scale: year
+      input_variable: chloride_mgL_toplayer
+      output_variable: chloride_averaged
+
+  # Based on Hard boundaries
+  
+  ## P. nodosus
+  - step_function_rule:
+      name: Hard boundaries HSI P. nodosus on water depth
+      description: Get the Habitat Suitability Index of P. nodosus based on water depth
+      limit_response_table:    
+        - [ limit , response]
+        - [-999.0 ,     0.00]
+        - [   0.05,     1.00]
+        - [   2.0 ,     0.00]
+        - [ 999.0 ,     0.00]
+      input_variable: water_depth_averaged
+      output_variable: HB_HGI_P_nodosus_water_depth
+ 
+  - step_function_rule:
+      name: Hard boundaries HSI P. nodosus on flow velocity
+      description: Get the Habitat Suitability Index of P. nodosus based on flow velocity
+      limit_response_table:    
+        - [ limit , response]
+        - [-999.0 ,     0.00]
+        - [   0.0 ,     1.00]
+        - [   2.0 ,     0.00]
+        - [ 999.0 ,     0.00]
+      input_variable: flow_velocity_averaged
+      output_variable: HB_HGI_P_nodosus_flow_velocity   
+
+  - step_function_rule:
+      name: Hard boundaries HSI P. nodosus on chloride concentration
+      description: Get the Habitat Suitability Index of P. nodosus based on chloride concentration
+      limit_response_table:    
+        - [ limit , response]
+        - [-999.0 ,     0.00]
+        - [   0.0 ,     1.00]
+        - [ 450.6 ,     0.00]
+        - [ 999.0 ,     0.00]
+      input_variable: chloride_averaged
+      output_variable: HB_HGI_P_nodosus_chloride  
+
+  - combine_results_rule:
+      name: Hard boundaries HGI P. nodosus total
+      description: Get the Habitat Suitability Index of P. nodosus based on all combined
+      operation: MIN
+      input_variables: ["HB_HGI_P_nodosus_water_depth", "HB_HGI_P_nodosus_flow_velocity","HB_HGI_P_nodosus_chloride"]
+      output_variable: HB_HSI_P_nodosus
+
+  ## P. pectinatus
+
+  - step_function_rule:
+      name: Hard boundaries HSI P. pectinatus on water depth
+      description: Get the Habitat Suitability Index of P. pectinatus based on water depth
+      limit_response_table:    
+        - [ limit , response]
+        - [-999.0 ,     0.00]
+        - [   0.05,     1.00]
+        - [   2.0 ,     0.00]
+        - [ 999.0 ,     0.00]
+      input_variable: water_depth_averaged
+      output_variable: HB_HGI_P_pectinatus_water_depth
+ 
+  - step_function_rule:
+      name: Hard boundaries HSI P. pectinatus on flow velocity
+      description: Get the Habitat Suitability Index of P. pectinatus based on flow velocity
+      limit_response_table:    
+        - [ limit , response]
+        - [-999.0 ,     0.00]
+        - [   0.0 ,     1.00]
+        - [   2.0 ,     0.00]
+        - [ 999.0 ,     0.00]
+      input_variable: flow_velocity_averaged
+      output_variable: HB_HGI_P_pectinatus_flow_velocity   
+
+  - step_function_rule:
+      name: Hard boundaries HSI P. pectinatus on chloride concentration
+      description: Get the Habitat Suitability Index of P. pectinatus based on chloride concentration
+      limit_response_table:    
+        - [   limit , response]
+        - [  -999.0 ,     0.00]
+        - [     0.0 ,     1.00]
+        - [ 15286.6 ,     0.00]
+        - [ 99999.0 ,     0.00]
+      input_variable: chloride_averaged
+      output_variable: HB_HGI_P_pectinatus_chloride  
+
+  - combine_results_rule:
+      name: Hard boundaries HGI P. pectinatus total
+      description: Get the Habitat Suitability Index of P. pectinatus based on all combined
+      operation: MIN
+      input_variables: ["HB_HGI_P_pectinatus_water_depth", "HB_HGI_P_pectinatus_flow_velocity","HB_HGI_P_pectinatus_chloride"]
+      output_variable: HB_HSI_P_pectinatus
+  
+
+  # Based on Fuzzy logic
+  
+  ## P. nodosus
+  - response_curve_rule:
+      name: Fuzzy logic HSI P. nodosus on water depth
+      description: Get the Habitat Suitability Index of P. nodosus based on water depth
+      response_table:
+           - [input  , output]
+           - [-999.0 ,   0.0 ]
+           - [   0.0 ,   0.0 ]
+           - [   0.5 ,   1.0 ]
+           - [   1.0 ,   1.0 ]
+           - [   2.0 ,   0.0 ]
+           - [ 999.0 ,   0.0 ]
+      input_variable: water_depth_averaged
+      output_variable: FL_HGI_P_nodosus_water_depth
+ 
+  - response_curve_rule:
+      name: Fuzzy logic HSI P. nodosus on flow velocity
+      description: Get the Habitat Suitability Index of P. nodosus based on flow velocity
+      response_table:
+           - [input  , output]
+           - [-999.0 ,   0.0 ]
+           - [   0.1 ,   0.0 ]
+           - [   0.3 ,   1.0 ]
+           - [   0.7 ,   1.0 ]
+           - [   1.0 ,   0.0 ]
+           - [ 999.0 ,   0.0 ]
+      input_variable: flow_velocity_averaged
+      output_variable: FL_HGI_P_nodosus_flow_velocity
+
+  - response_curve_rule:
+      name: Fuzzy logic HSI P. nodosus on chloride concentration
+      description: Get the Habitat Suitability Index of P. nodosus based on chloride concentration
+      response_table:
+           - [input  , output]
+           - [   0.0 ,   1.0 ]
+           - [ 200.0 ,   1.0 ]
+           - [ 300.0 ,   0.0 ]
+           - [ 999.0 ,   0.0 ]
+      input_variable: chloride_averaged
+      output_variable: FL_HGI_P_nodosus_chloride
+
+  - combine_results_rule:
+      name: Fuzzy logic HGI P. nodosus total
+      description: Get the Habitat Suitability Index of P. nodosus based on all combined
+      operation: MIN
+      input_variables: ["FL_HGI_P_nodosus_water_depth", "FL_HGI_P_nodosus_flow_velocity","FL_HGI_P_nodosus_chloride"]
+      output_variable: FL_HSI_P_nodosus 
+
+  ## P. pectinatus
+  - response_curve_rule:
+      name: Fuzzy logic HSI P. pectinatus on water depth
+      description: Get the Habitat Suitability Index of P. pectinatus based on water depth
+      response_table:
+           - [input  , output]
+           - [   0.0 ,   0.0 ]
+           - [   0.2 ,   0.0 ]
+           - [   0.5 ,   1.0 ]
+           - [   0.8 ,   0.8 ]
+           - [   1.25,   0.5 ]
+           - [   1.75 ,  0.2 ]
+           - [   2.00 ,  0.0 ]
+           - [ 999.0 ,   0.0 ]
+      input_variable: water_depth_averaged
+      output_variable: FL_HGI_P_pectinatus_water_depth
+ 
+  - response_curve_rule:
+      name: Fuzzy logic HSI P. pectinatus on flow velocity
+      description: Get the Habitat Suitability Index of P. pectinatus based on flow velocity
+      response_table:
+           - [input   , output]
+           - [   0.0  ,   1.0 ]
+           - [   0.3  ,   1.0 ]
+           - [   0.35 ,   0.7 ]
+           - [   0.45 ,   0.3 ]
+           - [   0.5  ,   0.0 ]
+           - [ 999.0  ,   0.0 ]
+      input_variable: flow_velocity_averaged
+      output_variable: FL_HGI_P_pectinatus_flow_velocity
+
+  - response_curve_rule:
+      name: Fuzzy logic HSI P. pectinatus on chloride concentration
+      description: Get the Habitat Suitability Index of P. pectinatus based on chloride concentration
+      response_table:
+           - [input  , output]
+           - [   0.0 ,   1.0 ]
+           - [1000.0 ,   1.0 ]
+      input_variable: chloride_averaged
+      output_variable: FL_HGI_P_pectinatus_chloride
+
+  - combine_results_rule:
+      name: Fuzzy logic HGI P. pectinatus total
+      description: Get the Habitat Suitability Index of P. pectinatus based on all combined
+      operation: MIN
+      input_variables: ["FL_HGI_P_pectinatus_water_depth", "FL_HGI_P_pectinatus_flow_velocity","FL_HGI_P_pectinatus_chloride"]
+      output_variable: FL_HSI_P_pectinatus       
+output-data:
+  filename: ./tests_acceptance/output_nc_files/DHYDRO_VKZM_Potamogeton_testcase_boundaries_vs_fuzzylogic.nc
