@@ -61,7 +61,7 @@ line_length = 88
 markers = [
     "data_access: tests using the file system",
 ]
-testpaths = ["tests/**/test_*.py"]
+testpaths = ["tests/**/test_*.py","tests_acceptance/**/test_*.py"]
 pythonpath = ["."]
 junit_logging = "all"
 log_cli = "True"

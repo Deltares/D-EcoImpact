@@ -12,6 +12,7 @@ The dependencies of the D-EcoImpact are declared, managed and installed with [Po
 - poetry 1.3 or higher ([installation instructions](https://python-poetry.org/docs/#installation))
 
 ## Install
+
 To install the dependencies of the project create a virtual environment either with `venv` or `conda`.\
 Switch to this environment and use `poetry` to restore the package dependencies.
 
@@ -31,6 +32,7 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 ### venv:
 
 - Create `venv` virtual environment
+
   ```sh
   $ python -m venv <env_name>
   ```
@@ -41,8 +43,7 @@ Switch to this environment and use `poetry` to restore the package dependencies.
   ```
 
 (see
-    [Documentation](
-    https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment))
+[Documentation](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment))
 
 ### Add dependencies
 
@@ -50,40 +51,50 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 $ poetry install
 ```
 
-
 ## Run
+
 Make sure you have a correct input file available in the main folder (eg. input_file.yaml) and use this as the first keyword argument when running the code through command line:
 
-  ```sh
-  $ python main.py input_file.yaml
-  ```
+```sh
+$ python main.py input_file.yaml
+```
 
 ## Development
 
 When adding a new dependency, do so using `poetry`
 
- - Add a new dependency
-    ```sh
-    $ poetry add <package>
-    ```
+- Add a new dependency
+
+  ```sh
+  $ poetry add <package>
+  ```
 
 - Add a new dependency for development
-    ```sh
-    $ poetry add <package> --dev
-    ```
+  ```sh
+  $ poetry add <package> --dev
+  ```
 
 ## Documentation
-There are mkdocs available for documentation on how to use this code. 
-For now these are available offline by running the command: 
+
+There are mkdocs available for documentation on how to use this code.
+For now these are available offline by running the command:
 
 ```
 $ mkdocs serve
 ```
 
-The pages will be served locally and available on one of you local ports. When executing this command in the INFO messages the location will be shown where the docs are available: 
+The pages will be served locally and available on one of you local ports. When executing this command in the INFO messages the location will be shown where the docs are available:
 
 ```
 INFO     -  [10:44:34] Serving on http://127.0.0.1:8000/
 ```
 
-In this case the docs are available on http://127.0.0.1:8000/ or http://localhost:8000: 
+In this case the docs are available on http://127.0.0.1:8000/ or http://localhost:8000:
+
+## Add acceptance tests
+
+To add an acceptance test:
+
+- Create the [name].yaml file and store it in the tests_acceptance/input_yaml_files
+- Put the [name].nc at the tests_acceptance/reference_nc_files folder. \* Note that the .nc file should have the same name as the .yaml file.
+- To test if it is working correctly run: poetry run pytest tests_acceptance/test_main.py
