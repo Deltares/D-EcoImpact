@@ -1,3 +1,9 @@
+# This file is part of D-EcoImpact
+# Copyright (C) 2022-2023  Stichting Deltares and D-EcoImpact contributors
+# This program is free software distributed under the GNU
+# Lesser General Public License version 2.1
+# A copy of the GNU General Public License can be found at
+# https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
 Tests for the ParserStepFunctionRule class
 """
