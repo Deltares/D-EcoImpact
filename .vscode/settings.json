@@ -32,6 +32,12 @@
     "python.analysis.exclude": [
         "tests/**/*"
     ],
+    "autoSnippet.snippets": [
+        {
+            "language": "python",
+            "snippet": "Insert_lgpl_header_DEI"
+        }
+    ],
     "python.linting.flake8Args": [
         "--max-line-length=88"
     ]
