@@ -1,26 +1,3 @@
-#  Copyright (C) 2022-2023 Stichting Deltares and contributors
-#  
-#  This program is free software: you can redistribute it and/or modify it
-#  under the terms of the GNU Lesser General Public License version 2.1 as
-#  published by the Free Software Foundation.
-#  
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-#  GNU Lesser General Public License for more details.
-#  
-#  You should have received a copy of the GNU General Public License
-#  along with this program. If not, see <http://www.gnu.org/licenses/>.
-#  
-#  contact: software@deltares.nl
-#  Stichting Deltares
-#  P.O. Box 177
-#  2600 MH Delft, The Netherlands
-#  
-#  All indications and logos of, and references to registered trademarks
-#  of Stichting Deltares remain the property of Stichting Deltares. All
-#  rights reserved.
-
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![TeamCity build status](https://dpcbuild.deltares.nl/app/rest/builds/buildType:id:DEcoImpact_UnitTests/statusIcon.svg)](https://dpcbuild.deltares.nl/viewType.html?buildTypeId=DEcoImpact_UnitTests)
 
@@ -28,6 +5,32 @@
 
 A Python based kernel to perform spatial (environmental) impact assessment. Based on knowledge rules applied to model output and/or measurements.
 The dependencies of the D-EcoImpact are declared, managed and installed with [Poetry](https://python-poetry.org/).
+
+## Copyright
+Copyright &copy; 2022-2023 Stichting Deltares and contributors
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License version 2.1 as
+published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Lesser General Public License for more details.
+
+A copy of the GNU General Public License can be found at  
+<https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md>  
+and at  
+<http://www.gnu.org/licenses/>
+
+Contact:  software@deltares.nl  
+Stichting Deltares  
+P.O. Box 177  
+2600 MH Delft, The Netherlands
+
+All indications and logos of, and references to registered trademarks
+of Stichting Deltares remain the property of Stichting Deltares. All
+rights reserved.
 
 ## Prerequisites
 
