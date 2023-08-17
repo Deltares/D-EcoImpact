@@ -9,7 +9,13 @@ The dependencies of the D-EcoImpact are declared, managed and installed with [Po
 ## Prerequisites
 
 - python 3.9 or higher
-- poetry 1.3 or higher ([installation instructions](https://python-poetry.org/docs/#installation))
+- poetry 1.3 or higher we recommend: ([installation instructions](https://python-poetry.org/docs/#installation))
+
+If you prefer to install poetry with conda then we recommed to install poetry only to the base environment:
+
+```sh
+$ conda install -y -c conda-forge poetry
+```
 
 ## Install
 
@@ -18,11 +24,11 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 
 ### Create environment
 
-#### Anaconda:
+#### Anaconda or Miniconda:
 
 - Create `conda` environment
   ```sh
-  $ conda create -y -c conda-forge --name <env_name> python=3.11
+  $ conda create -y pip --name <env_name> python=3.11
   ```
 - Activate `conda` environment
   ```sh
