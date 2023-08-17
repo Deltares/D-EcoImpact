@@ -61,18 +61,18 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
         # Per time period multiple multipliers can be given, reduce this to
         # one multiplier by taking the product of all multipliers.
         result_multipliers = [_np.prod(mp) for mp in self._multipliers]
-        dr = _xr.DataArray(value_array)
-
-        for (index, multiplier) in enumerate(result_multipliers):
+        old_dr = _xr.DataArray(value_array)
+        new_dr = _xr.full_like(old_dr, _np.nan)
+        for (index, mp) in enumerate(result_multipliers):
             if (len(self.date_range) != 0):
                 # Date is given in DD-MM, convert to MM-DD for comparison
                 start = self._convert_datestr(self.date_range[index][0])
                 end = self._convert_datestr(self.date_range[index][1])
-                dr_date = dr.time.dt.strftime(r"%m-%d")
-                dr = _xr.where((start < dr_date) & (dr_date < end), dr * multiplier, dr)
+                dr_date = old_dr.time.dt.strftime(r"%m-%d")
+                new_dr = _xr.where((start < dr_date) & (dr_date < end), old_dr * mp, new_dr)
             else:
-                dr = dr * multiplier
-        return dr
+                new_dr = old_dr * mp
+        return new_dr
 
     def _convert_datestr(self, date_str: str) -> str:
         parsed_str = _dt.strptime(date_str, r"%d-%m")
