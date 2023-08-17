@@ -69,7 +69,11 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
                 start = self._convert_datestr(self.date_range[index][0])
                 end = self._convert_datestr(self.date_range[index][1])
                 dr_date = old_dr.time.dt.strftime(r"%m-%d")
-                new_dr = _xr.where((start < dr_date) & (dr_date < end), old_dr * mp, new_dr)
+                new_dr = _xr.where(
+                    (start < dr_date) & (dr_date < end),
+                    old_dr * mp,
+                    new_dr
+                )
             else:
                 new_dr = old_dr * mp
         return new_dr
