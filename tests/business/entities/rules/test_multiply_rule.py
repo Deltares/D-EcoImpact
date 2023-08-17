@@ -85,3 +85,38 @@ def test_execute_value_array_multiplied_by_multipliers_with_dates():
 
     # Assert
     assert _xr.testing.assert_equal(multiplied_array, result_array) is None
+
+
+def test_execute_value_array_multiplied_by_multipliers_with_dates_missing_dates():
+    """Test executing Multiply Rule with multipliers and a date range. And check 
+    that the values """
+
+    # Arrange
+    logger = Mock(ILogger)
+    rule = MultiplyRule(
+        "test",
+        ["foo"],
+        [[2], [100, 10]],
+        date_range=[["02-01", "10-01"], ["11-01", "20-01"]]
+    )
+
+    values = [0.1, 0.7, 0.2, 0.2, 0.3, 0.1]
+    time = [
+        "2020-01-02",
+        "2020-01-12",
+        "2021-01-03",
+        "2021-01-13",
+        "2022-01-04",
+        "2022-01-14",
+    ]
+    time = [_np.datetime64(t) for t in time]
+    value_array = _xr.DataArray(values, coords=[time], dims=["time"])
+
+    # Act
+    multiplied_array = rule.execute(value_array, logger)
+
+    result_data = [None, 700, 0.4, 200, 0.6, 100]
+    result_array = _xr.DataArray(result_data, coords=[time], dims=["time"])
+
+    # Assert
+    assert _xr.testing.assert_equal(multiplied_array, result_array) is None
