@@ -42,7 +42,7 @@ class ParserMultiplyRule(IParserRuleBase):
         name = get_dict_element("name", dictionary)
         input_variable_name = get_dict_element("input_variable", dictionary)
         output_variable_name = get_dict_element("output_variable", dictionary)
-        description = get_dict_element("description", dictionary)
+        description = get_dict_element("description", dictionary, False) or ""
 
         multipliers = [get_dict_element("multipliers", dictionary, False)]
         date_range = []
