@@ -68,6 +68,9 @@ class DataAccessLayer(IDataAccessLayer):
         Returns:
             _xr.Dataset: Dataset based on provided dataset_data
         """
+        start_time = "2014-01-01"
+        end_time = "2015-12-31"
+
         if not Path.exists(dataset_data.path):
             message = f"""The file {dataset_data.path} is not found. \
                           Make sure the input file location is valid."""
@@ -78,6 +81,7 @@ class DataAccessLayer(IDataAccessLayer):
                           Currently only UGrid (NetCDF) files are supported."""
             raise NotImplementedError(message)
 
+        # open input dataset (from .nc file)
         try:
             dataset: _xr.Dataset = _xr.open_dataset(
                 dataset_data.path, mask_and_scale=True
@@ -87,6 +91,14 @@ class DataAccessLayer(IDataAccessLayer):
             # to floats
         except ValueError as exc:
             msg = "ERROR: Cannot open input .nc file -- " + str(dataset_data.path)
+            raise ValueError(msg) from exc
+
+        # apply time filter on input dataset
+        try:
+            # dataset = dataset.where(dataset["time.year"] > 2014, drop=True)
+            dataset = dataset.sel(time=slice(start_time, end_time))
+        except ValueError as exc:
+            msg = "ERROR: error applying time filter on dataset"
             raise ValueError(msg) from exc
 
         return dataset
