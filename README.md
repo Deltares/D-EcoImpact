@@ -24,11 +24,15 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 
 ### Create environment
 
+> Whereby **<env_name>** stands for your chosen environment name.
+>
+> The name can not contain any spaces or special characters.
+
 #### Anaconda or Miniconda:
 
 - Create `conda` environment
   ```sh
-  $ conda create -y pip --name <env_name> python=3.11
+  $ conda create -y -c pip --name <env_name> python=3.11
   ```
 - Activate `conda` environment
   ```sh
