@@ -89,7 +89,7 @@ def test_execute_value_array_multiplied_by_multipliers_with_dates():
 
 def test_execute_value_array_multiplied_by_multipliers_with_dates_missing_dates():
     """Test executing Multiply Rule with multipliers and a date range. And check 
-    that the values """
+    that the values that are outside the given periods are filled with None"""
 
     # Arrange
     logger = Mock(ILogger)
