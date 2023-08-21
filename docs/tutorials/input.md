@@ -102,6 +102,8 @@ The output of the following functionalities have been shown for a section of the
 
 The multiply rule allows for multiplication of variables. This could be used for unit transformation (e.g. salinity to chloride) or scenario creation (e.g. waterlevel 80% of existing value). The rule operates on all cells both 3D (in horizontal as vertical) as in the time axes. The same dimensions are returned at the output variable. The rule needs to be applied to an existing variable. A new variable is created when the rule is executed.
 
+When using the multiply rule with a start and end date (or multiple start and end dates) all periods that are not covered will be set to NaN. In this way the multiply rule can also be used as a filter in time.
+
 ```
 #EXAMPLE  : Salinity (psu) to chloride (mg/l) in an freshwater environment.
 - multiply_rule:
