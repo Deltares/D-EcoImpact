@@ -28,11 +28,13 @@ class IDatasetData(ABC):
     @abstractmethod
     def start_date(self) -> str:
         """start date to filter the dataset"""
+        # start_date is passed as string (not datetime) because it is optional
 
     @property
     @abstractmethod
     def end_date(self) -> str:
         """end date to filter the dataset"""
+        # end_date is passed as string (not datetime) because it is optional
 
     @property
     @abstractmethod

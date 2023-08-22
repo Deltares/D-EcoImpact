@@ -70,12 +70,18 @@ class DataAccessLayer(IDataAccessLayer):
             _xr.Dataset: Dataset based on provided dataset_data
         """
         # get start and end date from input file and convert to date format
-        ds_start_date = dataset_data.start_date
-        ds_end_date = dataset_data.end_date
+        # if start or end date is not given, then use None to slice the data
         date_format = "%d-%m-%Y"
-        filter_start_date = datetime.strptime(ds_start_date, date_format)
-        filter_end_date = datetime.strptime(ds_end_date, date_format)
+        filter_start_date = None
+        ds_start_date = dataset_data.start_date
+        if ds_start_date != 'None':
+            filter_start_date = datetime.strptime(ds_start_date, date_format)
+        filter_end_date = None
+        ds_end_date = dataset_data.end_date
+        if ds_end_date != 'None':
+            filter_end_date = datetime.strptime(ds_end_date, date_format)
 
+        # check path
         if not Path.exists(dataset_data.path):
             message = f"""The file {dataset_data.path} is not found. \
                           Make sure the input file location is valid."""
@@ -100,11 +106,15 @@ class DataAccessLayer(IDataAccessLayer):
 
         # apply time filter on input dataset
         try:
-            # dataset = dataset.where(dataset["time.year"] > 2014, drop=True)
             dataset = dataset.sel(time=slice(filter_start_date, filter_end_date))
         except ValueError as exc:
             msg = "ERROR: error applying time filter on dataset"
             raise ValueError(msg) from exc
+        # TO DO:
+        # log (INFO) applying time filter?
+        # validate whether given date is valid
+        # add/change tests
+        # update docs
 
         return dataset
 

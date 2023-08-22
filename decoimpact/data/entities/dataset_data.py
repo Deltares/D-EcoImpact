@@ -42,11 +42,13 @@ class DatasetData(IDatasetData):
     @property
     def start_date(self) -> str:
         """optional start date to filter the dataset"""
+        # start_date is passed as string (not datetime) because it is optional
         return self._start_date
 
     @property
     def end_date(self) -> str:
         """optional end date to filter the dataset"""
+        # end_date is passed as string (not datetime) because it is optional
         return self._end_date
 
     @property
