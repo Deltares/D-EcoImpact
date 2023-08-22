@@ -26,5 +26,10 @@ class IDatasetData(ABC):
 
     @property
     @abstractmethod
+    def start_date(self) -> str:
+        """start date to filter the dataset"""
+
+    @property
+    @abstractmethod
     def mapping(self) -> dict[str, str]:
         """Variable name mapping (source to target)"""

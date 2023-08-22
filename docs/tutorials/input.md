@@ -25,6 +25,8 @@ The model needs at least one rule under “rules” to execute.
 input-data:
   - dataset:
       filename: <path_to_file_including_file_name_and_type>
+      start_date: "<start_date>"
+      end_date: "<end_date>"
       variable_mapping:
         <variable1_input_file>: "<variable1_name_in_model>"
         <variable2_input_file>: "<variable2_name_in_model>"
