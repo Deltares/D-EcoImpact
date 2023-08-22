@@ -106,12 +106,14 @@ class DataAccessLayer(IDataAccessLayer):
 
         # apply time filter on input dataset
         try:
-            dataset = dataset.sel(time=slice(filter_start_date, filter_end_date))
+            if filter_start_date is not None or filter_end_date is not None:
+                time_filter = f"({filter_start_date}, {filter_end_date})"
+                self._logger.log_info(f"Applying time filter {time_filter} on dataset")
+                dataset = dataset.sel(time=slice(filter_start_date, filter_end_date))
         except ValueError as exc:
             msg = "ERROR: error applying time filter on dataset"
             raise ValueError(msg) from exc
         # TO DO:
-        # log (INFO) applying time filter?
         # validate whether given date is valid
         # add/change tests
         # update docs
