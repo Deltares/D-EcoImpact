@@ -69,11 +69,12 @@ class DataAccessLayer(IDataAccessLayer):
         Returns:
             _xr.Dataset: Dataset based on provided dataset_data
         """
-        # filter_start_date = "2014-01-01"
+        # get start and end date from input file and convert to date format
         ds_start_date = dataset_data.start_date
+        ds_end_date = dataset_data.end_date
         date_format = "%d-%m-%Y"
         filter_start_date = datetime.strptime(ds_start_date, date_format)
-        filter_end_date = "2015-12-31"
+        filter_end_date = datetime.strptime(ds_end_date, date_format)
 
         if not Path.exists(dataset_data.path):
             message = f"""The file {dataset_data.path} is not found. \

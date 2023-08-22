@@ -12,11 +12,8 @@ Classes:
 
 """
 
-import datetime
 from pathlib import Path
 from typing import Any
-
-from tomlkit import date
 
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.dictionary_utils import get_dict_element
@@ -34,17 +31,23 @@ class DatasetData(IDatasetData):
         super()
         self._path = Path(get_dict_element("filename", dataset)).resolve()
         self._start_date = str(get_dict_element("start_date", dataset, False))
+        self._end_date = str(get_dict_element("end_date", dataset, False))
         self._get_mapping(dataset)
 
     @property
     def path(self) -> Path:
         """File path to the input dataset"""
         return self._path
-    
+
     @property
     def start_date(self) -> str:
-        """optional start and end date to filter the dataset"""
+        """optional start date to filter the dataset"""
         return self._start_date
+
+    @property
+    def end_date(self) -> str:
+        """optional end date to filter the dataset"""
+        return self._end_date
 
     @property
     def mapping(self) -> dict[str, str]:
