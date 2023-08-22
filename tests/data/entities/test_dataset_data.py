@@ -19,6 +19,8 @@ def test_dataset_data_creation_logic():
     # Arrange
     data_dict = {
         "filename": "test.yaml",
+        # start_date is left out to check it is optional
+        "end_date": "31-12-2020",
         "variable_mapping": {"test": "new"},
     }
 
@@ -31,3 +33,32 @@ def test_dataset_data_creation_logic():
     assert str(data.path).endswith("test.yaml")
     assert "test" in data.mapping
     assert data.mapping["test"] == "new"
+    assert data.start_date == 'None'
+    assert data.end_date == "31-12-2020"
+
+
+
+def test_dataset_data_time_filter():
+    """The DatasetData should parse the provided dictionary
+    to correctly initialize itself during creation
+    and test the values of start and end date
+    and test whether the time filter is optional"""
+
+    # Arrange
+    data_dict = {
+        "filename": "test.yaml",
+        "start_date": "01-01-2019",
+        # end_date is left out to check it is optional
+        "variable_mapping": {"test": "new"},
+    }
+
+    # Act
+    data = DatasetData(data_dict)
+
+    # Assert
+    assert isinstance(data, IDatasetData)
+    assert str(data.path).endswith("test.yaml")
+    assert data.start_date == "01-01-2019"
+    assert data.end_date == 'None'
+    # the result 'None' should result in not filtering the data set on end date
+
