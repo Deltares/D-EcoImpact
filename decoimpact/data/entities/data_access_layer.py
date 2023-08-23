@@ -115,7 +115,6 @@ class DataAccessLayer(IDataAccessLayer):
             raise ValueError(msg) from exc
         # TO DO:
         # validate whether given date is valid
-        # add/change tests
         # update docs
 
         return dataset

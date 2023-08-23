@@ -244,3 +244,32 @@ def test_dataset_data_get_input_dataset_should_not_read_incorrect_file():
     assert exception_raised.args[0].endswith(
         f"ERROR: Cannot open input .nc file -- {str(path)}"
     )
+
+def test_data_access_layer_apply_time_filter():
+    """The DataAccessLayer should apply a given time filter"""
+
+    # Arrange
+    logger = LoggerFactory.create_logger()
+    path = Path(get_test_data_path() + "/test_time_filter.yaml")
+    # nc_path = get_test_data_path() + "/small_subset_FM-VZM_0000_map.nc"
+
+    # Act
+    da_layer = DataAccessLayer(logger)
+    model_data = da_layer.read_input_file(path)
+
+    # Assert
+
+    # implements interface
+    assert isinstance(model_data, IModelData)
+    assert isinstance(model_data, YamlModelData)
+
+    # assert model_data.name == "Model 1"
+    assert len(model_data.datasets) == 1
+
+    first_dataset = model_data.datasets[0]
+    assert first_dataset.start_date == '01-01-2014'
+    assert first_dataset.end_date == '31-12-2014'
+
+    # TO DO:
+    # test if result is time filtered
+    # assert first_dataset.min(dim='time') == '01-01-2014'
