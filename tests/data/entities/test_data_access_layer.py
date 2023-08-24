@@ -8,6 +8,7 @@
 Tests for DataAccessLayer class
 """
 
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import Mock
 
@@ -248,28 +249,46 @@ def test_dataset_data_get_input_dataset_should_not_read_incorrect_file():
 def test_data_access_layer_apply_time_filter():
     """The DataAccessLayer should apply a given time filter"""
 
+    # # Arrange
+    # logger = LoggerFactory.create_logger()
+    # path = Path(get_test_data_path() + "/test_time_filter.yaml")
+    # # nc_path = get_test_data_path() + "/small_subset_FM-VZM_0000_map.nc"
+
+    # # Act
+    # da_layer = DataAccessLayer(logger)
+    # model_data = da_layer.read_input_dataset(path)
+    
+
     # Arrange
-    logger = LoggerFactory.create_logger()
-    path = Path(get_test_data_path() + "/test_time_filter.yaml")
-    # nc_path = get_test_data_path() + "/small_subset_FM-VZM_0000_map.nc"
+    logger = Mock(ILogger)
+    path = get_test_data_path() + "/test_time_filter.nc"
+    data_dict = {
+        "filename": path,
+        "start_date": "01-07-2014",
+        "end_date": "01-09-2014",
+        "variable_mapping":{"water_depth_m": "water_depth"}
+    }
+    input_data = DatasetData(data_dict)
+
+    date_format = "%d-%m-%Y"
+    min_date_expected = datetime.strptime("02-07-2014", date_format)
 
     # Act
     da_layer = DataAccessLayer(logger)
-    model_data = da_layer.read_input_file(path)
+    # with pytest.raises(ValueError) as exc_info:
+    result_dataset = da_layer.read_input_dataset(input_data)
+    # min_date_dataset = result_dataset['time'].resample(time='1D').all()
+    min_date_dataset = result_dataset['time'].indexes['time'].normalize()
+    # min_date_dataset = str(result_dataset['time'].min())
+    # min_date_result = datetime.strptime(min_date_dataset, "%Y-%m-%dT%H:%M:%S")
+    min_date_result = min_date_dataset.min()
 
     # Assert
 
-    # implements interface
-    assert isinstance(model_data, IModelData)
-    assert isinstance(model_data, YamlModelData)
-
-    # assert model_data.name == "Model 1"
-    assert len(model_data.datasets) == 1
-
-    first_dataset = model_data.datasets[0]
-    assert first_dataset.start_date == '01-01-2014'
-    assert first_dataset.end_date == '31-12-2014'
+    # first_dataset = model_data.datasets[0]
+    # assert first_dataset.start_date == '01-01-2014'
+    # assert first_dataset.end_date == '31-12-2014'
 
     # TO DO:
     # test if result is time filtered
-    # assert first_dataset.min(dim='time') == '01-01-2014'
+    assert min_date_result == min_date_expected

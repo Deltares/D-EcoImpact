@@ -117,6 +117,8 @@ class DataAccessLayer(IDataAccessLayer):
         # validate whether given date is valid
         # update docs
 
+        # dataset.min()
+
         return dataset
 
     def write_output_file(self, dataset: _xr.Dataset, path: Path) -> None:
