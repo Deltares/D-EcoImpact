@@ -119,7 +119,8 @@ def test_dataset_data_write_output_file_should_check_if_path_exists():
 
 def test_dataset_data_write_output_file_should_check_if_extension_is_correct():
     """When calling write_output_file the provided path
-    extension needs to be checked if it matches the currently implementation (netCDF files)"""
+    extension needs to be checked if it matches
+    the currently implementation (netCDF files)"""
 
     # Arrange
     logger = Mock(ILogger)
@@ -246,18 +247,9 @@ def test_dataset_data_get_input_dataset_should_not_read_incorrect_file():
         f"ERROR: Cannot open input .nc file -- {str(path)}"
     )
 
+
 def test_data_access_layer_apply_time_filter():
     """The DataAccessLayer should apply a given time filter"""
-
-    # # Arrange
-    # logger = LoggerFactory.create_logger()
-    # path = Path(get_test_data_path() + "/test_time_filter.yaml")
-    # # nc_path = get_test_data_path() + "/small_subset_FM-VZM_0000_map.nc"
-
-    # # Act
-    # da_layer = DataAccessLayer(logger)
-    # model_data = da_layer.read_input_dataset(path)
-    
 
     # Arrange
     logger = Mock(ILogger)
@@ -266,7 +258,7 @@ def test_data_access_layer_apply_time_filter():
         "filename": path,
         "start_date": "01-07-2014",
         "end_date": "01-09-2014",
-        "variable_mapping":{"water_depth_m": "water_depth"}
+        "variable_mapping": {"water_depth_m": "water_depth"}
     }
     input_data = DatasetData(data_dict)
 
