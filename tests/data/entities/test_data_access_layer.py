@@ -257,30 +257,22 @@ def test_data_access_layer_apply_time_filter():
     data_dict = {
         "filename": path,
         "start_date": "01-07-2014",
-        "end_date": "01-09-2014",
+        "end_date": "31-08-2014",
         "variable_mapping": {"water_depth_m": "water_depth"}
     }
     input_data = DatasetData(data_dict)
-
     date_format = "%d-%m-%Y"
-    min_date_expected = datetime.strptime("02-07-2014", date_format)
+    start_date_expected = datetime.strptime("02-07-2014", date_format)
+    end_date_expected = datetime.strptime("31-08-2014", date_format)
 
     # Act
     da_layer = DataAccessLayer(logger)
-    # with pytest.raises(ValueError) as exc_info:
-    result_dataset = da_layer.read_input_dataset(input_data)
-    # min_date_dataset = result_dataset['time'].resample(time='1D').all()
-    min_date_dataset = result_dataset['time'].indexes['time'].normalize()
-    # min_date_dataset = str(result_dataset['time'].min())
-    # min_date_result = datetime.strptime(min_date_dataset, "%Y-%m-%dT%H:%M:%S")
-    min_date_result = min_date_dataset.min()
+    ds_result = da_layer.read_input_dataset(input_data)
+    ds_result_date = ds_result['time'].indexes['time'].normalize()
+    min_date_result = ds_result_date.min()
+    max_date_result = ds_result_date.max()
 
     # Assert
-
-    # first_dataset = model_data.datasets[0]
-    # assert first_dataset.start_date == '01-01-2014'
-    # assert first_dataset.end_date == '31-12-2014'
-
-    # TO DO:
-    # test if result is time filtered
-    assert min_date_result == min_date_expected
+    # test if result is time filtered for both start and end date
+    assert min_date_result == start_date_expected
+    assert max_date_result == end_date_expected
