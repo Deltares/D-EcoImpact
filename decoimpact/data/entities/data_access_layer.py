@@ -113,11 +113,6 @@ class DataAccessLayer(IDataAccessLayer):
         except ValueError as exc:
             msg = "ERROR: error applying time filter on dataset"
             raise ValueError(msg) from exc
-        # TO DO:
-        # validate whether given date is valid
-        # update docs
-
-        # dataset.min()
 
         return dataset
 
