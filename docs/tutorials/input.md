@@ -15,7 +15,7 @@ output-data:
 	…………………….
 ```
 
-In the input data the variables that are present in the input data provided through “filename” are selected for use. The variables that are used can be selected under “variable_mapping”. Here you are also able to rename variables as the name used for storage is often cryptic. 
+In the input data the variables that are present in the input data provided through “filename” are selected for use. It is possible to filter the input data by providing a start date or end date (format: "dd-mm-yyyy"); this is optional. The variables that are used can be selected under “variable_mapping”. Here you are also able to rename variables as the name used for storage is often cryptic. 
 
 At output data the location where the output file needs to be written can be provided through “filename”. In this output file only variables that have been used from the input data and variables that have been created in the model are stored.
 The model needs at least one rule under “rules” to execute.  
@@ -25,6 +25,8 @@ The model needs at least one rule under “rules” to execute.
 input-data:
   - dataset:
       filename: <path_to_file_including_file_name_and_type>
+      start_date: "<start_date>"
+      end_date: "<end_date>"
       variable_mapping:
         <variable1_input_file>: "<variable1_name_in_model>"
         <variable2_input_file>: "<variable2_name_in_model>"
