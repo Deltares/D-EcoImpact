@@ -1,3 +1,9 @@
+# This file is part of D-EcoImpact
+# Copyright (C) 2022-2023  Stichting Deltares and D-EcoImpact contributors
+# This program is free software distributed under the GNU
+# Lesser General Public License version 2.1
+# A copy of the GNU General Public License can be found at
+# https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
 Module for DatasetData interface
 
@@ -24,12 +30,26 @@ class DatasetData(IDatasetData):
         """
         super()
         self._path = Path(get_dict_element("filename", dataset)).resolve()
+        self._start_date = str(get_dict_element("start_date", dataset, False))
+        self._end_date = str(get_dict_element("end_date", dataset, False))
         self._get_mapping(dataset)
 
     @property
     def path(self) -> Path:
         """File path to the input dataset"""
         return self._path
+
+    @property
+    def start_date(self) -> str:
+        """optional start date to filter the dataset"""
+        # start_date is passed as string (not datetime) because it is optional
+        return self._start_date
+
+    @property
+    def end_date(self) -> str:
+        """optional end date to filter the dataset"""
+        # end_date is passed as string (not datetime) because it is optional
+        return self._end_date
 
     @property
     def mapping(self) -> dict[str, str]:

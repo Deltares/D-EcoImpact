@@ -15,7 +15,7 @@ output-data:
 	…………………….
 ```
 
-In the input data the variables that are present in the input data provided through “filename” are selected for use. The variables that are used can be selected under “variable_mapping”. Here you are also able to rename variables as the name used for storage is often cryptic. 
+In the input data the variables that are present in the input data provided through “filename” are selected for use. It is possible to filter the input data by providing a start date or end date (format: "dd-mm-yyyy"); this is optional. The variables that are used can be selected under “variable_mapping”. Here you are also able to rename variables as the name used for storage is often cryptic. 
 
 At output data the location where the output file needs to be written can be provided through “filename”. In this output file only variables that have been used from the input data and variables that have been created in the model are stored.
 The model needs at least one rule under “rules” to execute.  
@@ -25,6 +25,8 @@ The model needs at least one rule under “rules” to execute.
 input-data:
   - dataset:
       filename: <path_to_file_including_file_name_and_type>
+      start_date: "<start_date>"
+      end_date: "<end_date>"
       variable_mapping:
         <variable1_input_file>: "<variable1_name_in_model>"
         <variable2_input_file>: "<variable2_name_in_model>"
@@ -76,7 +78,7 @@ output-data:
 The output of the following functionalities have been shown for a section of the Lake Volkerak 3D hydrodynamic model in the Netherlands. This hydrodynamic model output contains 6 years of data (2011 – 2016), with a timestep of 10 days. The 3D hydrodynamic model has been setup with 22 vertical layers and 3290 horizontal flexible mesh grid cells.
 
 
-![Volkerak](/assets/images/3_volkerak_result.png "Spatial location of the Lake Volkerak hydrodynamic model output that has been used to show the effect of each function.")
+![Volkerak](../assets/images/3_volkerak_result.png "Spatial location of the Lake Volkerak hydrodynamic model output that has been used to show the effect of each function.")
 
 ## Rules
 
@@ -102,6 +104,8 @@ The output of the following functionalities have been shown for a section of the
 
 The multiply rule allows for multiplication of variables. This could be used for unit transformation (e.g. salinity to chloride) or scenario creation (e.g. waterlevel 80% of existing value). The rule operates on all cells both 3D (in horizontal as vertical) as in the time axes. The same dimensions are returned at the output variable. The rule needs to be applied to an existing variable. A new variable is created when the rule is executed.
 
+When using the multiply rule with a start and end date (or multiple start and end dates) all periods that are not covered will be set to NaN. In this way the multiply rule can also be used as a filter in time.
+
 ```
 #EXAMPLE  : Salinity (psu) to chloride (mg/l) in an freshwater environment.
 - multiply_rule:
@@ -123,7 +127,7 @@ The multiply rule allows for multiplication of variables. This could be used for
 
 ```
 
-![Result Multiply rule](/assets/images/3_result_multiply.png "Salinity (in PSU, left-hand side) has been translated in chloride (in mg/l, right-hand side) while maintaining the time, face and layer dimensions.")
+![Result Multiply rule](../assets/images/3_result_multiply.png "Salinity (in PSU, left-hand side) has been translated in chloride (in mg/l, right-hand side) while maintaining the time, face and layer dimensions.")
 
 ### Layer filter rule
 
@@ -151,7 +155,7 @@ The layer filter rule allows for the extraction of a layer from 3D variables. Th
 
 ```
 
-![Result Layer filter rule](/assets/images/3_result_layer_filter.png "Chloride (in mg/L, left-hand side) in 3D has been filtered to a 2D result on only the 22 vertical layer (right-hand side) while maintaining the time and face dimensions.")
+![Result Layer filter rule](../assets/images/3_result_layer_filter.png "Chloride (in mg/L, left-hand side) in 3D has been filtered to a 2D result on only the 22 vertical layer (right-hand side) while maintaining the time and face dimensions.")
 
 ### Time aggregation rule
 
@@ -184,7 +188,7 @@ The rule needs to be applied to an existing 2D/3D variable with time axis. A new
       output_variable: MAX_water_level_year
 ```
 
-![Result Time aggregation rule](/assets/images/3_result_time_aggregation.png "Water level (in m NAP, left-hand side) with a timestep every 10 days has been summarized to the maximum for each year (right-hand side) while maintaining the face dimension (layer dimension is not present in this example, but would be maintained).")
+![Result Time aggregation rule](../assets/images/3_result_time_aggregation.png "Water level (in m NAP, left-hand side) with a timestep every 10 days has been summarized to the maximum for each year (right-hand side) while maintaining the face dimension (layer dimension is not present in this example, but would be maintained).")
 
 Time aggregation rule with COUNT_PERIODS
 
@@ -252,7 +256,7 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
 
 ```
 
-![Result Step function rule](/assets/images/3_result_step.png "Salinity (in PSU, left-hand side) is translated in 4 distinct classes (right-hand side) while maintaining the time, face and layer dimension. The classes are based on 0.0 - <0.5 (class 1) 0.5 - <1.2 (class 2), 1.2 - <1.3 (class 3) and >1.3 (class 4).")
+![Result Step function rule](../assets/images/3_result_step.png "Salinity (in PSU, left-hand side) is translated in 4 distinct classes (right-hand side) while maintaining the time, face and layer dimension. The classes are based on 0.0 - <0.5 (class 1) 0.5 - <1.2 (class 2), 1.2 - <1.3 (class 3) and >1.3 (class 4).")
 
 ```
 #EXAMPLE  : Check if the water level falls within the range of -0.10 and +0.15 m NAP.
@@ -269,7 +273,7 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
       output_variable : water_level_policy
 ```
 
-![Result Step function rule 2](/assets/images/3_result_step_2.png "Water level (in m NAP, left-hand side) is translated in a False (0) or True (1) categorie by comparing it with a boundary policy (right-hand side) while maintaining the time and face dimension (layer dimension is not present in this example, but would be maintained). The boundary is that the water level is not allowed to be lower than -0.10 m NAP and higher than 0.15 m NAP.")
+![Result Step function rule 2](../assets/images/3_result_step_2.png "Water level (in m NAP, left-hand side) is translated in a False (0) or True (1) categorie by comparing it with a boundary policy (right-hand side) while maintaining the time and face dimension (layer dimension is not present in this example, but would be maintained). The boundary is that the water level is not allowed to be lower than -0.10 m NAP and higher than 0.15 m NAP.")
 
 ### Response curve rule
 ```
@@ -277,8 +281,10 @@ FORMAT
 - response_curve_rule:
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
-      input_values: [<list_with_the_limit_values>]
-      output_values: [<list_with_the_response_values>]
+      response_table:
+            - [ "input", "output"]
+            - [<limit_value>, <response_value>]
+            - [<limit_value>, <response_value>]
       input_variable: <one_input_variable_name>
       output_variable: <one_output_variable_name>
 ```
@@ -295,14 +301,21 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
 - response_curve_rule:
       name: HSI Pond weed water depth
       description: Reponse of Pond weed (Potamogeton nodosus) to water depth
-      input_values:      [-999.0, 0.0,  0.5, 1.0, 2.0, 999.0]
-      output_values:     [   0.0, 0.0,  1.0, 1.0, 0.0,   0.0]
+      response_table:
+           - ["input",   "output"]
+           - [-999.0 ,   0.0 ]
+           - [   0.0 ,   0.0 ]
+           - [   0.5 ,   1.0 ]
+           - [   1.0 ,   1.0 ]
+           - [   2.0 ,   0.0 ]
+           - [ 999.0 ,   0.0 ]
       input_variable: water_depth      
+      output_variable: HSI_Pnodosus_water_depth
 
 ```
 
 
-![Result Response curve rule](/assets/images/3_result_response.png "Water depth (in m, left-hand side) is translated through a linear interpolation to show the suitability for P. nodosus (right-hand side) while maintaining the time, face and layer dimension. The suitability is expressed in a fraction from 0.0 (unsuitable) and 1.0 (suitable).")
+![Result Response curve rule](../assets/images/3_result_response.png "Water depth (in m, left-hand side) is translated through a linear interpolation to show the suitability for P. nodosus (right-hand side) while maintaining the time, face and layer dimension. The suitability is expressed in a fraction from 0.0 (unsuitable) and 1.0 (suitable).")
 
 ### Combine results rule
 
@@ -335,9 +348,9 @@ The rule needs to be applied to an existing 2D/3D variables with or without time
 
 ```
 
-![Result Combine rule](/assets/images/3_result_combine.png "Water level (in m NAP, left-hand top side) and water depth (in m NAP, right-hand top side) are combined by subtracting to create the bathymetry over time (right-hand bottom side) while maintaining the time and face dimension (layer dimension is not present in this example, but would be maintained). ")
+![Result Combine rule](../assets/images/3_result_combine.png "Water level (in m NAP, left-hand top side) and water depth (in m NAP, right-hand top side) are combined by subtracting to create the bathymetry over time (right-hand bottom side) while maintaining the time and face dimension (layer dimension is not present in this example, but would be maintained). ")
 
-![Result Combine rule 2](/assets/images/3_result_combine_2.png "Water level (in m NAP, left-hand top side) and water depth (in m NAP, right-hand top side) are combined by subtracting to create the bathymetry over time (right-hand bottom side) while maintaining the time and face dimension (layer dimension is not present in this example, but would be maintained). ")
+![Result Combine rule 2](../assets/images/3_result_combine_2.png "Water level (in m NAP, left-hand top side) and water depth (in m NAP, right-hand top side) are combined by subtracting to create the bathymetry over time (right-hand bottom side) while maintaining the time and face dimension (layer dimension is not present in this example, but would be maintained). ")
 
 
 ### Formula rule

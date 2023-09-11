@@ -1,7 +1,14 @@
+# This file is part of D-EcoImpact
+# Copyright (C) 2022-2023  Stichting Deltares and D-EcoImpact contributors
+# This program is free software distributed under the GNU
+# Lesser General Public License version 2.1
+# A copy of the GNU General Public License can be found at
+# https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
 Tests for DataAccessLayer class
 """
 
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import Mock
 
@@ -112,7 +119,8 @@ def test_dataset_data_write_output_file_should_check_if_path_exists():
 
 def test_dataset_data_write_output_file_should_check_if_extension_is_correct():
     """When calling write_output_file the provided path
-    extension needs to be checked if it matches the currently implementation (netCDF files)"""
+    extension needs to be checked if it matches
+    the currently implementation (netCDF files)"""
 
     # Arrange
     logger = Mock(ILogger)
@@ -238,3 +246,33 @@ def test_dataset_data_get_input_dataset_should_not_read_incorrect_file():
     assert exception_raised.args[0].endswith(
         f"ERROR: Cannot open input .nc file -- {str(path)}"
     )
+
+
+def test_data_access_layer_apply_time_filter():
+    """The DataAccessLayer should apply a given time filter"""
+
+    # Arrange
+    logger = Mock(ILogger)
+    path = get_test_data_path() + "/test_time_filter.nc"
+    data_dict = {
+        "filename": path,
+        "start_date": "01-07-2014",
+        "end_date": "31-08-2014",
+        "variable_mapping": {"water_depth_m": "water_depth"}
+    }
+    input_data = DatasetData(data_dict)
+    date_format = "%d-%m-%Y"
+    start_date_expected = datetime.strptime("02-07-2014", date_format)
+    end_date_expected = datetime.strptime("31-08-2014", date_format)
+
+    # Act
+    da_layer = DataAccessLayer(logger)
+    ds_result = da_layer.read_input_dataset(input_data)
+    ds_result_date = ds_result['time'].indexes['time'].normalize()
+    min_date_result = ds_result_date.min()
+    max_date_result = ds_result_date.max()
+
+    # Assert
+    # test if result is time filtered for both start and end date
+    assert min_date_result == start_date_expected
+    assert max_date_result == end_date_expected

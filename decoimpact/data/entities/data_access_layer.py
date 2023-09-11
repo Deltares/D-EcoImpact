@@ -1,3 +1,9 @@
+# This file is part of D-EcoImpact
+# Copyright (C) 2022-2023  Stichting Deltares and D-EcoImpact contributors
+# This program is free software distributed under the GNU
+# Lesser General Public License version 2.1
+# A copy of the GNU General Public License can be found at
+# https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
 Module for DataAccessLayer class
 
@@ -7,6 +13,7 @@ Classes:
 """
 
 import re
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -62,6 +69,19 @@ class DataAccessLayer(IDataAccessLayer):
         Returns:
             _xr.Dataset: Dataset based on provided dataset_data
         """
+        # get start and end date from input file and convert to date format
+        # if start or end date is not given, then use None to slice the data
+        date_format = "%d-%m-%Y"
+        filter_start_date = None
+        ds_start_date = dataset_data.start_date
+        if ds_start_date != 'None':
+            filter_start_date = datetime.strptime(ds_start_date, date_format)
+        filter_end_date = None
+        ds_end_date = dataset_data.end_date
+        if ds_end_date != 'None':
+            filter_end_date = datetime.strptime(ds_end_date, date_format)
+
+        # check path
         if not Path.exists(dataset_data.path):
             message = f"""The file {dataset_data.path} is not found. \
                           Make sure the input file location is valid."""
@@ -72,6 +92,7 @@ class DataAccessLayer(IDataAccessLayer):
                           Currently only UGrid (NetCDF) files are supported."""
             raise NotImplementedError(message)
 
+        # open input dataset (from .nc file)
         try:
             dataset: _xr.Dataset = _xr.open_dataset(
                 dataset_data.path, mask_and_scale=True
@@ -81,6 +102,16 @@ class DataAccessLayer(IDataAccessLayer):
             # to floats
         except ValueError as exc:
             msg = "ERROR: Cannot open input .nc file -- " + str(dataset_data.path)
+            raise ValueError(msg) from exc
+
+        # apply time filter on input dataset
+        try:
+            if filter_start_date is not None or filter_end_date is not None:
+                time_filter = f"({filter_start_date}, {filter_end_date})"
+                self._logger.log_info(f"Applying time filter {time_filter} on dataset")
+                dataset = dataset.sel(time=slice(filter_start_date, filter_end_date))
+        except ValueError as exc:
+            msg = "ERROR: error applying time filter on dataset"
             raise ValueError(msg) from exc
 
         return dataset

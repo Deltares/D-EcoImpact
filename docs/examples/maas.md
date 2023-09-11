@@ -14,6 +14,6 @@ Based on the knowledgerules available through the KRW-Verkenner Rijkswateren the
 Habitat suitability criteria for flow velocity, water depth and desiccation for Potamogeton nodosus and Potamogeton pectinatus.
 
 
-![Maas](/assets/images/4_case_maas.png)
+![Maas](../assets/images/4_case_maas.png)
 
 

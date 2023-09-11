@@ -1,3 +1,9 @@
+# This file is part of D-EcoImpact
+# Copyright (C) 2022-2023  Stichting Deltares and D-EcoImpact contributors
+# This program is free software distributed under the GNU
+# Lesser General Public License version 2.1
+# A copy of the GNU General Public License can be found at
+# https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
 Tests for ParserResponseCurveRule class
 """
@@ -17,9 +23,13 @@ def _get_example_response_curve_rule_dict():
             "name": "test_name",
             "description": "description",
             "input_variable": "input",
-            "input_values": [1, 2, 3],
-            "output_values": [3, 2, 0],
-            "output_variable": "output",
+            "response_table": [
+                    ["input", "output"],
+                    [1, 3],
+                    [2, 2],
+                    [3, 0],
+                ],
+            "output_variable": "outputvar",
         }
     )
 
@@ -55,8 +65,7 @@ def test_parse_dict_to_rule_data_logic():
     "argument_to_remove",
     [
         "name",
-        "input_values",
-        "output_values",
+        "response_table",
         "input_variable",
         "output_variable",
         "description",
@@ -91,8 +100,12 @@ def test_parse_input_values_type():
             "name": "test_name",
             "description": "description",
             "input_variable": "input",
-            "input_values": ["a", "b", 2],
-            "output_values": [3, 2, 0],
+            "response_table": [
+                    ["input", "output"],
+                    ["a", 3],
+                    ["b", 2],
+                    [2, 0],
+                ],
             "output_variable": "output",
         }
     )
@@ -123,8 +136,12 @@ def test_parse_output_values_type():
             "name": "test_name",
             "description": "description",
             "input_variable": "input",
-            "input_values": [1, 2, 3],
-            "output_values": ["a", "b", 2],
+            "response_table": [
+                ["input", "output"],
+                [1, "a"],
+                [2, "b"],
+                [3, 2],
+            ],
             "output_variable": "output",
         }
     )
@@ -143,5 +160,38 @@ def test_parse_output_values_type():
         "ERROR in position 1 is type <class 'str'>. "
         "Output values should be a list of int or floats, "
         "received: ['a', 'b', 2]"
+    )
+    assert exception_raised.args[0] == expected_message
+
+
+def test_parse_response_table_columns():
+    """Test columns of response table to consist of only input and output"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "test_name",
+            "description": "description",
+            "input_variable": "input",
+            "response_table": [
+                    ["input", "output", "extra"],
+                    [1, 4, 7],
+                    [2, 5, 8],
+                    [3, 6, 9],
+                ],
+            "output_variable": "output",
+        }
+    )
+    logger = Mock(ILogger)
+
+    # Act
+    data = ParserResponseCurveRule()
+    with pytest.raises(ValueError) as exc_info:
+        data.parse_dict(contents, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = (
+        "ERROR: response table should have exactly 2 columns"
     )
     assert exception_raised.args[0] == expected_message

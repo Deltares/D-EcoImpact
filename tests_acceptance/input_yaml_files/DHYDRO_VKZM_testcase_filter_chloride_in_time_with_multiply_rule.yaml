@@ -1,0 +1,37 @@
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
+      variable_mapping:
+        water_level_mNAP:   "INPUT_water_level_mNAP"
+        water_depth_mNAP:   "INPUT_water_depth_mNAP"
+        flow_velocity_ms:   "INPUT_flow_velocity_ms"
+        salinity_PSU:       "INPUT_salinity_PSU"
+
+rules:
+  - multiply_rule:
+      name: calculate chloride
+      description: Converts salinity to chloride
+      multipliers: [0.0018066, 1e5]
+      input_variable: INPUT_salinity_PSU
+      output_variable: chloride_mgL
+
+  - multiply_rule:
+      name: waterlevel growth period
+      description: waterlevel growth period
+      multipliers_table: 
+          - ["start_date", "end_date", "multipliers"]
+          - ["15-04"     , "15-09"   ,         [1.0]]
+      input_variable: INPUT_water_level_mNAP
+      output_variable: water_level_gp
+
+  - multiply_rule:
+      name: chloride growth period
+      description: waterlevel growth period
+      multipliers_table: 
+          - ["start_date", "end_date", "multipliers"]
+          - ["15-04"     , "15-09"   ,         [1.0]]
+      input_variable: chloride_mgL
+      output_variable: chloride_gp
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/DHYDRO_VKZM_testcase_filter_chloride_in_time_with_multiply_rule.nc

@@ -1,3 +1,9 @@
+# This file is part of D-EcoImpact
+# Copyright (C) 2022-2023  Stichting Deltares and D-EcoImpact contributors
+# This program is free software distributed under the GNU
+# Lesser General Public License version 2.1
+# A copy of the GNU General Public License can be found at
+# https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
 Module for IModel Interface
 
@@ -10,7 +16,7 @@ Classes:
 """
 
 from abc import ABC, abstractmethod
-from enum import IntEnum
+from enum import Enum, auto
 from typing import List
 
 import xarray as _xr
@@ -18,19 +24,19 @@ import xarray as _xr
 from decoimpact.crosscutting.i_logger import ILogger
 
 
-class ModelStatus(IntEnum):
+class ModelStatus(Enum):
     """Enum for the model status"""
 
-    CREATED = 1
-    INITIALIZING = 2
-    INITIALIZED = 3
-    EXECUTING = 4
-    EXECUTED = 5
-    FINALIZING = 6
-    FINALIZED = 7
-    FAILED = 8
-    VALIDATING = 9
-    VALIDATED = 10
+    CREATED = auto()
+    INITIALIZING = auto()
+    INITIALIZED = auto()
+    EXECUTING = auto()
+    EXECUTED = auto()
+    FINALIZING = auto()
+    FINALIZED = auto()
+    FAILED = auto()
+    VALIDATING = auto()
+    VALIDATED = auto()
 
 
 class IModel(ABC):
