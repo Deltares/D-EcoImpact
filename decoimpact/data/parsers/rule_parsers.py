@@ -20,6 +20,9 @@ from decoimpact.data.parsers.parser_layer_filter_rule import ParserLayerFilterRu
 from decoimpact.data.parsers.parser_layer_subset_rule import ParserLayerSubsetRule
 from decoimpact.data.parsers.parser_multiply_rule import ParserMultiplyRule
 from decoimpact.data.parsers.parser_response_curve_rule import ParserResponseCurveRule
+from decoimpact.data.parsers.parser_rolling_statistic_rule import (
+    ParserRollingStatisticRule,
+)
 from decoimpact.data.parsers.parser_step_function_rule import ParserStepFunctionRule
 from decoimpact.data.parsers.parser_time_aggregation_rule import (
     ParserTimeAggregationRule,
@@ -33,6 +36,7 @@ def rule_parsers() -> Iterator[IParserRuleBase]:
     yield ParserLayerFilterRule()
     yield ParserLayerSubsetRule()
     yield ParserTimeAggregationRule()
+    yield ParserRollingStatisticRule()
     yield ParserStepFunctionRule()
     yield ParserResponseCurveRule()
     yield ParserFormulaRule()

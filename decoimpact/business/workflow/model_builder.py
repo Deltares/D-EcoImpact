@@ -27,6 +27,9 @@ from decoimpact.business.entities.rules.multi_array_operation_type import (
 )
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
 from decoimpact.business.entities.rules.response_curve_rule import ResponseCurveRule
+from decoimpact.business.entities.rules.rolling_statistic_rule import (
+    RollingStatisticRule,
+)
 from decoimpact.business.entities.rules.step_function_rule import StepFunctionRule
 from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
@@ -40,6 +43,7 @@ from decoimpact.data.api.i_layer_subset_rule_data import ILayerSubsetRuleData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
 from decoimpact.data.api.i_response_curve_rule_data import IResponseCurveRuleData
+from decoimpact.data.api.i_rolling_statistic_rule_data import IRollingStatisticRuleData
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.api.i_step_function_rule_data import IStepFunctionRuleData
 from decoimpact.data.api.i_time_aggregation_rule_data import ITimeAggregationRuleData
@@ -122,6 +126,15 @@ class ModelBuilder(IModelBuilder):
                 rule_data.operation,
                 rule_data.output_variable,
                 rule_data.time_scale,
+            )
+        if isinstance(rule_data, IRollingStatisticRuleData):
+            return RollingStatisticRule(
+                rule_data.name,
+                [rule_data.input_variable],
+                rule_data.operation,
+                rule_data.output_variable,
+                rule_data.time_scale,
+                rule_data.period,
             )
         if isinstance(rule_data, ICombineResultsRuleData):
             return CombineResultsRule(
