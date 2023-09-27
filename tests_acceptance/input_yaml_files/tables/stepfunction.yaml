@@ -1,0 +1,13 @@
+      name: test name
+      description: Get boundaries waterlevel
+      limit_response_table:    
+            [
+                [ limit , response],
+                [-999.0 ,     0.00],
+                [ -0.10 ,     1.00],
+                [  0.15 ,     0.00],
+                [ 999.0 ,     0.00],
+            ]
+      input_variable: water_level
+      output_variable: water_level_policy
+      
