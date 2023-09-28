@@ -1,0 +1,92 @@
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
+      variable_mapping:
+        salinity_PSU: "salinity_PHU"
+        temperature_degreesC: "temperature_C"
+        flow_velocity_ms: "flow_velocity_msec"
+        water_level_mNAP: "water_level_meterNAP"
+        water_depth_mNAP: "water_depth_meterNAP"
+
+rules:
+  - multiply_rule:
+      name: Get chloride concentration
+      description: Converts salinity to chloride
+      multipliers: [0.0018066, 1e5]
+      input_variable: salinity_PHU
+      output_variable: chloride_mgL
+
+  - layer_filter_rule:
+      name: Get chloride top layer
+      description: get first layer of model
+      layer_number: 22
+      input_variable: chloride_mgL
+      output_variable: chloride_mgL_top_layer
+
+  - layer_filter_rule:
+      name: Get temperature top layer
+      description: get first layer of model
+      layer_number: 22
+      input_variable: temperature_C
+      output_variable: temperature_C_top_layer
+
+  - layer_filter_rule:
+      name: Get flow velocity top layer
+      description: get first layer of model
+      layer_number: 22
+      input_variable: flow_velocity_msec
+      output_variable: flow_velocity_ms_top_layer
+
+  - time_aggregation_rule:
+      name: Get maximum chloride level
+      description: Get maximum chloride level
+      operation: MAX
+      input_variable: chloride_mgL_top_layer
+      time_scale: year
+      output_variable: MAX_chloride
+
+  - time_aggregation_rule:
+      name: Get minimum water temperature
+      description: Get minimum water temperature
+      operation: MIN
+      input_variable: temperature_C_top_layer
+      time_scale: year
+      output_variable: MIN_water_temperature
+
+  - time_aggregation_rule:
+      name: Get maximum flow velocity
+      description: Get maximum flow velocity
+      operation: MIN
+      input_variable: flow_velocity_ms_top_layer
+      time_scale: year
+      output_variable: MAX_flow_velocity
+
+  - time_aggregation_rule:
+      name: Get minimum water_depth
+      description: Get minimum water depth
+      operation: MIN
+      input_variable: water_depth_meterNAP
+      time_scale: year
+      output_variable: MIN_water_depth_mNAP
+
+  - classification_rule:
+      name: test calssification for aquatic plants
+      description: Get flowing value waterlevel
+      criteria_table:
+        - [
+            "output",
+            "MIN_water_depth_mNAP",
+            "MAX_flow_velocity",
+            "MAX_chloride",
+          ]
+        - [1, "<0.10", "-", "-"] # to dry
+        - [2, ">4.0", "-", "-"] # to deep
+        - [3, "-", "-", ">400"] # to salty
+        - [4, "-", ">1.5", "-"] # to fast flowing
+        - [5, "0.10:4.0", "0.0:1.5", "0:400"] # perfect for aquatic plants
+      input_variables:
+        ["MIN_water_depth_mNAP", "MAX_flow_velocity", "MAX_chloride"]
+      output_variable: aquatic_plant_classes
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/test12_multiple_reclassification.nc

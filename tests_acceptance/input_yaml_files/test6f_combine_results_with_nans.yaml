@@ -1,0 +1,34 @@
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
+      variable_mapping:
+        salinity_PSU: "salinity"
+        water_level_mNAP: "water_level"
+        water_depth_mNAP: "water_depth"
+
+rules:
+  - layer_filter_rule:
+      name: test name
+      description: get bottom layer of model
+      layer_number: 1
+      input_variable: salinity
+      output_variable: salinity_bottom_layer
+
+  - layer_filter_rule:
+      name: test name
+      description: get top layer of model
+      layer_number: 22
+      input_variable: salinity
+      output_variable: salinity_top_layer
+
+  - combine_results_rule:
+      name: test name
+      description: Substract waterdepth from waterlevel to get bath
+      operation: min
+      input_variables:
+        - salinity_bottom_layer
+        - salinity_top_layer
+      output_variable: salinity_min
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/test6f_combine_results_with_nans.nc

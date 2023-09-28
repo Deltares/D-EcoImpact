@@ -1,0 +1,56 @@
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
+      variable_mapping:
+        # salinity_PSU     : "IN_salinity_PSU"
+        # water_level_mNAP : "IN_water_level_mNAP"
+        water_depth_mNAP: "IN_water_depth_mNAP"
+        # flow_velocity_ms   : "IN_flow_velocity_ms"
+
+rules:
+  - step_function_rule:
+      name: Calculate dryfall moments
+      description: Calculate dryfall moments from water depth
+      limit_response_table:
+        - [limit, response]
+        - [-999.0, 1.00]
+        - [0.10, 0.00]
+        - [999.0, 0.00]
+      input_variable: IN_water_depth_mNAP
+      output_variable: dry_fall
+
+  - time_aggregation_rule:
+      name: Calculate dryfall occurance
+      description: Calculate dryfall occurance (nr of occurances/periods)
+      operation: COUNT_PERIODS
+      time_scale: YEAR
+      input_variable: dry_fall
+      output_variable: number_of_dry_periods
+
+  - time_aggregation_rule:
+      name: test for flooding
+      description: Test for flooding in area
+      operation: MIN
+      time_scale: YEAR
+      input_variable: dry_fall
+      output_variable: no_flooding
+
+  - step_function_rule:
+      name: Set land to -1
+      description: Set land to -1 for visualisation
+      limit_response_table:
+        - [limit, response]
+        - [0, 366]
+        - [1, -1]
+      input_variable: no_flooding
+      output_variable: land_filter
+
+  - combine_results_rule:
+      name: Set land to -1
+      description: Set land to -1 for visualisation
+      operation: min
+      input_variables: ["number_of_dry_periods", "land_filter"]
+      output_variable: Visualisation_number_of_dry_fall_periods
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/test13_time_condition_rule_occurance.nc

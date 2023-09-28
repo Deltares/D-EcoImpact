@@ -1,0 +1,25 @@
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
+      variable_mapping:
+        salinity_PSU: "salinity"
+        water_level_mNAP: "water_level"
+        water_depth_mNAP: "water_depth"
+
+rules:
+  - formula_rule:
+      name: Classify salinity
+      description: Reponse of Pond weed (Potamogeton nodosus) to water depth
+      formula: salinity < 1
+      input_variables: [salinity]
+      output_variable: salinity_class
+
+  - formula_rule:
+      name: Classify dryfall
+      description: Classify when dry-fall occurs and if so label it with 1 (or zero if no dry-fall)
+      formula: water_depth < 0.05
+      input_variables: [water_depth]
+      output_variable: dry_fall
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/test10_formula_based_comparison.nc

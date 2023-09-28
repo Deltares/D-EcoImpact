@@ -267,3 +267,4 @@ rules:
       output_variable: FL_HSI_P_pectinatus       
 output-data:
   filename: ./tests_acceptance/output_nc_files/DHYDRO_VKZM_Potamogeton_testcase_boundaries_vs_fuzzylogic.nc
+  

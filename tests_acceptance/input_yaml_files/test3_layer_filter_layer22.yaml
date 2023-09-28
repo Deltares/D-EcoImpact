@@ -1,0 +1,17 @@
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
+      variable_mapping:
+        salinity_PSU: "salinity_PHU"
+        water_level_mNAP: "waterlevel_m"
+
+rules:
+  - layer_filter_rule:
+      name: test name
+      description: get first layer of model
+      layer_number: 22
+      input_variable: salinity_PHU
+      output_variable: salinity_top_layer
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/test3_layer_filter_layer22.nc
