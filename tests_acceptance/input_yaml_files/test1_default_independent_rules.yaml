@@ -22,3 +22,4 @@ rules:
 
 output-data:
   filename: ./tests_acceptance/output_nc_files/test1_default_independent_rules.nc
+  
