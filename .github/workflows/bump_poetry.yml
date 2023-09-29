@@ -24,7 +24,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          poetry version ${{ VERSION_TYPE }}
+          poetry version ${{ env.VERSION_TYPE }}
           git add pyproject.toml
-          git commit -m "bump up ${{ VERSION_TYPE }} version from workflow"
+          git commit -m "bump up ${{ env.VERSION_TYPE }} version from workflow"
           git push
