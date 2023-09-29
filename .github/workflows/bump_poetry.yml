@@ -6,7 +6,7 @@ env:
   VERSION_TYPE: ${{ (startsWith(github.event.head_commit.message, 'Fix') ||
                      startsWith(github.event.head_commit.message, 'fix') ||
                      startsWith(github.event.head_commit.message, 'Bug') || 
-                     startsWith(github.event.head_commit.message, 'bug')'minor') &&
+                     startsWith(github.event.head_commit.message, 'bug')) &&
                      'minor' || 'patch' }}
   
 jobs:
