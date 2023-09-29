@@ -3,8 +3,11 @@ name: Update Python Poetry packages
 on: push
 
 env:
-  VERSION_TYPE: ${{ startsWith(github.event.head_commit.message, ['Fix', 'fix', 'Bug', 'bug']) == 'refs/heads/main' && 'patch' || 'minor' }}
-  
+  VERSION_TYPE: ${{ startsWith(github.event.head_commit.message, 'Fix') ||
+                    startsWith(github.event.head_commit.message, 'fix') ||
+                    startsWith(github.event.head_commit.message, 'Bug') || 
+                    startsWith(github.event.head_commit.message, 'bug')
+                    && 'patch' || 'minor' }}
 jobs:
   update-packages:
     runs-on: ubuntu-latest
