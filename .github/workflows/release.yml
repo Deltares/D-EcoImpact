@@ -5,7 +5,7 @@
 name: Release major version (create tag and bump poetry version)
 
 on:
-  push
+  workflow_dispatch: {}
 
 jobs:
   update-packages:
@@ -34,7 +34,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ PROJECT_VERSION }}
-          release_name: Release ${{ PROJECT_VERSION }}
+          tag_name: ${{ env.PROJECT_VERSION }}
+          release_name: Release ${{ env.PROJECT_VERSION }}
           draft: false
           prerelease: false

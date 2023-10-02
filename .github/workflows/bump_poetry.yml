@@ -3,7 +3,7 @@ name: Update Python Poetry packages
 on:
   push:
     branches:
-      - master
+      - main
 
 env:
   # The version type to update, based on the commit message (either patch for bug/fix or minor for all other commits)
