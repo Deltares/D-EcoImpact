@@ -4,8 +4,7 @@
 
 name: Release major version (create tag and bump poetry version)
 
-on:
-  workflow_dispatch: {}
+on: workflow_dispatch
 
 jobs:
   update-packages:
