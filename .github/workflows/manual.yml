@@ -2,9 +2,9 @@
 # It bumps the pyproject.toml version (major
 # Using this version it creates a tag and a release
 
-name: Manual workflow
+name: Relase major version (create tag and bump poetry version)
 
-on: workflow_dispatch
+on: push
 
 jobs:
   update-packages:
