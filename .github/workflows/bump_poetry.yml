@@ -1,15 +1,18 @@
 name: Update Python Poetry packages
 
-on: push
+on:
+  push:
+    branches:
+      - master
 
 env:
   # The version type to update, based on the commit message (either patch for bug/fix or minor for all other commits)
   VERSION_TYPE: ${{ (startsWith(github.event.head_commit.message, 'Fix') ||
                      startsWith(github.event.head_commit.message, 'fix') ||
-                     startsWith(github.event.head_commit.message, 'Bug') || 
+                     startsWith(github.event.head_commit.message, 'Bug') ||
                      startsWith(github.event.head_commit.message, 'bug')) &&
-                     'patch' || 'minor' }} 
-                     
+                     'patch' || 'minor' }}
+
 jobs:
   update-packages:
     runs-on: ubuntu-latest
