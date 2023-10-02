@@ -110,6 +110,11 @@ When adding a new dependency, do so using `poetry`
   $ poetry add <package> --dev
   ```
 
+### Versioning
+-  The repository depends on automatic versioning throuhg github actions and the commit message.
+- If the commit message starts with `Fix`, `fix`, `Bug`, or `bug` the patch version will be increased in the 
+  pyproject.toml and a tag will be created.
+
 ## Documentation
 
 There are mkdocs available for documentation on how to use this code.
