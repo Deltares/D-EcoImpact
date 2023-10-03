@@ -10,13 +10,13 @@ The dependencies of the D-EcoImpact are declared, managed and installed with [Po
 Copyright &copy; 2022-2023 Stichting Deltares and contributors
 
 This program is free software: you can redistribute it and/or modify it
-under the terms of the GNU Lesser General Public License version 2.1 as
+under the terms of the GNU Affero General Public License version 3.0 as
 published by the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Lesser General Public License for more details.
+GNU Affero General Public License for more details.
 
 A copy of the GNU General Public License can be found at  
 <https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md>  
