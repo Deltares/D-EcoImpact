@@ -1,0 +1,35 @@
+name: Update Python Poetry packages
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  # The version type to update, based on the commit message (either patch for bug/fix or minor for all other commits)
+  VERSION_TYPE: ${{ (startsWith(github.event.head_commit.message, 'Fix') ||
+                     startsWith(github.event.head_commit.message, 'fix') ||
+                     startsWith(github.event.head_commit.message, 'Bug') ||
+                     startsWith(github.event.head_commit.message, 'bug')) &&
+                     'patch' || 'minor' }}
+
+jobs:
+  update-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Run image
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: 1.4.2
+      - name: bump up patch version
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          poetry version ${{ env.VERSION_TYPE }}
+          git add pyproject.toml
+          git commit -m "bump up ${{ env.VERSION_TYPE }} version from workflow"
+          git push
