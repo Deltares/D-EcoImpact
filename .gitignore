@@ -139,3 +139,4 @@ dmypy.json
 !tests_acceptance/input_yaml_files/*.yaml
 !tests_acceptance/input_yaml_files/tables/*.yaml
 /tests_acceptance/output_nc_files/*.nc
+.idea/*
