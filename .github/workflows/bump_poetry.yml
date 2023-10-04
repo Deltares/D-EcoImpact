@@ -34,8 +34,9 @@ jobs:
           poetry version ${{ env.VERSION_TYPE }}
           PROJECT_VERSION=$(poetry version --short)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+          VERSION_NOTE="version: ${{ env.PROJECT_VERSION }}"
           git add pyproject.toml
-          sed -i "1 s/.*/version: ${{ env.PROJECT_VERSION }}/" template_input.yaml
+          sed -i "1 s/.*/$VERSION_NOTE/" template_input.yaml
           git add template_input.yaml
           git commit -m "bump up ${{ env.VERSION_TYPE }} version from workflow; version = ${{ env.PROJECT_VERSION }}"
           git push
