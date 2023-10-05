@@ -13,7 +13,6 @@ env:
                      startsWith(github.event.head_commit.message, 'Bug') ||
                      startsWith(github.event.head_commit.message, 'bug')) &&
                      'patch' || 'minor' }}
-  VERSION_NOTE: 0
 
 jobs:
   update-packages:
@@ -34,10 +33,8 @@ jobs:
           poetry version ${{ env.VERSION_TYPE }}
           PROJECT_VERSION=$(poetry version --short)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
-          VERSION_NOTE="version ${{ env.PROJECT_VERSION }}"
-          echo "VERSION_NOTE=$VERSION_NOTE" >> $GITHUB_ENV
           git add pyproject.toml
-          sed -i "1 s/.*/${{ env.VERSION_NOTE }}/" template_input.yaml
+          sed -i "1 s/.*/'version: '${{ env.PROJECT_VERSION }}/" template_input.yaml
           git add template_input.yaml
           git commit -m "bump up ${{ env.VERSION_TYPE }} version from workflow; version = ${{ env.PROJECT_VERSION }}"
           git push
