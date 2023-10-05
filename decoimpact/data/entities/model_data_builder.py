@@ -34,11 +34,22 @@ class ModelDataBuilder:
 
     def parse_yaml_data(self, contents: dict[Any, Any]) -> IModelData:
         """Parse the Yaml input file into a data object"""
+        input_version = self._parse_input_version(contents)
         input_datasets = list(self._parse_input_datasets(contents))
         output_dataset = self._parse_output_dataset(contents)
         rules = list(self._parse_rules(contents))
 
-        return YamlModelData("Model 1", input_datasets, output_dataset, rules)
+        return YamlModelData("Model 1", input_version, input_datasets, output_dataset,
+                             rules)
+    
+    def _parse_input_version(self, contents: str) -> str:
+        # input_version: str = get_dict_element("version", contents)
+        input_version: str = get_dict_element("version", contents)
+
+        # if len(input_version) != 1:
+        #     raise NotSupportedError("Only one input version is supported")
+        
+        return input_version
 
     def _parse_input_datasets(self, contents: dict[str, Any]) -> Iterable[IDatasetData]:
         input_datasets: List[dict[str, Any]] = get_dict_element("input-data", contents)

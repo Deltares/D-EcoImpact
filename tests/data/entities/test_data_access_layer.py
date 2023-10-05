@@ -25,6 +25,23 @@ from decoimpact.data.entities.yaml_model_data import YamlModelData
 from tests.testing_utils import get_test_data_path
 
 
+def test_input_version():
+    """The DataAccessLayer should read the version from the input.yaml"""
+
+    # Arrange
+    logger = LoggerFactory.create_logger()
+    path = Path(get_test_data_path() + "/test.yaml")
+
+    # Act
+    da_layer = DataAccessLayer(logger)
+    model_data = da_layer.read_input_file(path)
+    input_version = model_data.version
+
+    # Assert
+    print(input_version)
+    assert len(input_version) >= 5
+
+
 def test_data_access_layer_provides_yaml_model_data_for_yaml_file():
     """The DataAccessLayer should provide a YamlModelData
     for a yaml file"""
