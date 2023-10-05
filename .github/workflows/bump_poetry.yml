@@ -32,8 +32,8 @@ jobs:
           git config user.email github-actions@github.com
           poetry version ${{ env.VERSION_TYPE }}
           PROJECT_VERSION=$(poetry version --short)
-          git add pyproject.toml
           sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
           git add template_input.yaml
-          git commit -m "bump up ${{ env.VERSION_TYPE }} version from workflow; version $PROJECT_VERSION"
+          git add pyproject.toml
+          git commit -m "bump up ${{ env.VERSION_TYPE }} version from workflow: version $PROJECT_VERSION"
           git push
