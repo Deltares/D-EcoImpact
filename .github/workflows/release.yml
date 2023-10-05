@@ -48,3 +48,7 @@ jobs:
           release_name: Release ${{ env.PROJECT_VERSION }}
           draft: false
           prerelease: false
+      - name: Create new version of mkdocs and publish
+        run: |
+          poetry run mike deploy --push --update-aliases ${PROJECT_VERSION} latest
+          poetry run mike set-default --push latest
