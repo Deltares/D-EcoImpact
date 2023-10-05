@@ -25,11 +25,14 @@ jobs:
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: 1.4.2
-      - name: bump up patch version
+      - name: bump up patch version and update version in template_input.yaml
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           poetry version ${{ env.VERSION_TYPE }}
+          PROJECT_VERSION=$(poetry version --short)
+          sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
+          git add template_input.yaml
           git add pyproject.toml
-          git commit -m "bump up ${{ env.VERSION_TYPE }} version from workflow"
+          git commit -m "bump up ${{ env.VERSION_TYPE }} version from workflow: version $PROJECT_VERSION"
           git push

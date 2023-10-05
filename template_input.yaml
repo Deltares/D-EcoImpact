@@ -1,0 +1,68 @@
+version: 0.1.1
+
+input-data:
+  - dataset:
+      filename: 
+      start_date: 
+      end_date: 
+      variable_mapping:
+        water_depth_m: 
+        water_level_m: 
+
+rules:
+  - multiply_rule:
+      name: 
+      description: 
+      multipliers: []
+      input_variable: 
+      output_variable: 
+
+  - layer_filter_rule:
+      name: 
+      description: 
+      layer_number: 
+      input_variable: 
+      output_variable: 
+      
+  - time_aggregation_rule:
+      name: 
+      description: 
+      operation: 
+      time_scale: 
+      input_variable: 
+      output_variable: 
+
+    - step_function_rule:
+      name: 
+      description: 
+      limit_response_table:
+            - [ limit, response]
+            - [,]
+      input_variable:       
+      output_variable: 
+
+  - response_curve_rule:
+      name: 
+      description: 
+      response_table:
+          - [  input,  output ]
+          - [,]
+      input_variable:        
+      output_variable: 
+
+  - combine_results_rule:
+        name: 
+        description:      
+        operation: 
+        input_variables: [,]
+        output_variable: 
+
+  - combine_results_rule:
+        name: 
+        description:     
+        formula: 
+        input_variables: [,]
+        output_variable: 
+
+output-data:
+  filename: 

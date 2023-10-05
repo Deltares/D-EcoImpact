@@ -111,9 +111,11 @@ When adding a new dependency, do so using `poetry`
   ```
 
 ### Versioning
--  The repository depends on automatic versioning throuhg github actions and the commit message.
+The version looks like this: major.minor.patch
+- The repository depends on automatic versioning through github actions and the commit message.
 - If the commit message starts with `Fix`, `fix`, `Bug`, or `bug` the patch version will be increased in the 
   pyproject.toml and a tag will be created.
+- The major version will only be updated by a manual trigger through github actions (triggering the 'release.yaml').
 
 ## Documentation
 
@@ -139,3 +141,4 @@ To add an acceptance test:
 - Create the [name].yaml file and store it in the tests_acceptance/input_yaml_files
 - Put the [name].nc at the tests_acceptance/reference_nc_files folder. \* Note that the .nc file should have the same name as the .yaml file.
 - To test if it is working correctly run: poetry run pytest tests_acceptance/test_main.py
+
