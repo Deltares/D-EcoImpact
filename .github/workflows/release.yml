@@ -16,7 +16,7 @@ on:
         - major
 
 jobs:
-  update-packages:
+  create-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,6 +27,11 @@ jobs:
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: 1.4.2
+      - name: Pushing to the protected branch 'protected'
+        uses: CasperWA/push-protected@v2
+        with:
+          token: ${{ secrets.PUSH_TO_PROTECTED_BRANCH }}
+  branch: protected
       - name: bump up patch version
         run: |
           git config user.name github-actions
@@ -48,3 +53,9 @@ jobs:
           release_name: Release ${{ env.PROJECT_VERSION }}
           draft: false
           prerelease: false
+      - name: Install Dependencies
+        run: poetry install
+      - name: Create new version of mkdocs and publish
+        run: |
+          poetry run mike deploy --push --update-aliases ${PROJECT_VERSION} latest
+          poetry run mike set-default --push latest
