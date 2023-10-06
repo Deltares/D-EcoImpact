@@ -71,3 +71,6 @@ log_cli_format = "%(levelname)-8s %(message)s"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+build = "decoimpact.pyinstaller:install"
