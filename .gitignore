@@ -130,6 +130,7 @@ dmypy.json
 
 # test files
 *.yaml
+!template_input.yaml
 **/*.nc
 !tests/**/*.nc
 /examples/data_out/
