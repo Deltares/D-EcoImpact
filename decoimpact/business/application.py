@@ -17,6 +17,7 @@ from venv import logger
 from xmlrpc.client import APPLICATION_ERROR
 
 from decoimpact.business.entities.i_model import ModelStatus as _ModelStatus
+from decoimpact.business.utils.general_utils import read_version_number
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
 from decoimpact.business.workflow.model_runner import ModelRunner as _ModelRunner
 
@@ -29,8 +30,8 @@ from decoimpact.data.api.i_model_data import IModelData
 class Application:
     """Application for running command-line"""
 
-    # TO DO: get version
-    # APPLICATION_VERSION = 
+    # get version
+    APPLICATION_VERSION = read_version_number()
     
     def __init__(
         self,
@@ -59,14 +60,21 @@ class Application:
         """
 
         try:
+            # show application version
+            self._logger.log_info(f'Application version: {self.APPLICATION_VERSION}')
+
+            # read input file (input.yaml with version, input data, knowledge rules and path to output data)
             model_data: IModelData = self._da_layer.read_input_file(input_path)
             
             # TO DO: check version
 
+            # build model
             model = self._model_builder.build_model(model_data)
 
+            # run model
             _ModelRunner.run_model(model, self._logger)
 
+            # write output file
             if model.status == _ModelStatus.FINALIZED:
                 self._da_layer.write_output_file(
                     model.output_dataset, model_data.output_path
