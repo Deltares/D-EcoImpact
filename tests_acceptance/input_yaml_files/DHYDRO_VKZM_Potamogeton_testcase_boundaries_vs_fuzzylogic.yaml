@@ -1,3 +1,5 @@
+version: 0.0.0
+
 #Description of the potential growth locations for Long-leaf pond weed (Potamogeton nodosus)
 # Rules derived for hard boundaries from : https://repos.deltares.nl/repos/KRWV-Ecologie/trunk/Data_macrofyten/KRWVEco_Preferenties_Macrofyten_Totaal_20190219.xlsx
 # Data based on KRW-Verkenner Ecology model:
