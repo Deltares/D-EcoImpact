@@ -122,12 +122,14 @@ class DataAccessLayer(IDataAccessLayer):
 
         return dataset
 
-    def write_output_file(self, dataset: _xr.Dataset, path: Path) -> None:
+    def write_output_file(self, dataset: _xr.Dataset, path: Path
+                          , application_version: str) -> None:
         """Write XArray dataset to specified path
 
         Args:
             dataset (XArray dataset): dataset to write
             path (str): path to output file
+            application_version: application version to output file
 
         Returns:
             None
@@ -155,6 +157,7 @@ class DataAccessLayer(IDataAccessLayer):
             # (Data is stored in an HDF5 file, using only netCDF 3 compatible
             # API features.)
 
+            # TO DO: write application_version to output file as a global attribute
         except OSError as exc:
             msg = f"ERROR: Cannot write output .nc file -- {path}"
             self._logger.log_error(msg)

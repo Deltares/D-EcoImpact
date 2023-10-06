@@ -88,8 +88,7 @@ class Application:
             # write output file
             if model.status == _ModelStatus.FINALIZED:
                 self._da_layer.write_output_file(
-                    model.output_dataset, model_data.output_path
-                    # TO DO: send parameter APPLICATION_VERSION to write_output_file
+                    model.output_dataset, model_data.output_path, self.APPLICATION_VERSION
                 )
            
         except Exception as exc:
