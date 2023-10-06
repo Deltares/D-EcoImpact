@@ -1374,14 +1374,14 @@ use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "restrictedpython"
-version = "6.1"
+version = "6.2"
 description = "RestrictedPython is a defined subset of the Python language which allows to provide a program input into a trusted environment."
 category = "main"
 optional = false
 python-versions = ">=3.6, <3.12"
 files = [
-    {file = "RestrictedPython-6.1-py3-none-any.whl", hash = "sha256:0b2f1e54730ee29ac87a5dc684159bf163806038b02aa8561aaea840a8256a9f"},
-    {file = "RestrictedPython-6.1.tar.gz", hash = "sha256:7e58ea15cc92a0b916e0c8ca295e8b2c6d40fee4d12e1a2b5063d86efc279a9c"},
+    {file = "RestrictedPython-6.2-py3-none-any.whl", hash = "sha256:7c2ffa4904300d67732f841d8a975dcdc53eba4c1cdc9d84b97684ef12304a3d"},
+    {file = "RestrictedPython-6.2.tar.gz", hash = "sha256:db73eb7e3b39650f0d21d10cc8dda9c0e2986e621c94b0c5de32fb0dee3a08af"},
 ]
 
 [package.extras]
@@ -1487,14 +1487,14 @@ files = [
 
 [[package]]
 name = "urllib3"
-version = "2.0.4"
+version = "2.0.6"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "urllib3-2.0.4-py3-none-any.whl", hash = "sha256:de7df1803967d2c2a98e4b11bb7d6bd9210474c46e8a0401514e3a42a75ebde4"},
-    {file = "urllib3-2.0.4.tar.gz", hash = "sha256:8d22f86aae8ef5e410d4f539fde9ce6b2113a001bb4d189e0aed70642d602b11"},
+    {file = "urllib3-2.0.6-py3-none-any.whl", hash = "sha256:7a7c7003b000adf9e7ca2a377c9688bbc54ed41b985789ed576570342a375cd2"},
+    {file = "urllib3-2.0.6.tar.gz", hash = "sha256:b19e1a85d206b56d7df1d5e683df4a7725252a964e3993648dd0fb5a1c157564"},
 ]
 
 [package.extras]
