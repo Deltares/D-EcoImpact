@@ -1,7 +1,7 @@
 {
     "python.testing.pytestArgs": [
-        "--cov-report=xml",
-        "--cov=decoimpact"
+        // "--cov-report=xml",
+        // "--cov=decoimpact"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
