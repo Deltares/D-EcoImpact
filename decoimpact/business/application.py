@@ -68,13 +68,16 @@ class Application:
 
             # read input file (input.yaml with version, input data, knowledge rules and path to output data)
             model_data: IModelData = self._da_layer.read_input_file(input_path)
-            input_version = ''.join([str(x) + '.' for x in model_data.version])
+            input_version = ''.join([str(x) + '.' for x in model_data.version])[:-1]
+            self._logger.log_info(f'Input file version: {input_version}')
 
-            # check version: 
+            # check version:
             # major version of application should be equal or larger then input version --> error
             if self.APPLICATION_VERSION_PARTS[0] < model_data.version[0]:
                 self._logger.log_error(f'Application version {self.APPLICATION_VERSION} is older than version from input file {input_version}')
-            # TO DO: minor version of application should be equal or larger then input version --> warning
+            # minor version of application should be equal or larger then input version --> warning
+            elif self.APPLICATION_VERSION_PARTS[1] < model_data.version[1]:
+                self._logger.log_warning(f'Application version {self.APPLICATION_VERSION} is older than version from input file {input_version}')
 
             # build model
             model = self._model_builder.build_model(model_data)
