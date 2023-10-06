@@ -61,12 +61,12 @@ class Application:
 
         try:
             # show application version
-            # self._logger.log_info(f'Application version: {self.APPLICATION_VERSION}')
+            self._logger.log_info(f'Application version: {self.APPLICATION_VERSION}')
 
             # read input file
             model_data: IModelData = self._da_layer.read_input_file(input_path)
             str_input_version = ''.join([str(x) + '.' for x in model_data.version])[:-1]
-            # self._logger.log_info(f'Input file version: {input_version}')
+            self._logger.log_info(f'Input file version: {str_input_version}')
 
             # check version:
             error_msg = f'Application version {self.APPLICATION_VERSION} is older'\
