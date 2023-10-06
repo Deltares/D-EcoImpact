@@ -33,7 +33,7 @@ class DataAccessLayer(IDataAccessLayer):
     def __init__(self, logger: ILogger):
         self._logger = logger
 
-    def read_input_file(self, path: Path, logger: ILogger) -> IModelData:
+    def read_input_file(self, path: Path) -> IModelData:
         """Reads input file from provided path
 
         Args:
@@ -57,7 +57,7 @@ class DataAccessLayer(IDataAccessLayer):
                 stream, Loader=self.__create_yaml_loader()
             )
             model_data_builder = ModelDataBuilder(self._logger)
-            return model_data_builder.parse_yaml_data(contents, logger)
+            return model_data_builder.parse_yaml_data(contents)
 
     def read_input_dataset(self, dataset_data: IDatasetData) -> _xr.Dataset:
         """Uses the provided dataset_data to create/read a xarray Dataset

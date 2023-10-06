@@ -46,14 +46,14 @@ class Application:
         self._da_layer = da_layer
         self._model_builder = model_builder
 
-    def run(self, input_path: Path, logger: ILogger):
+    def run(self, input_path: Path):
         """Runs application
 
         Args:
             input_path (Path): path to input file
         """
 
-        model_data: IModelData = self._da_layer.read_input_file(input_path, logger)
+        model_data: IModelData = self._da_layer.read_input_file(input_path)
         model = self._model_builder.build_model(model_data)
 
         _ModelRunner.run_model(model, self._logger)
