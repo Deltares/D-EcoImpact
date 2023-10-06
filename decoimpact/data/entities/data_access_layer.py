@@ -1,6 +1,6 @@
 # This file is part of D-EcoImpact
 # Copyright (C) 2022-2023 Stichting Deltares
-# This program is free software distributed under the 
+# This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
@@ -60,8 +60,8 @@ class DataAccessLayer(IDataAccessLayer):
             model_data_builder = ModelDataBuilder(self._logger)
             try:
                 yaml_data = model_data_builder.parse_yaml_data(contents)
-            except:
-                raise (AttributeError('Error reading input file'))
+            except AttributeError as exc:
+                raise AttributeError('Error reading input file') from exc
 
             return yaml_data
 
@@ -122,8 +122,8 @@ class DataAccessLayer(IDataAccessLayer):
 
         return dataset
 
-    def write_output_file(self, dataset: _xr.Dataset, path: Path
-                          , application_version: str) -> None:
+    def write_output_file(self, dataset: _xr.Dataset, path: Path,
+                          application_version: str) -> None:
         """Write XArray dataset to specified path
 
         Args:
