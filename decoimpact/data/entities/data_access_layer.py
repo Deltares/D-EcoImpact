@@ -44,6 +44,7 @@ class DataAccessLayer(IDataAccessLayer):
 
         Raises:
             FileExistsError: if file does not exist
+            AttributeError: if yaml data is invalid
         """
         self._logger.log_info(f"Creating model data based on yaml file {path}")
 
@@ -57,7 +58,12 @@ class DataAccessLayer(IDataAccessLayer):
                 stream, Loader=self.__create_yaml_loader()
             )
             model_data_builder = ModelDataBuilder(self._logger)
-            return model_data_builder.parse_yaml_data(contents)
+            try:
+                yaml_data = model_data_builder.parse_yaml_data(contents)
+            except:
+                raise (AttributeError('Error reading input file'))
+
+            return yaml_data
 
     def read_input_dataset(self, dataset_data: IDatasetData) -> _xr.Dataset:
         """Uses the provided dataset_data to create/read a xarray Dataset

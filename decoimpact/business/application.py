@@ -13,6 +13,8 @@ Classes:
 """
 
 from pathlib import Path
+from venv import logger
+from xmlrpc.client import APPLICATION_ERROR
 
 from decoimpact.business.entities.i_model import ModelStatus as _ModelStatus
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
@@ -27,6 +29,9 @@ from decoimpact.data.api.i_model_data import IModelData
 class Application:
     """Application for running command-line"""
 
+    # TO DO: get version
+    # APPLICATION_VERSION = 
+    
     def __init__(
         self,
         logger: ILogger,
@@ -53,12 +58,23 @@ class Application:
             input_path (Path): path to input file
         """
 
-        model_data: IModelData = self._da_layer.read_input_file(input_path)
-        model = self._model_builder.build_model(model_data)
+        try:
+            model_data: IModelData = self._da_layer.read_input_file(input_path)
+            
+            # TO DO: check version
 
-        _ModelRunner.run_model(model, self._logger)
+            model = self._model_builder.build_model(model_data)
 
-        if model.status == _ModelStatus.FINALIZED:
-            self._da_layer.write_output_file(
-                model.output_dataset, model_data.output_path
-            )
+            _ModelRunner.run_model(model, self._logger)
+
+            if model.status == _ModelStatus.FINALIZED:
+                self._da_layer.write_output_file(
+                    model.output_dataset, model_data.output_path
+                    # TO DO: send parameter APPLICATION_VERSION to write_output_file
+                )
+           
+        except Exception as exc:
+            self._logger.log_error(f'Exiting application after error: {exc}')
+
+
+

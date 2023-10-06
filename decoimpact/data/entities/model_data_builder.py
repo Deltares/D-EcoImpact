@@ -35,8 +35,14 @@ class ModelDataBuilder:
         self._logger = logger
 
     def parse_yaml_data(self, contents: dict[Any, Any]) -> IModelData:
-        """Parse the Yaml input file into a data object"""
+        """Parse the Yaml input file into a data object
+        
+        Raises:
+            AttributeError: when version is not available from the input file
+        """
         input_version = self._parse_input_version(contents)
+        if not input_version:
+            raise (AttributeError(name ='Version not available from input file'))
         input_datasets = list(self._parse_input_datasets(contents))
         output_dataset = self._parse_output_dataset(contents)
         rules = list(self._parse_rules(contents))
@@ -52,8 +58,8 @@ class ModelDataBuilder:
 
             # check existence of version_string
             if len(str(version_string)) == 0 or version_string is None:
-                logger.log_error(f"Version ('{version_string}')" + 
-                                 " in input yaml is missing")
+                self._logger.log_error(f"Version ('{version_string}')" +
+                                       " in input yaml is missing")
             else:
                 # split string into 3 list items
                 version_list = version_string.split('.', 2)
