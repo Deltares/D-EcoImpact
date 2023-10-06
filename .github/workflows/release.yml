@@ -5,16 +5,15 @@
 name: Release major or minor version (create tag and bump poetry version)
 
 on:
-  push
-  # workflow_dispatch:
-  #   inputs:
-  #     release_type:
-  #       type: choice
-  #       description: Choose type of release
-  #       default: major
-  #       options:
-  #       - minor
-  #       - major
+  workflow_dispatch:
+    inputs:
+      release_type:
+        type: choice
+        description: Choose type of release
+        default: major
+        options:
+        - minor
+        - major
 
 jobs:
   create-release:
@@ -37,13 +36,11 @@ jobs:
           poetry version ${{ github.event.inputs.release_type }}
           PROJECT_VERSION=$(poetry version --short)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
-      # - name: uncomment after test
-      #   run: |
-      #     sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
-      #     git add template_input.yaml
-      #     git add pyproject.toml
-      #     git commit -m "bump up ${{ github.event.inputs.release_type }} version from release workflow: version $PROJECT_VERSION"
-      #     git push
+          sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
+          git add template_input.yaml
+          git add pyproject.toml
+          git commit -m "bump up ${{ github.event.inputs.release_type }} version from release workflow: version $PROJECT_VERSION"
+          git push
       - name: Create Release
         uses: actions/create-release@latest
         env:
