@@ -35,7 +35,6 @@ jobs:
           poetry version ${{ github.event.inputs.release_type }}
           PROJECT_VERSION=$(poetry version --short)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
-
       # - name: uncomment after test
       #   run: |
       #     sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
