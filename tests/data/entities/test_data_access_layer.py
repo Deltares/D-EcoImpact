@@ -34,12 +34,12 @@ def test_input_version():
 
     # Act
     da_layer = DataAccessLayer(logger)
-    model_data = da_layer.read_input_file(path)
+    model_data = da_layer.read_input_file(path, logger)
     input_version = model_data.version
 
     # Assert
-    print(input_version)
-    assert len(input_version) >= 5
+    # input_version should consist of 3 elements (major, minor, patch):
+    assert len(input_version) == 3
 
 
 def test_data_access_layer_provides_yaml_model_data_for_yaml_file():

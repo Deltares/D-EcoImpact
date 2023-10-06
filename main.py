@@ -31,7 +31,7 @@ def main(path: Path):
 
     # create and run application
     application = Application(logger, da_layer, model_builder)
-    application.run(path)
+    application.run(path, logger)
 
 
 if __name__ == "__main__":

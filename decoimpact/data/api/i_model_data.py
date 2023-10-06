@@ -30,7 +30,7 @@ class IModelData(ABC):
 
     @property
     @abstractmethod
-    def version(self) -> str:
+    def version(self) -> List[int]:
         """Version of the model"""
 
     @property

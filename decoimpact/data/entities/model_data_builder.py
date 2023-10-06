@@ -8,9 +8,11 @@
 Module for ModelDataBuilder class
 """
 
+import logging as _log
 from pathlib import Path
 from sqlite3 import NotSupportedError
 from typing import Any, Iterable, List
+from uu import Error
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_dataset import IDatasetData
@@ -32,9 +34,9 @@ class ModelDataBuilder:
         self._rule_parsers = list(rule_parsers())
         self._logger = logger
 
-    def parse_yaml_data(self, contents: dict[Any, Any]) -> IModelData:
+    def parse_yaml_data(self, contents: dict[Any, Any], logger: ILogger) -> IModelData:
         """Parse the Yaml input file into a data object"""
-        input_version = self._parse_input_version(contents)
+        input_version = self._parse_input_version(contents, logger)
         input_datasets = list(self._parse_input_datasets(contents))
         output_dataset = self._parse_output_dataset(contents)
         rules = list(self._parse_rules(contents))
@@ -42,13 +44,27 @@ class ModelDataBuilder:
         return YamlModelData("Model 1", input_version, input_datasets, output_dataset,
                              rules)
     
-    def _parse_input_version(self, contents: str) -> str:
-        # input_version: str = get_dict_element("version", contents)
-        input_version: str = get_dict_element("version", contents)
+    def _parse_input_version(self, contents: str, logger: ILogger) -> List[int]:
+        input_version = None
+        try:
+            # read version string
+            version_string: str = get_dict_element("version", contents)
 
-        # if len(input_version) != 1:
-        #     raise NotSupportedError("Only one input version is supported")
+            # check existence of version_string
+            if len(str(version_string)) == 0 or version_string is None:
+                logger.log_error(f"Version ('{version_string}')" + 
+                                 " in input yaml is missing")
+            else:
+                # split string into 3 list items
+                version_list = version_string.split('.', 2)
+
+                # convert str[] to int[]
+                input_version = list(map(int, version_list))
         
+        except (ValueError, RuntimeError, SyntaxError, NameError, AttributeError, TypeError) as exception:
+            logger.log_error(f"Invalid version in input yaml: {exception}")
+            return None
+ 
         return input_version
 
     def _parse_input_datasets(self, contents: dict[str, Any]) -> Iterable[IDatasetData]:
