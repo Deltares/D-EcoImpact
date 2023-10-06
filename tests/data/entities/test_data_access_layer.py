@@ -1,6 +1,6 @@
 # This file is part of D-EcoImpact
 # Copyright (C) 2022-2023 Stichting Deltares
-# This program is free software distributed under the 
+# This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
@@ -34,7 +34,7 @@ def test_input_version():
 
     # Act
     da_layer = DataAccessLayer(logger)
-    model_data = da_layer.read_input_file(path, logger)
+    model_data = da_layer.read_input_file(path)
     input_version = model_data.version
 
     # Assert
@@ -105,9 +105,10 @@ def test_dataset_data_write_output_file_should_write_file():
     data = [1]
     time = pd.date_range("2020-01-01", periods=1)
     dataset = _xr.Dataset(data_vars=dict(data=(["time"], data)), coords=dict(time=time))
+    application_version = '0.0.0'
 
     # Act
-    da_layer.write_output_file(dataset, path)
+    da_layer.write_output_file(dataset, path, application_version)
 
     # Assert
     assert path.is_file()
@@ -122,10 +123,11 @@ def test_dataset_data_write_output_file_should_check_if_path_exists():
     path = Path("./non_existing_dir/results.nc")
     da_layer = DataAccessLayer(logger)
     dataset = Mock(_xr.Dataset)
+    application_version = '0.0.0'
 
     # Act
     with pytest.raises(FileExistsError) as exc_info:
-        da_layer.write_output_file(dataset, path)
+        da_layer.write_output_file(dataset, path, application_version)
 
     exception_raised = exc_info.value
 
@@ -144,10 +146,11 @@ def test_dataset_data_write_output_file_should_check_if_extension_is_correct():
     path = Path(str(get_test_data_path()) + "/NonUgridFile.txt")
     da_layer = DataAccessLayer(logger)
     dataset = Mock(_xr.Dataset)
+    application_version = '0.0.0'
 
     # Act
     with pytest.raises(NotImplementedError) as exc_info:
-        da_layer.write_output_file(dataset, path)
+        da_layer.write_output_file(dataset, path, application_version)
 
     exception_raised = exc_info.value
 

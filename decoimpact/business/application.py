@@ -1,6 +1,6 @@
 # This file is part of D-EcoImpact
 # Copyright (C) 2022-2023 Stichting Deltares
-# This program is free software distributed under the 
+# This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
@@ -13,8 +13,6 @@ Classes:
 """
 
 from pathlib import Path
-from venv import logger
-from xmlrpc.client import APPLICATION_ERROR
 
 from decoimpact.business.entities.i_model import ModelStatus as _ModelStatus
 from decoimpact.business.utils.general_utils import read_version_number
@@ -35,7 +33,6 @@ class Application:
     # separate version into major, minor and patch:
     APPLICATION_VERSION_PARTS = list(map(int, APPLICATION_VERSION.split('.', 2)))
 
-    
     def __init__(
         self,
         logger: ILogger,
@@ -66,18 +63,22 @@ class Application:
             # show application version
             self._logger.log_info(f'Application version: {self.APPLICATION_VERSION}')
 
-            # read input file (input.yaml with version, input data, knowledge rules and path to output data)
+            # read input file
             model_data: IModelData = self._da_layer.read_input_file(input_path)
             input_version = ''.join([str(x) + '.' for x in model_data.version])[:-1]
             self._logger.log_info(f'Input file version: {input_version}')
 
             # check version:
-            # major version of application should be equal or larger then input version --> error
+            error_msg = f'Application version {self.APPLICATION_VERSION} is older'\
+                ' than version from input file {input_version}'
+            warning_msg = f'Application version {self.APPLICATION_VERSION} is older'\
+                ' than version from input file {input_version}'
+            # major version (app) should be equal or larger then input version --> error
             if self.APPLICATION_VERSION_PARTS[0] < model_data.version[0]:
-                self._logger.log_error(f'Application version {self.APPLICATION_VERSION} is older than version from input file {input_version}')
-            # minor version of application should be equal or larger then input version --> warning
+                self._logger.log_error(error_msg)
+            # minor version (app) should be equal or larger then input version --> warn
             elif self.APPLICATION_VERSION_PARTS[1] < model_data.version[1]:
-                self._logger.log_warning(f'Application version {self.APPLICATION_VERSION} is older than version from input file {input_version}')
+                self._logger.log_warning(warning_msg)
 
             # build model
             model = self._model_builder.build_model(model_data)
@@ -88,11 +89,9 @@ class Application:
             # write output file
             if model.status == _ModelStatus.FINALIZED:
                 self._da_layer.write_output_file(
-                    model.output_dataset, model_data.output_path, self.APPLICATION_VERSION
+                    model.output_dataset, model_data.output_path,
+                    self.APPLICATION_VERSION
                 )
-           
-        except Exception as exc:
+
+        except Exception as exc:    # pylint: disable=broad-except
             self._logger.log_error(f'Exiting application after error: {exc}')
-
-
-
