@@ -7,16 +7,21 @@
 """Main script for creating executable based on Python source files"""
 
 
-import PyInstaller.__main__
 from pathlib import Path
+
+import PyInstaller.__main__
 
 HERE = Path(__file__).parent.absolute()
 path_to_main = str(HERE / ".." / "main.py")
 
+
 def install():
-    PyInstaller.__main__.run([
-        path_to_main,
-        '--onefile',
-        '--windowed',
-        # other pyinstaller options... 
-    ])
+    PyInstaller.__main__.run(
+        [
+            path_to_main,
+            "--onefile",
+            "--windowed",
+            "-ndecoimpact"
+            # other pyinstaller options...
+        ]
+    )
