@@ -123,7 +123,8 @@ class DataAccessLayer(IDataAccessLayer):
         return dataset
 
     def write_output_file(
-        self, dataset: _xr.Dataset, path: Path, application_version: str, application_name: str
+        self, dataset: _xr.Dataset, path: Path, application_version: str,
+        application_name: str
     ) -> None:
         """Write XArray dataset to specified path
 
