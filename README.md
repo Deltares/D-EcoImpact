@@ -112,8 +112,7 @@ When adding a new dependency, do so using `poetry`
 
 ### Versioning
 The version looks like this: major.minor.patch
-- The repository depends on automatic versioning through github actions and the commit message.
-- If the commit message starts with `Fix`, `fix`, `Bug`, or `bug` the patch version will be increased in the 
+- The repository depends on automatic versioning through github actions. For each commit, the patch version will be increased in the 
   pyproject.toml and a tag will be created.
 - The major and minor version will only be updated by a manual trigger through github actions (triggering the 'release.yaml').
 
