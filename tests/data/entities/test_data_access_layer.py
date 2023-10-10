@@ -1,6 +1,6 @@
 # This file is part of D-EcoImpact
 # Copyright (C) 2022-2023 Stichting Deltares
-# This program is free software distributed under the 
+# This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
@@ -23,6 +23,23 @@ from decoimpact.data.entities.data_access_layer import DataAccessLayer
 from decoimpact.data.entities.dataset_data import DatasetData
 from decoimpact.data.entities.yaml_model_data import YamlModelData
 from tests.testing_utils import get_test_data_path
+
+
+def test_input_version():
+    """The DataAccessLayer should read the version from the input.yaml"""
+
+    # Arrange
+    logger = LoggerFactory.create_logger()
+    path = Path(get_test_data_path() + "/test.yaml")
+
+    # Act
+    da_layer = DataAccessLayer(logger)
+    model_data = da_layer.read_input_file(path)
+    input_version = model_data.version
+
+    # Assert
+    # input_version should consist of 3 elements (major, minor, patch):
+    assert len(input_version) == 3
 
 
 def test_data_access_layer_provides_yaml_model_data_for_yaml_file():
@@ -88,9 +105,11 @@ def test_dataset_data_write_output_file_should_write_file():
     data = [1]
     time = pd.date_range("2020-01-01", periods=1)
     dataset = _xr.Dataset(data_vars=dict(data=(["time"], data)), coords=dict(time=time))
+    application_version = "0.0.0"
+    application_name = "D-EcoImpact"
 
     # Act
-    da_layer.write_output_file(dataset, path)
+    da_layer.write_output_file(dataset, path, application_version, application_name)
 
     # Assert
     assert path.is_file()
@@ -105,10 +124,12 @@ def test_dataset_data_write_output_file_should_check_if_path_exists():
     path = Path("./non_existing_dir/results.nc")
     da_layer = DataAccessLayer(logger)
     dataset = Mock(_xr.Dataset)
+    application_version = "0.0.0"
+    application_name = "D-EcoImpact"
 
     # Act
     with pytest.raises(FileExistsError) as exc_info:
-        da_layer.write_output_file(dataset, path)
+        da_layer.write_output_file(dataset, path, application_version, application_name)
 
     exception_raised = exc_info.value
 
@@ -127,10 +148,12 @@ def test_dataset_data_write_output_file_should_check_if_extension_is_correct():
     path = Path(str(get_test_data_path()) + "/NonUgridFile.txt")
     da_layer = DataAccessLayer(logger)
     dataset = Mock(_xr.Dataset)
+    application_version = "0.0.0"
+    application_name = "D-EcoImpact"
 
     # Act
     with pytest.raises(NotImplementedError) as exc_info:
-        da_layer.write_output_file(dataset, path)
+        da_layer.write_output_file(dataset, path, application_version, application_name)
 
     exception_raised = exc_info.value
 
@@ -258,7 +281,7 @@ def test_data_access_layer_apply_time_filter():
         "filename": path,
         "start_date": "01-07-2014",
         "end_date": "31-08-2014",
-        "variable_mapping": {"water_depth_m": "water_depth"}
+        "variable_mapping": {"water_depth_m": "water_depth"},
     }
     input_data = DatasetData(data_dict)
     date_format = "%d-%m-%Y"
@@ -268,7 +291,7 @@ def test_data_access_layer_apply_time_filter():
     # Act
     da_layer = DataAccessLayer(logger)
     ds_result = da_layer.read_input_dataset(input_data)
-    ds_result_date = ds_result['time'].indexes['time'].normalize()
+    ds_result_date = ds_result["time"].indexes["time"].normalize()
     min_date_result = ds_result_date.min()
     max_date_result = ds_result_date.max()
 

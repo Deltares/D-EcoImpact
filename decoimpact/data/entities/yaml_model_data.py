@@ -1,6 +1,6 @@
 # This file is part of D-EcoImpact
 # Copyright (C) 2022-2023 Stichting Deltares
-# This program is free software distributed under the 
+# This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
@@ -26,12 +26,14 @@ class YamlModelData(IModelData):
     def __init__(
         self,
         name: str,
+        version: str,
         datasets: List[IDatasetData],
         output_path: Path,
         rules: List[IRuleData],
     ):
         super()
         self._name = name
+        self._version = version
         self._datasets = datasets
         self._output_path = output_path
         self._rules = rules
@@ -40,6 +42,11 @@ class YamlModelData(IModelData):
     def name(self) -> str:
         """Name of the model"""
         return self._name
+
+    @property
+    def version(self) -> str:
+        """Version of the model"""
+        return self._version
 
     @property
     def datasets(self) -> List[IDatasetData]:

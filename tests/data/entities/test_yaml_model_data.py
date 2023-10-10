@@ -1,6 +1,6 @@
 # This file is part of D-EcoImpact
 # Copyright (C) 2022-2023 Stichting Deltares
-# This program is free software distributed under the 
+# This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
@@ -29,9 +29,10 @@ def test_yaml_model_data_default_settings_and_type():
     datasets = [Mock(DatasetData)]
     rules = [Mock(MultiplyRuleData)]
     output_dataset = Mock(_xr.Dataset)
+    version='0.0.0'
 
     # Act
-    model_data = YamlModelData("Model 1", datasets, output_dataset, rules)
+    model_data = YamlModelData("Model 1", version, datasets, output_dataset, rules)
 
     # Assert
 

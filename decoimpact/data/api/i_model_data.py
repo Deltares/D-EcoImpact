@@ -1,6 +1,6 @@
 # This file is part of D-EcoImpact
 # Copyright (C) 2022-2023 Stichting Deltares
-# This program is free software distributed under the 
+# This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
@@ -27,6 +27,11 @@ class IModelData(ABC):
     @abstractmethod
     def name(self) -> str:
         """Name of the model"""
+
+    @property
+    @abstractmethod
+    def version(self) -> List[int]:
+        """Version of the model"""
 
     @property
     @abstractmethod

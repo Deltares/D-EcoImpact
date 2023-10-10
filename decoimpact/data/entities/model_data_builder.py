@@ -1,6 +1,6 @@
 # This file is part of D-EcoImpact
-# Copyright (C) 2022-2023 Stichting Deltares
-# This program is free software distributed under the 
+# Copyright (C) 2022-2023 Stichting Deltares and D-EcoImpact contributors
+# This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
@@ -33,12 +33,43 @@ class ModelDataBuilder:
         self._logger = logger
 
     def parse_yaml_data(self, contents: dict[Any, Any]) -> IModelData:
-        """Parse the Yaml input file into a data object"""
+        """Parse the Yaml input file into a data object
+
+        Raises:
+            AttributeError: when version is not available from the input file
+        """
+        input_version = self._parse_input_version(contents)
+        if not input_version:
+            raise (AttributeError(name='Version not available from input file'))
         input_datasets = list(self._parse_input_datasets(contents))
         output_dataset = self._parse_output_dataset(contents)
         rules = list(self._parse_rules(contents))
 
-        return YamlModelData("Model 1", input_datasets, output_dataset, rules)
+        return YamlModelData("Model 1", input_version, input_datasets, output_dataset,
+                             rules)
+
+    def _parse_input_version(self, contents: str) -> List[int]:
+        input_version = None
+        try:
+            # read version string
+            version_string: str = get_dict_element("version", contents)
+
+            # check existence of version_string
+            if len(str(version_string)) == 0 or version_string is None:
+                self._logger.log_error(f"Version ('{version_string}')" +
+                                       " in input yaml is missing")
+            else:
+                # split string into 3 list items
+                version_list = version_string.split('.', 2)
+
+                # convert str[] to int[]
+                input_version = list(map(int, version_list))
+
+        except (ValueError, AttributeError, TypeError) as exception:
+            self._logger.log_error(f"Invalid version in input yaml: {exception}")
+            return None
+
+        return input_version
 
     def _parse_input_datasets(self, contents: dict[str, Any]) -> Iterable[IDatasetData]:
         input_datasets: List[dict[str, Any]] = get_dict_element("input-data", contents)
