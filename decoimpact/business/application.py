@@ -30,8 +30,9 @@ class Application:
 
     # get version
     APPLICATION_VERSION = read_version_number()
+    APPLICATION_NAME = "D-EcoImpact"
     # separate version into major, minor and patch:
-    APPLICATION_VERSION_PARTS = list(map(int, APPLICATION_VERSION.split('.', 2)))
+    APPLICATION_VERSION_PARTS = list(map(int, APPLICATION_VERSION.split(".", 2)))
 
     def __init__(
         self,
@@ -61,18 +62,22 @@ class Application:
 
         try:
             # show application version
-            self._logger.log_info(f'Application version: {self.APPLICATION_VERSION}')
+            self._logger.log_info(f"Application version: {self.APPLICATION_VERSION}")
 
             # read input file
             model_data: IModelData = self._da_layer.read_input_file(input_path)
-            str_input_version = ''.join([str(x) + '.' for x in model_data.version])[:-1]
-            self._logger.log_info(f'Input file version: {str_input_version}')
+            str_input_version = "".join([str(x) + "." for x in model_data.version])[:-1]
+            self._logger.log_info(f"Input file version: {str_input_version}")
 
             # check version:
-            error_msg = f'Application version {self.APPLICATION_VERSION} is older'\
-                ' than version from input file {str_input_version}'
-            warning_msg = f'Application version {self.APPLICATION_VERSION} is older'\
-                ' than version from input file {str_input_version}'
+            error_msg = (
+                f"Application version {self.APPLICATION_VERSION} is older"
+                " than version from input file {str_input_version}"
+            )
+            warning_msg = (
+                f"Application version {self.APPLICATION_VERSION} is older"
+                " than version from input file {str_input_version}"
+            )
             # major version (app) should be equal or larger then input version --> error
             if self.APPLICATION_VERSION_PARTS[0] < model_data.version[0]:
                 self._logger.log_error(error_msg)
@@ -89,9 +94,11 @@ class Application:
             # write output file
             if model.status == _ModelStatus.FINALIZED:
                 self._da_layer.write_output_file(
-                    model.output_dataset, model_data.output_path,
-                    self.APPLICATION_VERSION
+                    model.output_dataset,
+                    model_data.output_path,
+                    self.APPLICATION_VERSION,
+                    self.APPLICATION_NAME,
                 )
 
-        except Exception as exc:    # pylint: disable=broad-except
-            self._logger.log_error(f'Exiting application after error: {exc}')
+        except Exception as exc:  # pylint: disable=broad-except
+            self._logger.log_error(f"Exiting application after error: {exc}")
