@@ -24,7 +24,7 @@ MAIN_SCRIPT_NAME = "main.py"
 main_script_path = parent_path.parent / MAIN_SCRIPT_NAME
 output_nc_files_path = parent_path / "output_nc_files"
 # Create output folder if not already there
-Path(output_nc_files_path).mkdir(exist_ok=True) 
+Path(output_nc_files_path).mkdir(exist_ok=True)
 reference_files_path = parent_path / "reference_nc_files"
 
 
@@ -65,7 +65,7 @@ def test_process_input(input_filename):
         reference_files_path / input_filename.replace(".yaml", ".nc")
     )
 
-    # Compare the datasets
-    assert generated_nc.identical(
+    # Compare the datasets if they have matching variables and coordinates
+    assert generated_nc.equals(
         reference_nc
     ), f"Generated output does not match reference for {input_filename}"

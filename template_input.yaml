@@ -6,8 +6,6 @@ input-data:
       start_date: 
       end_date: 
       variable_mapping:
-        water_depth_m: 
-        water_level_m: 
 
 rules:
   - multiply_rule:
