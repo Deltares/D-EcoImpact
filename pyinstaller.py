@@ -9,7 +9,10 @@
 
 from pathlib import Path
 
-import PyInstaller.__main__
+import PyInstaller.__main__  # pylint: disable=import-error, no-name-in-module
+
+# MDK: thess warnings are disabled on purpose. Using PyInstaller.__main__
+# comes directly from the documentation of PyInstaller.
 
 HERE = Path(__file__).parent.absolute()
 PATH_TO_MAIN = str(HERE / "main.py")
