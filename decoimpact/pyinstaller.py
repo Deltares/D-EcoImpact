@@ -20,12 +20,15 @@ def install():
     Function can be called from command line using a poetry function.
     Contains settings for pyinstaller."""
 
+    # MDK: this warning is disabled on purpose. Using PyInstaller.__main__
+    # comes directly from the documentation of PyInstaller.
+    # pylint: disable=maybe-no-member
     PyInstaller.__main__.run(
         [
             PATH_TO_MAIN,
+            "--name=decoimpact",
             "--onefile",
             "--windowed",
-            "-ndecoimpact"
             # other pyinstaller options...
         ]
     )
