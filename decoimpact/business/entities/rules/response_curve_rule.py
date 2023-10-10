@@ -1,6 +1,6 @@
 # This file is part of D-EcoImpact
 # Copyright (C) 2022-2023 Stichting Deltares
-# This program is free software distributed under the 
+# This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
@@ -14,7 +14,6 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 
 class ResponseCurveRule(RuleBase, ICellBasedRule):
-
     """Rule for response function"""
 
     def __init__(
