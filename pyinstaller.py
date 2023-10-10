@@ -12,7 +12,7 @@ from pathlib import Path
 import PyInstaller.__main__
 
 HERE = Path(__file__).parent.absolute()
-PATH_TO_MAIN = str(HERE / ".." / "main.py")
+PATH_TO_MAIN = str(HERE / "main.py")
 
 
 def install():

@@ -73,4 +73,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-build = "decoimpact.pyinstaller:install"
+build = "pyinstaller:install"
