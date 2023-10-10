@@ -16,14 +16,16 @@ on:
         - major
 
 jobs:
-  update-packages:
+  create-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v4
         with:
           python-version: 3.11
-      - name: Run image
+      - name: Install poetry
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: 1.4.2
@@ -48,3 +50,9 @@ jobs:
           release_name: Release ${{ env.PROJECT_VERSION }}
           draft: false
           prerelease: false
+      - name: Install Dependencies
+        run: poetry install
+      - name: Create new version of mkdocs and publish
+        run: |
+          poetry run mike deploy --push --update-aliases ${PROJECT_VERSION} latest
+          poetry run mike set-default --push latest
