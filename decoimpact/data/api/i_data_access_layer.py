@@ -1,6 +1,6 @@
 # This file is part of D-EcoImpact
 # Copyright (C) 2022-2023 Stichting Deltares
-# This program is free software distributed under the 
+# This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
@@ -48,7 +48,8 @@ class IDataAccessLayer(ABC):
         """
 
     @abstractmethod
-    def write_output_file(self, dataset: _xr.Dataset, path: Path) -> None:
+    def write_output_file(self, dataset: _xr.Dataset, path: Path,
+                          application_version: str) -> None:
         """Write output files to provided path
 
         Args:

@@ -1,6 +1,6 @@
 # This file is part of D-EcoImpact
 # Copyright (C) 2022-2023 Stichting Deltares
-# This program is free software distributed under the 
+# This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
@@ -44,6 +44,7 @@ class DataAccessLayer(IDataAccessLayer):
 
         Raises:
             FileExistsError: if file does not exist
+            AttributeError: if yaml data is invalid
         """
         self._logger.log_info(f"Creating model data based on yaml file {path}")
 
@@ -57,7 +58,12 @@ class DataAccessLayer(IDataAccessLayer):
                 stream, Loader=self.__create_yaml_loader()
             )
             model_data_builder = ModelDataBuilder(self._logger)
-            return model_data_builder.parse_yaml_data(contents)
+            try:
+                yaml_data = model_data_builder.parse_yaml_data(contents)
+            except AttributeError as exc:
+                raise AttributeError('Error reading input file') from exc
+
+            return yaml_data
 
     def read_input_dataset(self, dataset_data: IDatasetData) -> _xr.Dataset:
         """Uses the provided dataset_data to create/read a xarray Dataset
@@ -116,12 +122,14 @@ class DataAccessLayer(IDataAccessLayer):
 
         return dataset
 
-    def write_output_file(self, dataset: _xr.Dataset, path: Path) -> None:
+    def write_output_file(self, dataset: _xr.Dataset, path: Path,
+                          application_version: str) -> None:
         """Write XArray dataset to specified path
 
         Args:
             dataset (XArray dataset): dataset to write
             path (str): path to output file
+            application_version: application version to output file
 
         Returns:
             None
@@ -149,6 +157,7 @@ class DataAccessLayer(IDataAccessLayer):
             # (Data is stored in an HDF5 file, using only netCDF 3 compatible
             # API features.)
 
+            # TO DO: write application_version to output file as a global attribute
         except OSError as exc:
             msg = f"ERROR: Cannot write output .nc file -- {path}"
             self._logger.log_error(msg)

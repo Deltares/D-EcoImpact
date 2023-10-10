@@ -1,3 +1,5 @@
+version: 0.0.0
+
 input-data:
   - dataset:
       filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc

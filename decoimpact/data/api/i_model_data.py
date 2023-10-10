@@ -30,6 +30,11 @@ class IModelData(ABC):
 
     @property
     @abstractmethod
+    def version(self) -> List[int]:
+        """Version of the model"""
+
+    @property
+    @abstractmethod
     def datasets(self) -> List[IDatasetData]:
         """Datasets of the model"""
 
