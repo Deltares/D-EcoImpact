@@ -16,6 +16,9 @@ PATH_TO_MAIN = str(HERE / ".." / "main.py")
 
 
 def install():
+    """Function to create self-contained executable out of python files.
+    Function can be called from command line using a poetry function"""
+
     PyInstaller.__main__.run(
         [
             PATH_TO_MAIN,
