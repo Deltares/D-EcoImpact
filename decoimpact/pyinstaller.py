@@ -22,6 +22,7 @@ def install():
 
     # MDK: this warning is disabled on purpose. Using PyInstaller.__main__
     # comes directly from the documentation of PyInstaller.
+
     # pylint: disable=maybe-no-member
     PyInstaller.__main__.run(
         [
