@@ -3,6 +3,22 @@ from pathlib import Path
 
 from decoimpact.business.utils.version_utils import read_version_number
 
+# Multiline description
+PROGRAM_DESCRIPTION = """
+# D-EcoImpact
+
+# A Python based kernel to perform spatial (environmental) impact assessment.
+# Based on knowledge rules applied to model output and/or measurements.
+
+# See the README.md for more details
+
+# Copyright (C) 2022-2023 Stichting Deltares
+# This program is free software distributed under the
+# GNU Affero General Public License version 3.0
+# A copy of the GNU Affero General Public License can be found at
+# https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
+"""
+
 
 def read_command_line_arguments():
     """Reads the command line arguments given to the tool
@@ -10,25 +26,10 @@ def read_command_line_arguments():
     Returns:
         Path: input yaml path
     """
-    # Multiline description
-    DESCRIPTION = """
-    # D-EcoImpact
-
-    # A Python based kernel to perform spatial (environmental) impact assessment.
-    # Based on knowledge rules applied to model output and/or measurements.
-    
-    # See the README.md for more details
-
-    # Copyright (C) 2022-2023 Stichting Deltares
-    # This program is free software distributed under the
-    # GNU Affero General Public License version 3.0
-    # A copy of the GNU Affero General Public License can be found at
-    # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
-    """
 
     # Initialize parser with the multiline description
     parser = argparse.ArgumentParser(
-        description=DESCRIPTION,
+        description=PROGRAM_DESCRIPTION,
         formatter_class=argparse.RawTextHelpFormatter,
     )
 
