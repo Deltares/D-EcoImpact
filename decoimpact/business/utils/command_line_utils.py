@@ -14,7 +14,9 @@ def read_command_line_arguments():
     DESCRIPTION = """
     # D-EcoImpact
 
-    # A Python based kernel to perform spatial (environmental) impact assessment. Based on knowledge rules applied to model output and/or measurements.
+    # A Python based kernel to perform spatial (environmental) impact assessment.
+    # Based on knowledge rules applied to model output and/or measurements.
+    
     # See the README.md for more details
 
     # Copyright (C) 2022-2023 Stichting Deltares
