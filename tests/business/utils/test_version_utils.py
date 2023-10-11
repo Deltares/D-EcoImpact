@@ -8,21 +8,23 @@
 Tests for utility functions regarding version number
 """
 
-import decoimpact.business.utils.version_utils as utilities
 import re
 
-def test_flatten_list_returns_flat_list():
+import decoimpact.business.utils.version_utils as utilities
+
+
+def test_read_version_number_returns_string_matching_format():
     """Test read_version_number returns a string, corresponding to
     the major.minor.patch form."""
 
-# Arramge
-# Define the pattern to match the desired format
-pattern = r'^\d+\.\d+\.\d+$'
+    # Arrange
+    # Define the pattern to match the desired format
+    pattern = r"^\d+\.\d+\.\d+$"
+
     # Act
     version_string = utilities.read_version_number()
 
     # Assert
     assert isinstance(version_string, str)
     assert len(version_string) > 0
-    
-    re.match(pattern, input_string):
+    assert re.match(pattern, version_string)
