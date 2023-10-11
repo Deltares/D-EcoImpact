@@ -15,7 +15,7 @@ Classes:
 from pathlib import Path
 
 from decoimpact.business.entities.i_model import ModelStatus as _ModelStatus
-from decoimpact.business.utils.general_utils import read_version_number
+from decoimpact.business.utils.version_utils import read_version_number
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
 from decoimpact.business.workflow.model_runner import ModelRunner as _ModelRunner
 
