@@ -48,6 +48,7 @@ def read_command_line_arguments():
         print("D-EcoImpact version:", version)
         exit()
     else:
+        print("\nNo inputfile given. Exiting. \n")
         parser.print_help()
         exit()
     return input_path
