@@ -1,16 +1,5 @@
 import argparse
-from importlib.metadata import version
 from pathlib import Path
-
-
-def read_version_number():
-    """Reads the version of the tool
-
-    Returns:
-        str: version number of tool
-    """
-    version_string = version("decoimpact")
-    return version_string
 
 
 def read_command_line_arguments():
