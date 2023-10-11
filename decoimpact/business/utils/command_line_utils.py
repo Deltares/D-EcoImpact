@@ -1,6 +1,8 @@
 import argparse
 from pathlib import Path
 
+from decoimpact.business.utils.version_utils import read_version_number
+
 
 def read_command_line_arguments():
     """Reads the command line arguments given to the tool
