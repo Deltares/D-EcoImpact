@@ -131,7 +131,10 @@ The pages will be served locally and available on one of you local ports. When e
 INFO     -  [10:44:34] Serving on http://127.0.0.1:8000/
 ```
 
-In this case the docs are available on http://127.0.0.1:8000/ or http://localhost:8000:
+In this case the docs are available on http://127.0.0.1:8000/ or http://localhost:8000
+
+For each release a version of documentation is available at: 
+(deltares.github.io/D-EcoImpact/)[deltares.github.io/D-EcoImpact/]
 
 ## Add acceptance tests
 

@@ -6,14 +6,14 @@ on:
       - main
 
 jobs:
-  update-packages:
+  bump-up-version:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: 3.11
-      - name: Run image
+      - name: Install poetry
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: 1.4.2
