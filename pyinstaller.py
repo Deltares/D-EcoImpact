@@ -32,7 +32,7 @@ def install():
             PATH_TO_MAIN,
             "--name=decoimpact",
             "--onefile",
-            "--windowed",
+            "--console",
             # other pyinstaller options...
         ]
     )
