@@ -332,7 +332,7 @@ def test_execute_value_array_aggregate_time_monthly_median():
 
 
 def test_execute_value_array_aggregate_time_monthly_stdev():
-    """Test aggregate input_variable_names of a TimeAggregationRule (QANT10, monthly)"""
+    """Test aggregate input_variable_names of a TimeAggregationRule (STDEV, monthly)"""
 
     # create test set
     logger = Mock(ILogger)
@@ -356,7 +356,7 @@ def test_execute_value_array_aggregate_time_monthly_stdev():
 
 
 def test_execute_value_array_aggregate_time_monthly_q10():
-    """Test aggregate input_variable_names of a TimeAggregationRule (QANT10, monthly)"""
+    """Test aggregate input_variable_names of a TimeAggregationRule (QUANT10, monthly)"""
 
     # create test set
     logger = Mock(ILogger)
@@ -380,7 +380,7 @@ def test_execute_value_array_aggregate_time_monthly_q10():
 
 
 def test_execute_value_array_aggregate_time_monthly_q90():
-    """Test aggregate input_variable_names of a TimeAggregationRule (QANT10, monthly)"""
+    """Test aggregate input_variable_names of a TimeAggregationRule (QUANT90, monthly)"""
 
     # create test set
     logger = Mock(ILogger)
