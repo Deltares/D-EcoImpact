@@ -8,6 +8,7 @@
 Module for command line utils
 """
 import argparse
+import sys
 from pathlib import Path
 
 from decoimpact.business.utils.version_utils import read_version_number
@@ -58,9 +59,9 @@ def read_command_line_arguments():
     elif args.version:
         version = read_version_number()
         print("D-EcoImpact version:", version)
-        exit()
+        sys.exit()
     else:
         print("\nNo inputfile given. Exiting. \n")
         parser.print_help()
-        exit()
+        sys.exit()
     return input_path
