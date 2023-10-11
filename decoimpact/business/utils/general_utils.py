@@ -40,9 +40,8 @@ def read_command_line_arguments():
     )
 
     # Adding optional argument
-    parser.add_argument("-i", "--input_file", help="Input yaml file")
     parser.add_argument(
-        "input_file_positional",
+        "input_file",
         nargs="?",
         help="Input yaml file",
     )
@@ -53,8 +52,6 @@ def read_command_line_arguments():
 
     if args.input_file:
         input_path = Path(args.input_file)
-    elif args.input_file_positional:
-        input_path = Path(args.input_file_positional)
     elif args.version:
         version = read_version_number()
         print("D-EcoImpact version:", version)
