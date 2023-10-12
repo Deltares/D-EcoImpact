@@ -89,9 +89,12 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
         """
 
         bins = self._limits
+        responses = self._responses
 
         # bins are constant
         selected_bin = -1
+        if _np.isnan(value):
+            return value
         if value < _np.min(bins):
             logger.log_warning("value less than min")
             selected_bin = 0
@@ -100,4 +103,4 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
             if value > _np.max(bins):
                 logger.log_warning("value greater than max")
 
-        return self._responses[selected_bin]
+        return responses[selected_bin]
