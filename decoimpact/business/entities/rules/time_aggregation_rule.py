@@ -171,12 +171,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
                 self._operation_parameter / 100
             ).drop_vars("quantile")
 
-        elif self._operation_type is TimeOperationType.QUANT10:
-            result = aggregated_values.quantile(0.1).drop_vars("quantile")
-
-        elif self._operation_type is TimeOperationType.QUANT90:
-            result = aggregated_values.quantile(0.9).drop_vars("quantile")
-
         else:
             raise NotImplementedError(
                 f"The operation type '{self._operation_type}' "
@@ -184,13 +178,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             )
 
         return _xr.DataArray(result)
-
-    # def quantile(self, q: float):
-    #     """Method to determine quantile
-
-    #     Args: quantile: the value q th to pass on to the quantile function
-    #     """
-    #     return aggregated_values.quantile(q).drop_vars("quantile")
 
     def count_groups(self, elem):
         """

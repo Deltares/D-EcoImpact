@@ -380,54 +380,6 @@ def test_execute_value_array_aggregate_time_monthly_percentile():
     )
 
 
-def test_execute_value_array_aggregate_time_monthly_q10():
-    """Test aggregate input_variable_names of a TimeAggregationRule (QUANT10, monthly)"""
-
-    # create test set
-    logger = Mock(ILogger)
-    rule = TimeAggregationRule(
-        name="test",
-        time_scale="month",
-        input_variable_names=["foo"],
-        operation_type=TimeOperationType.QUANT10,
-    )
-
-    time_aggregation = rule.execute(value_array_monthly, logger)
-    result_data = [0.1, 0.25, 0.21]
-    result_array = _xr.DataArray(
-        result_data, coords=[result_time_monthly], dims=["time_month"]
-    )
-
-    # Assert
-    assert (
-        _xr.testing.assert_allclose(time_aggregation, result_array, atol=1e-11) is None
-    )
-
-
-def test_execute_value_array_aggregate_time_monthly_q90():
-    """Test aggregate input_variable_names of a TimeAggregationRule (QUANT90, monthly)"""
-
-    # create test set
-    logger = Mock(ILogger)
-    rule = TimeAggregationRule(
-        name="test",
-        time_scale="month",
-        input_variable_names=["foo"],
-        operation_type=TimeOperationType.QUANT90,
-    )
-
-    time_aggregation = rule.execute(value_array_monthly, logger)
-    result_data = [0.1, 0.65, 0.29]
-    result_array = _xr.DataArray(
-        result_data, coords=[result_time_monthly], dims=["time_month"]
-    )
-
-    # Assert
-    assert (
-        _xr.testing.assert_allclose(time_aggregation, result_array, atol=1e-11) is None
-    )
-
-
 def test_operation_type_not_implemented():
     """Test that the time aggregation rule gives an error if no operation_type is given"""
 

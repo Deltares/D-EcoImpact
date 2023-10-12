@@ -25,6 +25,4 @@ class TimeOperationType(IntEnum):
     MAX_DURATION_PERIODS = 7
     AVG_DURATION_PERIODS = 8
     STDEV = 9
-    QUANT10 = 10
-    QUANT90 = 11
-    PERCENTILE = 12
+    PERCENTILE = 10
