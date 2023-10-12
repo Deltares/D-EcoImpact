@@ -33,7 +33,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: TimeOperationType,
-        operation_parameter: float,
+        operation_parameter: float = 0,
         time_scale: str = "year",
         output_variable_name: str = "output",
         description: str = "",

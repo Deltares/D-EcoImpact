@@ -10,9 +10,7 @@ Module for ParserTimeAggregationRule class
 Classes:
     ParserTimeAggregationRule
 """
-import operator
 from typing import Any, Dict
-from unicodedata import numeric
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
