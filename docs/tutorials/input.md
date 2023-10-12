@@ -171,7 +171,7 @@ FORMAT
 ```
 
 The time aggregation rule rule allows for calculating a statistical summary over the time axes of 3D and 2D variables. This could be used for calculating the maximum value over a year (e.g. for water level) or the minimum value over a month (e.g. oxygen concentration). The rule operates both on  3D variables and 2D variables as long as they have a time axes and returns a 3D or 2D result depending on input with the statistic calculated for a new time axis (e.g, year or month). 
-Operations available: Add, Average, Median, Min, Max and count_periods
+Operations available: Add, Average, Median, Min, Max, count_periods, Stdev and Percentile(n). When using percentile, add a number for the nth percentile with brackets like this: percentile(10).
 
 Time aggregation available: Year, Month
 
