@@ -10,7 +10,9 @@ Module for ParserTimeAggregationRule class
 Classes:
     ParserTimeAggregationRule
 """
+import operator
 from typing import Any, Dict
+from unicodedata import numeric
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
@@ -37,10 +39,27 @@ class ParserTimeAggregationRule(IParserRuleBase):
         Returns:
             RuleBase: Rule based on the provided data
         """
+        # get elements
         name = get_dict_element("name", dictionary)
         input_variable_name = get_dict_element("input_variable", dictionary)
         operation = get_dict_element("operation", dictionary)
         time_scale = get_dict_element("time_scale", dictionary)
+        # if operation contains percentile,
+        # extract percentile value as operation_parameter from operation:
+        if str(operation)[:10] == "PERCENTILE":
+            try:
+                operation_parameter = float(str(operation)[11:-1])
+            except ValueError as exc:
+                print(
+                    "Operation percentile is missing valid value like 'percentile(5)'.",
+                    exc,
+                )
+            operation = "PERCENTILE"
+
+        else:
+            operation_parameter = None
+
+        # validate operation
         match_operation = [o for o in TimeOperationType if o.name == operation]
         operation_value = next(iter(match_operation), None)
 
@@ -50,6 +69,17 @@ class ParserTimeAggregationRule(IParserRuleBase):
             raise ValueError(message)
         output_variable_name = get_dict_element("output_variable", dictionary)
 
+        # test if operation_parameter is within expected limits:
+        if operation_value == TimeOperationType.PERCENTILE:
+            if operation_parameter < 0 or operation_parameter > 100:
+                message = "Operation percentile should have number between 0 and 100"
+                raise ValueError(message)
+
         return TimeAggregationRuleData(
-            name, operation_value, input_variable_name, output_variable_name, time_scale
+            name,
+            operation_value,
+            operation_parameter,
+            input_variable_name,
+            output_variable_name,
+            time_scale,
         )

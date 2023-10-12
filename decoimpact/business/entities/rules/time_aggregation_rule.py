@@ -33,12 +33,14 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: TimeOperationType,
+        operation_parameter: float,
         time_scale: str = "year",
         output_variable_name: str = "output",
         description: str = "",
     ):
         super().__init__(name, input_variable_names, output_variable_name, description)
         self._operation_type = operation_type
+        self._operation_parameter = operation_parameter
         self._time_scale = time_scale.lower()
         self._time_scale_mapping = {"month": "M", "year": "Y"}
 
@@ -46,6 +48,11 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
     def operation_type(self):
         """Operation type property"""
         return self._operation_type
+
+    @property
+    def operation_parameter(self):
+        """Operation parameter property"""
+        return self._operation_parameter
 
     @property
     def time_scale(self):
@@ -159,6 +166,11 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         elif self._operation_type is TimeOperationType.STDEV:
             result = aggregated_values.std()
 
+        elif self._operation_type is TimeOperationType.PERCENTILE:
+            result = aggregated_values.quantile(
+                self._operation_parameter / 100
+            ).drop_vars("quantile")
+
         elif self._operation_type is TimeOperationType.QUANT10:
             result = aggregated_values.quantile(0.1).drop_vars("quantile")
 
@@ -172,6 +184,13 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             )
 
         return _xr.DataArray(result)
+
+    # def quantile(self, q: float):
+    #     """Method to determine quantile
+
+    #     Args: quantile: the value q th to pass on to the quantile function
+    #     """
+    #     return aggregated_values.quantile(q).drop_vars("quantile")
 
     def count_groups(self, elem):
         """

@@ -27,3 +27,4 @@ class TimeOperationType(IntEnum):
     STDEV = 9
     QUANT10 = 10
     QUANT90 = 11
+    PERCENTILE = 12

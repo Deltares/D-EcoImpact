@@ -30,3 +30,8 @@ class ICombineResultsRuleData(IRuleData, ABC):
     @abstractmethod
     def operation_type(self) -> str:
         """Property for the operation_type"""
+
+    @property
+    @abstractmethod
+    def operation_parameter(self) -> float:
+        """Property for the operation_parameter"""

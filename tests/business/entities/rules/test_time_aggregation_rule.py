@@ -355,6 +355,31 @@ def test_execute_value_array_aggregate_time_monthly_stdev():
     )
 
 
+def test_execute_value_array_aggregate_time_monthly_percentile():
+    """Test aggregate input_variable_names of a TimeAggregationRule (PERCENTILE, monthly)"""
+
+    # create test set
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        time_scale="month",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.PERCENTILE,
+        operation_parameter=10,
+    )
+
+    time_aggregation = rule.execute(value_array_monthly, logger)
+    result_data = [0.1, 0.25, 0.21]
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_monthly], dims=["time_month"]
+    )
+
+    # Assert
+    assert (
+        _xr.testing.assert_allclose(time_aggregation, result_array, atol=1e-11) is None
+    )
+
+
 def test_execute_value_array_aggregate_time_monthly_q10():
     """Test aggregate input_variable_names of a TimeAggregationRule (QUANT10, monthly)"""
 
