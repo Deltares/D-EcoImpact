@@ -20,7 +20,8 @@ PROGRAM_DESCRIPTION = """
 # A Python based kernel to perform spatial ecological impact assessment.
 # Based on knowledge rules applied to model output and/or measurements.
 
-# See the README.md for more details
+# For more details see the README.md found at
+# https://github.com/Deltares/D-EcoImpact/blob/main/README.md
 
 # Copyright (C) 2022-2023 Stichting Deltares
 # This program is free software distributed under the
