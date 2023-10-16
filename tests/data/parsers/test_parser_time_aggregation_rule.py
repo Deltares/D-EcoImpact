@@ -131,7 +131,7 @@ def test_parse_operation_percentile_has_parameter():
 
     # Assert
     expected_message = (
-        "Operation percentile is missing valid value such as 'percentile(10)'."
+        "Operation percentile is missing valid value like 'percentile(10)'"
     )
     assert exception_raised.args[0] == expected_message
 
