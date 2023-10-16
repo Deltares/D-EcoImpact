@@ -332,7 +332,8 @@ def test_execute_value_array_aggregate_time_monthly_median():
 
 
 def test_execute_value_array_aggregate_time_monthly_stdev():
-    """Test aggregate input_variable_names of a TimeAggregationRule (STDEV, monthly)"""
+    """Test aggregate input_variable_names of a TimeAggregationRule
+    (STDEV, monthly)"""
 
     # create test set
     logger = Mock(ILogger)
@@ -356,7 +357,8 @@ def test_execute_value_array_aggregate_time_monthly_stdev():
 
 
 def test_execute_value_array_aggregate_time_monthly_percentile():
-    """Test aggregate input_variable_names of a TimeAggregationRule (PERCENTILE, monthly)"""
+    """Test aggregate input_variable_names of a TimeAggregationRule
+    (PERCENTILE, monthly)"""
 
     # create test set
     logger = Mock(ILogger)
@@ -381,7 +383,8 @@ def test_execute_value_array_aggregate_time_monthly_percentile():
 
 
 def test_operation_type_not_implemented():
-    """Test that the time aggregation rule gives an error if no operation_type is given"""
+    """Test that the time aggregation rule gives an error
+    if no operation_type is given"""
 
     # create test set
     logger = Mock(ILogger)

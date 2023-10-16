@@ -48,10 +48,11 @@ class ParserTimeAggregationRule(IParserRuleBase):
             try:
                 operation_parameter = float(str(operation)[11:-1])
             except ValueError as exc:
-                print(
-                    "Operation percentile is missing valid value like 'percentile(5)'.",
-                    exc,
+                message = (
+                    "Operation percentile is missing valid value like 'percentile(10)'."
                 )
+                # print(message, exc,)
+                raise ValueError(message) from exc
             operation = "PERCENTILE"
 
         else:
