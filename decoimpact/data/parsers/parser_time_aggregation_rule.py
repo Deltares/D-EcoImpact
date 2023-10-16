@@ -42,6 +42,8 @@ class ParserTimeAggregationRule(IParserRuleBase):
         input_variable_name = get_dict_element("input_variable", dictionary)
         operation = get_dict_element("operation", dictionary)
         time_scale = get_dict_element("time_scale", dictionary)
+        operation_parameter = None
+
         # if operation contains percentile,
         # extract percentile value as operation_parameter from operation:
         if str(operation)[:10] == "PERCENTILE":
@@ -55,24 +57,27 @@ class ParserTimeAggregationRule(IParserRuleBase):
                 raise ValueError(message) from exc
             operation = "PERCENTILE"
 
-        else:
-            operation_parameter = None
-
         # validate operation
         match_operation = [o for o in TimeOperationType if o.name == operation]
         operation_value = next(iter(match_operation), None)
 
+        # validate operation_value (percentile(n); n = operation_value)
         if not operation_value:
             message = f"Operation is not of a predefined type. Should be in: \
                       {[o.name for o in TimeOperationType]}. Received: {operation}"
             raise ValueError(message)
-        output_variable_name = get_dict_element("output_variable", dictionary)
 
         # test if operation_parameter is within expected limits:
         if operation_value == TimeOperationType.PERCENTILE:
-            if operation_parameter < 0 or operation_parameter > 100:
+            if (
+                operation_parameter is None
+                or operation_parameter < 0
+                or operation_parameter > 100
+            ):
                 message = "Operation percentile should have number between 0 and 100"
                 raise ValueError(message)
+
+        output_variable_name = get_dict_element("output_variable", dictionary)
 
         return TimeAggregationRuleData(
             name,
