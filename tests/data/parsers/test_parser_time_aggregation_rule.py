@@ -131,7 +131,7 @@ def test_parse_operation_percentile_has_parameter():
 
     # Assert
     expected_message = (
-        "Operation percentile is missing valid value like 'percentile(10)'."
+        "Operation percentile is missing valid value such as 'percentile(10)'."
     )
     assert exception_raised.args[0] == expected_message
 
@@ -158,5 +158,5 @@ def test_parse_operation_percentile_valid_parameter():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = "Operation percentile should have number between 0 and 100"
+    expected_message = "Operation percentile should be a number between 0 and 100."
     assert exception_raised.args[0] == expected_message

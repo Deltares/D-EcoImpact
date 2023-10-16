@@ -51,9 +51,8 @@ class ParserTimeAggregationRule(IParserRuleBase):
                 operation_parameter = float(str(operation)[11:-1])
             except ValueError as exc:
                 message = (
-                    "Operation percentile is missing valid value like 'percentile(10)'."
+                    "Operation percentile is missing valid value such as 'percentile(10)'."
                 )
-                # print(message, exc,)
                 raise ValueError(message) from exc
             operation = "PERCENTILE"
 
@@ -74,7 +73,7 @@ class ParserTimeAggregationRule(IParserRuleBase):
                 or operation_parameter < 0
                 or operation_parameter > 100
             ):
-                message = "Operation percentile should have number between 0 and 100"
+                message = "Operation percentile should be a number between 0 and 100."
                 raise ValueError(message)
 
         output_variable_name = get_dict_element("output_variable", dictionary)
