@@ -31,7 +31,6 @@ def install():
         [
             PATH_TO_MAIN,
             "--name=decoimpact",
-            "--onefile",
             "--console",
             # other pyinstaller options...
         ]

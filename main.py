@@ -7,10 +7,12 @@
 """Main script for running model using command-line"""
 
 
+import argparse
 import sys
 from pathlib import Path
 
 from decoimpact.business.application import Application
+from decoimpact.business.utils.command_line_utils import read_command_line_arguments
 from decoimpact.business.workflow.model_builder import ModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.crosscutting.logger_factory import LoggerFactory
@@ -35,5 +37,5 @@ def main(path: Path):
 
 
 if __name__ == "__main__":
-    input_path = Path(sys.argv[1])
+    input_path = read_command_line_arguments()
     main(input_path)
