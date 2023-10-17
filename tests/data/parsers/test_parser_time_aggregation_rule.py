@@ -106,3 +106,57 @@ def test_parse_operation_type():
     expected_message = f"Operation is not of a predefined type. Should be in: \
                       {[o.name for o in TimeOperationType]}. Received: Minimum"
     assert exception_raised.args[0] == expected_message
+
+
+def test_parse_operation_percentile_has_parameter():
+    """Test if operation percentile is parsed correctly"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variable": "input",
+            "operation": "PERCENTILE",
+            "output_variable": "output",
+            "time_scale": "year",
+        }
+    )
+    logger = Mock(ILogger)
+
+    # Act
+    data = ParserTimeAggregationRule()
+    with pytest.raises(ValueError) as exc_info:
+        data.parse_dict(contents, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = (
+        "Operation percentile is missing valid value like 'percentile(10)'"
+    )
+    assert exception_raised.args[0] == expected_message
+
+
+def test_parse_operation_percentile_valid_parameter():
+    """Test if operation percentile is parsed correctly"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variable": "input",
+            "operation": "PERCENTILE(999)",
+            "output_variable": "output",
+            "time_scale": "year",
+        }
+    )
+    logger = Mock(ILogger)
+
+    # Act
+    data = ParserTimeAggregationRule()
+    with pytest.raises(ValueError) as exc_info:
+        data.parse_dict(contents, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = "Operation percentile should be a number between 0 and 100."
+    assert exception_raised.args[0] == expected_message

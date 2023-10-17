@@ -19,7 +19,7 @@ def test_time_aggregation_rule_data_creation_logic():
 
     # Act
     data = TimeAggregationRuleData(
-        "test_name", TimeOperationType.MIN, "input", "output", "description"
+        "test_name", TimeOperationType.MIN, None, "input", "output", "description"
     )
 
     # Assert

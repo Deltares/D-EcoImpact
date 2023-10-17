@@ -82,7 +82,7 @@ class ModelBuilder(IModelBuilder):
                 [rule_data.input_variable],
                 rule_data.multipliers,
                 rule_data.output_variable,
-                rule_data.date_range
+                rule_data.date_range,
             )
 
         if isinstance(rule_data, ILayerFilterRuleData):
@@ -107,6 +107,7 @@ class ModelBuilder(IModelBuilder):
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.operation,
+                rule_data.operation_parameter,
                 rule_data.output_variable,
                 rule_data.time_scale,
             )
