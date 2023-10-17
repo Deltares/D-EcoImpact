@@ -144,3 +144,6 @@ To add an acceptance test:
 - Put the [name].nc at the tests_acceptance/reference_nc_files folder. \* Note that the .nc file should have the same name as the .yaml file.
 - To test if it is working correctly run: poetry run pytest tests_acceptance/test_main.py
 
+
+
+
