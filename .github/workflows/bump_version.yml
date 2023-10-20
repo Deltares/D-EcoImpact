@@ -11,23 +11,25 @@ jobs:
   bump-up-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: checkout code
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.VERSION_DECOIMPACT }}
-      - uses: actions/setup-python@v4
+      - name: install python
+        uses: actions/setup-python@v4
         with:
           python-version: 3.11
       - name: Install poetry
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: 1.4.2
-      - name: bump up patch version and update version in template_input.yaml
+      - name: bump up version and update template_input.yaml
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
           poetry version patch
           PROJECT_VERSION=$(poetry version --short)
           sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
+      - name: commit changes
+        run: |
           git add template_input.yaml
           git add pyproject.toml
           git commit -m "bump up patch version from workflow: version $PROJECT_VERSION"
