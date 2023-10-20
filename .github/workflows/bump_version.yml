@@ -28,5 +28,9 @@ jobs:
           sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
           git add template_input.yaml
           git add pyproject.toml
+      - name: push changes
+        uses: ad-m/github-push-action@main
+        with:
+          github-token: ${{ secrets.VERSION_DECOIMPACT }}
           git commit -m "bump up patch version from workflow: version $PROJECT_VERSION"
-          git push
+          force_with_lease: true
