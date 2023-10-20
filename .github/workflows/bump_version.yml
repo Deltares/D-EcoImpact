@@ -1,4 +1,4 @@
-name: Update Python Poetry packages
+name: update version
 
 on:
   pull_request_target:
@@ -20,6 +20,9 @@ jobs:
         with:
           poetry-version: 1.4.2
       - name: bump up patch version and update version in template_input.yaml
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.VERSION_DECOIMPACT }}
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
@@ -28,9 +31,5 @@ jobs:
           sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
           git add template_input.yaml
           git add pyproject.toml
-      - name: push changes
-        uses: ad-m/github-push-action@main
-        with:
-          github-token: ${{ secrets.VERSION_DECOIMPACT }}
           git commit -m "bump up patch version from workflow: version $PROJECT_VERSION"
-          force_with_lease: true
+          git push
