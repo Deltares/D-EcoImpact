@@ -36,15 +36,15 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: TimeOperationType,
-        time_scale: str = "day",
-        period: float = 5.2,
+        time_scale: str = "day", #TODO: why day?
+        period: float = 5.2, #TODO: why 5.2
         output_variable_name: str = "output",
         description: str = "",
     ):
         super().__init__(name, input_variable_names, output_variable_name, description)
         self._operation_type = operation_type
         self._time_scale = time_scale.lower()
-        self._time_scale_mapping = {"hour": "H", "day": "D", "month": "M", "year": "Y"}
+        self._time_scale_mapping = {"hour": "H", "day": "D", "month": "M", "year": "Y"} #TODO: shall we have this dictionary somewhere else?
         self._period = period
 
     @property
@@ -91,12 +91,13 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
             value_array (DataArray): value to aggregate
 
         Returns:
-            DataArray: Aggregated values
+            DataArray: Aggregated values 
         """
+        #TODO: check if the comment is relevant.
+        dim_name = get_dict_element(self._time_scale, self._time_scale_mapping) #TODO: this could be replaced if we replace the line with the dictionary above
+        
 
-        dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
-
-        time_dim_name = self._get_time_dimension_name(value_array, logger)
+        time_dim_name = self._get_time_dimension_name(value_array, logger) 
 
         result = self._perform_operation(
             value_array,
@@ -133,7 +134,7 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
         result_array = result_array.where(False, _np.nan)
 
         if dim_name == "H":
-            TMAXdt = _dt.timedelta(hours=period)
+            TMAXdt = _dt.timedelta(hours=period) #TODO: TMAXdt meaning?
         elif dim_name == "D":
             TMAXdt = _dt.timedelta(days=period)
         elif dim_name == "M":
@@ -169,13 +170,12 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
 
             if self._operation_type is TimeOperationType.STDEV:
                 result = data.std(dim="time")
-
-            if self._operation_type is TimeOperationType.QUANT10:
-                result = data.quantile(q=0.1, dim="time").drop_vars("quantile")
-
-            if self._operation_type is TimeOperationType.QUANT90:
-                result = data.quantile(q=0.9, dim="time").drop_vars("quantile")
-
+           
+            """ elif self._operation_type is TimeOperationType.PERCENTILE:
+                result = data.quantile(
+                    self._operation_parameter / 100
+                ).drop_vars("quantile")
+            """
             if result is None:
                 raise NotImplementedError(
                     f"The operation type '{self._operation_type}' "
@@ -186,7 +186,7 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
             result_array.loc[dict(time=last_timestamp_data)] = result
 
         return _xr.DataArray(result_array)
-
+    #TODO: move the function below to utils
     def _get_time_dimension_name(self, variable: _xr.DataArray, logger: ILogger) -> str:
         """Retrieves the dimension name
 
