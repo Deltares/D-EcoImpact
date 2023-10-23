@@ -36,15 +36,15 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: TimeOperationType,
-        time_scale: str = "day", #TODO: why day?
-        period: float = 5.2, #TODO: why 5.2
+        time_scale: str = "day", 
+        period: float = 1, 
         output_variable_name: str = "output",
         description: str = "",
     ):
         super().__init__(name, input_variable_names, output_variable_name, description)
         self._operation_type = operation_type
         self._time_scale = time_scale.lower()
-        self._time_scale_mapping = {"hour": "H", "day": "D", "month": "M", "year": "Y"} #TODO: shall we have this dictionary somewhere else?
+        self._time_scale_mapping = {"hour": "H", "day": "D", "month": "M", "year": "Y"}
         self._period = period
 
     @property
@@ -85,7 +85,7 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
 
-        """Aggregates the values for the specified start and end date
+        """Calculating the rolling statistic for a given period
 
         Args:
             value_array (DataArray): value to aggregate
@@ -93,9 +93,9 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
         Returns:
             DataArray: Aggregated values 
         """
-        #TODO: check if the comment is relevant.
-        dim_name = get_dict_element(self._time_scale, self._time_scale_mapping) #TODO: this could be replaced if we replace the line with the dictionary above
         
+        dim_name = get_dict_element(self._time_scale, self._time_scale_mapping) 
+
 
         time_dim_name = self._get_time_dimension_name(value_array, logger) 
 
@@ -134,23 +134,23 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
         result_array = result_array.where(False, _np.nan)
 
         if dim_name == "H":
-            TMAXdt = _dt.timedelta(hours=period) #TODO: TMAXdt meaning?
+            operation_time_delta = _dt.timedelta(hours=period) #TODO: TMAXdt meaning?
         elif dim_name == "D":
-            TMAXdt = _dt.timedelta(days=period)
+            operation_time_delta = _dt.timedelta(days=period)
         elif dim_name == "M":
-            TMAXdt = _dt.timedelta(months=period)
+            operation_time_delta = _dt.timedelta(months=period)
         elif dim_name == "Y":
-            TMAXdt = _dt.timedelta(years=period)
+            operation_time_delta = _dt.timedelta(years=period)
         else:
             logger.log_error(f"Invalid dim_name provided : '{dim_name}'.")
 
-        TMAX = _np.array([TMAXdt], dtype="timedelta64[ms]")[0]
+        time_delta_ms = _np.array([operation_time_delta], dtype="timedelta64[ms]")[0]
         last_timestamp = values.time.isel(time=-1).values
-        for t in values.time.values:  # Interested in vectorizing this loop
+        for timestep in values.time.values:  # Interested in vectorizing this loop
 
-            if last_timestamp - t < TMAX:
+            if last_timestamp - timestep < time_delta_ms:
                 break
-            data = values.sel(time=slice(t, t + TMAX))
+            data = values.sel(time=slice(timestep, timestep + time_delta_ms))
             last_timestamp_data = data.time.isel(time=-1).values
 
             if self._operation_type is TimeOperationType.ADD:
@@ -170,7 +170,7 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
 
             if self._operation_type is TimeOperationType.STDEV:
                 result = data.std(dim="time")
-           
+            #TODO: add also the percentile 
             """ elif self._operation_type is TimeOperationType.PERCENTILE:
                 result = data.quantile(
                     self._operation_parameter / 100
