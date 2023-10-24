@@ -165,26 +165,26 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
             last_timestamp_data = data.time.isel(time=-1).values
 
             if self._operation_type is TimeOperationType.ADD:
-                result = data.sum(dim="time")
+                result = data.sum(dim=time_dim_name)
 
             if self._operation_type is TimeOperationType.MIN:
-                result = data.min(dim="time")
+                result = data.min(dim=time_dim_name)
 
             if self._operation_type is TimeOperationType.MAX:
-                result = data.max(dim="time")
+                result = data.max(dim=time_dim_name)
 
             if self._operation_type is TimeOperationType.AVERAGE:
-                result = data.mean(dim="time")
+                result = data.mean(dim=time_dim_name)
 
             if self._operation_type is TimeOperationType.MEDIAN:
-                result = data.median(dim="time")
+                result = data.median(dim=time_dim_name)
 
             if self._operation_type is TimeOperationType.STDEV:
-                result = data.std(dim="time")
+                result = data.std(dim=time_dim_name)
 
             elif self._operation_type is TimeOperationType.PERCENTILE:
                 result = data.quantile(
-                    self._operation_parameter / 100, dim="time"
+                    self._operation_parameter / 100, dim=time_dim_name
                 ).drop_vars("quantile")
 
             if result is None:
