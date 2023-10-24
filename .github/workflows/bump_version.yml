@@ -33,7 +33,8 @@ jobs:
           sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
       - name: commit changes
         run: |
+          PROJECT_VERSION=$(poetry version --short)
           git add template_input.yaml
           git add pyproject.toml
-          git commit -m "bump up patch version from workflow: version {{ $PROJECT_VERSION }}"
+          git commit -m "bump up patch version: $PROJECT_VERSION"
           git push
