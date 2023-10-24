@@ -1,4 +1,4 @@
-name: bump up patch version using poetry
+name: bump patch version using poetry
 
 on:
   pull_request_target:
@@ -24,7 +24,7 @@ jobs:
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: 1.4.2
-      - name: bump up version and update template_input.yaml
+      - name: bump version and update template_input.yaml
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
@@ -36,5 +36,5 @@ jobs:
           PROJECT_VERSION=$(poetry version --short)
           git add template_input.yaml
           git add pyproject.toml
-          git commit -m "bump up patch version: $PROJECT_VERSION"
+          git commit -m "bump patch version: $PROJECT_VERSION"
           git push
