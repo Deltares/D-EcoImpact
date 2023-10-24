@@ -1,4 +1,4 @@
-name: Update Python Poetry packages
+name: Update patch version using poetry
 
 on:
   push:
