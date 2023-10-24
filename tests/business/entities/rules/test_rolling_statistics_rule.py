@@ -12,8 +12,8 @@ import pytest
 import xarray as _xr
 from mock import Mock
 
-from decoimpact.business.entities.rules.rolling_statistic_rule import (
-    RollingStatisticRule,
+from decoimpact.business.entities.rules.rolling_statistics_rule import (
+    RollingStatisticsRule,
 )
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.time_operation_type import TimeOperationType
@@ -38,7 +38,7 @@ def test_create_rolling_statistics_rule_should_set_defaults():
     """Test creating a rolling statistics rule with defaults"""
 
     # Arrange & Act
-    rule = RollingStatisticRule(
+    rule = RollingStatisticsRule(
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.MIN,
@@ -47,14 +47,14 @@ def test_create_rolling_statistics_rule_should_set_defaults():
     # Assert
     assert rule.name == "test"
     assert rule.description == ""
-    assert isinstance(rule, RollingStatisticRule)
+    assert isinstance(rule, RollingStatisticsRule)
 
 
 def test_rolling_statistics_rule_without_time_dimension():
     """RollingStatisticsRule should give an error when no time dim is defined"""
     # create test set
     logger = Mock(ILogger)
-    rule = RollingStatisticRule(
+    rule = RollingStatisticsRule(
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.ADD,
@@ -80,7 +80,7 @@ def test_execute_value_array_rolling_statistics_max():
 
     # create test set
     logger = Mock(ILogger)
-    rule = RollingStatisticRule(
+    rule = RollingStatisticsRule(
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.MAX,

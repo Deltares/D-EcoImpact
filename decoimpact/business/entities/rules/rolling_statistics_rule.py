@@ -5,10 +5,10 @@
 # A copy of the GNU General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
-Module for RollingStatisticRule class
+Module for RollingStatisticsRule class
 
 Classes:
-    RollingStatisticRule
+    RollingStatisticsRule
 """
 
 import copy as _cp
@@ -29,8 +29,8 @@ from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.dictionary_utils import get_dict_element
 
 
-class RollingStatisticRule(RuleBase, IArrayBasedRule):
-    """Implementation for the rolling statistic rule"""
+class RollingStatisticsRule(RuleBase, IArrayBasedRule):
+    """Implementation for the rolling statistics rule"""
 
     def __init__(
         self,
@@ -92,7 +92,7 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
         return valid
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
-        """Calculating the rolling statistic for a given period
+        """Calculating the rolling statistics for a given period
 
         Args:
             value_array (DataArray): value to aggregate
