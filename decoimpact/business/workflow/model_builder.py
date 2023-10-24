@@ -115,15 +115,18 @@ class ModelBuilder(IModelBuilder):
                 rule_data.output_variable,
                 rule_data.time_scale,
             )
+            
         if isinstance(rule_data, IRollingStatisticRuleData):
             return RollingStatisticRule(
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.operation,
+                rule_data.operation_parameter,
                 rule_data.output_variable,
                 rule_data.time_scale,
                 rule_data.period,
             )
+            
         if isinstance(rule_data, ICombineResultsRuleData):
             return CombineResultsRule(
                 rule_data.name,

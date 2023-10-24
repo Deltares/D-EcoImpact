@@ -37,6 +37,7 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: TimeOperationType,
+        operation_parameter: float = 0,
         time_scale: str = "day", 
         period: float = 1, 
         output_variable_name: str = "output",
@@ -45,6 +46,7 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
         super().__init__(name, input_variable_names, output_variable_name, description)
         self._operation_type = operation_type
         self._time_scale = time_scale.lower()
+        self._operation_parameter = operation_parameter
         self._time_scale_mapping = {"hour": "H", "day": "D", "month": "M", "year": "Y"}
         self._period = period
 
@@ -52,6 +54,11 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
     def operation_type(self):
         """Operation type property"""
         return self._operation_type
+    
+    @property
+    def operation_parameter(self):
+        """Operation parameter property"""
+        return self._operation_parameter
 
     @property
     def time_scale(self):
@@ -112,22 +119,27 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
     def _perform_operation(
         self,
         values: _xr.DataArray,
-        time_dim_name: str, #TODO: do we really need that?
+        time_dim_name: str,
         period: float,
         dim_name: str,
         logger: ILogger,
     ) -> _xr.DataArray:
         """Returns the values based on the operation type
 
+
         Args:
-            aggregated_values (DataArrayResample): aggregate values
+            values (_xr.DataArray): values
+            time_dim_name (str): time dimension name
+            dim_name (str): dimension name
+            logger (ILogger): logger
 
         Raises:
             NotImplementedError: If operation type is not supported
 
         Returns:
             DataArray: Values of operation type
-        """
+        """        
+
         # derived from this stackoverflow answer:
         # https://stackoverflow.com/questions/76556088/rolling-timedelta-temporal-window-with-xarray
 
@@ -171,7 +183,12 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
 
             if self._operation_type is TimeOperationType.STDEV:
                 result = data.std(dim="time")
-            #TODO: add also the percentile ?
+                
+            elif self._operation_type is TimeOperationType.PERCENTILE:
+                result = data.quantile(
+                    self._operation_parameter / 100, dim ="time"
+                ).drop_vars("quantile")
+            
             if result is None:
                 raise NotImplementedError(
                     f"The operation type '{self._operation_type}' "
@@ -182,5 +199,3 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
             result_array.loc[dict(time=last_timestamp_data)] = result
 
         return _xr.DataArray(result_array)
-    
- 

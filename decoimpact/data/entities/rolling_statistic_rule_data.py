@@ -24,6 +24,7 @@ class RollingStatisticRuleData(IRollingStatisticRuleData, RuleData):
         self,
         name: str,
         operation: TimeOperationType,
+        operation_parameter: float,
         input_variable: str,
         period: float,
         time_scale: str = "year",
@@ -33,6 +34,7 @@ class RollingStatisticRuleData(IRollingStatisticRuleData, RuleData):
         super().__init__(name, output_variable, description)
         self._input_variable = input_variable
         self._operation = operation
+        self._operation_parameter = operation_parameter
         self._time_scale = time_scale
         self._period = period
 
@@ -45,6 +47,11 @@ class RollingStatisticRuleData(IRollingStatisticRuleData, RuleData):
     def operation(self) -> TimeOperationType:
         """Operation type"""
         return self._operation
+    
+    @property
+    def operation_parameter(self) -> float:
+        """Operation parameter"""
+        return self._operation_parameter
 
     @property
     def time_scale(self) -> str:
