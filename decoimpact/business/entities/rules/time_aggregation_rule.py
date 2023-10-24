@@ -20,6 +20,7 @@ from xarray.core.resample import DataArrayResample
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
+from decoimpact.business.utils.dataset_utils import get_time_dimension_name
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.dictionary_utils import get_dict_element
@@ -106,7 +107,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
 
-        time_dim_name = self._get_time_dimension_name(value_array, logger)
+        time_dim_name = get_time_dimension_name(value_array, logger)
         aggregated_values = value_array.resample({time_dim_name: dim_name})
 
         result = self._perform_operation(aggregated_values)
@@ -275,25 +276,3 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
                 group_result.append(group_result_row)
 
         return group_result
-
-    def _get_time_dimension_name(self, variable: _xr.DataArray, logger: ILogger) -> str:
-        """Retrieves the dimension name
-
-        Args:
-            value_array (DataArray): values to get time dimension
-
-        Raises:
-            ValueError: If time dimension could not be found
-
-        Returns:
-            str: time dimension name
-        """
-
-        for dim in variable.dims:
-            dim_values = variable[dim]
-            if dim_values.dtype.name == "datetime64[ns]":
-                return str(dim)
-
-        message = f"No time dimension found for {variable.name}"
-        logger.log_error(message)
-        raise ValueError(message)
