@@ -38,8 +38,8 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
         input_variable_names: List[str],
         operation_type: TimeOperationType,
         operation_parameter: float = 0,
-        time_scale: str = "day", 
-        period: float = 1, 
+        time_scale: str = "day",
+        period: float = 1,
         output_variable_name: str = "output",
         description: str = "",
     ):
@@ -54,7 +54,7 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
     def operation_type(self):
         """Operation type property"""
         return self._operation_type
-    
+
     @property
     def operation_parameter(self):
         """Operation parameter property"""
@@ -92,26 +92,24 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
         return valid
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
-
         """Calculating the rolling statistic for a given period
 
         Args:
             value_array (DataArray): value to aggregate
 
         Returns:
-            DataArray: Aggregated values 
+            DataArray: Aggregated values
         """
-        
-        dim_name = get_dict_element(self._time_scale, self._time_scale_mapping) 
 
+        time_scale = get_dict_element(self._time_scale, self._time_scale_mapping)
 
-        time_dim_name = get_time_dimension_name(value_array, logger) 
+        time_dim_name = get_time_dimension_name(value_array, logger)
 
         result = self._perform_operation(
             value_array,
             time_dim_name,
             self._period,
-            dim_name,
+            time_scale,
             logger,
         )
         return result
@@ -121,7 +119,7 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
         values: _xr.DataArray,
         time_dim_name: str,
         period: float,
-        dim_name: str,
+        time_scale: str,
         logger: ILogger,
     ) -> _xr.DataArray:
         """Returns the values based on the operation type
@@ -138,7 +136,7 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
 
         Returns:
             DataArray: Values of operation type
-        """        
+        """
 
         # derived from this stackoverflow answer:
         # https://stackoverflow.com/questions/76556088/rolling-timedelta-temporal-window-with-xarray
@@ -146,21 +144,21 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
         result_array = _cp.deepcopy(values)
         result_array = result_array.where(False, _np.nan)
 
-        if dim_name == "H":
+        if time_scale == "H":
             operation_time_delta = _dt.timedelta(hours=period)
-        elif dim_name == "D":
+        elif time_scale == "D":
             operation_time_delta = _dt.timedelta(days=period)
-        elif dim_name == "M":
-            operation_time_delta = _dt.timedelta(months=period)
-        elif dim_name == "Y":
-            operation_time_delta = _dt.timedelta(years=period)
+        # elif time_scale == "M":
+        #     operation_time_delta = _dt.timedelta(months=period)
+        # elif time_scale == "Y":
+        #     operation_time_delta = _dt.timedelta(years=period)
+        # NB 'months' and 'years' are not supported this way
         else:
-            logger.log_error(f"Invalid dim_name provided : '{dim_name}'.")
+            logger.log_error(f"Invalid time scale provided : '{time_scale}'.")
 
         time_delta_ms = _np.array([operation_time_delta], dtype="timedelta64[ms]")[0]
         last_timestamp = values.time.isel(time=-1).values
         for timestep in values.time.values:  # Interested in vectorizing this loop
-
             if last_timestamp - timestep < time_delta_ms:
                 break
             data = values.sel(time=slice(timestep, timestep + time_delta_ms))
@@ -183,12 +181,12 @@ class RollingStatisticRule(RuleBase, IArrayBasedRule):
 
             if self._operation_type is TimeOperationType.STDEV:
                 result = data.std(dim="time")
-                
+
             elif self._operation_type is TimeOperationType.PERCENTILE:
                 result = data.quantile(
-                    self._operation_parameter / 100, dim ="time"
+                    self._operation_parameter / 100, dim="time"
                 ).drop_vars("quantile")
-            
+
             if result is None:
                 raise NotImplementedError(
                     f"The operation type '{self._operation_type}' "
