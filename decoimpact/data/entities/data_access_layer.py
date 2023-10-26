@@ -61,8 +61,7 @@ class DataAccessLayer(IDataAccessLayer):
             try:
                 yaml_data = model_data_builder.parse_yaml_data(contents)
             except AttributeError as exc:
-                raise AttributeError("Error reading input file") from exc
-
+                raise AttributeError(f"Error reading input file. {exc}") from exc
             return yaml_data
 
     def read_input_dataset(self, dataset_data: IDatasetData) -> _xr.Dataset:
@@ -123,8 +122,11 @@ class DataAccessLayer(IDataAccessLayer):
         return dataset
 
     def write_output_file(
-        self, dataset: _xr.Dataset, path: Path, application_version: str,
-        application_name: str
+        self,
+        dataset: _xr.Dataset,
+        path: Path,
+        application_version: str,
+        application_name: str,
     ) -> None:
         """Write XArray dataset to specified path
 
