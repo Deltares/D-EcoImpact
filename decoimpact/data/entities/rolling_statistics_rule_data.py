@@ -5,19 +5,21 @@
 # A copy of the GNU General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
-Module for RollingStatisticRuleData class
+Module for RollingStatisticsRuleData class
 
 Classes:
-    RollingStatisticRuleData
+    RollingStatisticsRuleData
 
 """
 
-from decoimpact.data.api.i_rolling_statistic_rule_data import IRollingStatisticRuleData
+from decoimpact.data.api.i_rolling_statistics_rule_data import (
+    IRollingStatisticsRuleData,
+)
 from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.entities.rule_data import RuleData
 
 
-class RollingStatisticRuleData(IRollingStatisticRuleData, RuleData):
+class RollingStatisticsRuleData(IRollingStatisticsRuleData, RuleData):
     """Class for storing data related to rolling_statistic rule"""
 
     def __init__(

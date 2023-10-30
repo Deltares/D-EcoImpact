@@ -18,20 +18,17 @@ from decoimpact.business.entities.rules.rolling_statistics_rule import (
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.time_operation_type import TimeOperationType
 
-data_yearly = [0.1, 0.7, 0.2, 0.2, 0.3, 0.1]
-time_yearly = [
+data = [0.1, 0.7, 0.2, 0.2, 0.3, 0.1]
+time = [
     "2020-01-01",
-    "2020-02-02",
-    "2020-03-03",
-    "2020-04-04",
-    "2021-01-01",
-    "2021-03-01",
+    "2020-01-02",
+    "2020-01-03",
+    "2020-01-04",
+    "2020-01-05",
+    "2020-01-06",
 ]
-time_yearly = [np.datetime64(t) for t in time_yearly]
-value_array_yearly = _xr.DataArray(data_yearly, coords=[time_yearly], dims=["time"])
-
-result_time_yearly = ["2020-12-31", "2021-12-31"]
-result_time_yearly = [np.datetime64(t) for t in result_time_yearly]
+time = [np.datetime64(t) for t in time]
+value_array = _xr.DataArray(data, coords=[time], dims=["time"])
 
 
 def test_create_rolling_statistics_rule_should_set_defaults():
@@ -76,7 +73,7 @@ def test_rolling_statistics_rule_without_time_dimension():
 
 
 def test_execute_value_array_rolling_statistics_max():
-    """Aggregate input_variable_names of a TimeAggregationRule (max, yearly)"""
+    """RollingStatisticsRule (max, yearly)"""
 
     # create test set
     logger = Mock(ILogger)
@@ -85,14 +82,81 @@ def test_execute_value_array_rolling_statistics_max():
         input_variable_names=["foo"],
         operation_type=TimeOperationType.MAX,
         time_scale="day",
-        period=365,
+        period=2,
     )
 
-    time_aggregation = rule.execute(value_array_yearly, logger)
+    rolling_statistic = rule.execute(value_array, logger)
 
-    result_data = [np.nan, np.nan, np.nan, 0.7, 0.7, np.nan]
-    # result: array([nan, nan, nan, 0.7, 0.7, nan])
-    result_array = _xr.DataArray(result_data, coords=[time_yearly], dims=["time"])
+    result_data = [np.nan, np.nan, 0.7, 0.7, 0.3, 0.3]
+    result_array = _xr.DataArray(result_data, coords=[time], dims=["time"])
 
     # Assert
-    assert _xr.testing.assert_equal(time_aggregation, result_array) is None
+    assert _xr.testing.assert_equal(rolling_statistic, result_array) is None
+    
+    
+def test_execute_value_array_rolling_statistics_min():
+    """RullingStatisticsRule (min, yearly)"""
+
+    # create test set
+    logger = Mock(ILogger)
+    rule = RollingStatisticsRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.MIN,
+        time_scale="day",
+        period=2,
+    )
+
+    rolling_statistic = rule.execute(value_array, logger)
+
+    result_data = [np.nan, np.nan, 0.1, 0.2, 0.2, 0.1]
+    result_array = _xr.DataArray(result_data, coords=[time], dims=["time"])
+
+    # Assert
+    assert _xr.testing.assert_equal(rolling_statistic, result_array) is None
+    
+    
+def test_execute_value_array_rolling_statistics_average():
+    """RullingStatisticsRule (average, yearly)"""
+
+    # create test set
+    logger = Mock(ILogger)
+    rule = RollingStatisticsRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.MEDIAN,
+        time_scale="day",
+        period=2,
+    )
+
+    rolling_statistic = rule.execute(value_array, logger)
+
+    result_data = [np.nan, np.nan, 0.2, 0.2, 0.2, 0.2]
+    result_array = _xr.DataArray(result_data, coords=[time], dims=["time"])
+
+    # Assert
+    assert _xr.testing.assert_equal(rolling_statistic, result_array) is None
+
+
+def test_operation_type_not_implemented():
+    """Test that the rulling statistics rule gives an error
+    if no operation_type is given"""
+
+    # create test set
+    logger = Mock(ILogger)
+    rule = RollingStatisticsRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type="test",
+        time_scale="day",
+        period=2,
+    )
+
+    with pytest.raises(NotImplementedError) as exc_info:
+        rule.execute(value_array, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = "The operation type 'test' is currently not supported"
+    assert exception_raised.args[0] == expected_message

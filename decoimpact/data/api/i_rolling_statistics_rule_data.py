@@ -5,10 +5,10 @@
 # A copy of the GNU General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
-Module for IRollingStatisticRuleData interface
+Module for IRollingStatisticsRuleData interface
 
 Interfaces:
-    IRollingStatisticRuleData
+    IRollingStatisticsRuleData
 
 """
 
@@ -19,8 +19,8 @@ from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.api.time_operation_type import TimeOperationType
 
 
-class IRollingStatisticRuleData(IRuleData, ABC):
-    """Data for a RollingStatisticRule"""
+class IRollingStatisticsRuleData(IRuleData, ABC):
+    """Data for a RollingStatisticsRule"""
 
     @property
     @abstractmethod

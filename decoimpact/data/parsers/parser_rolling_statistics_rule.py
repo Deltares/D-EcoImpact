@@ -5,10 +5,10 @@
 # A copy of the GNU General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
-Module for ParserRollingStatisticRule class
+Module for ParserRollingStatisticsRule class
 
 Classes:
-    ParserRollingStatisticRule
+    ParserRollingStatisticsRule
 """
 from typing import Any, Dict
 
@@ -16,20 +16,20 @@ from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.dictionary_utils import get_dict_element
-from decoimpact.data.entities.rolling_statistic_rule_data import (
-    RollingStatisticRuleData,
+from decoimpact.data.entities.rolling_statistics_rule_data import (
+    RollingStatisticsRuleData,
 )
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
-class ParserRollingStatisticRule(IParserRuleBase):
+class ParserRollingStatisticsRule(IParserRuleBase):
 
-    """Class for creating a RollingStatisticRuleData"""
+    """Class for creating a RollingStatisticsRuleData"""
 
     @property
     def rule_type_name(self) -> str:
         """Type name for the rule"""
-        return "rolling_statistic_rule"
+        return "rolling_statistics_rule"
 
     def parse_dict(self, dictionary: Dict[str, Any], logger: ILogger) -> IRuleData:
         """Parses the provided dictionary to a IRuleData
@@ -44,9 +44,7 @@ class ParserRollingStatisticRule(IParserRuleBase):
         operation = get_dict_element("operation", dictionary)
         time_scale = get_dict_element("time_scale", dictionary)
         period = get_dict_element("period", dictionary)
-        match_operation = [o for o in TimeOperationType if o.name == operation]
-        operation_value = next(iter(match_operation), None)
-        operation_parameter = None
+        
         
         
         # if operation contains percentile,
@@ -60,6 +58,11 @@ class ParserRollingStatisticRule(IParserRuleBase):
                 )
                 raise ValueError(message) from exc
             operation = "PERCENTILE"
+        
+        # validate operation
+        match_operation = [o for o in TimeOperationType if o.name == operation]
+        operation_value = next(iter(match_operation), None)
+        operation_parameter = None
 
         if not operation_value:
             message = f"Operation is not of a predefined type. Should be in: \
@@ -82,7 +85,7 @@ class ParserRollingStatisticRule(IParserRuleBase):
             
         output_variable_name = get_dict_element("output_variable", dictionary)
 
-        return RollingStatisticRuleData(
+        return RollingStatisticsRuleData(
             name,
             operation_value,
             operation_parameter,

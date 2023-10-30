@@ -167,19 +167,19 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
             if self._operation_type is TimeOperationType.ADD:
                 result = data.sum(dim=time_dim_name)
 
-            if self._operation_type is TimeOperationType.MIN:
+            elif self._operation_type is TimeOperationType.MIN:
                 result = data.min(dim=time_dim_name)
 
-            if self._operation_type is TimeOperationType.MAX:
+            elif self._operation_type is TimeOperationType.MAX:
                 result = data.max(dim=time_dim_name)
 
-            if self._operation_type is TimeOperationType.AVERAGE:
+            elif self._operation_type is TimeOperationType.AVERAGE:
                 result = data.mean(dim=time_dim_name)
 
-            if self._operation_type is TimeOperationType.MEDIAN:
+            elif self._operation_type is TimeOperationType.MEDIAN:
                 result = data.median(dim=time_dim_name)
 
-            if self._operation_type is TimeOperationType.STDEV:
+            elif self._operation_type is TimeOperationType.STDEV:
                 result = data.std(dim=time_dim_name)
 
             elif self._operation_type is TimeOperationType.PERCENTILE:
@@ -187,7 +187,7 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
                     self._operation_parameter / 100, dim=time_dim_name
                 ).drop_vars("quantile")
 
-            if result is None:
+            else:
                 raise NotImplementedError(
                     f"The operation type '{self._operation_type}' "
                     "is currently not supported"
