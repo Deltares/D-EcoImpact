@@ -86,8 +86,7 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
 
         Returns:
             float: response corresponding to value to classify
-            int: number of warnings less than minimum
-            int: number of warnings greater than maximum
+            int[]: number of warnings less than minimum and greater than maximum
         """
 
         bins = self._limits
