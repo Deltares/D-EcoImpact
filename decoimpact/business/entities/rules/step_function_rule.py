@@ -95,19 +95,17 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
 
         # bins are constant
         selected_bin = -1
-        warn_min = 0
-        warn_max = 0
+        warning_counter = [0, 0]
         if _np.isnan(value):
             return value
         if value < _np.min(bins):
-            # logger.log_warning("value less than min")
-            warn_min += 1
+            # count warning exceeding min:
+            warning_counter[0] = 1
             selected_bin = 0
         else:
             selected_bin = _np.digitize(value, bins) - 1
             if value > _np.max(bins):
-                warn_max += 1
-        # if warn_max > 0:
-        #     logger.log_warning(f"value greater than max: {warn_max} occurence(s)")
+                # count warning exceeding max:
+                warning_counter[1] = 1
 
-        return responses[selected_bin], warn_min, warn_max
+        return responses[selected_bin], warning_counter

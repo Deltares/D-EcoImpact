@@ -284,7 +284,8 @@ def test_process_rules_calls_cell_based_rule_execute_correctly():
     rule.input_variable_names = ["test"]
     rule.output_variable_name = "output"
 
-    rule.execute.return_value = [1, 0, 0]
+    # expected return value = 1; number of warnings (min and max) = 0 and 0
+    rule.execute.return_value = [1, [0, 0]]
 
     processor = RuleProcessor([rule], dataset)
 
