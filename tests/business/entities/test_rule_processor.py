@@ -284,7 +284,7 @@ def test_process_rules_calls_cell_based_rule_execute_correctly():
     rule.input_variable_names = ["test"]
     rule.output_variable_name = "output"
 
-    rule.execute.return_value = 1
+    rule.execute.return_value = [1, 0, 0]
 
     processor = RuleProcessor([rule], dataset)
 
@@ -297,6 +297,7 @@ def test_process_rules_calls_cell_based_rule_execute_correctly():
     assert rule.output_variable_name in dataset.keys()
 
     assert rule.execute.call_count == 6
+
 
 def test_process_rules_calls_multi_cell_based_rule_execute_correctly():
     """Tests if during processing the rule its execute method of
@@ -329,6 +330,7 @@ def test_process_rules_calls_multi_cell_based_rule_execute_correctly():
     assert rule.output_variable_name in dataset.keys()
 
     assert rule.execute.call_count == 6
+
 
 def test_process_rules_calls_array_based_rule_execute_correctly():
     """Tests if during processing the rule its execute method of
