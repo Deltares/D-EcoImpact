@@ -27,6 +27,7 @@ from decoimpact.business.entities.rules.i_multi_cell_based_rule import (
     IMultiCellBasedRule,
 )
 from decoimpact.business.entities.rules.i_rule import IRule
+from decoimpact.business.entities.rules.step_function_rule import StepFunctionRule
 from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_time_aggregation_rule_data import ITimeAggregationRuleData
@@ -69,6 +70,17 @@ def _create_test_rules() -> List[IRule]:
     rule4.name = "rule4"
 
     return [rule1, rule2, rule3, rule4]
+
+
+@pytest.fixture(name="example_rule")
+def fixture_example_rule():
+    """Inititaion of StepFunctionRule to be reused in the following tests"""
+    return StepFunctionRule(
+        "rule_name",
+        "input_variable_name",
+        [0, 1, 2, 5, 10],
+        [10, 11, 12, 15, 20],
+    )
 
 
 def test_creating_rule_processor_without_rules_should_throw_exception():
@@ -508,3 +520,39 @@ def test_execute_rule_throws_error_for_unknown_input_variable():
         + "in input datasets or in calculated output dataset."
     )
     assert exception_raised.args[0] == expected_message
+
+
+@pytest.mark.parametrize(
+    "input_value, expected_output_value, expected_log_message",
+    [
+        (-1, (10, [1, 0]), "value less than min: 1 occurence(s)"),
+        (11, (20, [0, 1]), "value greater than max: 1 occurence(s)"),
+    ],
+)
+def test_process_values_outside_limits(
+    example_rule,
+    input_value: int,
+    expected_output_value: int,
+    expected_log_message: str,
+):
+    """
+    Test the function execution with input values outside the interval limits.
+    """
+    # Arrange
+    logger = Mock(ILogger)
+    dataset = _xr.Dataset()
+    dataset["test1"] = _xr.DataArray(input_value)
+    rule = Mock(ICellBasedRule)
+    rule.input_variable_names = ["test1"]
+    rule.output_variable_name = "output"
+    rule.execute.return_value = expected_output_value
+    processor = RuleProcessor([rule], dataset)
+
+    # Act
+    assert processor.initialize(logger)
+    processor.process_rules(dataset, logger)
+
+    # Assert
+    assert example_rule.execute(input_value, logger) == expected_output_value
+    processor.process_rules(dataset, logger)
+    logger.log_warning.assert_called_with(expected_log_message)

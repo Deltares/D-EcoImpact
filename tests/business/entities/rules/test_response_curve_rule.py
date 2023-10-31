@@ -13,7 +13,10 @@ from unittest.mock import Mock
 
 import numpy as _np
 import pytest
+import xarray as _xr
 
+from decoimpact.business.entities.rule_processor import RuleProcessor
+from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
 from decoimpact.business.entities.rules.response_curve_rule import ResponseCurveRule
 from decoimpact.crosscutting.i_logger import ILogger
 
@@ -61,30 +64,6 @@ def test_execute_response_rule_values_between_limits(
     # Assert
     assert example_rule.execute(input_value, logger) == expected_output_value
     logger.log_warning.assert_not_called()
-
-
-@pytest.mark.parametrize(
-    "input_value, expected_output_value, expected_log_message",
-    [
-        (-1, (0, [1, 0]), "value less than min: 1 occurence(s)"),
-        (6000, (3, [0, 1]), "value greater than max: 1 occurence(s)"),
-    ],
-)
-def test_execute_response_rule_values_outside_limits(
-    example_rule,
-    input_value: int,
-    expected_output_value: int,
-    expected_log_message: str,
-):
-    """
-    Test the function execution with input values outside the interval limits.
-    """
-    # Arrange
-    logger = Mock(ILogger)
-
-    # Assert
-    assert example_rule.execute(input_value, logger) == expected_output_value
-    logger.log_warning.assert_called_with(expected_log_message)
 
 
 def test_inputs_and_outputs_have_different_lengths(example_rule):
