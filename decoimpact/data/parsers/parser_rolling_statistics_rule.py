@@ -46,7 +46,6 @@ class ParserRollingStatisticsRule(IParserRuleBase):
         period = get_dict_element("period", dictionary)
         
         
-        
         # if operation contains percentile,
         # extract percentile value as operation_parameter from operation:
         if str(operation)[:10] == "PERCENTILE":
