@@ -44,8 +44,6 @@ class ParserRollingStatisticsRule(IParserRuleBase):
         operation = get_dict_element("operation", dictionary)
         time_scale = get_dict_element("time_scale", dictionary)
         period = get_dict_element("period", dictionary)
-        
-        
         # if operation contains percentile,
         # extract percentile value as operation_parameter from operation:
         if str(operation)[:10] == "PERCENTILE":
@@ -57,7 +55,6 @@ class ParserRollingStatisticsRule(IParserRuleBase):
                 )
                 raise ValueError(message) from exc
             operation = "PERCENTILE"
-        
         # validate operation
         match_operation = [o for o in TimeOperationType if o.name == operation]
         operation_value = next(iter(match_operation), None)
@@ -71,7 +68,6 @@ class ParserRollingStatisticsRule(IParserRuleBase):
             message = f"Period is not of a predefined type. Should be  \
                       a float or integer value. Received: {period}"
             raise ValueError(message)
-        
         # test if operation_parameter is within expected limits:
         if operation_value == TimeOperationType.PERCENTILE:
             if (
@@ -81,7 +77,6 @@ class ParserRollingStatisticsRule(IParserRuleBase):
             ):
                 message = "Operation percentile should be a number between 0 and 100."
                 raise ValueError(message)
-            
         output_variable_name = get_dict_element("output_variable", dictionary)
 
         return RollingStatisticsRuleData(
