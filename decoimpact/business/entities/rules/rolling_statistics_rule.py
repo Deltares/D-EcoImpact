@@ -19,7 +19,6 @@ from typing import List
 
 import numpy as _np
 import xarray as _xr
-from xarray.core.resample import DataArrayResample
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
