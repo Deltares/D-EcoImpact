@@ -283,7 +283,6 @@ def get_time_dimension_name(variable: _xr.DataArray, logger: ILogger) -> str:
         str: time dimension name
     """
     
-
     for dim in variable.dims:
         dim_values = variable[dim]
         if dim_values.dtype.name == "datetime64[ns]":

@@ -137,9 +137,6 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
             DataArray: Values of operation type
         """
 
-        # derived from this stackoverflow answer:
-        # https://stackoverflow.com/questions/76556088/rolling-timedelta-temporal-window-with-xarray
-
         result_array = _cp.deepcopy(values)
         result_array = result_array.where(False, _np.nan)
 
@@ -147,11 +144,6 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
             operation_time_delta = _dt.timedelta(hours=period)
         elif time_scale == "D":
             operation_time_delta = _dt.timedelta(days=period)
-        # elif time_scale == "M":
-        #     operation_time_delta = _dt.timedelta(months=period)
-        # elif time_scale == "Y":
-        #     operation_time_delta = _dt.timedelta(years=period)
-        # NB 'months' and 'years' are not supported this way
         else:
             logger.log_error(f"Invalid time scale provided : '{time_scale}'.")
 
