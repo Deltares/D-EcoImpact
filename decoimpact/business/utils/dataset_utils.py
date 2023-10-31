@@ -271,23 +271,24 @@ def rec_search_dep_vars(
 
 
 def get_time_dimension_name(variable: _xr.DataArray, logger: ILogger) -> str:
-        """Retrieves the dimension name
+    """Retrieves the dimension name
 
-        Args:
-            value_array (DataArray): values to get time dimension
+    Args:
+        value_array (DataArray): values to get time dimension
 
-        Raises:
-            ValueError: If time dimension could not be found
+    Raises:
+        ValueError: If time dimension could not be found
 
-        Returns:
-            str: time dimension name
-        """
+    Returns:
+        str: time dimension name
+    """
+    
 
-        for dim in variable.dims:
-            dim_values = variable[dim]
-            if dim_values.dtype.name == "datetime64[ns]":
-                return str(dim)
+    for dim in variable.dims:
+        dim_values = variable[dim]
+        if dim_values.dtype.name == "datetime64[ns]":
+            return str(dim)
 
-        message = f"No time dimension found for {variable.name}"
-        logger.log_error(message)
-        raise ValueError(message)
+    message = f"No time dimension found for {variable.name}"
+    logger.log_error(message)
+    raise ValueError(message)
