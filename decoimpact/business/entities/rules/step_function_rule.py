@@ -96,7 +96,7 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
         selected_bin = -1
         warning_counter = [0, 0]
         if _np.isnan(value):
-            return value
+            return value, warning_counter
         if value < _np.min(bins):
             # count warning exceeding min:
             warning_counter[0] = 1
