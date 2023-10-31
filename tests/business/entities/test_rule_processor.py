@@ -72,17 +72,6 @@ def _create_test_rules() -> List[IRule]:
     return [rule1, rule2, rule3, rule4]
 
 
-@pytest.fixture(name="example_rule")
-def fixture_example_rule():
-    """Inititaion of StepFunctionRule to be reused in the following tests"""
-    return StepFunctionRule(
-        "rule_name",
-        "input_variable_name",
-        [0, 1, 2, 5, 10],
-        [10, 11, 12, 15, 20],
-    )
-
-
 def test_creating_rule_processor_without_rules_should_throw_exception():
     """
     Tests if absence of rules is correctly checked during creation of the processor.
@@ -520,6 +509,17 @@ def test_execute_rule_throws_error_for_unknown_input_variable():
         + "in input datasets or in calculated output dataset."
     )
     assert exception_raised.args[0] == expected_message
+
+
+@pytest.fixture(name="example_rule")
+def fixture_example_rule():
+    """Inititaion of StepFunctionRule to be reused in the following tests"""
+    return StepFunctionRule(
+        "rule_name",
+        "input_variable_name",
+        [0, 1, 2, 5, 10],
+        [10, 11, 12, 15, 20],
+    )
 
 
 @pytest.mark.parametrize(
