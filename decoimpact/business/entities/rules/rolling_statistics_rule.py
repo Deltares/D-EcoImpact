@@ -46,7 +46,7 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
         self._operation_type = operation_type
         self._time_scale = time_scale.lower()
         self._operation_parameter = operation_parameter
-        self._time_scale_mapping = {"hour": "H", "day": "D", "month": "M", "year": "Y"}
+        self._time_scale_mapping = {"hour": "H", "day": "D"}
         self._period = period
 
     @property
