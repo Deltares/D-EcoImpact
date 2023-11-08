@@ -174,13 +174,13 @@ class RuleBasedModel(IModel):
         mapping_vars_created = list(mappings.values())
         duplicates_created = _lu.items_in(mapping_vars_created, input_vars)
 
-        if len(duplicates_created) > 0:
-            logger.log_error(
-                "Mapping towards the following variables "
-                f"'{', '.join(duplicates_created)}', will create duplicates with"
-                " variables in the input datasets."
-            )
-            valid = False
+        # if len(duplicates_created) > 0:
+        #     logger.log_error(
+        #         "Mapping towards the following variables "
+        #         f"'{', '.join(duplicates_created)}', will create duplicates with"
+        #         " variables in the input datasets."
+        #     )
+        #     valid = False
 
         # check for missing rule inputs
         needed_rule_inputs = _lu.remove_duplicates_from_list(
