@@ -14,8 +14,8 @@ Classes:
 # from itertools import groupby
 from typing import List
 
-import xarray as _xr
 import numpy as _np
+import xarray as _xr
 from xarray.core.resample import DataArrayResample
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
@@ -33,12 +33,14 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: TimeOperationType,
+        operation_parameter: float = 0,
         time_scale: str = "year",
         output_variable_name: str = "output",
         description: str = "",
     ):
         super().__init__(name, input_variable_names, output_variable_name, description)
         self._operation_type = operation_type
+        self._operation_parameter = operation_parameter
         self._time_scale = time_scale.lower()
         self._time_scale_mapping = {"month": "M", "year": "Y"}
 
@@ -46,6 +48,11 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
     def operation_type(self):
         """Operation type property"""
         return self._operation_type
+
+    @property
+    def operation_parameter(self):
+        """Operation parameter property"""
+        return self._operation_parameter
 
     @property
     def time_scale(self):
@@ -79,7 +86,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         return valid
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
-
         """Aggregates the values for the specified start and end date
 
         Args:
@@ -136,7 +142,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         period_operations = [
             TimeOperationType.COUNT_PERIODS,
             TimeOperationType.MAX_DURATION_PERIODS,
-            TimeOperationType.AVG_DURATION_PERIODS
+            TimeOperationType.AVG_DURATION_PERIODS,
         ]
 
         if self._operation_type is TimeOperationType.ADD:
@@ -156,6 +162,14 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         elif self._operation_type in period_operations:
             result = aggregated_values.reduce(self.analyze_groups, dim="time")
+
+        elif self._operation_type is TimeOperationType.STDEV:
+            result = aggregated_values.std()
+
+        elif self._operation_type is TimeOperationType.PERCENTILE:
+            result = aggregated_values.quantile(
+                self._operation_parameter / 100
+            ).drop_vars("quantile")
 
         else:
             raise NotImplementedError(
@@ -190,15 +204,15 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
     def duration_groups(self, elem):
         """
-            Create an array that cumulative sums the values of the groups in the array,
-            but restarts when a 0 occurs. For example: [0, 1, 1, 0, 1, 1, 1, 0, 1]
-            This function will return: [0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 0, 1]
+        Create an array that cumulative sums the values of the groups in the array,
+        but restarts when a 0 occurs. For example: [0, 1, 1, 0, 1, 1, 1, 0, 1]
+        This function will return: [0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 0, 1]
 
-            Args:
-                elem (List): the data array in N-dimensions
+        Args:
+            elem (List): the data array in N-dimensions
 
-            Returns:
-                List: List with the duration of the periods
+        Returns:
+            List: List with the duration of the periods
         """
         # Function to create a cumsum over the groups (where the elements in elem are 1)
         cumsum_groups = _np.frompyfunc(lambda a, b: a + b if b == 1 else 0, 2, 1)
@@ -248,7 +262,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
                     period,
                     group_count,
                     out=_np.zeros_like(period),
-                    where=group_count != 0
+                    where=group_count != 0,
                 )
 
         # in case of multiple dimensions:

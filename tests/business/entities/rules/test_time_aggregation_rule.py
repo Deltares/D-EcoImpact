@@ -331,8 +331,9 @@ def test_execute_value_array_aggregate_time_monthly_median():
     )
 
 
-def test_operation_type_not_implemented():
-    """Test that the time aggregation rule gives an error if no operation_type is given"""
+def test_execute_value_array_aggregate_time_monthly_stdev():
+    """Test aggregate input_variable_names of a TimeAggregationRule
+    (STDEV, monthly)"""
 
     # create test set
     logger = Mock(ILogger)
@@ -340,7 +341,58 @@ def test_operation_type_not_implemented():
         name="test",
         time_scale="month",
         input_variable_names=["foo"],
-        operation_type="test"
+        operation_type=TimeOperationType.STDEV,
+    )
+
+    time_aggregation = rule.execute(value_array_monthly, logger)
+    result_data = [0.0, 0.25, 0.05]
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_monthly], dims=["time_month"]
+    )
+
+    # Assert
+    assert (
+        _xr.testing.assert_allclose(time_aggregation, result_array, atol=1e-11) is None
+    )
+
+
+def test_execute_value_array_aggregate_time_monthly_percentile():
+    """Test aggregate input_variable_names of a TimeAggregationRule
+    (PERCENTILE, monthly)"""
+
+    # create test set
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        time_scale="month",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.PERCENTILE,
+        operation_parameter=10,
+    )
+
+    time_aggregation = rule.execute(value_array_monthly, logger)
+    result_data = [0.1, 0.25, 0.21]
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_monthly], dims=["time_month"]
+    )
+
+    # Assert
+    assert (
+        _xr.testing.assert_allclose(time_aggregation, result_array, atol=1e-11) is None
+    )
+
+
+def test_operation_type_not_implemented():
+    """Test that the time aggregation rule gives an error
+    if no operation_type is given"""
+
+    # create test set
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        time_scale="month",
+        input_variable_names=["foo"],
+        operation_type="test",
     )
 
     with pytest.raises(NotImplementedError) as exc_info:
@@ -349,7 +401,5 @@ def test_operation_type_not_implemented():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = (
-        "The operation type 'test' is currently not supported"
-    )
+    expected_message = "The operation type 'test' is currently not supported"
     assert exception_raised.args[0] == expected_message

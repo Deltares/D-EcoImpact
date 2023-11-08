@@ -34,5 +34,10 @@ class ITimeAggregationRuleData(IRuleData, ABC):
 
     @property
     @abstractmethod
+    def operation_parameter(self) -> float:
+        """Operation parameter"""
+
+    @property
+    @abstractmethod
     def time_scale(self) -> str:
         """Time scale"""
