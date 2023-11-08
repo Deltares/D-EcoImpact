@@ -2,7 +2,7 @@ version: 0.0.0
 
 input-data:
   - dataset:
-      filename: examples/data/small_subset_FM-VZM_0000_map.nc
+      filename: tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
       variable_mapping:
         salinity_PSU: "salinity"
         water_level_mNAP: "water_level"
@@ -23,4 +23,4 @@ rules:
       output_variable: new_water_level
 
 output-data:
-  filename: examples/data_out/test1_default_independent_rules.nc
+  filename: examples/test1_default_independent_rules.nc
