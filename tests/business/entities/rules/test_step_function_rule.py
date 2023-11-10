@@ -9,10 +9,16 @@ Tests for Step Function Rule class
 """
 
 
+from typing import Dict, List
+
 import numpy as _np
 import pytest
+import xarray as _xr
 from mock import Mock
 
+from decoimpact.business.entities.rule_processor import RuleProcessor
+from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
+from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.step_function_rule import StepFunctionRule
 from decoimpact.crosscutting.i_logger import ILogger
 
@@ -46,10 +52,10 @@ def test_create_step_function(example_rule):
 @pytest.mark.parametrize(
     "input_value, expected_output_value",
     [
-        (0.5, 10),
-        (1.5, 11),
-        (2.5, 12),
-        (5.5, 15),
+        (0.5, (10, [0, 0])),
+        (1.5, (11, [0, 0])),
+        (2.5, (12, [0, 0])),
+        (5.5, (15, [0, 0])),
     ],
 )
 def test_execute_values_between_limits(
@@ -68,7 +74,13 @@ def test_execute_values_between_limits(
 
 @pytest.mark.parametrize(
     "input_value, expected_output_value",
-    [(0, 10), (1, 11), (2, 12), (5, 15), (10, 20)],
+    [
+        (0, (10, [0, 0])),
+        (1, (11, [0, 0])),
+        (2, (12, [0, 0])),
+        (5, (15, [0, 0])),
+        (10, (20, [0, 0])),
+    ],
 )
 def test_execute_values_at_limits(
     example_rule, input_value: int, expected_output_value: int
@@ -82,27 +94,6 @@ def test_execute_values_at_limits(
     # Assert
     assert example_rule.execute(input_value, logger) == expected_output_value
     logger.log_warning.assert_not_called()
-
-
-@pytest.mark.parametrize(
-    "input_value, expected_output_value, expected_log_message",
-    [(-1, 10, "value less than min"), (11, 20, "value greater than max")],
-)
-def test_execute_values_outside_limits(
-    example_rule,
-    input_value: int,
-    expected_output_value: int,
-    expected_log_message: str,
-):
-    """
-    Test the function execution with input values outside the interval limits.
-    """
-    # Arrange
-    logger = Mock(ILogger)
-
-    # Assert
-    assert example_rule.execute(input_value, logger) == expected_output_value
-    logger.log_warning.assert_called_with(expected_log_message)
 
 
 def test_limits_and_responses_have_different_lengths(example_rule):
@@ -164,7 +155,14 @@ def fixture_example_rule_combined():
 
 @pytest.mark.parametrize(
     "input_value, expected_output_value",
-    [(-1, 22), (0.5, 22), (1.5, 15), (2.5, 10), (5.5, 12), (10.5, 20)],
+    [
+        (-1, (22, [1, 0])),
+        (0.5, (22, [0, 0])),
+        (1.5, (15, [0, 0])),
+        (2.5, (10, [0, 0])),
+        (5.5, (12, [0, 0])),
+        (10.5, (20, [0, 1])),
+    ],
 )
 def test_execute_values_combined_dec_inc(
     example_rule_combined,

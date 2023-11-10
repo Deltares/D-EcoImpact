@@ -245,8 +245,26 @@ class RuleProcessor:
         np_array = input_variable.to_numpy()
         result_variable = _np.zeros_like(np_array)
 
+        # define variables to count value exceedings (for some rules): min and max
+        warning_counter = [0, 0]
+        warning_counter_total = [0, 0]
+
+        # execute rule and gather warnings for exceeded values (for some rules)
         for indices, value in _np.ndenumerate(np_array):
-            result_variable[indices] = rule.execute(value, logger)
+            result_variable[indices], warning_counter = rule.execute(value, logger)
+            # update total counter for both min and max
+            warning_counter_total[0] += warning_counter[0]
+            warning_counter_total[1] += warning_counter[1]
+
+        # show warnings values outside range (for some rules):
+        if warning_counter_total[0] > 0:
+            logger.log_warning(
+                f"value less than min: {warning_counter_total[0]} occurence(s)"
+            )
+        if warning_counter_total[1] > 0:
+            logger.log_warning(
+                f"value greater than max: {warning_counter_total[1]} occurence(s)"
+            )
 
         # use copy to get the same dimensions as the
         # original input variable

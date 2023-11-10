@@ -25,7 +25,6 @@ class ResponseCurveRule(RuleBase, ICellBasedRule):
         output_variable_name="output",
         description: str = "",
     ):
-
         super().__init__(name, [input_variable_name], output_variable_name, description)
 
         self._input_values = _np.array(input_values)
@@ -62,18 +61,22 @@ class ResponseCurveRule(RuleBase, ICellBasedRule):
 
         Returns:
             float: response corresponding to value to classify
+            int[]: number of warnings less than minimum and greater than maximum
         """
 
         values_input = self._input_values
         values_output = self._output_values
+        warning_counter = [0, 0]
 
         # values are constant
         if value < _np.min(values_input):
-            logger.log_warning("value less than min")
-            return values_output[0]
+            # count warning exceeding min:
+            warning_counter[0] = 1
+            return values_output[0], warning_counter
 
         if value > _np.max(values_input):
-            logger.log_warning("value greater than max")
-            return values_output[-1]
+            # count warning exceeding max:
+            warning_counter[1] = 1
+            return values_output[-1], warning_counter
 
-        return _np.interp(value, values_input, values_output)
+        return _np.interp(value, values_input, values_output), warning_counter

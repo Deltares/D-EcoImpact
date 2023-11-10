@@ -73,7 +73,7 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
             return False
         return True
 
-    def execute(self, value: float, logger: ILogger) -> float:
+    def execute(self, value: float, logger: ILogger):
         """Classify a variable, based on given bins.
         Values lower than lowest bin will produce a warning and will
         be assigned class 0.
@@ -86,6 +86,7 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
 
         Returns:
             float: response corresponding to value to classify
+            int[]: number of warnings less than minimum and greater than maximum
         """
 
         bins = self._limits
@@ -93,14 +94,17 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
 
         # bins are constant
         selected_bin = -1
+        warning_counter = [0, 0]
         if _np.isnan(value):
-            return value
+            return value, warning_counter
         if value < _np.min(bins):
-            logger.log_warning("value less than min")
+            # count warning exceeding min:
+            warning_counter[0] = 1
             selected_bin = 0
         else:
             selected_bin = _np.digitize(value, bins) - 1
             if value > _np.max(bins):
-                logger.log_warning("value greater than max")
+                # count warning exceeding max:
+                warning_counter[1] = 1
 
-        return responses[selected_bin]
+        return responses[selected_bin], warning_counter

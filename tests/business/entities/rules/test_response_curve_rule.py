@@ -13,7 +13,10 @@ from unittest.mock import Mock
 
 import numpy as _np
 import pytest
+import xarray as _xr
 
+from decoimpact.business.entities.rule_processor import RuleProcessor
+from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
 from decoimpact.business.entities.rules.response_curve_rule import ResponseCurveRule
 from decoimpact.crosscutting.i_logger import ILogger
 
@@ -47,7 +50,7 @@ def test_create_response_rule(example_rule):
 
 @pytest.mark.parametrize(
     "input_value, expected_output_value",
-    [(25, 0.5), (75, 1.1), (770, 2.1)],
+    [(25, (0.5, [0, 0])), (75, (1.1, [0, 0])), (770, (2.1, [0, 0]))],
 )
 def test_execute_response_rule_values_between_limits(
     example_rule, input_value: int, expected_output_value: float
@@ -61,30 +64,6 @@ def test_execute_response_rule_values_between_limits(
     # Assert
     assert example_rule.execute(input_value, logger) == expected_output_value
     logger.log_warning.assert_not_called()
-
-
-@pytest.mark.parametrize(
-    "input_value, expected_output_value, expected_log_message",
-    [
-        (-1, 0, "value less than min"),
-        (6000, 3, "value greater than max"),
-    ],
-)
-def test_execute_response_rule_values_outside_limits(
-    example_rule,
-    input_value: int,
-    expected_output_value: int,
-    expected_log_message: str,
-):
-    """
-    Test the function execution with input values outside the interval limits.
-    """
-    # Arrange
-    logger = Mock(ILogger)
-
-    # Assert
-    assert example_rule.execute(input_value, logger) == expected_output_value
-    logger.log_warning.assert_called_with(expected_log_message)
 
 
 def test_inputs_and_outputs_have_different_lengths(example_rule):
@@ -131,7 +110,14 @@ def fixture_example_rule_combined():
 
 @pytest.mark.parametrize(
     "input_value, expected_output_value",
-    [(-1, 22), (0.5, 18.5), (1.5, 12.5), (3.5, 11), (7.5, 16), (10.5, 20)],
+    [
+        (-1, (22, [1, 0])),
+        (0.5, (18.5, [0, 0])),
+        (1.5, (12.5, [0, 0])),
+        (3.5, (11, [0, 0])),
+        (7.5, (16, [0, 0])),
+        (10.5, (20, [0, 1])),
+    ],
 )
 def test_execute_values_combined_dec_inc(
     example_rule_combined,
