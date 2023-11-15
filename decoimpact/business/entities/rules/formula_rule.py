@@ -89,7 +89,7 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
         return float(local_variables[self.formula_output_name])
 
     def _setup_environment(self):
-        self._SAFE_MODULES = frozenset(
+        self._safe_modules = frozenset(
             (
                 "math",
                 "numpy",
@@ -106,6 +106,6 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
 
     def _safe_import(self, name, *args, **kwargs):
         # Redefine import, to only import from safe modules
-        if name not in self._SAFE_MODULES:
+        if name not in self._safe_modules:
             raise _ArgumentError(None, f"Importing {name!r} is not allowed!")
         return __import__(name, *args, **kwargs)
