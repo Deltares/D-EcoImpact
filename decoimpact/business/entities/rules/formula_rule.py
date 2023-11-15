@@ -23,6 +23,7 @@ from decoimpact.business.entities.rules.i_multi_cell_based_rule import (
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.crosscutting.i_logger import ILogger
 
+# pylint: disable=W0122
 
 class FormulaRule(RuleBase, IMultiCellBasedRule):
     """Implementation for the Formula rule"""
