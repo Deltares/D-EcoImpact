@@ -119,7 +119,6 @@ class DataAccessLayer(IDataAccessLayer):
             msg = "ERROR: error applying time filter on dataset"
             raise ValueError(msg) from exc
 
-        return dataset
 
     def write_output_file(
         self,
