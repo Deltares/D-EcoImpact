@@ -25,6 +25,7 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 # pylint: disable=W0122
 
+
 class FormulaRule(RuleBase, IMultiCellBasedRule):
     """Implementation for the Formula rule"""
 
