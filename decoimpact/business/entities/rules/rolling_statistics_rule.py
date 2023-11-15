@@ -184,7 +184,6 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
                     "is currently not supported"
                 )
 
-            # result_array.loc[dict(time=t + TMAX)] = result
-            result_array.loc[dict(time=last_timestamp_data)] = result
+            result_array.loc[{"time": last_timestamp_data}] = result
 
         return _xr.DataArray(result_array)
