@@ -74,7 +74,7 @@ def type_of_classification(class_val) -> str:
         str: Type of classification
     """
 
-    if isinstance(class_val, int) or isinstance(class_val, float):
+    if isinstance(class_val, (float, int)):
         return "number"
     if isinstance(class_val, str):
         class_val = class_val.strip()
