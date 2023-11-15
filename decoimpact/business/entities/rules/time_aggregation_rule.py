@@ -219,7 +219,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         cumsum_groups = _np.frompyfunc(lambda a, b: a + b if b == 1 else 0, 2, 1)
         return cumsum_groups.accumulate(elem)
 
-    def analyze_groups(self, elem, axis, **kwargs):
+    def analyze_groups(self, elem, axis):
         """This function analyzes the input array (N-dimensional array containing 0
         and 1) The function will reduce the array over the time axis, depending on a
         certain time operation type. Below are the operation types with what this
