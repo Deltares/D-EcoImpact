@@ -26,8 +26,8 @@ def str_range_to_list(range_string: str):
     try:
         begin, end = range_string.split(":")
         return float(begin), float(end)
-    except ValueError:
-        raise ValueError(f'Input "{range_string}" is not a valid range')
+    except ValueError as exc:
+        raise ValueError(f'Input "{range_string}" is not a valid range') from exc
 
 
 def read_str_comparison(compare_str: str, operator: str):
@@ -54,10 +54,9 @@ def read_str_comparison(compare_str: str, operator: str):
             )
         compare_val = compare_list[1]
         return float(compare_val)
-    except ValueError:
+    except ValueError as exc:
         raise ValueError(
-            f'Input "{compare_str}" is not a valid comparison with operator: {operator}'
-        )
+            f'Input "{compare_str}" is not a valid comparison with operator: {operator}')  from exc
 
 
 def type_of_classification(class_val) -> str:
@@ -92,7 +91,7 @@ def type_of_classification(class_val) -> str:
         try:
             float(class_val)
             return "number"
-        except ValueError:
-            raise ValueError(f"No valid criteria is given: {class_val}")
+        except ValueError as exc:
+            raise ValueError(f"No valid criteria is given: {class_val}") from exc
 
     raise ValueError(f"No valid criteria is given: {class_val}")
