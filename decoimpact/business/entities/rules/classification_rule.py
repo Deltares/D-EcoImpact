@@ -11,6 +11,7 @@ Classes:
     ClassificationRule
 """
 
+from dataclasses import dataclass
 from typing import Dict, List
 
 import xarray as _xr
@@ -27,19 +28,25 @@ from decoimpact.business.entities.rules.string_parser_utils import (
 from decoimpact.crosscutting.i_logger import ILogger
 
 
+@dataclass
+class ClassificationRuleConfig:
+    name: str
+    input_variable_names: List[str]
+    criteria_table: Dict[str, List]
+    output_variable_name: str = "output"
+    description: str = ""
+
+
 class ClassificationRule(RuleBase, IMultiArrayBasedRule):
     """Implementation for the (multiple) classification rule"""
 
-    def __init__(
-        self,
-        name: str,
-        input_variable_names: List[str],
-        criteria_table: Dict[str, List],
-        output_variable_name: str = "output",
-        description: str = "",
-    ):
-        super().__init__(name, input_variable_names, output_variable_name, description)
-        self._criteria_table = criteria_table
+    def __init__(self, config: ClassificationRuleConfig):
+        super().__init__(config.name, 
+                         config.input_variable_names,
+                         config.output_variable_name,
+                         config.description
+                         )
+        self._criteria_table = config.criteria_table
 
     @property
     def criteria_table(self) -> Dict:

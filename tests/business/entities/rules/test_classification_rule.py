@@ -13,7 +13,10 @@ from unittest.mock import Mock
 
 import xarray as _xr
 
-from decoimpact.business.entities.rules.classification_rule import ClassificationRule
+from decoimpact.business.entities.rules.classification_rule import (
+    ClassificationRule,
+    ClassificationRuleConfig,
+)
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -28,7 +31,10 @@ def test_create_classification_rule_should_set_defaults():
     }
 
     # Arrange and act
-    rule = ClassificationRule("test", ["water_depth", "salinity"], criteria_test_table)
+    config = ClassificationRuleConfig("test", 
+                                      ["water_depth", "salinity"], 
+                                      criteria_test_table)
+    rule = ClassificationRule(config)
 
     # assert
     assert rule.name == "test"
@@ -52,10 +58,13 @@ def test_execute_classification():
 
     # arrange
     logger = Mock(ILogger)
-    rule = ClassificationRule("test", ["water_depth", "salinity"], criteria_test_table)
+    config = ClassificationRuleConfig("test", 
+                                      ["water_depth", "salinity"], 
+                                      criteria_test_table)
+    rule = ClassificationRule(config)
     test_data = {"water_depth": _xr.DataArray([13, 0, 11, 15, 12, 20]),
-        "salinity": _xr.DataArray([8.8, 0, 2, 9, 2.5, 11]),
-        "temperature": _xr.DataArray([20, -5, 20, 28, 1, -5])}
+                 "salinity": _xr.DataArray([8.8, 0, 2, 9, 2.5, 11]),
+                 "temperature": _xr.DataArray([20, -5, 20, 28, 1, -5])}
 
     # expected results:
     # 1: take first when multiple apply --> 300
