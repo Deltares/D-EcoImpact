@@ -41,11 +41,11 @@ class ParserAxisFilterRule(IParserRuleBase):
         input_variable_name = get_dict_element("input_variable", dictionary)
         dim_name = get_dict_element("dim_name", dictionary)
         if not isinstance(dim_name, str):
-                message = (
-                    "Dimension name should be a string, "
-                    f"received a {type(dim_name)}: {dim_name}"
-                )
-                raise ValueError(message)
+            message = (
+                "Dimension name should be a string, "
+                f"received a {type(dim_name)}: {dim_name}"
+            )
+            raise ValueError(message)
             
         layer_number = get_dict_element("layer_number", dictionary)
         if not isinstance(layer_number, int):
@@ -57,5 +57,6 @@ class ParserAxisFilterRule(IParserRuleBase):
         output_variable_name = get_dict_element("output_variable", dictionary)
 
         return AxisFilterRuleData(
-            name, layer_number, dim_name, input_variable_name, output_variable_name, description
+            name, layer_number, dim_name, input_variable_name, 
+            output_variable_name, description
         )

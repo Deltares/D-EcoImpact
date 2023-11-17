@@ -64,9 +64,7 @@ class AxisFilterRule(RuleBase, IArrayBasedRule):
                 [{value_array.dims}] layer_name [{self._dim_name}]"""
             logger.log_error(message)
             raise IndexError(message)
-
         
-
         if not (
             self._layer_number >= 0
             and self._layer_number <= len(getattr(value_array, self._dim_name))
