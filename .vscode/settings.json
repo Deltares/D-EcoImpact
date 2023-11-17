@@ -16,10 +16,6 @@
     "python.formatting.blackArgs": [
         "--line-length=88"
     ],
-    "python.linting.flake8Enabled": true,
-    "python.linting.flake8Args": [
-        "--max-line-length=88"
-    ],
     "python.linting.pylintEnabled": true,
     "coverage-gutters.showLineCoverage": true,
     "coverage-gutters.coverageFileNames": [
@@ -41,5 +37,10 @@
     ],
     "pylint.args": [
         "max-line-length=88"
+    ],
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 88,
+    "flake8.args": [
+        "--max-line-length=88"
     ]
 }
