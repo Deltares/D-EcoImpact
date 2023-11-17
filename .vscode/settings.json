@@ -30,7 +30,8 @@
         }
     ],
     "pylint.args": [
-        "max-line-length=88"
+        "max-line-length=88",
+        "disable=R0903"
     ],
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 88,
