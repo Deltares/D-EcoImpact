@@ -127,7 +127,7 @@ class ModelBuilder(IModelBuilder):
                 rule_data.output_variable,
                 rule_data.time_scale,
                 rule_data.period,
-            )     
+            )
 
         if isinstance(rule_data, ICombineResultsRuleData):
             return CombineResultsRule(
