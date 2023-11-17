@@ -10,7 +10,6 @@
         "editor.codeActionsOnSave": {
             "source.organizeImports": true,
         },
-        "editor.defaultFormatter": "ms-python.black-formatter",
     },
     "coverage-gutters.showLineCoverage": true,
     "coverage-gutters.coverageFileNames": [
