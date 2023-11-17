@@ -23,6 +23,7 @@ from decoimpact.business.entities.rules.i_multi_cell_based_rule import (
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.crosscutting.i_logger import ILogger
 
+# disabled pylint warning about use of exec.
 # pylint: disable=W0122
 
 
