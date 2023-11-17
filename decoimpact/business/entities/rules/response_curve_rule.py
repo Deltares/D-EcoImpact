@@ -4,6 +4,13 @@
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
+"""
+Module for Response Curve Rule class
+
+Classes:
+    Response Curve Rule
+"""
+
 from typing import List
 
 import numpy as _np
