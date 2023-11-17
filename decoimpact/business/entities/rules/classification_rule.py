@@ -30,6 +30,7 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 @dataclass
 class ClassificationRuleConfig:
+    """Configuration of the (multiple) classification rule"""
     name: str
     input_variable_names: List[str]
     criteria_table: Dict[str, List]
@@ -41,7 +42,7 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
     """Implementation for the (multiple) classification rule"""
 
     def __init__(self, config: ClassificationRuleConfig):
-        super().__init__(config.name, 
+        super().__init__(config.name,
                          config.input_variable_names,
                          config.output_variable_name,
                          config.description
