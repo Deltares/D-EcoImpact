@@ -12,18 +12,12 @@
         },
         "editor.defaultFormatter": "ms-python.black-formatter",
     },
-    "python.formatting.provider": "none",
-    "python.formatting.blackArgs": [
-        "--line-length=88"
-    ],
-    "python.linting.pylintEnabled": true,
     "coverage-gutters.showLineCoverage": true,
     "coverage-gutters.coverageFileNames": [
         "coverage.xml"
     ],
     "python.analysis.typeCheckingMode": "basic",
     "python.analysis.completeFunctionParens": true,
-    "python.analysis.autoImportUserSymbols": true,
     "python.analysis.autoImportCompletions": true,
     "python.analysis.diagnosticMode": "openFilesOnly",
     "python.analysis.exclude": [
