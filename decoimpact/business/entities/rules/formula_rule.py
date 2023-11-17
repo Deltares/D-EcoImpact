@@ -42,7 +42,7 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
     ):
         super().__init__(name, input_variable_names, output_variable_name, description)
         self._formula = formula
-        self._byte_code = None  # Initialize _byte_code attribute
+        self._byte_code = None
         self._setup_environment()
 
     def validate(self, logger: ILogger) -> bool:
