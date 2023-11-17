@@ -12,7 +12,7 @@ Classes:
 
 """
 
-from typing import List
+from typing import List, Optional
 
 from decoimpact.data.api.i_multiply_rule_data import IMultiplyRuleData
 from decoimpact.data.entities.rule_data import RuleData
@@ -28,7 +28,7 @@ class MultiplyRuleData(IMultiplyRuleData, RuleData):
         input_variable: str,
         output_variable: str = "output",
         description: str = "",
-        date_range: List[List[str]] = [],
+        date_range: Optional[List[List[str]]] = None,
     ):
         super().__init__(name, output_variable, description)
         self._input_variable = input_variable
