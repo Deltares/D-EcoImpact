@@ -19,7 +19,7 @@ def test_create_axis_filter_rule_should_set_defaults():
     """Test creating a AxisFilterRule with defaults"""
 
     # Arrange & Act
-    rule = AxisFilterRule("test", ["foo"],  3, "dim", "output")
+    rule = AxisFilterRule("test", ["foo"],  3, "boo", "output")
 
     # Assert
     assert rule.name == "test"
@@ -27,7 +27,7 @@ def test_create_axis_filter_rule_should_set_defaults():
     assert rule.input_variable_names == ["foo"]
     assert rule.output_variable_name == "output"
     assert rule.layer_number == 3
-    assert rule.dim_name == "dim"
+    assert rule.dim_name == "boo"
     assert isinstance(rule, AxisFilterRule)
 
 
@@ -35,13 +35,13 @@ def test_execute_value_array_axis_filtered():
     """Test execute of layer filter rule"""
     # Arrange & Act
     logger = Mock(ILogger)
-    rule = AxisFilterRule("test", ["foo"], 3, "dim" "output", "description")
-    #data = [[[1, 2, 3, 4]]]
-    value_array = _xr.DataArray(data)
+    rule = AxisFilterRule("test", ["foo"], 1, "dim_1", "output", "description")
+    data = [[1, 2], [3, 4]]
+    value_array = _xr.DataArray(data, dims=("dim_1","dim_2"))
     filtered_array = rule.execute(value_array, logger)
 
-    result_data = [[3]]
-    result_array = _xr.DataArray(result_data)
+    result_data = [1,2]
+    result_array = _xr.DataArray(result_data, dims=("dim_2"))
 
     # Assert
     assert _xr.testing.assert_equal(filtered_array, result_array) is None

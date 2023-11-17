@@ -42,7 +42,7 @@ class ParserAxisFilterRule(IParserRuleBase):
         dim_name = get_dict_element("dim_name", dictionary)
         if not isinstance(dim_name, str):
                 message = (
-                    "Dimension name should be an string, "
+                    "Dimension name should be a string, "
                     f"received a {type(dim_name)}: {dim_name}"
                 )
                 raise ValueError(message)
