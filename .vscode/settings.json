@@ -39,7 +39,7 @@
             "snippet": "Insert_lgpl_header_DEI"
         }
     ],
-    "python.linting.flake8Args": [
-        "--max-line-length=88"
+    "pylint.args": [
+        "max-line-length=88"
     ]
 }
