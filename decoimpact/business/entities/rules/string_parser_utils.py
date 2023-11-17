@@ -56,7 +56,9 @@ def read_str_comparison(compare_str: str, operator: str):
         return float(compare_val)
     except ValueError as exc:
         raise ValueError(
-            f'Input "{compare_str}" is not a valid comparison with operator: {operator}')  from exc
+            f'Input "{compare_str}" is not a valid comparison with '
+            f'operator: {operator}'
+            ) from exc
 
 
 def type_of_classification(class_val) -> str:
