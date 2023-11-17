@@ -64,7 +64,7 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
         old_dr = _xr.DataArray(value_array)
         new_dr = _xr.full_like(old_dr, _np.nan)
         for (index, _mp) in enumerate(result_multipliers):
-            if (len(self.date_range) != 0):
+            if len(self.date_range) != 0:
                 # Date is given in DD-MM, convert to MM-DD for comparison
                 start = self._convert_datestr(self.date_range[index][0])
                 end = self._convert_datestr(self.date_range[index][1])
