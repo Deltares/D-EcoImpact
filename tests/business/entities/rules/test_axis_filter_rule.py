@@ -27,7 +27,7 @@ def test_create_axis_filter_rule_should_set_defaults():
     assert rule.input_variable_names == ["foo"]
     assert rule.output_variable_name == "output"
     assert rule.layer_number == 3
-    assert rule.dim_name == "boo"
+    assert rule.axis_name == "boo"
     assert isinstance(rule, AxisFilterRule)
 
 

@@ -106,7 +106,7 @@ class ModelBuilder(IModelBuilder):
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.layer_number,
-                rule_data.dim_name,
+                rule_data.axis_name,
                 rule_data.output_variable,
             )
 

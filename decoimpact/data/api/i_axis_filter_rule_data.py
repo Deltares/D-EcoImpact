@@ -33,5 +33,5 @@ class IAxisFilterRuleData(IRuleData, ABC):
     
     @property
     @abstractmethod
-    def dim_name(self) -> str:
+    def axis_name(self) -> str:
         """Property for the dim name"""

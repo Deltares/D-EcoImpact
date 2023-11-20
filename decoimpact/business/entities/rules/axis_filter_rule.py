@@ -29,13 +29,13 @@ class AxisFilterRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         layer_number: int,
-        dim_name: str,
+        axis_name: str,
         output_variable_name: str = "output",
         description: str = "",
     ):
         super().__init__(name, input_variable_names, output_variable_name, description)
         self._layer_number = layer_number
-        self._dim_name = dim_name
+        self._axis_name = axis_name
 
     @property
     def layer_number(self) -> int:
@@ -43,9 +43,9 @@ class AxisFilterRule(RuleBase, IArrayBasedRule):
         return self._layer_number
 
     @property
-    def dim_name(self) -> str:
+    def axis_name(self) -> str:
         """Layer number property"""
-        return self._dim_name
+        return self._axis_name
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
 
@@ -59,19 +59,19 @@ class AxisFilterRule(RuleBase, IArrayBasedRule):
             float: 2D variable
         """
         
-        if self._dim_name not in value_array.dims:
+        if self._axis_name not in value_array.dims:
             message = f"""Layer name is not in dim names \
-                [{value_array.dims}] layer_name [{self._dim_name}]"""
+                [{value_array.dims}] layer_name [{self._axis_name}]"""
             logger.log_error(message)
             raise IndexError(message)
         
         if not (
             self._layer_number >= 0
-            and self._layer_number <= len(getattr(value_array, self._dim_name))
+            and self._layer_number <= len(getattr(value_array, self._axis_name))
         ):
             message = f"""Layer number should be within range \
-                [0,{len(getattr(value_array, self._dim_name))}]"""
+                [0,{len(getattr(value_array, self._axis_name))}]"""
             logger.log_error(message)
             raise IndexError(message)
 
-        return value_array.isel({self._dim_name: self._layer_number - 1})
+        return value_array.isel({self._axis_name: self._layer_number - 1})

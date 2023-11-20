@@ -39,7 +39,7 @@ def test_parse_dict_to__axis_rule_data_logic():
             "description": "description",
             "input_variable": "input",
             "layer_number": 3,
-            "dim_name": "dim_name",
+            "axis_name": "axis_name",
             "output_variable": "output",
         }
     )
@@ -76,11 +76,11 @@ def test_parse_wrong_dict_to_axis_rule_data_logic():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = "Missing element dim_name"
+    expected_message = "Missing element axis_name"
     assert exception_raised.args[0] == expected_message
     
     
-def test_parse_dim_name_type():
+def test_parse_axis_name_type():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
     contents = dict(
@@ -89,7 +89,7 @@ def test_parse_dim_name_type():
             "description": "description",
             "input_variable": "input",
             "layer_number": 3,
-            "dim_name": 3,
+            "axis_name": 3,
             "output_variable": "output",
         }
     )
