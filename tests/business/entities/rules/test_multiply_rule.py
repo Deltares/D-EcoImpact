@@ -11,8 +11,8 @@ Tests for RuleBase class
 
 from unittest.mock import Mock
 
-import numpy as _np
 import xarray as _xr
+import numpy as _np
 
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
 from decoimpact.crosscutting.i_logger import ILogger
@@ -29,7 +29,7 @@ def test_create_multiply_rule_should_set_defaults():
     assert rule.input_variable_names == ["foo"]
     assert rule.output_variable_name == "output"
     assert rule.multipliers == [[0.5, 3.0]]
-    assert rule.date_range == None
+    assert rule.date_range == []
     assert isinstance(rule, MultiplyRule)
 
 
