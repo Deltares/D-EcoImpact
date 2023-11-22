@@ -39,6 +39,7 @@ class ParserRollingStatisticsRule(IParserRuleBase):
         Returns:
             RuleBase: Rule based on the provided data
         """
+        # get elements
         name = get_dict_element("name", dictionary)
         input_variable_name = get_dict_element("input_variable", dictionary)
         operation = get_dict_element("operation", dictionary)
@@ -55,6 +56,7 @@ class ParserRollingStatisticsRule(IParserRuleBase):
                 )
                 raise ValueError(message) from exc
             operation = "PERCENTILE"
+
         # validate operation
         match_operation = [o for o in TimeOperationType if o.name == operation]
         operation_value = next(iter(match_operation), None)

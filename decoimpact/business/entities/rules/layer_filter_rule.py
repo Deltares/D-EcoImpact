@@ -51,7 +51,7 @@ class LayerFilterRule(RuleBase, IArrayBasedRule):
         Returns:
             float: 2D variable
         """
-        # TODO: what happens if in the future the 2nd dimension is not nLayers
+
         dim_name = value_array.dims[2]
 
         if not (

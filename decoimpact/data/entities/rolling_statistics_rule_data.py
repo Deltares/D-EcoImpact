@@ -49,7 +49,7 @@ class RollingStatisticsRuleData(IRollingStatisticsRuleData, RuleData):
     def operation(self) -> TimeOperationType:
         """Operation type"""
         return self._operation
-    
+
     @property
     def operation_parameter(self) -> float:
         """Operation parameter"""

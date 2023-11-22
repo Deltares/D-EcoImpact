@@ -8,8 +8,8 @@
 Module for Validation functions
 """
 
-from typing import List
 from datetime import datetime
+from typing import List
 
 
 def validate_all_instances_number(data: List, name: str):
@@ -53,19 +53,19 @@ def validate_type_date(data: List[str], name: str):
     for (index, date_string) in enumerate(data):
         try:
             datetime.strptime(date_string, r"%d-%m")
-        except TypeError:
+        except TypeError as exc:
             message = (
                 f"{name} should be a list of strings, "
                 f"received: {data}. ERROR in position {index} is "
                 f"type {type(date_string)}."
             )
-            raise TypeError(message)
-        except ValueError:
+            raise TypeError(message) from exc
+        except ValueError as exc:
             message = (
                 f"{name} should be a list of date strings with Format DD-MM, "
                 f"received: {data}. ERROR in position {index}, string: {date_string}."
             )
-            raise ValueError(message)
+            raise ValueError(message) from exc
 
 
 def validate_start_before_end(start_list: List[str], end_list: List[str]):

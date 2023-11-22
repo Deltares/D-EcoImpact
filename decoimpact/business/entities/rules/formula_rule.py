@@ -23,6 +23,9 @@ from decoimpact.business.entities.rules.i_multi_cell_based_rule import (
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.crosscutting.i_logger import ILogger
 
+# disabled pylint warning about use of exec.
+# pylint: disable=W0122
+
 
 class FormulaRule(RuleBase, IMultiCellBasedRule):
     """Implementation for the Formula rule"""
@@ -39,6 +42,7 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
     ):
         super().__init__(name, input_variable_names, output_variable_name, description)
         self._formula = formula
+        self._byte_code = None
         self._setup_environment()
 
     def validate(self, logger: ILogger) -> bool:
@@ -48,7 +52,7 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
                 filename="<inline code>",
                 mode="exec",
             )
-            local_variables = dict([(name, 1.0) for name in self.input_variable_names])
+            local_variables = {name: 1.0 for name in self.input_variable_names}
             exec(byte_code, self._global_variables, local_variables)
 
         except (SyntaxError, NameError) as exception:
@@ -89,7 +93,7 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
         return float(local_variables[self.formula_output_name])
 
     def _setup_environment(self):
-        self._SAFE_MODULES = frozenset(
+        self._safe_modules = frozenset(
             (
                 "math",
                 "numpy",
@@ -106,6 +110,6 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
 
     def _safe_import(self, name, *args, **kwargs):
         # Redefine import, to only import from safe modules
-        if name not in self._SAFE_MODULES:
+        if name not in self._safe_modules:
             raise _ArgumentError(None, f"Importing {name!r} is not allowed!")
         return __import__(name, *args, **kwargs)
