@@ -16,6 +16,7 @@ from typing import Iterable, List
 
 from decoimpact.business.entities.i_model import IModel
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
+from decoimpact.business.entities.rules.axis_filter_rule import AxisFilterRule
 from decoimpact.business.entities.rules.classification_rule import ClassificationRule
 from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
 from decoimpact.business.entities.rules.formula_rule import FormulaRule
@@ -33,6 +34,7 @@ from decoimpact.business.entities.rules.step_function_rule import StepFunctionRu
 from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.api.i_axis_filter_rule_data import IAxisFilterRuleData
 from decoimpact.data.api.i_classification_rule_data import IClassificationRuleData
 from decoimpact.data.api.i_combine_results_rule_data import ICombineResultsRuleData
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
@@ -96,6 +98,15 @@ class ModelBuilder(IModelBuilder):
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.layer_number,
+                rule_data.output_variable,
+            )
+            
+        if isinstance(rule_data, IAxisFilterRuleData):
+            return AxisFilterRule(
+                rule_data.name,
+                [rule_data.input_variable],
+                rule_data.layer_number,
+                rule_data.axis_name,
                 rule_data.output_variable,
             )
 

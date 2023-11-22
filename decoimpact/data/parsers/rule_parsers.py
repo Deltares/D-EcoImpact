@@ -13,6 +13,7 @@ Classes:
 from typing import Iterator
 
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
+from decoimpact.data.parsers.parser_axis_filter_rule import ParserAxisFilterRule
 from decoimpact.data.parsers.parser_classification_rule import ParserClassificationRule
 from decoimpact.data.parsers.parser_combine_results_rule import ParserCombineResultsRule
 from decoimpact.data.parsers.parser_formula_rule import ParserFormulaRule
@@ -39,3 +40,4 @@ def rule_parsers() -> Iterator[IParserRuleBase]:
     yield ParserResponseCurveRule()
     yield ParserFormulaRule()
     yield ParserClassificationRule()
+    yield ParserAxisFilterRule()
