@@ -58,13 +58,13 @@ class AxisFilterRule(RuleBase, IArrayBasedRule):
         Returns:
             float: 2D variable
         """
-        
+
         if self._axis_name not in value_array.dims:
             message = f"""Layer name is not in dim names \
                 [{value_array.dims}] layer_name [{self._axis_name}]"""
             logger.log_error(message)
             raise IndexError(message)
-        
+
         if not (
             self._layer_number >= 0
             and self._layer_number <= len(getattr(value_array, self._axis_name))

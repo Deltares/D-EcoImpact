@@ -30,7 +30,7 @@ class IAxisFilterRuleData(IRuleData, ABC):
     @abstractmethod
     def layer_number(self) -> int:
         """Property for the layer number"""
-    
+
     @property
     @abstractmethod
     def axis_name(self) -> str:
