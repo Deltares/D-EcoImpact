@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "decoimpact"
-version = "0.1.10"
+version = "0.1.11"
 description = "A Python based kernel to perform spatial (environmental) impact assessment. Based on knowledge rules applied to model output and/or measurements."
 authors = ["Deltares"]
 readme = "README.md"
