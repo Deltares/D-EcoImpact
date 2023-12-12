@@ -1,12 +1,14 @@
 # Structure of the model input file and functionality
 
-D-EcoImpact is steered through a YAML input file. This input file informs the model which data to use , what ecological knowledge rules to apply and where to write the output data. 
-The easiest way to edit these YAML files is by using [Notepad++](https://notepad-plus-plus.org/downloads/). When starting with your first application with D-EcoImpact, make use of earlier models to setup your YAML input file and edit from there. When running the YAML file with D-EcoImpact, the model will inform you if there are inconsistencies in the file provided. 
+D-Eco Impact is steered through a YAML input file. This input file informs the model which data to use , what ecological knowledge rules to apply and where to write the output data. 
+The easiest way to edit these YAML files is by using [Notepad++](https://notepad-plus-plus.org/downloads/). When starting with your first application with D-Eco Impact, make use of earlier models to setup your YAML input file and edit from there. When running the YAML file with D-Eco Impact, the model will inform you if there are inconsistencies in the file provided. 
 
 ## Importing and exporting data
 Importing and exporting data is always arranged in the input-data and output-data header in the YAML file.  
 
 ```
+version: …………………….
+
 input-data:
 	…………………….
 rules:
@@ -22,6 +24,8 @@ The model needs at least one rule under “rules” to execute.
 
 ```
 #FORMAT
+version: <D-Eco Impact version_nr>
+
 input-data:
   - dataset:
       filename: <path_to_file_including_file_name_and_type>
@@ -39,12 +43,16 @@ output-data:
 
 ```
 #EXAMPLE  : Reading and writing a example model of the Volkerak-Zoommeer
+version: 0.1.5
+
 # Mapping: mesh2d_sa1              : Salinity (PSU)
 #          mesh2d_s1                : Water level (m NAP)
 #          mesh2d_waterdepth : Water depth (m NAP) 
 input-data:
   - dataset:
       filename: examples/data/FM-VZM_0000_map.nc
+      start_date: "01-01-2011"
+      end_date: "31-12-2015"
       variable_mapping:
         mesh2d_sa1: "salinity"
         mesh2d_s1: "water_level"
@@ -66,6 +74,8 @@ output-data:
 The functionality is always arranged in the form of rules under the rules header in the yaml file.
 
 ```
+version: …………………….
+
 input-data:
 	…………………….
 rules:
@@ -81,6 +91,7 @@ The output of the following functionalities have been shown for a section of the
 ![Volkerak](../assets/images/3_volkerak_result.png "Spatial location of the Lake Volkerak hydrodynamic model output that has been used to show the effect of each function.")
 
 ## Rules
+
 
 ### Multiply rule
 ```
@@ -104,7 +115,7 @@ The output of the following functionalities have been shown for a section of the
 
 The multiply rule allows for multiplication of variables. This could be used for unit transformation (e.g. salinity to chloride) or scenario creation (e.g. waterlevel 80% of existing value). The rule operates on all cells both 3D (in horizontal as vertical) as in the time axes. The same dimensions are returned at the output variable. The rule needs to be applied to an existing variable. A new variable is created when the rule is executed.
 
-When using the multiply rule with a start and end date (or multiple start and end dates) all periods that are not covered will be set to NaN. In this way the multiply rule can also be used as a filter in time.
+When using the multiply rule with a start and end date (or multiple start and end dates) all periods that are not covered will be set to NaN. In this way the multiply rule can also be used as a filter in time. NaNs are ignored by any further calculations (for example the time_aggregation_rule).
 
 ```
 #EXAMPLE  : Salinity (psu) to chloride (mg/l) in an freshwater environment.
@@ -116,18 +127,18 @@ When using the multiply rule with a start and end date (or multiple start and en
       output_variable: chloride
 
 - multiply_rule:
-      name: Multiply salinity to chloride
-      description: Converts salinity to chloride
+      name: Select only the summer half year for chloride
+      description: Select only the summer half year for chloride as this is important for plant growth
       multipliers_table:
             - ["start_date", "end_date", "multipliers"]
-            - ["01-01", "15-07", [1, 100]]
-            - ["16-07", "31-12", [0]]
-      input_variable:  mesh2d_sa1
-      output_variable: chloride2
+            - ["15-04"     , "15-09"   ,         [1.0]]
+      input_variable:  chloride
+      output_variable: chloride_grow_period
 
 ```
 
 ![Result Multiply rule](../assets/images/3_result_multiply.png "Salinity (in PSU, left-hand side) has been translated in chloride (in mg/l, right-hand side) while maintaining the time, face and layer dimensions.")
+
 
 ### Layer filter rule
 
@@ -157,6 +168,7 @@ The layer filter rule allows for the extraction of a layer from 3D variables. Th
 
 ![Result Layer filter rule](../assets/images/3_result_layer_filter.png "Chloride (in mg/L, left-hand side) in 3D has been filtered to a 2D result on only the 22 vertical layer (right-hand side) while maintaining the time and face dimensions.")
 
+
 ### Time aggregation rule
 
 ```
@@ -171,7 +183,8 @@ FORMAT
 ```
 
 The time aggregation rule rule allows for calculating a statistical summary over the time axes of 3D and 2D variables. This could be used for calculating the maximum value over a year (e.g. for water level) or the minimum value over a month (e.g. oxygen concentration). The rule operates both on  3D variables and 2D variables as long as they have a time axes and returns a 3D or 2D result depending on input with the statistic calculated for a new time axis (e.g, year or month). 
-Operations available: Add, Average, Median, Min, Max, count_periods, Stdev and Percentile(n). When using percentile, add a number for the nth percentile with brackets like this: percentile(10).
+Operations available: Add, Average, Median, Min, Max, period statistics, Stdev and Percentile(n). When using percentile, add a number for the nth percentile with brackets like this: percentile(10). Stdev calculates the standard- deviation over te time period. Under period statistics the functionality COUNT_PERIODS, AVG_DURATION_PERIODS, MIN_DURATION_PERIODS and MAX_DURATION_PERIODS are available, and these only work with boolean data variables (0 or 1 values). COUNT_PERIODS calculates the uninterupted times 1 applies (nr). AVG_DURATION_PERIODS, MIN_DURATION_PERIODS and MAX_DURATION_PERIODS take the respective statistic of the duration that 1 applies (duration).
+
 
 Time aggregation available: Year, Month
 
@@ -218,6 +231,7 @@ Calculate the amount of periods of dry time monthly
         output_variable: COUNT_PERIODS_water_level_month
 ```
 
+
 ### Step function rule
 
 ```
@@ -256,6 +270,8 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
 
 ```
 
+![Visualisation of input Step function rule](../assets/images/3_input_step.png "Salinity (in PSU) is translated in 4 distinct classes based on the shown relationship. The classes are based on 0.0 - <0.5 (class 1) 0.5 - <1.2 (class 2), 1.2 - <1.3 (class 3) and >1.3 (class 4).")
+
 ![Result Step function rule](../assets/images/3_result_step.png "Salinity (in PSU, left-hand side) is translated in 4 distinct classes (right-hand side) while maintaining the time, face and layer dimension. The classes are based on 0.0 - <0.5 (class 1) 0.5 - <1.2 (class 2), 1.2 - <1.3 (class 3) and >1.3 (class 4).")
 
 ```
@@ -273,9 +289,13 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
       output_variable : water_level_policy
 ```
 
+![Visualisation of input Step function rule 2](../assets/images/3_input_step_2.png "Water level (in m NAP) is translated in a False (0) or True (1) categorie by comparing it with a boundary policy based on the shown relationship. The boundary is that the water level is not allowed to be lower than -0.10 m NAP and higher than 0.15 m NAP.")
+
 ![Result Step function rule 2](../assets/images/3_result_step_2.png "Water level (in m NAP, left-hand side) is translated in a False (0) or True (1) categorie by comparing it with a boundary policy (right-hand side) while maintaining the time and face dimension (layer dimension is not present in this example, but would be maintained). The boundary is that the water level is not allowed to be lower than -0.10 m NAP and higher than 0.15 m NAP.")
 
+
 ### Response curve rule
+
 ```
 FORMAT  
 - response_curve_rule:
@@ -314,8 +334,10 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
 
 ```
 
+![Visualisation of input Response curve rule](../assets/images/3_input_response.png "Water depth (in m) is translated through a linear interpolation to show the suitability for P. nodosuse based on the shown relationship. The suitability is expressed in a fraction from 0.0 (unsuitable) and 1.0 (suitable).")
 
 ![Result Response curve rule](../assets/images/3_result_response.png "Water depth (in m, left-hand side) is translated through a linear interpolation to show the suitability for P. nodosus (right-hand side) while maintaining the time, face and layer dimension. The suitability is expressed in a fraction from 0.0 (unsuitable) and 1.0 (suitable).")
+
 
 ### Combine results rule
 
@@ -424,3 +446,198 @@ When a formula results in a boolean, it will be converted to a float result. Mea
 
 For more information on these operators click [here](https://www.w3schools.com/python/python_operators.asp).
 
+
+### (Multiple) Classification rule
+
+```
+FORMAT  
+- classification_rule:
+      name: <name_of_rule_in_text>
+      description: <description_of_rule_in_text>
+      criteria_table:
+            - [ "output"       , <input_variable_name1>, <input_variable_name2>]
+            - [<response_value>,       <criteria_range>,       <criteria_range>]
+            - [<response_value>,       <criteria_range>,       <criteria_range>]
+      input_variables: [<list with_input_variable_names>]
+      output_variable: <one_output_variable_name>
+```
+The classification rule allows for the classification based on the range of one or multiple input vairables. The value range can be indicated in muliple ways.
+This rule can be used for indicating suitability (0 or 1) or specify categories (1,2,3 etc). The rule will start with the last given criteria range row and work upwards,hence overwriting is possible. Currently there is no check whether possible ranges have been missed or are overlapping.
+
+The rule needs to be applied to an existing 2D/3D variables with or without time axis. A new 2D/3D variable with or without time axis is created when the rule is executed.
+
+Criteria ranges available are:
+
+|**Criteria range**| **Example**|**Description**| 
+|:---:|:---:|:---:|
+| "-" | "-" | Value is not applicable to category, all is allowed |
+| "criteria_value" | "5" | Value is exectly the criteria value (only applicable for integers) |
+| ">criteria_value" | ">1" | Value needs to larger than criteria value |
+| "<criteria_value" | "< 0.5" | Value needs to be smaller than criteria value |
+| "criteria_value1:criteria_value2" | "0.2:4" | Value needs to be equal or be in between criteria_value1 and criteria_value2 | 
+
+```
+#EXAMPLE  : Determine the suitability for aquatic vegetation based on classification
+  - classification_rule:
+      name: Classification for aquatic plants
+      description: Derive the classification for aquatic plants based on water depth, flow velocity and chloride levels
+      criteria_table: 
+        - ["output", "MIN_water_depth_mNAP", "MAX_flow_velocity", "MAX_chloride"]
+        - [     1  ,               "<0.10" ,                "-" ,            "-"] # to dry
+        - [     2  ,                ">4.0" ,                "-" ,            "-"] # to deep
+        - [     3  ,                   "-" ,                "-" ,         ">400"] # to salty
+        - [     4  ,                   "-" ,             ">1.5" ,            "-"] # to fast flowing
+        - [     5  ,            "0.10:4.0" ,          "0.0:1.5" ,       "0:400"] # perfect for aquatic plants
+      input_variables: ["MIN_water_depth_mNAP", "MAX_flow_velocity", "MAX_chloride"]
+      output_variable: aquatic_plant_classes
+
+      
+  - classification_rule:
+      name: Suitability for aquatic plants
+      description: Derive the suitability for aquatic plants based on the classification
+      criteria_table: 
+        - ["output", "aquatic_plant_classes"]
+        - [     0  ,                   "1:4"] # not suitable
+        - [     1  ,                     "5"] # suitable
+      input_variables: ["aquatic_plant_classes"]
+      output_variable: aquatic_plant_suitability
+
+```
+
+![Result Classification rule](../assets/images/3_result_classification.png "Minimum Water depth(in m NAP, left-hand top side), maximum flow velocity(in m/s, right-hand top side) and maximum chloride level (in mg/L, left-hand bottom side) are combined based on criteria ranges to create the aquatic plant classification (right-hand bottom side) while maintaining the time and face dimension (layer dimension is not present in this example, but would be maintained). ")
+
+![Result Classification rule 2](../assets/images/3_result_classification_2.png "The aquatic plant classification (left-hand side) are translated based on criteria ranges to an aquatic_plant suitability class (right-hand side) while maintaining the time and face dimension (layer dimension is not present in this example, but would be maintained). ")
+
+
+### Rolling statistic rule
+
+```
+FORMAT  
+- rolling_statistics_rule:
+      name: <name_of_rule_in_text>
+      description: <description_of_rule_in_text>
+      operation: <statistic_opperation_applied>
+      time_scale : <time_step_unit_applied>
+      period: <time_step_value_applied>
+      input_variable: <one_input_variable_name>
+      output_variable: <one_output_variable_name>
+```
+
+The rolling statistic rule allows for a rolling statistic based on the choicen operation and the time period over which the statistic should be repeated. The calculated statistic will be written to each last timestep that falls within the period.
+Operations available: Add, Average, Median, Min, Max, count_periods, Stdev and Percentile(n). When using percentile, add a number for the nth percentile with brackets like this: percentile(10).
+
+Time scales available: hour, day
+Period can be a float or integer value. 
+
+The rule needs to be applied to an existing 2D/3D variables with time axis. A new 2D/3D variable with the same time axis is created when the rule is executed.
+
+An explanation of how the rolling statistic rule works is shown in the table below:
+
+|**timestep**|**1**|**2**|**3**|**4**|**5**|**6**|**7**|**8**|
+|:--------:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| period1  | - | - | - | i |   |   |   |   |
+| period2  |   | - | - | - | i |   |   |   |
+| period3  |   |   | - | - | - | i |   |   |
+
+In the example shown above the stripe indicates the time period covered (4 timesteps in this case) and with i the location where the result of the statistic over that period is written. Hence, the first three timesteps in this example will not contain any values. This is repeated until the time series has been covered.
+
+```
+#EXAMPLE  : Determine a rolling statistic over salinity levels
+  - rolling_statistics_rule:
+      name: test rolling statistic 12.5 hours
+      description: test rolling statistic 12.5 hours
+      operation: MAX
+      time_scale: hour
+      period: 12.5
+      input_variable: IN_salinity_PSU
+      output_variable: salinity_tl_hour_max
+
+  - rolling_statistics_rule:
+      name: test rolling statistic 7 days
+      description: test rolling statistic 7 days
+      operation: MAX
+      time_scale: day
+      period: 7
+      input_variable: IN_salinity_PSU
+      output_variable: salinity_tl_week_max
+```
+
+![Result Rolling statistic rule](../assets/images/3_result_rolling_statistic.png "Salinity(in PSU, left-hand) is translated to an 12.5 hourly statistic (in PSU, right-hand) while maintaining the time and face dimension (layer dimension is not present in this example, but would be maintained). ")
+
+![Result Rolling statistic rule 2](../assets/images/3_result_rolling_statistic_2.png "Salinity(in PSU, left-hand) is translated to an weekly statistic (in PSU, right-hand) while maintaining the time and face dimension (layer dimension is not present in this example, but would be maintained). ")
+
+
+### Axis filter rule
+
+```
+FORMAT  
+- axis_filter_rule:
+      name: <name_of_rule_in_text>
+      description: <description_of_rule_in_text>
+      layer_number: <integer_nr_of_layer>
+	  axis_name: <name_of_axis_applied>
+      layer_number: <integer_nr_of_layer_in_axis_applied>
+      input_variable: <one_3D_input_variable_name>
+      output_variable: <one_output_variable_name>
+```
+
+The axis filter rule is close to the layer_filter_rule, however it allows for filtering on any axis present in the data. This allows for the selection of a specific time step, spatial cell or other data axis value.
+
+The rule needs to be applied to an existing 2D/3D variables with or without time axis. A new 2D/3D variable with or without time axis is created when the rule is executed, with the exception of the axis that was filtered upon.
+
+```
+#EXAMPLE  : Select only the salinity in the cell for the channel entrance from the faces
+  - axis_filter_rule:
+      name: Filter face of channel entrance (13th face cell)
+      description: Filter face of channel entrance (13th face cell)
+      axis_name: mesh2d_nFaces
+      layer_number: 13
+      input_variable: IN_salinity_PSU
+      output_variable: salinity_PSU_channel_entrance
+```
+
+![Result Axis filter rule](../assets/images/3_result_axis_filter.png "Salinity(in PSU, left-hand) is subset so that only face cell 13 is left (channel entrance) reducing the data to a 2D salinity plot for multiple time steps (in PSU, right-hand) while maintaining in this case the time dimension and layer dimension (face dimension is selected upon in this example and is therefore omitted in the results). ")
+
+
+##Including data from another YAML file
+
+It is possible to include data in the YAML file that originates from another file. At the moment this is only applicable to another YAML file. This can be useful for storing large classification_rule tables in a separate file (for a better overview of the work file), but this functionality is not limited to that specific rule.
+
+Here is the original rule: 
+```
+#EXAMPLE  : Original
+# This is a simplified example, only top layer of flow velocity and chloride was used and year statistics
+
+  - classification_rule:
+      name: classification for aquatic plants
+      description: classification for aquatic plants based on water depth, flow velocity and chloride.
+      criteria_table: 
+        - ["output", "MIN_water_depth_mNAP", "MAX_flow_velocity", "MAX_chloride"]
+        - [     1  ,               "<0.10" ,                "-" ,               "-"] # to dry
+        - [     2  ,                 ">4.0" ,                "-" ,               "-"] # to deep
+        - [     3  ,                       "-" ,                "-" ,        ">400"] # to salty
+        - [     4  ,                       "-" ,          ">1.5" ,               "-"] # to fast flowing
+        - [     5  ,          "0.10:4.0" ,      "0.0:1.5" ,       "0:400"] # perfect for aquatic plants
+```
+
+And this is the rule while making using of an inclusion from another file:
+```
+#EXAMPLE  : Original
+# This is a simplified example, only top layer of flow velocity and chloride was used and year statistics
+
+  - classification_rule:
+      name: classification for aquatic plants
+      description: classification for aquatic plants based on water depth, flow velocity and chloride.
+      criteria_table: !include tables/aquatic_plant_criteria.yaml
+      input_variables: ["MIN_water_depth_mNAP", "MAX_flow_velocity", "MAX_chloride"]
+      output_variable: aquatic_plant_classes
+```
+And this is the included file from tables/aquatic_plant_criteria.yaml:
+```
+        - ["output", "MIN_water_depth_mNAP", "MAX_flow_velocity", "MAX_chloride"]
+        - [     1  ,               "<0.10" ,                "-" ,               "-"] # to dry
+        - [     2  ,                 ">4.0" ,                "-" ,               "-"] # to deep
+        - [     3  ,                       "-" ,                "-" ,        ">400"] # to salty
+        - [     4  ,                       "-" ,          ">1.5" ,               "-"] # to fast flowing
+        - [     5  ,          "0.10:4.0" ,      "0.0:1.5" ,       "0:400"] # perfect for aquatic plants
+```

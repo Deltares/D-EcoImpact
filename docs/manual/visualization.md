@@ -14,8 +14,6 @@ Panoply is useful for exploring the content of NetCDF files. It allows the user 
 ## Quickplot
 Quickplot is a Deltares visualization tool used amongst others for Delft3D 4 and Delft3D-FM models. Intern Deltares the latest version of Quickplot can be gathered here:
 
-(n:\Deltabox\Bulletin\jagers\Delft-QUICKPLOT MCRv82 (2013b)\64bit\)
-
 Quickplot is also co-delivered with the installation of one of the Delft3D suites. 
 
 Quickplot allows the visualization of UGRID NetCDF files, both in the horizontal, over time and in the vertical (for 3D models). 
@@ -25,9 +23,11 @@ Quickplot allows the visualization of UGRID NetCDF files, both in the horizontal
 ## QGIS
 QuantumGIS (QGIS) is open source free ware GIS software. The latest version of QGIS can be downloaded [here](https://www.qgis.org/en/site/forusers/download.html)
 
-QGIS can handle 2D Mesh data directly. When it comes to 3D mesh data a Deltares plugin developed by Jan Mooiman (QGIS_Qmesh) can perform the visualisation. Also visualization through time is made easy with the QGIS_Qmesh plugin. Intern Deltares the latest version of this plugin can be gathered here:
-n:\Deltabox\Bulletin\mooiman\programs\
-or externally compiled [here](https://github.com/Deltares/qgis_umesh).
+QGIS can handle 2D Mesh data directly. See the QGIS 3.28 documentation [here](https://docs.qgis.org/3.28/en/docs/user_manual/managing_data_source/opening_data.html?highlight=mesh#loading-a-mesh-layer).
+QGIS does however not recognize our newly created time axes (e.g. time_year, time_month after using the D-Eco Impact "time_aggregation_rule").
+
+When it comes to 3D mesh data a Deltares plugin developed by Jan Mooiman (QGIS_Qmesh) can perform the visualisation. Also visualization through time is made easy with the QGIS_Qmesh plugin. Intern Deltares the latest version of this plugin can be gathered here:
+needs to be externally compiled [here](https://github.com/Deltares/qgis_umesh).
 
 When Mesh data is loaded directly in QGIS the spatial relevance can be easily displayed using the plugin QuickMapServices > OSM layer.
 
