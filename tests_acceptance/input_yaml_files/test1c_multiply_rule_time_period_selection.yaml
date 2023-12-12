@@ -1,0 +1,43 @@
+version: 0.0.0
+
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
+      variable_mapping:
+        salinity_PSU: "salinity"
+
+rules:
+  - multiply_rule:
+      name: test name
+      description: Converts salinity to chloride
+      multipliers: [0.0018066, 1e5]
+      input_variable: salinity
+      output_variable: chloride
+
+  - multiply_rule:
+      name: chloride growth period
+      description: chloride growth period
+      multipliers_table: 
+          - ["start_date", "end_date", "multipliers"]
+          - ["15-04"     , "15-09"   ,         [1.0]]
+      input_variable: chloride
+      output_variable: chloride_gp
+
+  - time_aggregation_rule:
+      name: average chloride level
+      description: Get average chloride level
+      operation: AVERAGE
+      input_variable: chloride
+      time_scale: year
+      output_variable: AVG_chloride
+
+  - time_aggregation_rule:
+      name: average chloride level grow period
+      description: Get average chloride level grow period
+      operation: AVERAGE
+      input_variable: chloride_gp
+      time_scale: year
+      output_variable: AVG_chloride_gp        
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/test1c_multiply_rule_time_period_selection.nc
