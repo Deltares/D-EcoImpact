@@ -24,7 +24,7 @@ The model needs at least one rule under “rules” to execute.
 
 ```
 #FORMAT
-version: <D-Eco Impact version_nr>
+version: <D-Eco_Impact_version_nr>
 
 input-data:
   - dataset:
@@ -183,8 +183,7 @@ FORMAT
 ```
 
 The time aggregation rule rule allows for calculating a statistical summary over the time axes of 3D and 2D variables. This could be used for calculating the maximum value over a year (e.g. for water level) or the minimum value over a month (e.g. oxygen concentration). The rule operates both on  3D variables and 2D variables as long as they have a time axes and returns a 3D or 2D result depending on input with the statistic calculated for a new time axis (e.g, year or month). 
-Operations available: Add, Average, Median, Min, Max, period statistics, Stdev and Percentile(n). When using percentile, add a number for the nth percentile with brackets like this: percentile(10). Stdev calculates the standard- deviation over te time period. Under period statistics the functionality COUNT_PERIODS, AVG_DURATION_PERIODS, MIN_DURATION_PERIODS and MAX_DURATION_PERIODS are available, and these only work with boolean data variables (0 or 1 values). COUNT_PERIODS calculates the uninterupted times 1 applies (nr). AVG_DURATION_PERIODS, MIN_DURATION_PERIODS and MAX_DURATION_PERIODS take the respective statistic of the duration that 1 applies (duration).
-
+Operations available: Add, Average, Median, Min, Max, period statistics, Stdev and Percentile(n). When using percentile, add a number for the nth percentile with brackets like this: percentile(10). Stdev calculates the standard- deviation over te time period. Under period statistics are explained further in the text.
 
 Time aggregation available: Year, Month
 
@@ -203,9 +202,10 @@ The rule needs to be applied to an existing 2D/3D variable with time axis. A new
 
 ![Result Time aggregation rule](../assets/images/3_result_time_aggregation.png "Water level (in m NAP, left-hand side) with a timestep every 10 days has been summarized to the maximum for each year (right-hand side) while maintaining the face dimension (layer dimension is not present in this example, but would be maintained).")
 
-Time aggregation rule with COUNT_PERIODS
+Period statistics: Time aggregation rule with COUNT_PERIODS, AVG_DURATION_PERIODS, MIN_DURATION_PERIODS and MAX_DURATION_PERIODS
 
-When the operation type count_periods is used, the user needs to make sure that the input data is always consisting of only 1 and 0. If there is no such layer, the user can make a combination of for example the classification rule together with the time aggregation rule. For example, waterdepth can be used to check whether the cells are dry or not (this can be done with a classification rule) and with the COUNT_PERIODS operation type in the time aggregation rule the amount of periods within a year or month can be calculated.
+When the operation type period statistics is used, the user needs to make sure that the input data is always consisting of only 1 and 0. If there is no such layer, the user can make a combination of for example the classification rule together with the time aggregation rule. For example, waterdepth can be used to check whether the cells are dry or not (this can be done with a classification rule) and with the COUNT_PERIODS operation type in the time aggregation rule the amount of consecutive periods within a year or month can be calculated (nr). AVG_DURATION_PERIODS, MIN_DURATION_PERIODS and MAX_DURATION_PERIODS take the respective statistic of the duration for those consecutive periods (duration).
+
 
 
 ```
