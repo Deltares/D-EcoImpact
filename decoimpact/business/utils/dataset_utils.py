@@ -200,7 +200,7 @@ def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> list[
 
     attrs = dataset[var_name].attrs
     for attr in attrs.items():
-        if any([attr[0].endswith(var_check) for var_check in vars_to_check]):
+        if any(attr[0].endswith(var_check) for var_check in vars_to_check):
             attrs_list = list(set(attrs_list + attr[1].split(" ")))
     return attrs_list
 
@@ -282,7 +282,7 @@ def get_time_dimension_name(variable: _xr.DataArray, logger: ILogger) -> str:
     Returns:
         str: time dimension name
     """
-    
+
     for dim in variable.dims:
         dim_values = variable[dim]
         if dim_values.dtype.name == "datetime64[ns]":

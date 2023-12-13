@@ -214,7 +214,7 @@ class RuleProcessor:
         self, rule: IRule, result: _xr.DataArray, input_variable: _xr.DataArray
     ):
         self._copy_definition_attributes(input_variable, result)
-        # TODO: this should come from the input
+
         result.attrs["long_name"] = rule.output_variable_name
         result.attrs["standard_name"] = rule.output_variable_name
 

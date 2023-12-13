@@ -40,7 +40,7 @@ class ModelDataBuilder:
         """
         input_version = self._parse_input_version(contents)
         if not input_version:
-            raise (AttributeError(name="Version not available from input file"))
+            raise AttributeError(name="Version not available from input file")
         input_datasets = list(self._parse_input_datasets(contents))
         output_dataset = self._parse_output_dataset(contents)
         rules = list(self._parse_rules(contents))

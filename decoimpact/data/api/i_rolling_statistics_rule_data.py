@@ -31,7 +31,7 @@ class IRollingStatisticsRuleData(IRuleData, ABC):
     @abstractmethod
     def operation(self) -> TimeOperationType:
         """Operation type"""
-    
+
     @property
     @abstractmethod
     def operation_parameter(self) -> float:

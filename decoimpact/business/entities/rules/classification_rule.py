@@ -87,11 +87,11 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
 
                 elif criteria_class == "larger":
                     comparison_val = read_str_comparison(criteria, ">")
-                    comparison = (data > float(comparison_val))
+                    comparison = data > float(comparison_val)
 
                 elif criteria_class == "smaller":
                     comparison_val = read_str_comparison(criteria, "<")
-                    comparison = (data < float(comparison_val))
+                    comparison = data < float(comparison_val)
 
                 # Criteria_comparison == 1 -> to check where the value is True
                 criteria_comparison = _xr.where(
@@ -102,7 +102,7 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
             # For the first row set the default to None, for all the other
             # rows use the already created dataarray
             default_val = None
-            if (row != len(self._criteria_table["output"])-1):
+            if row != len(self._criteria_table["output"])-1:
                 default_val = result_array
 
             result_array = _xr.where(criteria_comparison, out, default_val)

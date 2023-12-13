@@ -46,7 +46,7 @@ class ParserAxisFilterRule(IParserRuleBase):
                 f"received a {type(axis_name)}: {axis_name}"
             )
             raise ValueError(message)
-            
+
         layer_number = get_dict_element("layer_number", dictionary)
         if not isinstance(layer_number, int):
             message = (
@@ -57,6 +57,6 @@ class ParserAxisFilterRule(IParserRuleBase):
         output_variable_name = get_dict_element("output_variable", dictionary)
 
         return AxisFilterRuleData(
-            name, layer_number, axis_name, input_variable_name, 
+            name, layer_number, axis_name, input_variable_name,
             output_variable_name, description
         )

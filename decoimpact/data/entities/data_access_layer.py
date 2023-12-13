@@ -118,7 +118,6 @@ class DataAccessLayer(IDataAccessLayer):
         except ValueError as exc:
             msg = "ERROR: error applying time filter on dataset"
             raise ValueError(msg) from exc
-
         return dataset
 
     def write_output_file(
@@ -168,8 +167,6 @@ class DataAccessLayer(IDataAccessLayer):
             msg = f"ERROR: Cannot write output .nc file -- {path}"
             self._logger.log_error(msg)
             raise OSError(msg) from exc
-
-        return None
 
     def yaml_include_constructor(self, loader: _yaml.Loader, node: _yaml.Node) -> Any:
         """constructor function to make !include (referencedfile) possible"""

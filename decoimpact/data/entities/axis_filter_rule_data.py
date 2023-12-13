@@ -42,9 +42,8 @@ class AxisFilterRuleData(IAxisFilterRuleData, RuleData):
     def layer_number(self) -> int:
         """Property for the layer number"""
         return self._layer_number
-    
+
     @property
     def axis_name(self) -> str:
         """Property for the dimension name"""
         return self._axis_name
-

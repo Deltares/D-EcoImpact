@@ -10,24 +10,13 @@
         "editor.codeActionsOnSave": {
             "source.organizeImports": true,
         },
-        "editor.defaultFormatter": "ms-python.black-formatter",
     },
-    "python.formatting.provider": "none",
-    "python.formatting.blackArgs": [
-        "--line-length=88"
-    ],
-    "python.linting.flake8Enabled": true,
-    "python.linting.flake8Args": [
-        "--max-line-length=88"
-    ],
-    "python.linting.pylintEnabled": true,
     "coverage-gutters.showLineCoverage": true,
     "coverage-gutters.coverageFileNames": [
         "coverage.xml"
     ],
     "python.analysis.typeCheckingMode": "basic",
     "python.analysis.completeFunctionParens": true,
-    "python.analysis.autoImportUserSymbols": true,
     "python.analysis.autoImportCompletions": true,
     "python.analysis.diagnosticMode": "openFilesOnly",
     "python.analysis.exclude": [
@@ -39,7 +28,13 @@
             "snippet": "Insert_lgpl_header_DEI"
         }
     ],
-    "python.linting.flake8Args": [
+    "pylint.args": [
+        "max-line-length=88",
+        "enable=too-few-public-methods",
+    ],
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 88,
+    "flake8.args": [
         "--max-line-length=88"
     ]
 }

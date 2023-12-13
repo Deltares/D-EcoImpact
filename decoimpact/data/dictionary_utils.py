@@ -11,12 +11,12 @@ Module for dictionary utilities
 
 from typing import Dict, List, Optional, TypeVar
 
-TValue = TypeVar("TValue")
+ValueT = TypeVar("ValueT")
 
 
 def get_dict_element(
-    key: str, contents: Dict[str, TValue], required: bool = True
-) -> Optional[TValue]:
+    key: str, contents: Dict[str, ValueT], required: bool = True
+) -> Optional[ValueT]:
     """Tries to get an element from the provided dictionary.
 
     Args:
