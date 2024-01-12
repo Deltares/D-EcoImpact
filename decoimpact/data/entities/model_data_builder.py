@@ -42,11 +42,17 @@ class ModelDataBuilder:
         if not input_version:
             raise AttributeError(name="Version not available from input file")
         input_datasets = list(self._parse_input_datasets(contents))
-        output_dataset = self._parse_output_dataset(contents)
+        output_path = self._parse_output_dataset(contents)
+        output_variables = list(self._parse_output_variables(contents))
         rules = list(self._parse_rules(contents))
 
         return YamlModelData(
-            "Model 1", input_version, input_datasets, output_dataset, rules
+            "Model 1",
+            input_version,
+            input_datasets,
+            output_path,
+            output_variables,
+            rules,
         )
 
     def _parse_input_version(self, contents: str) -> List[int]:
@@ -82,10 +88,25 @@ class ModelDataBuilder:
     def _parse_output_dataset(self, contents: dict[str, Any]) -> Path:
         output_data: dict[str, Any] = get_dict_element("output-data", contents)
 
-        if len(output_data) != 1:
-            raise NotSupportedError("Only one output is currently supported")
+        # if len(output_data) != 1:
+        #     raise NotSupportedError("Only one output is currently supported")
 
         return Path(output_data["filename"])
+
+    def _parse_output_variables(
+        self, contents: dict[str, Any]
+    ) -> Iterable[IDatasetData]:
+        output_data: dict[str, Any] = get_dict_element("output-data", contents)
+
+        # if len(output_data) != 1:
+        #     raise NotSupportedError("Only one output is currently supported")
+
+        # save_only_variables: dict[str, Any] = get_dict_element("save_only_variables")
+        # for item, vars in output_data:
+        #     if item == "save_only_variables":
+        #         yield DatasetData(get_dict_element("save_only_variables", output_data))
+        #         # output_variables =
+        return output_data["save_only_variables"]
 
     def _parse_rules(self, contents: dict[str, Any]) -> Iterable[IRuleData]:
         rules: List[dict[str, Any]] = get_dict_element("rules", contents)

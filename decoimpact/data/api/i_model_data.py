@@ -45,5 +45,10 @@ class IModelData(ABC):
 
     @property
     @abstractmethod
+    def output_variables(self) -> List[str]:
+        """Output variables"""
+
+    @property
+    @abstractmethod
     def rules(self) -> List[IRuleData]:
         """Rules of the model"""
