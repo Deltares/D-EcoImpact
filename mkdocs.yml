@@ -59,9 +59,9 @@ nav:
   - Home: "index.md"
   - Installation: "installation.md"
   - Development: "development.md"
-  - Tutorials:
-      - Visualization: "tutorials/visualization.md"
-      - Input files: "tutorials/input.md"
+  - User manual:
+      - Visualization: "manual/visualization.md"
+      - Input files: "manual/input.md"
   - Examples:
       - Volkerak zoommeer: "examples/volkerak.md"
       - Meuse: "examples/maas.md"
