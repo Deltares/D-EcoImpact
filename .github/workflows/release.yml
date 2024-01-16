@@ -1,8 +1,8 @@
 # This workflow should be triggered when a release of the main is needed. 
-# It creates a tage and regenerates the documentation to generate a release. 
-# It does not bumps version number, that happens for the merged pull request.
+# It creates a tag and regenerates the documentation to generate a release. 
+# It does not bump the version number, that happens for the merged pull request.
 
-name: Release major or minor version (create tag and documention)
+name: Release major or minor version (create tag and documentation)
 
 on:
   workflow_dispatch:
