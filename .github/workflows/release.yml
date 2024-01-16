@@ -1,8 +1,8 @@
 # This workflow should be triggered when a release of the main is needed. 
-# It bumps the pyproject.toml version (major
-# Using this version it creates a tag and a release
+# It creates a tage and regenerates the documentation to generate a release. 
+# It does not bumps version number, that happens for the merged pull request.
 
-name: Release major or minor version (create tag and bump poetry version)
+name: Release major or minor version (create tag and documention)
 
 on:
   workflow_dispatch:
@@ -29,18 +29,6 @@ jobs:
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: 1.4.2
-      - name: bump up patch version
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          poetry version ${{ github.event.inputs.release_type }}
-          PROJECT_VERSION=$(poetry version --short)
-          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
-          sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
-          git add template_input.yaml
-          git add pyproject.toml
-          git commit -m "bump up ${{ github.event.inputs.release_type }} version from release workflow: version $PROJECT_VERSION"
-          git push
       - name: Create Release
         uses: actions/create-release@latest
         env:
