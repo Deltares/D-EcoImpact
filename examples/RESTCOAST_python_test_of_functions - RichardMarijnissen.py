@@ -64,23 +64,21 @@ rule3C = StepFunctionRule("Salinity variability class", "salinity_variability", 
 rule4A1 = TimeAggregationRule("Compute mean ssc", ["mud1_kgm3"], TimeOperationType.AVERAGE, "year","mean_mud1_kgm3")
 rule4A2 = TimeAggregationRule("Compute mean ssc", ["mud2_kgm3"], TimeOperationType.AVERAGE, "year","mean_mud2_kgm3")
 rule4A3 = CombineResultsRule("Compute ssc of mud", ["mean_mud1_kgm3", "mean_mud2_kgm3"], MultiArrayOperationType.ADD, "mean_mud_kgm3")
-# rule4A1 = CombineResultsRule("Compute ssc of mud", ["mud1_kgm3", "mud2_kgm3"], MultiArrayOperationType.ADD, "m_mud_kgm3")
-# rule4A2 = TimeAggregationRule("Compute mean ssc", ["mud2_kgm3"], TimeOperationType.AVERAGE, "year","mean_mud2_kgm3")
 rule4B1 = FormulaRule("Determine depth of photic zone", ["mean_mud_kgm3"], "4.605170185988091/(0.08 + 2.5e4 * mean_mud_kgm3)", "dpar1_m")
-#rule4B2 = LayerFilterRule("Depth of photic zone without time", ["dpar1_m"], 2, "time_year", "dpar1_m_t0")
+rule4B2 = LayerFilterRule("Depth of photic zone without time", ["dpar1_m"], 2, "time_year", "dpar1_m_t0")
 # # --> It would be more convenient to also be able to use constants across the script and have a log or ln() function e.g.
 # #     SetConstant(Set background extinction coefficient (m-1 ), ["E0"], 0.08)
 # #     SetConstant(Set mud extinction coefficient (kg m-3 ), ["Emud"], 2.5e4)
 # #     rule4B = FormulaRule("Determine depth of photic zone", ["mud_kgm3", "E0", "Emud"], "-ln(0.01)/(E0 + Emud * mud_kgm3", "d_par1")
 # # rule4C = FormulaRule("Determine level of photic zone", ["dpar1_m", "mesh2d_mesh2d_MLWN"], "mesh2d_mesh2d_MLWN - dpar1_m", "zpar1_mNAP")
-# rule4C = CombineResultsRule("Determine level of photic zone", ["dpar1_m_t0", "mesh2d_mesh2d_MLWN"], MultiArrayOperationType.SUBTRACT, "zpar1_mNAP")
-# rule4D1 = TimeAggregationRule("calculate bottom level", ["mesh2d_mor_bl"], TimeOperationType.AVERAGE, "year","mean_bottomlevel_mNAP")
-# rule4D2 = FormulaRule("Deep sublittoral", ["mean_bottomlevel_mNAP", "zpar1_mNAP"], "mean_bottomlevel_mNAP < zpar1_mNAP", "deep_sublittoral")
+rule4C = CombineResultsRule("Determine level of photic zone", ["dpar1_m_t0", "mesh2d_mesh2d_MLWN"], MultiArrayOperationType.SUBTRACT, "zpar1_mNAP")
+rule4D1 = TimeAggregationRule("calculate bottom level", ["mesh2d_mor_bl"], TimeOperationType.AVERAGE, "year","mean_bottomlevel_mNAP")
+rule4D2 = FormulaRule("Deep sublittoral", ["mean_bottomlevel_mNAP", "zpar1_mNAP"], "mean_bottomlevel_mNAP < zpar1_mNAP", "deep_sublittoral")
 rule4E = FormulaRule("Get exposure time", ["mesh2d_mesh2d_Inundation"], "1 - mesh2d_mesh2d_Inundation", "exposure_time")
 rule4F = StepFunctionRule("Littoral class minus sublittoral", "exposure_time", [0.0, 0.04, 0.25, 0.40, 0.85, 1.0], [0.0, 2.0, 3.0, 4.0, 5.0, 5.0], "LitoralCod_min_sublittoral")
 rule4G = FormulaRule("Sublittoral ",["exposure_time"], "exposure_time <= 0.04", "sublittoral")
-# rule4H = CombineResultsRule("Sublittoral classes", ["sublittoral","deep_sublittoral"],MultiArrayOperationType.SUBTRACT,"sub_littoral_classes")
-# rule4I = CombineResultsRule("Littoral class", ["LitoralCod_min_sublittoral","sub_littoral_classes"],MultiArrayOperationType.ADD,"LitoralCod")
+rule4H = CombineResultsRule("Sublittoral classes", ["sublittoral","deep_sublittoral"],MultiArrayOperationType.SUBTRACT,"sub_littoral_classes")
+rule4I = CombineResultsRule("Littoral class", ["LitoralCod_min_sublittoral","sub_littoral_classes"],MultiArrayOperationType.ADD,"LitoralCod")
 
 # Determine ZES.1 Hydrodynamics class
 rule5A = TimeAggregationRule("max current velocity", ["mesh2d_ucmag"],TimeOperationType.MAX, "year","max_flowvelocity_ms")
@@ -104,9 +102,9 @@ model = RuleBasedModel([inputDataset], [rule1A, rule1B,\
                                         rule2A, rule2B,\
                                         rule3A, rule3B, rule3C,\
                                         rule4A1, rule4A2, rule4A3, rule4B1,\
-                                        #rule4C, rule4D1, rule4D2,
+                                        rule4C, rule4D1, rule4D2,
                                         rule4E,rule4F, rule4G,\
-                                        #rule4H, rule4I,\
+                                        rule4H, rule4I,\
                                         rule5A, rule5B,\
                                         rule6A1, rule6A2, rule6B, rule6C, rule6D, \
                                         rule7A, rule7B, rule7C, rule7D \
