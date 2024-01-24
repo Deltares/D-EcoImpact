@@ -90,12 +90,15 @@ class Application:
 
             # run model
             _ModelRunner.run_model(model, self._logger)
+            print('check A',model_data.output_path)
+            print('check B',model_data.output_variables)
 
             # write output file
             if model.status == _ModelStatus.FINALIZED:
                 self._da_layer.write_output_file(
                     model.output_dataset,
                     model_data.output_path,
+                    model_data.output_variables,
                     self.APPLICATION_VERSION,
                     self.APPLICATION_NAME,
                 )

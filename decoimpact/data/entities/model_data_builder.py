@@ -88,25 +88,22 @@ class ModelDataBuilder:
     def _parse_output_dataset(self, contents: dict[str, Any]) -> Path:
         output_data: dict[str, Any] = get_dict_element("output-data", contents)
 
-        # if len(output_data) != 1:
-        #     raise NotSupportedError("Only one output is currently supported")
-
         return Path(output_data["filename"])
 
     def _parse_output_variables(
         self, contents: dict[str, Any]
     ) -> Iterable[IDatasetData]:
         output_data: dict[str, Any] = get_dict_element("output-data", contents)
+        print('q1',output_data)
 
-        # if len(output_data) != 1:
-        #     raise NotSupportedError("Only one output is currently supported")
-
-        # save_only_variables: dict[str, Any] = get_dict_element("save_only_variables")
-        # for item, vars in output_data:
-        #     if item == "save_only_variables":
-        #         yield DatasetData(get_dict_element("save_only_variables", output_data))
-        #         # output_variables =
-        return output_data["save_only_variables"]
+        if 'save_only_variables' in output_data:
+            print('q2','restriction present')
+        else:
+            print('q3','restriction NOT present')
+            output_data['save_only_variables'] = []
+        
+        print('qq',output_data['save_only_variables'])
+        return output_data['save_only_variables']
 
     def _parse_rules(self, contents: dict[str, Any]) -> Iterable[IRuleData]:
         rules: List[dict[str, Any]] = get_dict_element("rules", contents)
