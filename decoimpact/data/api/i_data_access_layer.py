@@ -48,8 +48,9 @@ class IDataAccessLayer(ABC):
         """
 
     @abstractmethod
-    def write_output_file(self, dataset: _xr.Dataset, path: Path,
-        variables_to_remove: [str], application_version: str, application_name: str) -> None:
+    def write_output_file(self, dataset: _xr.Dataset, path: Path, 
+                          variables_to_remove: [str], application_version: str, 
+                          application_name: str) -> None:
         """Write output files to provided path
 
         Args:

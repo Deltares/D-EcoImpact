@@ -97,7 +97,7 @@ class ModelDataBuilder:
 
         if 'save_only_variables' not in output_data:
             output_data['save_only_variables'] = []
-        
+
         return output_data['save_only_variables']
 
     def _parse_rules(self, contents: dict[str, Any]) -> Iterable[IRuleData]:

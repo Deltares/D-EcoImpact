@@ -19,7 +19,6 @@ from typing import Any
 
 import xarray as _xr
 import yaml as _yaml
-from numpy import var
 
 from decoimpact.business.utils.dataset_utils import remove_all_variables_except
 from decoimpact.crosscutting.i_logger import ILogger
