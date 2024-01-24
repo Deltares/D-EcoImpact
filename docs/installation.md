@@ -1,5 +1,5 @@
 # Installation 
-D-EcoImpact is a command line operated model. To use D-EcoImpact (currently) an installation of Python and the used libraries is required. This is best achieved by installing D-EcoImpact in a virtual environment.
+D-Eco Impact is a command line operated model. To use D-Eco Impact (currently) an installation of Python and the used libraries is required. This is best achieved by installing D-Eco Impact in a virtual environment.
 
 
 ## Anaconda, miniConda or Visual Studio Code
@@ -9,7 +9,7 @@ Anaconda (elaborate functionality) and minicoda (minimum functionality) are envi
 - [miniConda](https://docs.conda.io/en/main/miniconda.html)
 - [Visual Studio code](https://code.visualstudio.com/download)
 
-## Installation of D-EcoImpact with Anaconda or miniConda
+## Installation of D-Eco Impact with Anaconda or miniConda
 
 1.	Open your commandline (cmd) or conda prompt, and execute:
   ```sh
@@ -21,28 +21,28 @@ Anaconda (elaborate functionality) and minicoda (minimum functionality) are envi
   $ conda activate <env_name>
   ```
 
-3.	Move to the folder where you have placed the D-EcoImpact source code
+3.	Move to the folder where you have placed the D-Eco Impact source code
 You can use cd ../ and cd <folder_name> to move to the location or use windows explorer and type “cmd” + enter in the path bar.
 
-4.	To install the required libraries Poetry is used. Poetry makes use of the poetry.lock and pyproject.toml (present in the D-EcoImpact folder) to find these required libraries.
+4.	To install the required libraries Poetry is used. Poetry makes use of the poetry.lock and pyproject.toml (present in the D-Eco Impact folder) to find these required libraries.
 Execute the following command:
   ```
   poetry install
   ```
 NB. If errors occur while installing the libraries, this might have to do with your administrative rights. Either start the cmd or conda promt “As administrator” or discuss this with your IT support.
 
-5.	Now D-EcoImpact is setup for use. You can test this by executing one of the input yaml files.
+5.	Now D-Eco Impact is setup for use. You can test this by executing one of the input yaml files.
 To execute use the following in the command prompt while your environment is active:
   ```
   python main.py <your_input_file>.yaml
   ```
 
-## Installation D-Ecoimpact with Visual Studio Code and venv
+## Installation D-Eco impact with Visual Studio Code and venv
 
 1.	Install [Python version 3.11.2] (https://www.python.org/downloads/)
 2.	Open Visual Studio Code.
 3.	Press CRTL + Shift + P and type “Python: Create Environment” followed by enter, select “Venv”.
-4.	Place the environment in the D-EcoImpact folder.
+4.	Place the environment in the D-Eco Impact folder.
 5.	Press CTRL + Shift + P and type “Python: Select interpreter” and select the newly created environment.
 6.	In the terminal in Visual Studio Code execute the following command:
   ```
@@ -50,7 +50,7 @@ To execute use the following in the command prompt while your environment is act
   ```
 7.	In the terminal in Visual Studio Code execute the following command:
 poetry install
-6.	Now D-EcoImpact is setup for use. You can test this by executing one of the input yaml files.
+6.	Now D-Eco Impact is setup for use. You can test this by executing one of the input yaml files.
 To execute use the following in the command prompt while your environment is active:
   ```
   python main.py <your_input_file>.yaml
