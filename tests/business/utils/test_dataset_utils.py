@@ -52,7 +52,7 @@ def test_add_incorrect_variable_to_dataset_throws_exception():
 
 
 def test_remove_variable_remove_variable_and_keeps_others():
-    """Tests if remove dataset removes the desired variable, and
+    """Tests if remove variable from dataset removes the desired variable, and
     keeps the other variables."""
 
     # Arrange
@@ -71,6 +71,56 @@ def test_remove_variable_remove_variable_and_keeps_others():
     assert variable1 in dataset
     assert variable3 in dataset
     assert variable2 not in dataset
+    
+    
+    
+def test_remove_all_variables_except_variable():
+    """Tests if remove all variables except 1 variable removes all variables, and
+    keeps the desired variable."""
+
+    # Arrange
+    variable1 = "variable1"
+    variable2 = "variable2"
+    variable3 = "variable3"
+    variable4 = "variable4"
+    dataset = _xr.Dataset(
+        data_vars=dict(variable1=variable1, variable2=variable2, 
+                       variable3=variable3, variable4=variable4)
+    )
+    variable_to_keep = [variable2]
+
+    # Act
+    dataset = utilities.remove_all_variables_except(dataset, variable_to_keep)
+
+    # Assert
+    assert variable1 not in dataset
+    assert variable2 in dataset
+    assert variable3 not in dataset
+    assert variable4 not in dataset
+    
+def test_remove_all_variables_except_variable():
+    """Tests if remove all variables except multiple variable removes all variables, and
+    keeps the desired variables."""
+
+    # Arrange
+    variable1 = "variable1"
+    variable2 = "variable2"
+    variable3 = "variable3"
+    variable4 = "variable4"
+    dataset = _xr.Dataset(
+        data_vars=dict(variable1=variable1, variable2=variable2, 
+                       variable3=variable3, variable4=variable4)
+    )
+    variables_to_keep = [variable2, variable4]
+
+    # Act
+    dataset = utilities.remove_all_variables_except(dataset, variables_to_keep)
+
+    # Assert
+    assert variable1 not in dataset
+    assert variable2 in dataset
+    assert variable3 not in dataset
+    assert variable4 in dataset
 
 
 def test_remove_variable_throws_exception_if_dataset_does_not_contain_variable():
