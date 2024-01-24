@@ -43,7 +43,7 @@ class ModelDataBuilder:
             raise AttributeError(name="Version not available from input file")
         input_datasets = list(self._parse_input_datasets(contents))
         output_path = self._parse_output_dataset(contents)
-        output_variables = list(self._parse_output_variables(contents))
+        output_variables = self._parse_output_variables(contents)
         rules = list(self._parse_rules(contents))
 
         return YamlModelData(

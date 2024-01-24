@@ -46,7 +46,7 @@ class IModelData(ABC):
     @property
     @abstractmethod
     def output_variables(self) -> List[str]:
-        """Output variables"""
+        """Output variables when a selection of output variables is made"""
 
     @property
     @abstractmethod
