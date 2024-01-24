@@ -94,15 +94,10 @@ class ModelDataBuilder:
         self, contents: dict[str, Any]
     ) -> Iterable[IDatasetData]:
         output_data: dict[str, Any] = get_dict_element("output-data", contents)
-        print('q1',output_data)
 
-        if 'save_only_variables' in output_data:
-            print('q2','restriction present')
-        else:
-            print('q3','restriction NOT present')
+        if 'save_only_variables' not in output_data:
             output_data['save_only_variables'] = []
         
-        print('qq',output_data['save_only_variables'])
         return output_data['save_only_variables']
 
     def _parse_rules(self, contents: dict[str, Any]) -> Iterable[IRuleData]:
