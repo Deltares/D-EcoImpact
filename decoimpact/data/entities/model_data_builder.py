@@ -9,7 +9,6 @@ Module for ModelDataBuilder class
 """
 
 from pathlib import Path
-from sqlite3 import NotSupportedError
 from typing import Any, Iterable, List
 
 from decoimpact.crosscutting.i_logger import ILogger

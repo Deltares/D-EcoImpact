@@ -61,7 +61,8 @@ def remove_variables(dataset: _xr.Dataset, variables: list[str]) -> _xr.Dataset:
     return dataset
 
 
-def remove_all_variables_except(dataset: _xr.Dataset, variables_to_use: List[str]) -> _xr.Dataset:
+def remove_all_variables_except(dataset: _xr.Dataset, 
+                                variables_to_use: List[str]) -> _xr.Dataset:
     """Remove all variables from dataset except provided list of variables.
 
     Args:
@@ -241,9 +242,9 @@ def create_composed_dataset(
         _xr.Dataset: composed dataset (with selected variables)
     """
     merged_dataset = merge_list_of_datasets(input_datasets)
-    
+
     cleaned_dataset = remove_all_variables_except(merged_dataset, variables_to_use)
-    
+
     if mapping is None or len(mapping) == 0:
         return cleaned_dataset
 
