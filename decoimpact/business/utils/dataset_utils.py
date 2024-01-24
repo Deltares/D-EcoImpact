@@ -61,7 +61,7 @@ def remove_variables(dataset: _xr.Dataset, variables: list[str]) -> _xr.Dataset:
     return dataset
 
 
-def remove_all_variables_except(dataset: _xr.Dataset, 
+def remove_all_variables_except(dataset: _xr.Dataset,
                                 variables_to_use: List[str]) -> _xr.Dataset:
     """Remove all variables from dataset except provided list of variables.
 
