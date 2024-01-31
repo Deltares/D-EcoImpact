@@ -130,7 +130,7 @@ class RuleBasedModel(IModel):
         the dependent variables are recursively looked up. This is done to
         support XUgrid and to prevent invalid topologies.
         This also allows QuickPlot to visualize the results.
-        
+
         Args:
             -
 
@@ -139,7 +139,7 @@ class RuleBasedModel(IModel):
         """
 
         for dataset in self._input_datasets:
-            var_list = _du.get_dummy_and_dependent_var_list(dataset) 
+            var_list = _du.get_dummy_and_dependent_var_list(dataset)
 
         mapping_keys = list((self._mappings or {}).keys())
 
