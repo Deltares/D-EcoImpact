@@ -87,6 +87,9 @@ class TestRemoveVariables:
                 variable4=variable4,
             )
         )
+        dataset["variable2"].attrs = {
+            "cf_role": "mesh_topology"
+        }
         variable_to_keep = [variable2]
 
         # Act
@@ -99,8 +102,8 @@ class TestRemoveVariables:
         assert variable4 not in dataset
 
     def test_leave_multiple_variables(self):
-        """Tests if remove all variables except multiple variable removes all variables, and
-        keeps the desired variables."""
+        """Tests if remove all variables except multiple variable removes all 
+        variables, and keeps the desired variables."""
 
         # Arrange
         variable1 = "variable1"
@@ -115,6 +118,9 @@ class TestRemoveVariables:
                 variable4=variable4,
             )
         )
+        dataset["variable2"].attrs = {
+            "cf_role": "mesh_topology"
+        }
         variables_to_keep = [variable2, variable4]
 
         # Act
