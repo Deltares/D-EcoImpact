@@ -10,6 +10,7 @@ from typing import List, Optional
 
 import xarray as _xr
 
+import decoimpact.business.utils.list_utils as _lu
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -99,25 +100,17 @@ def remove_all_variables_except_TEST(dataset: _xr.Dataset,
         variables_to_keep (List[str]): selected variables to keep
 
     Returns:
-        _xr.Dataset: reduced dataset (containing selected variables)
+        _xr.Dataset: reduced dataset (containing only selected variables and 
+        variables needed for topology)
     """
-    var_list = []
-    dummy_vars = []
 
-    dummy_vars = get_dummy_variable_in_ugrid(dataset)
-    var_list = rec_search_dep_vars(dataset, dummy_vars, [], [])
+    sys_vars = get_dummy_and_dependent_var_list(dataset)
 
-    print('dummy',dummy_vars)
-    print('varlist',var_list)
-
-    all_vars = dummy_vars + var_list
-    print('all vars',all_vars)
+    print('all vars',sys_vars)
     print('\nA variable to keep:',variables_to_keep)
-    variables_to_keep += all_vars
+    variables_to_keep += sys_vars
     print('\nB variable to keep:',variables_to_keep)
-    
-    
-    
+
     all_variables = list_vars(dataset)
 
     variables_to_remove = [item for item in all_variables if item not in 
@@ -134,7 +127,6 @@ def remove_all_variables_except_TEST(dataset: _xr.Dataset,
     cleaned_dataset = remove_variables(dataset, variables_to_remove)
 
     return cleaned_dataset
-
 
 
 def list_vars(dataset: _xr.Dataset) -> list[str]:
@@ -256,6 +248,25 @@ def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
         )
 
     return dummy
+
+def get_dummy_and_dependent_var_list(dataset: _xr.Dataset) -> list:
+    """Obtain the list of variables in a dataset.
+    The dummy variable is obtained, from which a the variables are recursively looked up. The dummy and dependent variables are combined in one list.
+    This is done to support XUgrid and to prevent invalid topologies.
+    This also allows QuickPlot to visualize the results.
+
+    Args:
+        dataset (_xr.Dataset): Dataset to search for dummy variable
+
+    Returns:
+        list[str]: dummy and dependent variables
+    """
+
+    dummy_vars = get_dummy_variable_in_ugrid(dataset)
+    var_list = rec_search_dep_vars(dataset, dummy_vars, [], [])
+
+    var_list += dummy_vars
+    return _lu.remove_duplicates_from_list(var_list)
 
 
 def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> list[str]:
