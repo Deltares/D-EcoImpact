@@ -69,6 +69,7 @@ rules:
 
 output-data:
   filename: examples/data_out/results_test8c.nc
+  save_only_variables: test
 ```
 
 ## Functionality
