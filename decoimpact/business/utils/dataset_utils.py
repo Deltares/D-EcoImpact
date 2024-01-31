@@ -77,14 +77,6 @@ def remove_all_variables_except(dataset: _xr.Dataset,
 
     variables_to_remove = [item for item in all_variables if item not in 
                            list(variables_to_keep)]
-    
-    print('\n\nall variables',all_variables)
-    print('\nvariable to keep:',variables_to_keep)
-    print('\nvariable to remove:',variables_to_remove)
-    
-    #mapping_keys = list(dataset.keys())
-    #var_list = rec_search_dep_vars(dataset, variables_to_keep, [], [])
-    #print('mapping',var_list)
 
     cleaned_dataset = remove_variables(dataset, variables_to_remove)
 
@@ -104,21 +96,13 @@ def remove_all_variables_except_TEST(dataset: _xr.Dataset,
         variables needed for topology)
     """
 
-    sys_vars = get_dummy_and_dependent_var_list(dataset)
-
-    print('all vars',sys_vars)
-    print('\nA variable to keep:',variables_to_keep)
-    variables_to_keep += sys_vars
-    print('\nB variable to keep:',variables_to_keep)
+    dummy_dependent_var_list = get_dummy_and_dependent_var_list(dataset)
+    variables_to_keep += dummy_dependent_var_list
 
     all_variables = list_vars(dataset)
 
     variables_to_remove = [item for item in all_variables if item not in 
                            list(variables_to_keep)]
-    
-    print('\n\nC all variables',all_variables)
-    print('\nvariable to keep:',variables_to_keep)
-    print('\nvariable to remove:',variables_to_remove)
 
     cleaned_dataset = remove_variables(dataset, variables_to_remove)
 
