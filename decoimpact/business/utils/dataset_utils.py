@@ -73,32 +73,9 @@ def remove_all_variables_except(dataset: _xr.Dataset,
     Returns:
         _xr.Dataset: reduced dataset (containing selected variables)
     """
-    all_variables = list_vars(dataset)
-
-    variables_to_remove = [item for item in all_variables if item not in 
-                           list(variables_to_keep)]
-
-    cleaned_dataset = remove_variables(dataset, variables_to_remove)
-
-    return cleaned_dataset
-
-
-def remove_all_variables_except_TEST(dataset: _xr.Dataset,
-                                variables_to_keep: List[str]) -> _xr.Dataset:
-    """Remove all variables from dataset except provided list of variables.
-
-    Args:
-        dataset (_xr.Dataset): Dataset to remove variables from
-        variables_to_keep (List[str]): selected variables to keep
-
-    Returns:
-        _xr.Dataset: reduced dataset (containing only selected variables and 
-        variables needed for topology)
-    """
-
     dummy_dependent_var_list = get_dummy_and_dependent_var_list(dataset)
     variables_to_keep += dummy_dependent_var_list
-
+    
     all_variables = list_vars(dataset)
 
     variables_to_remove = [item for item in all_variables if item not in 
