@@ -42,7 +42,9 @@ class ModelDataBuilder:
             raise AttributeError(name="Version not available from input file")
         input_datasets = list(self._parse_input_datasets(contents))
         output_path = self._parse_output_dataset(contents)
-        output_variables = list(self._parse_output_variables(contents))
+        print('dud',self._parse_output_variables(contents))
+        output_variables = self._parse_output_variables(contents)
+        print('qq',output_variables)
         rules = list(self._parse_rules(contents))
 
         return YamlModelData(
@@ -93,11 +95,13 @@ class ModelDataBuilder:
         self, contents: dict[str, Any]
     ) -> Iterable[IDatasetData]:
         output_data: dict[str, Any] = get_dict_element("output-data", contents)
+        save_only_variables = output_data.get('save_only_variables', [])
 
-        if 'save_only_variables' not in output_data:
-            output_data['save_only_variables'] = []
+        # Convert to list if not already one
+        if not isinstance(save_only_variables, list):
+            save_only_variables = [save_only_variables]
 
-        return output_data['save_only_variables']
+        return save_only_variables
 
     def _parse_rules(self, contents: dict[str, Any]) -> Iterable[IRuleData]:
         rules: List[dict[str, Any]] = get_dict_element("rules", contents)
