@@ -140,6 +140,7 @@ class RuleBasedModel(IModel):
             var_list = _du.rec_search_dep_vars(dataset, dummy_vars, [], [])
 
         mapping_keys = list((self._mappings or {}).keys())
+        print('mapping',var_list)
         all_vars = dummy_vars + var_list + mapping_keys + self._get_direct_rule_inputs()
         return _lu.remove_duplicates_from_list(all_vars)
 

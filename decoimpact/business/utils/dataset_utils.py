@@ -62,23 +62,79 @@ def remove_variables(dataset: _xr.Dataset, variables: list[str]) -> _xr.Dataset:
 
 
 def remove_all_variables_except(dataset: _xr.Dataset,
-                                variables_to_use: List[str]) -> _xr.Dataset:
+                                variables_to_keep: List[str]) -> _xr.Dataset:
     """Remove all variables from dataset except provided list of variables.
 
     Args:
         dataset (_xr.Dataset): Dataset to remove variables from
-        variables_to_use (List[str]): selected variables to keep
+        variables_to_keep (List[str]): selected variables to keep
 
     Returns:
-        _xr.Dataset: reducded dataset (containing selected variables)
+        _xr.Dataset: reduced dataset (containing selected variables)
     """
     all_variables = list_vars(dataset)
 
-    variables_to_remove = [x for x in all_variables if x not in variables_to_use]
+    variables_to_remove = [item for item in all_variables if item not in 
+                           list(variables_to_keep)]
+    
+    print('\n\nall variables',all_variables)
+    print('\nvariable to keep:',variables_to_keep)
+    print('\nvariable to remove:',variables_to_remove)
+    
+    #mapping_keys = list(dataset.keys())
+    #var_list = rec_search_dep_vars(dataset, variables_to_keep, [], [])
+    #print('mapping',var_list)
 
     cleaned_dataset = remove_variables(dataset, variables_to_remove)
 
     return cleaned_dataset
+
+
+def remove_all_variables_except_TEST(dataset: _xr.Dataset,
+                                variables_to_keep: List[str]) -> _xr.Dataset:
+    """Remove all variables from dataset except provided list of variables.
+
+    Args:
+        dataset (_xr.Dataset): Dataset to remove variables from
+        variables_to_keep (List[str]): selected variables to keep
+
+    Returns:
+        _xr.Dataset: reduced dataset (containing selected variables)
+    """
+    var_list = []
+    dummy_vars = []
+
+    dummy_vars = get_dummy_variable_in_ugrid(dataset)
+    var_list = rec_search_dep_vars(dataset, dummy_vars, [], [])
+
+    print('dummy',dummy_vars)
+    print('varlist',var_list)
+
+    all_vars = dummy_vars + var_list
+    print('all vars',all_vars)
+    print('\nA variable to keep:',variables_to_keep)
+    variables_to_keep += all_vars
+    print('\nB variable to keep:',variables_to_keep)
+    
+    
+    
+    all_variables = list_vars(dataset)
+
+    variables_to_remove = [item for item in all_variables if item not in 
+                           list(variables_to_keep)]
+    
+    print('\n\nC all variables',all_variables)
+    print('\nvariable to keep:',variables_to_keep)
+    print('\nvariable to remove:',variables_to_remove)
+    
+    
+
+
+
+    cleaned_dataset = remove_variables(dataset, variables_to_remove)
+
+    return cleaned_dataset
+
 
 
 def list_vars(dataset: _xr.Dataset) -> list[str]:
