@@ -39,14 +39,6 @@ rules:
       time_scale: year
       output_variable: AVG_chloride_gp 
 
-  - multiply_rule:
-      name: make new variable to save
-      description: Converts AVG_chloride_gp to output value
-      multipliers: [1]
-      input_variable: AVG_chloride_gp
-      output_variable: output_variable
-      
-
 output-data:
   filename: ./tests_acceptance/output_nc_files/test1d_multiply_rule_time_period_selection_with_only_one_variable_saved.nc
-  save_only_variables: [AVG_chloride_gp]
+  save_only_variables: AVG_chloride_gp
