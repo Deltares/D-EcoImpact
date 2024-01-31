@@ -344,14 +344,14 @@ def reduce_dataset_for_writing(dataset: _xr.Dataset, save_only_variables: List[s
 
     Args:
         dataset (DataSet): dataset
-        save_only_variables (List[str]): optional list of variables to be saved. If 
+        save_only_variables (List[str]): optional list of variables to be saved. If
         empty, all variables are saved
 
     Raises:
         OSError: If save_only_variables do not exist in dataset
 
     Returns:
-        str: time dimension name
+        dataset
     """
     for var in save_only_variables:
         if var not in dataset:

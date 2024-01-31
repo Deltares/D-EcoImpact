@@ -8,10 +8,13 @@
 Tests for utility functions regarding an xarray dataset
 """
 
+from unittest.mock import Mock
+
 import pytest
 import xarray as _xr
 
 import decoimpact.business.utils.dataset_utils as utilities
+from decoimpact.crosscutting.i_logger import ILogger
 
 
 class TestAddVariables:
@@ -100,6 +103,37 @@ class TestRemoveVariables:
         assert variable2 in dataset
         assert variable3 not in dataset
         assert variable4 not in dataset
+        
+    def test_reduce_for_writing_throws_exception_for_non_existing_variable(self):
+        """Tests if reduce dataset for writing throws error when save_only_variable is
+        not present in dataset."""
+
+        # Arrange
+        variable1 = "variable1"
+        variable2 = "variable2"
+        variable3 = "variable3"
+        variable4 = "variable4"
+        dataset = _xr.Dataset(
+            data_vars=dict(
+                variable1=variable1,
+                variable2=variable2,
+                variable3=variable3,
+                variable4=variable4,
+            )
+        )
+        dataset["variable2"].attrs = {
+            "cf_role": "mesh_topology"
+        }
+        logger = Mock(ILogger)
+        variable_to_keep = ['non_existing_variable']
+
+        # Assert
+        with pytest.raises(OSError) as error:
+            utilities.reduce_dataset_for_writing(dataset, variable_to_keep, logger)
+
+
+        # Assert
+        assert error.value.args[0] == f"ERROR: variable non_existing_variable is not present in dataset"
 
     def test_leave_multiple_variables(self):
         """Tests if remove all variables except multiple variable removes all 
