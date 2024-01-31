@@ -287,6 +287,26 @@ class TestGetDummyVariableInUgrid:
             == """No dummy variable defined and therefore input dataset does
             not comply with UGrid convention."""
         )
+        
+        
+    def test_get_dummy_and_dependent_var_list(self):
+        """Test if you receive the name of the dummy and dependent variables variable
+        in a ugrid dataset"""
+        # Arrange
+        var_list = ["var1", "var2", "var3", "var4", "var5"]
+        ds = _xr.Dataset(data_vars=dict.fromkeys(var_list))
+        ds["var1"].attrs = {
+            "cf_role": "mesh_topology",
+            "test_coordinates": "var2 var3",
+            "test_dimension": "var4",
+            "testbounds": "var5",
+        }
+
+        # Act
+        var_list = utilities.get_dummy_and_dependent_var_list(ds)
+
+        # Assert
+        assert sorted(var_list) == sorted(['var2', 'var5', 'var3', 'var1'])
 
 
 class TestGetDependentVarsByVarName:

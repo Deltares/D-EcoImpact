@@ -119,10 +119,6 @@ def remove_all_variables_except_TEST(dataset: _xr.Dataset,
     print('\n\nC all variables',all_variables)
     print('\nvariable to keep:',variables_to_keep)
     print('\nvariable to remove:',variables_to_remove)
-    
-    
-
-
 
     cleaned_dataset = remove_variables(dataset, variables_to_remove)
 
