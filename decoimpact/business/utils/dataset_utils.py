@@ -336,3 +336,28 @@ def get_time_dimension_name(variable: _xr.DataArray, logger: ILogger) -> str:
     message = f"No time dimension found for {variable.name}"
     logger.log_error(message)
     raise ValueError(message)
+
+
+def reduce_dataset_for_writing(dataset: _xr.Dataset, save_only_variables: List[str],
+                               logger: ILogger):
+    """Reduce dataset before writing by only saving selected variables
+
+    Args:
+        dataset (DataSet): dataset
+        save_only_variables (List[str]): optional list of variables to be saved. If 
+        empty, all variables are saved
+
+    Raises:
+        OSError: If save_only_variables do not exist in dataset
+
+    Returns:
+        str: time dimension name
+    """
+    for var in save_only_variables:
+        if var not in dataset:
+            msg = f"ERROR: variable {var} is not present in dataset"
+            logger.log_error(msg)
+            raise OSError(msg)
+
+    dataset = remove_all_variables_except(dataset, save_only_variables)
+    return dataset
