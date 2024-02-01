@@ -124,23 +124,26 @@ class RuleBasedModel(IModel):
         logger.log_debug("Finalize the rule processor.")
         self._rule_processor = None
 
-    def _make_output_variables_list(self):
+    def _make_output_variables_list(self) -> list:
         """Make the list of variables to be contained in the output dataset.
         A list of variables needed is obtained from the dummy variable and
         the dependent variables are recursively looked up. This is done to
         support XUgrid and to prevent invalid topologies.
         This also allows QuickPlot to visualize the results.
+
+        Args:
+            -
+
+        Returns:
+            list[str]: dummy, dependendent,  mapping and rule input variables
         """
 
-        var_list = []
-        dummy_vars = []
-
         for dataset in self._input_datasets:
-            dummy_vars = _du.get_dummy_variable_in_ugrid(dataset)
-            var_list = _du.rec_search_dep_vars(dataset, dummy_vars, [], [])
+            var_list = _du.get_dummy_and_dependent_var_list(dataset)
 
         mapping_keys = list((self._mappings or {}).keys())
-        all_vars = dummy_vars + var_list + mapping_keys + self._get_direct_rule_inputs()
+
+        all_vars = var_list + mapping_keys + self._get_direct_rule_inputs()
         return _lu.remove_duplicates_from_list(all_vars)
 
     def _validate_mappings(self, mappings: dict[str, str], logger: ILogger) -> bool:

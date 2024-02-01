@@ -32,7 +32,7 @@ def test_yaml_model_data_default_settings_and_type():
     version='0.0.0'
 
     # Act
-    model_data = YamlModelData("Model 1", version, datasets, output_dataset, rules)
+    model_data = YamlModelData("Model 1", version, datasets, output_dataset, [], rules)
 
     # Assert
 

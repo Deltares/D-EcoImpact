@@ -19,7 +19,7 @@ output-data:
 
 In the input data the variables that are present in the input data provided through “filename” are selected for use. It is possible to filter the input data by providing a start date or end date (format: "dd-mm-yyyy"); this is optional. The variables that are used can be selected under “variable_mapping”. Here you are also able to rename variables as the name used for storage is often cryptic. 
 
-At output data the location where the output file needs to be written can be provided through “filename”. In this output file only variables that have been used from the input data and variables that have been created in the model are stored.
+At output data the location where the output file needs to be written can be provided through “filename”. In this output file only variables that have been used from the input data and variables that have been created in the model are stored. It is possible to reduce the file size with the optional parameter "save_only_variables", which can take the name of one or several variables. 
 The model needs at least one rule under “rules” to execute.  
 
 ```
@@ -39,6 +39,7 @@ rules:
         ………
 output-data:
   filename: <path_to_file_including_file_name_and_type>
+  save_only_variables: <variable, or list_of_variables>
 ```
 
 ```
@@ -68,6 +69,7 @@ rules:
 
 output-data:
   filename: examples/data_out/results_test8c.nc
+  save_only_variables: test
 ```
 
 ## Functionality

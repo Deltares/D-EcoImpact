@@ -96,6 +96,7 @@ class Application:
                 self._da_layer.write_output_file(
                     model.output_dataset,
                     model_data.output_path,
+                    model_data.output_variables,
                     self.APPLICATION_VERSION,
                     self.APPLICATION_NAME,
                 )

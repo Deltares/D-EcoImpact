@@ -10,6 +10,7 @@ from typing import List, Optional
 
 import xarray as _xr
 
+import decoimpact.business.utils.list_utils as _lu
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -59,6 +60,30 @@ def remove_variables(dataset: _xr.Dataset, variables: list[str]) -> _xr.Dataset:
     except ValueError as exc:
         raise ValueError(f"ERROR: Cannot remove {variables} from dataset.") from exc
     return dataset
+
+
+def remove_all_variables_except(dataset: _xr.Dataset,
+                                variables_to_keep: List[str]) -> _xr.Dataset:
+    """Remove all variables from dataset except provided list of variables.
+
+    Args:
+        dataset (_xr.Dataset): Dataset to remove variables from
+        variables_to_keep (List[str]): selected variables to keep
+
+    Returns:
+        _xr.Dataset: reduced dataset (containing selected variables)
+    """
+    dummy_dependent_var_list = get_dummy_and_dependent_var_list(dataset)
+    variables_to_keep += dummy_dependent_var_list
+
+    all_variables = list_vars(dataset)
+
+    variables_to_remove = [item for item in all_variables if item not in
+                           list(variables_to_keep)]
+
+    cleaned_dataset = remove_variables(dataset, variables_to_remove)
+
+    return cleaned_dataset
 
 
 def list_vars(dataset: _xr.Dataset) -> list[str]:
@@ -182,6 +207,28 @@ def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
     return dummy
 
 
+def get_dummy_and_dependent_var_list(dataset: _xr.Dataset) -> list:
+    """Obtain the list of variables in a dataset.
+    The dummy variable is obtained, from which a the variables are
+    recursively looked up. The dummy and dependent variables are combined
+    in one list.
+    This is done to support XUgrid and to prevent invalid topologies.
+    This also allows QuickPlot to visualize the results.
+
+    Args:
+        dataset (_xr.Dataset): Dataset to search for dummy variable
+
+    Returns:
+        list[str]: dummy and dependent variables
+    """
+
+    dummy_vars = get_dummy_variable_in_ugrid(dataset)
+    var_list = rec_search_dep_vars(dataset, dummy_vars, [], [])
+
+    var_list += dummy_vars
+    return _lu.remove_duplicates_from_list(var_list)
+
+
 def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> list[str]:
     """Get all the variables that are described in the attributes of the dummy variable,
     associated with the UGrid standard.
@@ -222,11 +269,9 @@ def create_composed_dataset(
         _xr.Dataset: composed dataset (with selected variables)
     """
     merged_dataset = merge_list_of_datasets(input_datasets)
-    all_variables = list_vars(merged_dataset)
 
-    variables_to_remove = [x for x in all_variables if x not in variables_to_use]
+    cleaned_dataset = remove_all_variables_except(merged_dataset, variables_to_use)
 
-    cleaned_dataset = remove_variables(merged_dataset, variables_to_remove)
     if mapping is None or len(mapping) == 0:
         return cleaned_dataset
 
@@ -291,3 +336,28 @@ def get_time_dimension_name(variable: _xr.DataArray, logger: ILogger) -> str:
     message = f"No time dimension found for {variable.name}"
     logger.log_error(message)
     raise ValueError(message)
+
+
+def reduce_dataset_for_writing(dataset: _xr.Dataset, save_only_variables: List[str],
+                               logger: ILogger):
+    """Reduce dataset before writing by only saving selected variables
+
+    Args:
+        dataset (DataSet): dataset
+        save_only_variables (List[str]): optional list of variables to be saved. If
+        empty, all variables are saved
+
+    Raises:
+        OSError: If save_only_variables do not exist in dataset
+
+    Returns:
+        dataset
+    """
+    for var in save_only_variables:
+        if var not in dataset:
+            msg = f"ERROR: variable {var} is not present in dataset"
+            logger.log_error(msg)
+            raise OSError(msg)
+
+    dataset = remove_all_variables_except(dataset, save_only_variables)
+    return dataset

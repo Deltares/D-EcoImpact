@@ -29,6 +29,7 @@ class YamlModelData(IModelData):
         version: str,
         datasets: List[IDatasetData],
         output_path: Path,
+        output_variables: List[str],
         rules: List[IRuleData],
     ):
         super()
@@ -36,6 +37,7 @@ class YamlModelData(IModelData):
         self._version = version
         self._datasets = datasets
         self._output_path = output_path
+        self._output_variables = output_variables
         self._rules = rules
 
     @property
@@ -57,6 +59,11 @@ class YamlModelData(IModelData):
     def output_path(self) -> Path:
         """Model path to the output file"""
         return self._output_path
+
+    @property
+    def output_variables(self) -> List[str]:
+        """Output variables"""
+        return self._output_variables
 
     @property
     def rules(self) -> List[IRuleData]:
