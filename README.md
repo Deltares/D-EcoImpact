@@ -153,7 +153,7 @@ To build the docker image, run the following command in the root of the project:
 
 ```sh
 
-$ build-image.sh
+$ ./build-image.sh
 
 ```
 
