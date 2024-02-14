@@ -146,3 +146,23 @@ To add an acceptance test:
 
 
 
+## Docker image
+
+### Build
+To build the docker image, run the following command in the root of the project:
+
+```sh
+
+$ build-image.sh
+
+```
+
+### Pull
+
+To pull the docker image from the docker hub, run the following command:
+
+```sh 
+
+$ docker pull ghcr.io/deltares/d-ecoimpact:latest
+
+```
