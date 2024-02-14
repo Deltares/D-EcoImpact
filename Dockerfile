@@ -1,5 +1,7 @@
 FROM python:3.11-slim
 
+LABEL org.opencontainers.image.source="https://github.com/Deltares/D-EcoImpact"
+
 WORKDIR /decoimpact
 
 # Copy files in local working directory to docker working directory
