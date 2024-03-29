@@ -26,14 +26,15 @@ You can use cd ../ and cd <folder_name> to move to the location or use windows e
 
 4.	To install the required libraries Poetry is used. 
 Use poetry 1.3 or higher: ([installation instructions](https://python-poetry.org/docs/#installation))
-If you prefer to install poetry with conda then we recommed to install poetry only to the base environment:
+If you prefer to install poetry with conda then we recommed to install poetry only to the base environment.
+
 Activate base environment:
 ```sh
 $ conda activate base
 ```
-Install poetry using conda:
+Install poetry using pip:
 ```sh
-$ conda activate base
+$ pip install poetry
 ```
 Activate your created environment:
 ```sh
