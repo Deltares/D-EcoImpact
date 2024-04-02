@@ -48,7 +48,7 @@ Execute the following command:
   ```
 NB. If errors occur while installing the libraries, this might have to do with your administrative rights. Either start the cmd or conda promt “As administrator” or discuss this with your IT support.
 
-6.	Now D-Eco Impact is setup for use. You can test this by executing one of the input yaml files.
+6.	Now D-Eco Impact is ready to use. You can test this by executing one of the input yaml files.
 To execute use the following in the command prompt while your environment is active:
   ```
   python main.py <your_input_file>.yaml
