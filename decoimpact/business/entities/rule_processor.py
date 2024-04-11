@@ -294,18 +294,44 @@ class RuleProcessor:
 
         value_arrays = list(input_variables.values())
         np_array = value_arrays[0].to_numpy()
+
+        # 1. Check the amount of dimensions of all variables
+        len_dims = _np.array([len(vals.dims) for vals in value_arrays])
+
+        # 2. Use the variable with the most dimensions. If there are more than one, check whether they have the same dimensions.
+        most_dims_bool = len_dims == max(len_dims)
+
+        var1 = value_arrays[_np.argmax(len_dims)]
+        for ind_vars, enough_dims in enumerate(most_dims_bool):
+            if not enough_dims:
+                var2 = value_arrays[ind_vars]
+                var2 = _xr.broadcast(var2, var1)[0]
+                value_arrays[ind_vars] = var2.transpose(*var1.dims)
+
+        # 5. Check if all variables now have the same dimensions
+        for val_index in range(len(value_arrays) - 1):
+            var1 = value_arrays[val_index]
+            var2 = value_arrays[val_index + 1]
+            diff = set(var1.dims) ^ set(var2.dims)
+
+            # If the variables with the most dimensions have different dimensions, stop the calculation
+            if len(diff) != 0:
+                raise NotImplementedError(
+                    f"Can not execute rule {rule.name} with variables with different dimensions. Variable {var1.name} with dimensions:{var1.dims} is different than {var2.name} with dimensions:{var2.dims}"
+                )
+
         result_variable = _np.zeros_like(np_array)
         cell_values = {}
 
         for indices, _ in _np.ndenumerate(np_array):
-            for name, value_array in input_variables.items():
-                cell_values[name] = value_array.data[indices]
+            for value in value_arrays:
+                cell_values[value.name] = value.data[indices]
 
             result_variable[indices] = rule.execute(cell_values, logger)
 
         # use copy to get the same dimensions as the
         # original input variable
-        return value_arrays[0].copy(data=result_variable)
+        return var1.copy(data=result_variable)
 
     def _get_rule_input_variables(
         self, rule: IRule, output_dataset: _xr.Dataset
