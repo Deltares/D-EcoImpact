@@ -298,7 +298,8 @@ class RuleProcessor:
         # 1. Check the amount of dimensions of all variables
         len_dims = _np.array([len(vals.dims) for vals in value_arrays])
 
-        # 2. Use the variable with the most dimensions. If there are more than one, check whether they have the same dimensions.
+        # 2. Use the variable with the most dimensions. If there are more than
+        # one, check whether they have the same dimensions.
         most_dims_bool = len_dims == max(len_dims)
 
         var1 = value_arrays[_np.argmax(len_dims)]
@@ -314,10 +315,13 @@ class RuleProcessor:
             var2 = value_arrays[val_index + 1]
             diff = set(var1.dims) ^ set(var2.dims)
 
-            # If the variables with the most dimensions have different dimensions, stop the calculation
+            # If the variables with the most dimensions have different dimensions,
+            # stop the calculation
             if len(diff) != 0:
                 raise NotImplementedError(
-                    f"Can not execute rule {rule.name} with variables with different dimensions. Variable {var1.name} with dimensions:{var1.dims} is different than {var2.name} with dimensions:{var2.dims}"
+                    f"Can not execute rule {rule.name} with variables with different \
+                     dimensions. Variable {var1.name} with dimensions:{var1.dims} is \
+                     different than {var2.name} with dimensions:{var2.dims}"
                 )
 
         result_variable = _np.zeros_like(np_array)
