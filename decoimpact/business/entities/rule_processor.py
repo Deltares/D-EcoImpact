@@ -295,11 +295,11 @@ class RuleProcessor:
 
         value_arrays = list(input_variables.values())
 
-        # 1. Check the amount of dimensions of all variables
+        # Check the amount of dimensions of all variables
         len_dims = _np.array([len(vals.dims) for vals in value_arrays])
 
-        # 2. Use the variable with the most dimensions. If there are more than
-        # one, check whether they have the same dimensions.
+        # Use the variable with the most dimensions. Broadcast all other
+        # variables to these dimensions
         most_dims_bool = len_dims == max(len_dims)
 
         ref_var = value_arrays[_np.argmax(len_dims)]
@@ -307,9 +307,15 @@ class RuleProcessor:
             if not enough_dims:
                 var2 = value_arrays[ind_vars]
                 var2 = _xr.broadcast(var2, ref_var)[0]
+                # Let the user know which variables will be broadcast to all dimensions
+                logger.log_warning(
+                    f"Variable {var2.name} will be broadcast to the following \
+                        dimensions: {set(ref_var.dims) ^ set(var2.dims)}"
+                )
+                # Make sure the dimensions are in the same order
                 value_arrays[ind_vars] = var2.transpose(*ref_var.dims)
 
-        # 5. Check if all variables now have the same dimensions
+        # Check if all variables now have the same dimensions
         for val_index in range(len(value_arrays) - 1):
             var1 = value_arrays[val_index]
             var2 = value_arrays[val_index + 1]
