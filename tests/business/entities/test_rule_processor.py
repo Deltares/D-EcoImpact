@@ -334,6 +334,117 @@ def test_process_rules_calls_multi_cell_based_rule_execute_correctly():
     assert rule.execute.call_count == 6
 
 
+@pytest.mark.parametrize(
+    "input_array1, input_array2, dims, coords",
+    [
+        (
+            _xr.DataArray(
+                _np.array([1, 2], _np.int32),
+                dims=["x"],
+                coords={"x": [0, 1]},
+            ),
+            _xr.DataArray(
+                _np.array([[1, 2], [3, 4]], _np.int32),
+                dims=["x", "y"],
+                coords={"x": [0, 1], "y": [0, 1]},
+            ),
+            {"x": 2, "y": 2},
+            {"x": 2, "y": 2},
+        ),
+        (
+            _xr.DataArray(
+                _np.array([1, 2], _np.int32),
+                dims=["x"],
+                coords={"x": [0, 1]},
+            ),
+            _xr.DataArray(
+                _np.array([[[1, 2], [3, 4]], [[1, 2], [3, 4]]], _np.int32),
+                dims=["x", "y", "z"],
+                coords={"x": [0, 1], "y": [0, 1], "z": [0, 1]},
+            ),
+            {"x": 2, "y": 2, "z": 2},
+            {"x": 2, "y": 2, "z": 2},
+        ),
+    ],
+)
+def test_process_rules_calls_multi_cell_based_rule_special_cases(
+    input_array1, input_array2, dims, coords
+):
+    """Some exceptional cases need to be tested for the multi_cell rule:
+    1. variables with different dimensions (1D vs 2D)
+    2. variables with different dimensions (1D vs 3D)"""
+
+    # Arrange
+    dataset = _xr.Dataset()
+
+    dataset["test1"] = input_array1
+    dataset["test2"] = input_array2
+
+    logger = Mock(ILogger)
+    rule = Mock(IMultiCellBasedRule)
+
+    rule.input_variable_names = ["test1", "test2"]
+    rule.output_variable_name = "output"
+
+    rule.execute.return_value = 1
+
+    processor = RuleProcessor([rule], dataset)
+
+    # Act
+    assert processor.initialize(logger)
+    output_dataset = processor.process_rules(dataset, logger)
+
+    # Assert
+    for dim in output_dataset.dims:
+        assert output_dataset.dims[dim] == dims[dim]
+
+    for coord in output_dataset.coords:
+        assert output_dataset.coords[coord] == coords[coord]
+
+
+def test_process_rules_calls_multi_cell_based_fails_with_different_dims():
+    """MultiCellBasedRule allows for values with less dimensions, but not
+    with different dimensions."""
+
+    # Arrange
+    dataset = _xr.Dataset()
+    input_array1 = _xr.DataArray(
+        _np.array([1, 2], _np.int32),
+        dims=["x"],
+        coords={"x": [0, 1]},
+    )
+    input_array2 = _xr.DataArray(
+        _np.array([1, 2], _np.int32),
+        dims=["y"],
+        coords={"y": [0, 1]},
+    )
+
+    dataset["test1"] = input_array1
+    dataset["test2"] = input_array2
+
+    logger = Mock(ILogger)
+    rule = Mock(IMultiCellBasedRule)
+    rule.name = "test_rule"
+    rule.input_variable_names = ["test1", "test2"]
+    rule.output_variable_name = "output"
+
+    rule.execute.return_value = 1
+    processor = RuleProcessor([rule], dataset)
+
+    processor.initialize(logger)
+
+    # Act
+    with pytest.raises(NotImplementedError) as exc_info:
+        processor.process_rules(dataset, logger)
+    exception_raised = exc_info.value
+
+    # Assert
+    expected = f"Can not execute rule {rule.name} with variables with different \
+                    dimensions. Variable test1 with dimensions:('x',) is \
+                    different than test2 with dimensions:('y',)"
+    assert exception_raised.args[0] == expected
+
+
 def test_process_rules_calls_array_based_rule_execute_correctly():
     """Tests if during processing the rule its execute method of
     an IArrayBasedRule is called with the right parameter."""

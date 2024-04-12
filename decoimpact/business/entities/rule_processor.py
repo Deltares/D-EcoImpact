@@ -85,6 +85,7 @@ class RuleProcessor:
         Raises:
             RuntimeError: if initialization is not correctly done
         """
+
         if len(self._processing_list) < 1:
             message = "Processor is not properly initialized, please initialize."
             raise RuntimeError(message)
@@ -293,7 +294,6 @@ class RuleProcessor:
             )
 
         value_arrays = list(input_variables.values())
-        np_array = value_arrays[0].to_numpy()
 
         # 1. Check the amount of dimensions of all variables
         len_dims = _np.array([len(vals.dims) for vals in value_arrays])
@@ -302,12 +302,12 @@ class RuleProcessor:
         # one, check whether they have the same dimensions.
         most_dims_bool = len_dims == max(len_dims)
 
-        var1 = value_arrays[_np.argmax(len_dims)]
+        ref_var = value_arrays[_np.argmax(len_dims)]
         for ind_vars, enough_dims in enumerate(most_dims_bool):
             if not enough_dims:
                 var2 = value_arrays[ind_vars]
-                var2 = _xr.broadcast(var2, var1)[0]
-                value_arrays[ind_vars] = var2.transpose(*var1.dims)
+                var2 = _xr.broadcast(var2, ref_var)[0]
+                value_arrays[ind_vars] = var2.transpose(*ref_var.dims)
 
         # 5. Check if all variables now have the same dimensions
         for val_index in range(len(value_arrays) - 1):
@@ -320,14 +320,14 @@ class RuleProcessor:
             if len(diff) != 0:
                 raise NotImplementedError(
                     f"Can not execute rule {rule.name} with variables with different \
-                     dimensions. Variable {var1.name} with dimensions:{var1.dims} is \
-                     different than {var2.name} with dimensions:{var2.dims}"
+                    dimensions. Variable {var1.name} with dimensions:{var1.dims} is \
+                    different than {var2.name} with dimensions:{var2.dims}"
                 )
 
-        result_variable = _np.zeros_like(np_array)
+        result_variable = _np.zeros_like(ref_var.to_numpy())
         cell_values = {}
 
-        for indices, _ in _np.ndenumerate(np_array):
+        for indices, _ in _np.ndenumerate(ref_var.to_numpy()):
             for value in value_arrays:
                 cell_values[value.name] = value.data[indices]
 
@@ -335,7 +335,7 @@ class RuleProcessor:
 
         # use copy to get the same dimensions as the
         # original input variable
-        return var1.copy(data=result_variable)
+        return ref_var.copy(data=result_variable)
 
     def _get_rule_input_variables(
         self, rule: IRule, output_dataset: _xr.Dataset
