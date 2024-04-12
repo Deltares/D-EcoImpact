@@ -335,7 +335,7 @@ def test_process_rules_calls_multi_cell_based_rule_execute_correctly():
 
 
 @pytest.mark.parametrize(
-    "input_array1, input_array2, dims, coords",
+    "input_array1, input_array2, dims",
     [
         (
             _xr.DataArray(
@@ -348,7 +348,6 @@ def test_process_rules_calls_multi_cell_based_rule_execute_correctly():
                 dims=["x", "y"],
                 coords={"x": [0, 1], "y": [0, 1]},
             ),
-            {"x": 2, "y": 2},
             {"x": 2, "y": 2},
         ),
         (
@@ -363,12 +362,11 @@ def test_process_rules_calls_multi_cell_based_rule_execute_correctly():
                 coords={"x": [0, 1], "y": [0, 1], "z": [0, 1]},
             ),
             {"x": 2, "y": 2, "z": 2},
-            {"x": 2, "y": 2, "z": 2},
         ),
     ],
 )
 def test_process_rules_calls_multi_cell_based_rule_special_cases(
-    input_array1, input_array2, dims, coords
+    input_array1, input_array2, dims
 ):
     """Some exceptional cases need to be tested for the multi_cell rule:
     1. variables with different dimensions (1D vs 2D)
@@ -395,11 +393,8 @@ def test_process_rules_calls_multi_cell_based_rule_special_cases(
     output_dataset = processor.process_rules(dataset, logger)
 
     # Assert
-    for dim in output_dataset.dims:
-        assert output_dataset.dims[dim] == dims[dim]
-
-    for coord in output_dataset.coords:
-        assert output_dataset.coords[coord] == coords[coord]
+    print(output_dataset.output, output_dataset.dims, output_dataset.dims == dims)
+    assert output_dataset.dims == dims
 
 
 def test_process_rules_calls_multi_cell_based_fails_with_different_dims():
