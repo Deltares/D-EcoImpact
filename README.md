@@ -175,3 +175,11 @@ docker login command with your GitHub username and a Personal Access Token (PAT)
 ```bash
 echo "YOUR_PERSONAL_ACCESS_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
 ```
+
+
+
+## How to Cite
+If you found D-Eco Impact useful for your study, please cite it as:
+
+Weeber, M., Elzinga, H., Schoonveld, W., Van de Vries, C., Klapwijk, M., Mischa, I., Rodriguez Aguilera, D., Farrag, M., Ye, Q., Markus, A., Van Oorschot, M., Saager, P., & Icke, J. (2024). D-Eco Impact (v0.3.0). Zenodo. https://doi.org/10.5281/zenodo.10941913
+
