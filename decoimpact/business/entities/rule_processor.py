@@ -305,18 +305,20 @@ class RuleProcessor:
         ref_var = value_arrays[_np.argmax(len_dims)]
         for ind_vars, enough_dims in enumerate(most_dims_bool):
             if not enough_dims:
-                var2 = value_arrays[ind_vars]
-                var2 = _xr.broadcast(var2, ref_var)[0]
                 # Let the user know which variables will be broadcast to all dimensions
-                dims_orig = value_arrays[ind_vars].dims
-                dims_result = var2.dims
-                dims_diff = tuple(x for x in dims_result if x not in dims_orig)
-                str_dims_broadcasted = str(dims_diff)
+                var_orig = value_arrays[ind_vars]
+                dims_orig = var_orig.dims
+                dims_result = ref_var.dims
+                dims_diff = list(str(x) for x in dims_result if x not in dims_orig)
+                str_dims_broadcasted = ",".join(dims_diff)
                 logger.log_info(
-                    f"Variable {var2.name} will be expanded to the following dimensions: {str_dims_broadcasted} "
+                    f"Variable {var_orig.name} will be expanded to the following dimensions: {str_dims_broadcasted} "
                 )
+                # perform the broadcast
+
+                var_broadcasted = _xr.broadcast(var_orig, ref_var)[0]
                 # Make sure the dimensions are in the same order
-                value_arrays[ind_vars] = var2.transpose(*ref_var.dims)
+                value_arrays[ind_vars] = var_broadcasted.transpose(*ref_var.dims)
 
         # Check if all variables now have the same dimensions
         for val_index in range(len(value_arrays) - 1):
