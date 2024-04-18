@@ -308,8 +308,11 @@ class RuleProcessor:
                 var2 = value_arrays[ind_vars]
                 var2 = _xr.broadcast(var2, ref_var)[0]
                 # Let the user know which variables will be broadcast to all dimensions
-                str_dims_broadcasted = str(set(var2.dims))
-                logger.log_warning(
+                dims_orig = value_arrays[ind_vars].dims
+                dims_result = var2.dims
+                dims_diff = tuple(x for x in dims_result if x not in dims_orig)
+                str_dims_broadcasted = str(dims_diff)
+                logger.log_info(
                     f"Variable {var2.name} will be expanded to the following dimensions: {str_dims_broadcasted} "
                 )
                 # Make sure the dimensions are in the same order
