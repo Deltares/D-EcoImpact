@@ -310,7 +310,7 @@ class RuleProcessor:
                 # Let the user know which variables will be broadcast to all dimensions
                 str_dims_broadcasted = str(set(var2.dims))
                 logger.log_warning(
-                    f"Variable {var2.name} will be broadcast to the following dimensions: {str_dims_broadcasted} "
+                    f"Variable {var2.name} will be expanded to the following dimensions: {str_dims_broadcasted} "
                 )
                 # Make sure the dimensions are in the same order
                 value_arrays[ind_vars] = var2.transpose(*ref_var.dims)
