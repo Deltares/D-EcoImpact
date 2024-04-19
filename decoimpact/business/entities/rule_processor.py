@@ -312,7 +312,8 @@ class RuleProcessor:
                 dims_diff = list(str(x) for x in dims_result if x not in dims_orig)
                 str_dims_broadcasted = ",".join(dims_diff)
                 logger.log_info(
-                    f"Variable {var_orig.name} will be expanded to the following dimensions: {str_dims_broadcasted} "
+                    f"""Variable {var_orig.name} will be expanded to the following \
+dimensions: {str_dims_broadcasted} """
                 )
                 # perform the broadcast
 
