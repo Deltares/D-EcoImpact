@@ -85,6 +85,7 @@ class RuleProcessor:
         Raises:
             RuntimeError: if initialization is not correctly done
         """
+
         if len(self._processing_list) < 1:
             message = "Processor is not properly initialized, please initialize."
             raise RuntimeError(message)
@@ -293,19 +294,60 @@ class RuleProcessor:
             )
 
         value_arrays = list(input_variables.values())
-        np_array = value_arrays[0].to_numpy()
-        result_variable = _np.zeros_like(np_array)
+
+        # Check the amount of dimensions of all variables
+        len_dims = _np.array([len(vals.dims) for vals in value_arrays])
+
+        # Use the variable with the most dimensions. Broadcast all other
+        # variables to these dimensions
+        most_dims_bool = len_dims == max(len_dims)
+
+        ref_var = value_arrays[_np.argmax(len_dims)]
+        for ind_vars, enough_dims in enumerate(most_dims_bool):
+            if not enough_dims:
+                # Let the user know which variables will be broadcast to all dimensions
+                var_orig = value_arrays[ind_vars]
+                dims_orig = var_orig.dims
+                dims_result = ref_var.dims
+                dims_diff = list(str(x) for x in dims_result if x not in dims_orig)
+                str_dims_broadcasted = ",".join(dims_diff)
+                logger.log_info(
+                    f"""Variable {var_orig.name} will be expanded to the following \
+dimensions: {str_dims_broadcasted} """
+                )
+                # perform the broadcast
+
+                var_broadcasted = _xr.broadcast(var_orig, ref_var)[0]
+                # Make sure the dimensions are in the same order
+                value_arrays[ind_vars] = var_broadcasted.transpose(*ref_var.dims)
+
+        # Check if all variables now have the same dimensions
+        for val_index in range(len(value_arrays) - 1):
+            var1 = value_arrays[val_index]
+            var2 = value_arrays[val_index + 1]
+            diff = set(var1.dims) ^ set(var2.dims)
+
+            # If the variables with the most dimensions have different dimensions,
+            # stop the calculation
+            if len(diff) != 0:
+                raise NotImplementedError(
+                    f"Can not execute rule {rule.name} with variables with different \
+                    dimensions. Variable {var1.name} with dimensions:{var1.dims} is \
+                    different than {var2.name} with dimensions:{var2.dims}"
+                )
+
+        result_variable = _np.zeros_like(ref_var.to_numpy())
         cell_values = {}
 
-        for indices, _ in _np.ndenumerate(np_array):
-            for name, value_array in input_variables.items():
-                cell_values[name] = value_array.data[indices]
+        for indices, _ in _np.ndenumerate(ref_var.to_numpy()):
+            for value in value_arrays:
+                cell_values[value.name] = value.data[indices]
 
             result_variable[indices] = rule.execute(cell_values, logger)
 
         # use copy to get the same dimensions as the
         # original input variable
-        return value_arrays[0].copy(data=result_variable)
+        return ref_var.copy(data=result_variable)
 
     def _get_rule_input_variables(
         self, rule: IRule, output_dataset: _xr.Dataset
