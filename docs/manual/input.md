@@ -398,7 +398,7 @@ The rule needs to be applied to an existing 2D/3D variables with or without time
 #EXAMPLE  : Calculate bathymetry over time 
 # This is just an example, there is a variable bedlevel without time (mesh2d_flowelem_bl)
 
-- combine_results_rule:
+- formula_rule:
       name: Calculate bathymetry
       description: Calculate bathymetry over time by adding water level and water depth      
       formula: water_level + water_depth
