@@ -69,43 +69,62 @@ class ParserClassificationRule(IParserRuleBase):
             overlap_msg = []
             gap_msg = []
 
-            # all_criteria = [type_of_classification(val) for val in criteria]
-            # if not "larger" in all_criteria:
-            #     logger.log_warning(
-            #         f"""For the variable {name} no 'greater and equal to' (>=) classification is defined. All values above *** will not be classified"""
-            #     )
+            not_covered_values = [-_np.inf, _np.inf]
+            covered_numbers = []
 
-            # if not "smaller" in all_criteria:
-            #     logger.log_warning(
-            #         f"""For the variable {name} no 'smaller than' (<)  classification is defined. All values below *** will not be classified"""
-            #     )
+            all_criteria = [type_of_classification(val) for val in criteria]
+            # Check if there are multiple larger or larger and equal comparison values are present, this will cause overlap
+            if all_criteria.count('larger') + all_criteria.count('larger_equal') > 1: 
+                overlap_msg.append(f"Overlap for variable {name}, multiple criteria with > or >= values are defined")
 
-            covered_values = [-_np.inf, _np.inf]
+            # Check if there are multiple larger or larger and equal comparison values are present, this will cause overlap
+            if all_criteria.count('smaller') + all_criteria.count('smaller_equal') > 1: 
+                overlap_msg.append(f"Overlap for variable {name}, multiple criteria with operators < or <= are defined")
 
-            for val in (
-                val for val in criteria if (type_of_classification(val) == "larger")
-            ):
-                comparison_val = read_str_comparison(val, ">=")
-                if covered_values[-1] > comparison_val:
-                    covered_values[-1] = comparison_val
+            # First set the bounds of the criteria range, by checking if there are both > (or >=) and < (or <=) are present. Without these there will always be a gap defined.
 
-            for val in (
-                val for val in criteria if (type_of_classification(val) == "smaller")
-            ):
-                comparison_val = read_str_comparison(val, "<")
-                if covered_values[0] < comparison_val:
-                    covered_values[0] = comparison_val
+            # Check upper bound (> and >=)
 
-            if covered_values[0] > covered_values[-1]:
+            for bnd_name, operator in [("larger_equal", ">="), ("larger", ">")]:
+                for val in (
+                    c for c in criteria if (type_of_classification(c) == bnd_name) or
+                ):
+                    comparison_val = read_str_comparison(val, operator)
+                    if not_covered_values[-1] > comparison_val:
+                        not_covered_values[-1] = comparison_val
+                        if bnd_name == "larger_equal":
+                            covered_numbers.append(comparison_val)
+
+            # for val in (c for c in criteria if (type_of_classification(c) == "larger")):
+            #     comparison_val = read_str_comparison(val, ">")
+            #     if not_covered_values[-1] > comparison_val:
+            #         not_covered_values[-1] = comparison_val
+
+            # Check lower bound (< and <=)
+            for bnd_name, operator in [("smaller_equal", "<="), ("smaller", "<")]:
+                for val in (
+                    c for c in criteria if (type_of_classification(c) == bnd_name)
+                ):
+                    comparison_val = read_str_comparison(val, operator)
+                    if not_covered_values[0] < comparison_val:
+                        not_covered_values[0] = comparison_val
+                        if bnd_name == "smaller_equal":
+                            covered_numbers.append(comparison_val)
+
+            # If the upperbound is lower than the lower bound there is an overlap
+            # For example when the user defines >10 and <100 -> not_covered_values will look like: [100, 10] and there is an overlap between 10 and 100. But all values are covered. So empty not_covered_values array.
+            if not_covered_values[0] > not_covered_values[-1]:
                 overlap_msg.append(
-                    f"Overlap for variable {name} in range {covered_values[-1]}:{covered_values[0]}"
+                    f"Overlap for variable {name} in range {not_covered_values[-1]}:{not_covered_values[0]}"
                 )
-                covered_values = []
+                not_covered_values = []
 
-            if covered_values[0] == covered_values[-1]:
-                covered_values = []
+            # If the upper and lowerbound are the same. And this value is covered in the covered_numbers array: empty the not_covered_values array, all values are covered. For example the user defines >0 and <=0 -> not_covered_values will look like: [0, 0] and the covered_numbers array: [0].
+            if not_covered_values[0] == not_covered_values[-1]:
+                not_covered_values = []
 
-            if len(covered_values) == 0:
+            # If not_covered_values is empty, it means all values are covered. All other defined criteria will cause an overlap.
+            if len(not_covered_values) == 0:
                 for comparison_string in ["number", "range"]:
                     for val in (
                         val
@@ -116,27 +135,49 @@ class ParserClassificationRule(IParserRuleBase):
                             f"Overlap for variable {name} in  {comparison_string}: {val}"
                         )
 
+            # If not_covered_values is not empty, the other criteria might fill these gaps. First check on the numbers.
             else:
+                not_covered_values = [not_covered_values]
                 for val in (
-                    val for val in criteria if (type_of_classification(val) == "range")
+                    c for c in criteria if (type_of_classification(c) == "number")
                 ):
-                    covered_values = []
+                    for not_covered_range in not_covered_values:
+                        start, end = not_covered_range[0], not_covered_range[-1]
+                        if self._check_inside_bounds(start, end, float(val)):
+                            # If number is inside the bounds, split up the array into 2 ranges and add to covered_numbers
+                            # If the number is the same/ or outside the bound, leave as is and add to covered_numbers => overlap
 
+
+
+
+
+                for val in (
+                    c for c in criteria if (type_of_classification(c) == "range")
+                ):
+                    start_range, end_range = str_range_to_list(val)
+
+                    for not_covered_range in not_covered_values:
+                        start, end = not_covered_range[0], not_covered_range[-1]
+                        begin_inside = self._check_inside_bounds(start, end, start_range)
+                        end_inside = self._check_inside_bounds(start, end, end_range)
+                        if begin_inside & end_inside:
+                            # The range is inside the not covered values eg when the user gives the criteria: <=0, >10 and 3:5, making two serperate gaps.
+
+                            # The range is outside the covered values eg when the user gives the criteria: <=0, >10 and 13:15, overlap
+
+                            # The range starts within the bounds eg when the user gives the criteria: <=0, >10 and 3:15, an overlap and a gap
+
+                            # The range ends within the bounds eg when the user gives the criteria: <=0, >10 and -3:5, an overlap and a gap
+
+                            # The range is larger than the given bounds 
+                            # The range starts within the bounds eg when the user gives the criteria: <=0, >10 and -3:15. All values covered, but overlap
+
+
+            # Create the final check over the not_covered_values and the covered_numbers
+            # Send warning with the combined messages
             print("\n".join(overlap_msg))
+            print("\n".join(gap_msg))
+            # Only show the first 10 lines. Print all warnings to a txt file.
 
-            # covered_values = [-_np.inf, _np.inf]
-            # criteria_class = type_of_classification(criteria)
-            # if criteria_class == "larger":
-            #     comparison_val = read_str_comparison(criteria, ">")
-            #     covered_values[0] = comparison_val
-
-            # elif criteria_class == "smaller":
-            #     comparison_val = read_str_comparison(criteria, "<")
-            #     covered_values[-1] = comparison_val
-
-            # elif criteria_class == "number":
-            #     covered_range = [float(val)]
-
-            # elif criteria_class == "range":
-            #     begin, end = str_range_to_list(criteria)
-            #     comparison = (data >= begin) & (data <= end)
+    def _check_inside_bounds(self, start, end, var):
+        return (var > start) & (var < end)
