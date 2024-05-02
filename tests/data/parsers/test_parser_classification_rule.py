@@ -43,7 +43,7 @@ def test_parse_dict_to_rule_data_logic():
                 ["output", "mesh2d_waterdepth", "mesh2d_sa1"],
                 [100, 0, 30],
                 [300, 0, 0.5],
-                [400, 0, "0.3:0.6"]
+                [400, 0, "0.3:0.6"],
             ],
             "output_variable": "output",
         }
@@ -54,3 +54,38 @@ def test_parse_dict_to_rule_data_logic():
     parsed_dict = data.parse_dict(contents, logger)
 
     assert isinstance(parsed_dict, IRuleData)
+
+
+@pytest.mark.parametrize(
+    "criteria_table, expected_log_message",
+    [
+        (
+            [["output", "varA"], [1, "<0"]],
+            """For the variable varA no 'greater and equal to' (>=) classification is defined. All values above *** will not be classified""",
+        ),
+        (
+            [["output", "varA"], [1, ">=0"]],
+            """For the variable varA no 'smaller than' (<)  classification is defined. All values below *** will not be classified""",
+        ),
+    ],
+)
+def test_feedback_for_criteria_with_gaps_and_overlap(
+    criteria_table, expected_log_message
+):
+    """Test if a correct dictionary is parsed into a RuleData object"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variables": ["varA", "varB", "varC", "varD"],
+            "description": "test",
+            "criteria_table": criteria_table,
+            "output_variable": "output",
+        }
+    )
+    logger = Mock(ILogger)
+    # Act
+    data = ParserClassificationRule()
+    data.parse_dict(contents, logger)
+
+    logger.log_warning.assert_called_with(expected_log_message)
