@@ -8,7 +8,11 @@
 Tests for string parser utilities
 """
 import pytest
-from decoimpact.business.entities.rules.string_parser_utils import read_str_comparison, str_range_to_list, type_of_classification
+from decoimpact.business.entities.rules.string_parser_utils import (
+    read_str_comparison,
+    str_range_to_list,
+    type_of_classification,
+)
 
 
 def test_str_range_to_list():
@@ -42,13 +46,10 @@ def test_read_str_comparison():
     assert read_str_comparison(">5", ">") == 5
     assert read_str_comparison("<5", "<") == 5
 
+
 @pytest.mark.parametrize(
     "test_string, operator",
-    [
-        [">=5", ">"],
-        ["5<", "<"],
-        ["<5>", "<"]
-    ],
+    [[">=5", ">"], ["5<", "<"], ["<5>", "<"]],
 )
 def test_read_str_comparison_fails(test_string: str, operator: str):
     """Test if a range in incorrect format gives an error"""
@@ -59,7 +60,10 @@ def test_read_str_comparison_fails(test_string: str, operator: str):
     exception_raised = exc_info.value
 
     # Assert
-    assert exception_raised.args[0] == f'Input "{test_string}" is not a valid comparison with operator: {operator}'
+    assert (
+        exception_raised.args[0]
+        == f'Input "{test_string}" is not a valid comparison with operator: {operator}'
+    )
 
 
 @pytest.mark.parametrize(
@@ -80,7 +84,10 @@ def test_read_str_comparison_fails_multiple_operators(test_string: str, operator
     exception_raised = exc_info.value
 
     # Assert
-    assert exception_raised.args[0] == f'Input "{test_string}" is not a valid comparison with operator: {operator}'
+    assert (
+        exception_raised.args[0]
+        == f'Input "{test_string}" is not a valid comparison with operator: {operator}'
+    )
 
 
 @pytest.mark.parametrize(
@@ -92,9 +99,11 @@ def test_read_str_comparison_fails_multiple_operators(test_string: str, operator
         ["-", "NA"],
         [">5", "larger"],
         ["<5", "smaller"],
+        [">=5", "larger_equal"],
+        ["<=5", "smaller_equal"],
         [5, "number"],
-        [-8.0, "number"]
-    ]
+        [-8.0, "number"],
+    ],
 )
 def test_type_of_classification(test_string: str, result: str):
     """Test function to type classification"""
@@ -103,15 +112,7 @@ def test_type_of_classification(test_string: str, result: str):
 
 @pytest.mark.parametrize(
     "test_string",
-    [
-        ["hello"],
-        [">=5"],
-        ["5<"],
-        [""],
-        ["--"],
-        [":100:199"],
-        ["3:>9"]
-    ],
+    [["hello"], [">=5"], ["5<"], [""], ["--"], [":100:199"], ["3:>9"]],
 )
 def test_type_of_classification_fails(test_string: str):
     """Test function to type classification for failing strings"""

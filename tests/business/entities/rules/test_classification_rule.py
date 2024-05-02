@@ -23,8 +23,8 @@ def test_create_classification_rule_should_set_defaults():
     # test data
     criteria_test_table = {
         "output": [1, 2, 3, 4],
-        "water_depth": [.1, 3.33, 5, 5],
-        "temperature": ['-', '0.1: 15', 15, '>15'],
+        "water_depth": [0.1, 3.33, 5, 5],
+        "temperature": ["-", "0.1: 15", 15, ">15"],
     }
 
     # Arrange and act
@@ -45,17 +45,19 @@ def test_execute_classification():
     # test data
     criteria_test_table = {
         "output": [100, 200, 300, 400, 500, 900, 111],
-        "water_depth": [11, 12, 13, 13, 15, 0, '-'],
-        "salinity": ['-', '0.5: 5.5', 8.8, 8.8, 9, 0, ">10"],
-        "temperature": ['-', '-', '-', '-', '>25.0', 0, "<0"],
+        "water_depth": [11, 12, 13, 13, 15, 0, "-"],
+        "salinity": ["-", "0.5: 5.5", 8.8, 8.8, 9, 0, ">10"],
+        "temperature": ["-", "-", "-", "-", ">25.0", 0, "<0"],
     }
 
     # arrange
     logger = Mock(ILogger)
     rule = ClassificationRule("test", ["water_depth", "salinity"], criteria_test_table)
-    test_data = {"water_depth": _xr.DataArray([13, 0, 11, 15, 12, 20]),
+    test_data = {
+        "water_depth": _xr.DataArray([13, 0, 11, 15, 12, 20]),
         "salinity": _xr.DataArray([8.8, 0, 2, 9, 2.5, 11]),
-        "temperature": _xr.DataArray([20, -5, 20, 28, 1, -5])}
+        "temperature": _xr.DataArray([20, -5, 20, 28, 1, -5]),
+    }
 
     # expected results:
     # 1: take first when multiple apply --> 300
@@ -71,4 +73,3 @@ def test_execute_classification():
 
     # assert
     assert _xr.testing.assert_equal(test_result, expected_result) is None
-
