@@ -475,7 +475,9 @@ Criteria ranges available are:
 | "-" | "-" | Value is not applicable to category, all is allowed |
 | "criteria_value" | "5" | Value is exectly the criteria value (only applicable for integers) |
 | ">criteria_value" | ">1" | Value needs to larger than criteria value |
-| "<criteria_value" | "< 0.5" | Value needs to be smaller than criteria value |
+| "<criteria_value" | "<0.5" | Value needs to be smaller than criteria value |
+| ">criteria_value" | ">=1" | Value needs to larger than or equal to criteria value |
+| "<criteria_value" | "<=0.5" | Value needs to be smaller than or equal to criteria value |
 | "criteria_value1:criteria_value2" | "0.2:4" | Value needs to be equal or be in between criteria_value1 and criteria_value2 | 
 
 ```
