@@ -57,27 +57,51 @@ def test_parse_dict_to_rule_data_logic():
 
 
 @pytest.mark.parametrize(
-    "criteria_table, expected_log_message",
+    "criteria_table, expected_warning_msg",
     [
         (
-            [["output", "varA"], [1, "<0"]],
-            """For the variable varA no 'greater and equal to' (>=) classification is defined. All values above *** will not be classified""",
+            [["output", "varA"], [1, "<0"], [2, "<=8"]],
+            """Overlap for variable varA, multiple criteria with operators < or <= are defined\nGap for variable varA in range 8.0:inf""",
         ),
         (
-            [["output", "varA"], [1, ">=0"]],
-            """For the variable varA no 'smaller than' (<)  classification is defined. All values below *** will not be classified""",
+            [["output", "varB"], [1, ">0"], [2, ">=8"]],
+            """Overlap for variable varB, multiple criteria with operators > or >= are defined\nGap for variable varB in range -inf:0.0""",
+        ),
+        (
+            [["output", "varC"], [1, "<0"]],
+            """Gap for variable varC in range 0.0:inf""",
+        ),
+        (
+            [["output", "varD"], [1, ">=0"]],
+            """Gap for variable varD in range -inf:0.0""",
+        ),
+        (
+            [["output", "varE"], [1, ">0"], [2, "<10"]],
+            """Overlap for variable varE in range 0.0:10.0""",
+        ),
+        (
+            [["output", "varF"], [1, ">0"], [2, "<0"]],
+            """Gap for variable varF in number 0.0""",
+        ),
+        (
+            [["output", "varF"], [1, ">0"], [2, "<=0"]],
+            "",
+        ),
+        (
+            [["output", "varG"], [1, "0:10"]],
+            """Gap for variable varG in range 0.0:10.0""",
         ),
     ],
 )
 def test_feedback_for_criteria_with_gaps_and_overlap(
-    criteria_table, expected_log_message
+    criteria_table, expected_warning_msg
 ):
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
     contents = dict(
         {
             "name": "testname",
-            "input_variables": ["varA", "varB", "varC", "varD"],
+            "input_variables": ["varA", "varB", "varC", "varD", "varE", "varF", "varG"],
             "description": "test",
             "criteria_table": criteria_table,
             "output_variable": "output",
@@ -88,4 +112,4 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
     data = ParserClassificationRule()
     data.parse_dict(contents, logger)
 
-    logger.log_warning.assert_called_with(expected_log_message)
+    logger.log_warning.assert_called_with(expected_warning_msg)
