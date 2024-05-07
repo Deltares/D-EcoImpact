@@ -83,14 +83,6 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
                     begin, end = str_range_to_list(criteria)
                     comparison = (data >= begin) & (data <= end)
 
-                elif criteria_class == "larger":
-                    comparison_val = read_str_comparison(criteria, ">")
-                    comparison = data > float(comparison_val)
-
-                elif criteria_class == "smaller":
-                    comparison_val = read_str_comparison(criteria, "<")
-                    comparison = data < float(comparison_val)
-
                 elif criteria_class == "larger_equal":
                     comparison_val = read_str_comparison(criteria, ">=")
                     comparison = data >= float(comparison_val)
@@ -98,6 +90,14 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
                 elif criteria_class == "smaller_equal":
                     comparison_val = read_str_comparison(criteria, "<=")
                     comparison = data <= float(comparison_val)
+
+                elif criteria_class == "larger":
+                    comparison_val = read_str_comparison(criteria, ">")
+                    comparison = data > float(comparison_val)
+
+                elif criteria_class == "smaller":
+                    comparison_val = read_str_comparison(criteria, "<")
+                    comparison = data < float(comparison_val)
 
                 # Criteria_comparison == 1 -> to check where the value is True
                 criteria_comparison = _xr.where(
