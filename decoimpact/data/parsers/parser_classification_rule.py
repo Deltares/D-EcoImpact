@@ -67,38 +67,35 @@ class ParserClassificationRule(IParserRuleBase):
                 continue
 
             overlap_msg = []
-            gap_msg = []
 
             not_covered_values = [-_np.inf, _np.inf]
             covered_numbers = []
 
             all_criteria = [type_of_classification(val) for val in criteria]
             # Check if there are multiple larger or larger and equal comparison values are present, this will cause overlap
-            if all_criteria.count('larger') + all_criteria.count('larger_equal') > 1: 
-                overlap_msg.append(f"Overlap for variable {name}, multiple criteria with > or >= values are defined")
+            if all_criteria.count("larger") + all_criteria.count("larger_equal") > 1:
+                overlap_msg.append(
+                    f"Overlap for variable {name}, multiple criteria with operators > or >= are defined"
+                )
 
             # Check if there are multiple larger or larger and equal comparison values are present, this will cause overlap
-            if all_criteria.count('smaller') + all_criteria.count('smaller_equal') > 1: 
-                overlap_msg.append(f"Overlap for variable {name}, multiple criteria with operators < or <= are defined")
+            if all_criteria.count("smaller") + all_criteria.count("smaller_equal") > 1:
+                overlap_msg.append(
+                    f"Overlap for variable {name}, multiple criteria with operators < or <= are defined"
+                )
 
             # First set the bounds of the criteria range, by checking if there are both > (or >=) and < (or <=) are present. Without these there will always be a gap defined.
 
             # Check upper bound (> and >=)
-
             for bnd_name, operator in [("larger_equal", ">="), ("larger", ">")]:
                 for val in (
-                    c for c in criteria if (type_of_classification(c) == bnd_name) or
+                    c for c in criteria if (type_of_classification(c) == bnd_name)
                 ):
                     comparison_val = read_str_comparison(val, operator)
                     if not_covered_values[-1] > comparison_val:
                         not_covered_values[-1] = comparison_val
                         if bnd_name == "larger_equal":
                             covered_numbers.append(comparison_val)
-
-            # for val in (c for c in criteria if (type_of_classification(c) == "larger")):
-            #     comparison_val = read_str_comparison(val, ">")
-            #     if not_covered_values[-1] > comparison_val:
-            #         not_covered_values[-1] = comparison_val
 
             # Check lower bound (< and <=)
             for bnd_name, operator in [("smaller_equal", "<="), ("smaller", "<")]:
@@ -120,8 +117,11 @@ class ParserClassificationRule(IParserRuleBase):
                 not_covered_values = []
 
             # If the upper and lowerbound are the same. And this value is covered in the covered_numbers array: empty the not_covered_values array, all values are covered. For example the user defines >0 and <=0 -> not_covered_values will look like: [0, 0] and the covered_numbers array: [0].
-            if not_covered_values[0] == not_covered_values[-1]:
-                not_covered_values = []
+            if len(not_covered_values) != 0:
+                if (not_covered_values[0] == not_covered_values[-1]) and (
+                    not_covered_values[0] in covered_numbers
+                ):
+                    not_covered_values = []
 
             # If not_covered_values is empty, it means all values are covered. All other defined criteria will cause an overlap.
             if len(not_covered_values) == 0:
@@ -132,7 +132,7 @@ class ParserClassificationRule(IParserRuleBase):
                         if (type_of_classification(val) == comparison_string)
                     ):
                         overlap_msg.append(
-                            f"Overlap for variable {name} in  {comparison_string}: {val}"
+                            f"Overlap for variable {name} in {comparison_string}: {val}"
                         )
 
             # If not_covered_values is not empty, the other criteria might fill these gaps. First check on the numbers.
@@ -141,42 +141,85 @@ class ParserClassificationRule(IParserRuleBase):
                 for val in (
                     c for c in criteria if (type_of_classification(c) == "number")
                 ):
-                    for not_covered_range in not_covered_values:
+                    for ind_range, not_covered_range in enumerate(not_covered_values):
                         start, end = not_covered_range[0], not_covered_range[-1]
+                        # If number is inside the bounds, split up the array into 2 ranges and add to covered_numbers
                         if self._check_inside_bounds(start, end, float(val)):
-                            # If number is inside the bounds, split up the array into 2 ranges and add to covered_numbers
-                            # If the number is the same/ or outside the bound, leave as is and add to covered_numbers => overlap
+                            not_covered_values.insert(ind_range, [start, float(val)])
+                            not_covered_values.insert(ind_range, [float(val), end])
 
-
-
-
+                        # If the number is the same/ or outside the bound, leave as is and add to covered_numbers => overlap
+                        else:
+                            covered_numbers.append(float(val))
 
                 for val in (
                     c for c in criteria if (type_of_classification(c) == "range")
                 ):
                     start_range, end_range = str_range_to_list(val)
 
-                    for not_covered_range in not_covered_values:
+                    for ind_range, not_covered_range in enumerate(not_covered_values):
                         start, end = not_covered_range[0], not_covered_range[-1]
-                        begin_inside = self._check_inside_bounds(start, end, start_range)
+                        begin_inside = self._check_inside_bounds(
+                            start, end, start_range
+                        )
                         end_inside = self._check_inside_bounds(start, end, end_range)
+                        # The range is inside the not covered values eg when the user gives the criteria: <=0, >10 and 3:5, making two seperate gaps.
                         if begin_inside & end_inside:
-                            # The range is inside the not covered values eg when the user gives the criteria: <=0, >10 and 3:5, making two serperate gaps.
+                            not_covered_values.insert(ind_range, [start, start_range])
+                            not_covered_values.insert(ind_range, [end_range, end])
 
-                            # The range is outside the covered values eg when the user gives the criteria: <=0, >10 and 13:15, overlap
+                        # The range starts within the bounds eg when the user gives the criteria: <=0, >10 and 3:15, an overlap and a gap
+                        if begin_inside & (not end_inside):
+                            not_covered_values.insert(ind_range, [start, start_range])
+                            not_covered_values.insert(ind_range, [start_range, end])
+                            overlap_msg.append(
+                                f"Overlap for variable {name} in range {end}:{end_range}"
+                            )
 
-                            # The range starts within the bounds eg when the user gives the criteria: <=0, >10 and 3:15, an overlap and a gap
+                        # The range ends within the bounds eg when the user gives the criteria: <=0, >10 and -3:5, an overlap and a gap
+                        if (not begin_inside) & end_inside:
+                            not_covered_values.insert(ind_range, [start, end_range])
+                            not_covered_values.insert(ind_range, [end_range, end])
+                            overlap_msg.append(
+                                f"Overlap for variable {name} in range {start_range}:{start}"
+                            )
 
-                            # The range ends within the bounds eg when the user gives the criteria: <=0, >10 and -3:5, an overlap and a gap
+                        # The range is outside the covered values eg when the user gives the criteria: <=0, >10 and 13:15, overlap
+                        if ((end < start_range) & (end < end_range)) or (
+                            (start_range < start) & (end_range < start)
+                        ):
+                            overlap_msg.append(
+                                f"Overlap for variable {name} in range {start_range}:{end_range}"
+                            )
 
-                            # The range is larger than the given bounds 
-                            # The range starts within the bounds eg when the user gives the criteria: <=0, >10 and -3:15. All values covered, but overlap
+                        # The range is larger than the given bounds eg when the user gives the criteria: <=0, >10 and -3:15. All values covered, but overlap
+                        if (start_range <= start) & (end_range >= end):
+                            overlap_msg.append(
+                                f"Overlap for variable {name} in range {start_range}:{start} and {end}:{end_range}"
+                            )
+                            not_covered_values = []
 
+                        if start == start_range:
+                            overlap_msg.append(
+                                f"Overlap for variable {name} at {start_range}"
+                            )
+
+                        if end == end_range:
+                            overlap_msg.append(
+                                f"Overlap for variable {name} at {end_range}"
+                            )
+
+            for r in not_covered_values:
+                if r[0] == r[-1]:
+                    overlap_msg.append(f"Gap for variable {name} in number {r[0]}")
+                else:
+                    overlap_msg.append(
+                        f"Gap for variable {name} in range {r[0]}:{r[1]}"
+                    )
 
             # Create the final check over the not_covered_values and the covered_numbers
             # Send warning with the combined messages
-            print("\n".join(overlap_msg))
-            print("\n".join(gap_msg))
+            logger.log_warning("\n".join(overlap_msg))
             # Only show the first 10 lines. Print all warnings to a txt file.
 
     def _check_inside_bounds(self, start, end, var):
