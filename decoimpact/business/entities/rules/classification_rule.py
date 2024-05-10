@@ -47,10 +47,8 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
         return self._criteria_table
 
     def execute(
-            self,
-            value_arrays: Dict[str, _xr.DataArray],
-            logger: ILogger
-            ) -> _xr.DataArray:
+        self, value_arrays: Dict[str, _xr.DataArray], logger: ILogger
+    ) -> _xr.DataArray:
         """Determine the classification based on the table with criteria
         Args:
             values (Dict[str, float]): Dictionary holding the values
@@ -66,7 +64,7 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
         # Create an empty result_array to be filled
         result_array = _xr.zeros_like(value_arrays[column_names[0]])
 
-        for (row, out) in reversed(list(enumerate(self._criteria_table["output"]))):
+        for row, out in reversed(list(enumerate(self._criteria_table["output"]))):
             criteria_comparison = _xr.full_like(value_arrays[column_names[0]], True)
             for column_name in column_names:
                 # DataArray on which the criteria needs to be checked
@@ -85,6 +83,14 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
                     begin, end = str_range_to_list(criteria)
                     comparison = (data >= begin) & (data <= end)
 
+                elif criteria_class == "larger_equal":
+                    comparison_val = read_str_comparison(criteria, ">=")
+                    comparison = data >= float(comparison_val)
+
+                elif criteria_class == "smaller_equal":
+                    comparison_val = read_str_comparison(criteria, "<=")
+                    comparison = data <= float(comparison_val)
+
                 elif criteria_class == "larger":
                     comparison_val = read_str_comparison(criteria, ">")
                     comparison = data > float(comparison_val)
@@ -95,14 +101,12 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
 
                 # Criteria_comparison == 1 -> to check where the value is True
                 criteria_comparison = _xr.where(
-                    comparison & (criteria_comparison == 1),
-                    True,
-                    False
+                    comparison & (criteria_comparison == 1), True, False
                 )
             # For the first row set the default to None, for all the other
             # rows use the already created dataarray
             default_val = None
-            if row != len(self._criteria_table["output"])-1:
+            if row != len(self._criteria_table["output"]) - 1:
                 default_val = result_array
 
             result_array = _xr.where(criteria_comparison, out, default_val)

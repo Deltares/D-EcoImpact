@@ -50,15 +50,15 @@ def read_str_comparison(compare_str: str, operator: str):
         if len(compare_list) != 2:
             raise IndexError(
                 f'Input "{compare_str}" is not a valid comparison '
-                f'with operator: {operator}'
+                f"with operator: {operator}"
             )
         compare_val = compare_list[1]
         return float(compare_val)
     except ValueError as exc:
         raise ValueError(
             f'Input "{compare_str}" is not a valid comparison with '
-            f'operator: {operator}'
-            ) from exc
+            f"operator: {operator}"
+        ) from exc
 
 
 def type_of_classification(class_val) -> str:
@@ -84,6 +84,12 @@ def type_of_classification(class_val) -> str:
         if ":" in class_val:
             str_range_to_list(class_val)
             return "range"
+        if ">=" in class_val:
+            read_str_comparison(class_val, ">=")
+            return "larger_equal"
+        if "<=" in class_val:
+            read_str_comparison(class_val, "<=")
+            return "smaller_equal"
         if ">" in class_val:
             read_str_comparison(class_val, ">")
             return "larger"
