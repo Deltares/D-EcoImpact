@@ -163,3 +163,57 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
     data.parse_dict(contents, logger)
 
     logger.log_warning.assert_called_with(expected_warning_msg)
+
+
+@pytest.mark.parametrize(
+    "criteria_table, expected_warning_msg",
+    [
+        (
+            [
+                ["output", "varA", "varB", "varC"],
+                [1, "<0", "<5", "<10"],
+                [2, "<0", "<5", ">=10"],
+                [3, "<0", ">=5", "<10"],
+                [4, "<0", ">=5", ">=10"],
+                [5, ">=0", "<5", "<10"],
+                [6, ">=0", "<5", ">=10"],
+                [7, ">=0", ">=5", "<10"],
+                [8, ">=0", ">=5", ">=10"],
+            ],
+            "",
+        ),
+        (
+            [
+                ["output", "varA", "varB", "varC"],
+                [1, "<0", "<0", "0:10"],
+                [2, "<0", "<0", ">10"],
+                [3, "<0", ">=0", "0:10"],
+            ],
+            """For conditions: (varA: <0, varB: <0).Overlap for variable varC in number 10.0\nFor conditions: (varA: <0, varB: <0).Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0).Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0).Gap for variable varC in range 10.0:inf\nFor conditions: (varA: <0).Overlap for variable varB, multiple criteria with operators < or <= are defined\nOverlap for variable varA, multiple criteria with operators < or <= are defined\nGap for variable varA in range 0.0:inf""",
+        ),
+    ],
+)
+def test_feedback_for_criteria_multiple_parameters(
+    criteria_table, expected_warning_msg
+):
+    """Test if a correct dictionary is parsed into a RuleData object"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variables": [
+                "varA",
+                "varB",
+                "varC",
+            ],
+            "description": "test",
+            "criteria_table": criteria_table,
+            "output_variable": "output",
+        }
+    )
+    logger = Mock(ILogger)
+    # Act
+    data = ParserClassificationRule()
+    data.parse_dict(contents, logger)
+
+    logger.log_warning.assert_called_with(expected_warning_msg)
