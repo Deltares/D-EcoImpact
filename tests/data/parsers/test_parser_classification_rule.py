@@ -189,7 +189,7 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
                 [2, "<0", "<0", ">10"],
                 [3, "<0", ">=0", "0:10"],
             ],
-            """For conditions: (varA: <0, varB: <0).Overlap for variable varC in number 10.0\nFor conditions: (varA: <0, varB: <0).Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0).Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0).Gap for variable varC in range 10.0:inf\nFor conditions: (varA: <0).Overlap for variable varB, multiple criteria with operators < or <= are defined\nOverlap for variable varA, multiple criteria with operators < or <= are defined\nGap for variable varA in range 0.0:inf""",
+            """For conditions: (varA: <0, varB: <0).Overlap for variable varC in number 10.0\nFor conditions: (varA: <0, varB: <0).Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0).Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0).Gap for variable varC in range 10.0:inf\nGap for variable varA in range 0.0:inf""",
         ),
     ],
 )

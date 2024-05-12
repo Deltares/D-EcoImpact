@@ -66,35 +66,56 @@ class ParserClassificationRule(IParserRuleBase):
         overlap_msg = []
         del criteria_table["output"]
 
-        def check_coverage(criteria_table, conditions={}):
+        def check_coverage(criteria_table, conditions={}, unique=True):
+            # This is a recursive function until all combinations of variables in the criteriatable is checked on coverage.
+            # If there is only one variable, check on all conditions for coverage
             if len(criteria_table.items()) == 1:
                 cond_str = ", ".join(
                     [f"{key}: {value}" for key, value in conditions.items()]
                 )
-                if cond_str != "":
-                    cond_str = f"For conditions: ({cond_str})."
                 name, criteria = next(iter(criteria_table.items()))
+                if cond_str != "":
+                    # When checking a single parameter or the first parameter
+                    cond_str = f"For conditions: ({cond_str})."
+                if unique:
+                    # Little trick to ignore the duplicates when a combination of parameters is given.
+                    criteria = _np.unique(criteria)
                 self._validate_criteria_on_overlap_and_gaps(
                     name, criteria, overlap_msg, cond_str, logger
                 )
+            # Else evaluate the previous variables to get unique combinations back
             else:
+                # This recursive function loops over all variables and filters it on unique values
                 crit_to_sort = list(criteria_table.values())[0]
                 for unique_c in _np.unique(crit_to_sort):
                     indices = [i for i, c in enumerate(crit_to_sort) if c == unique_c]
 
+                    # Make a new criteria_table with the remaining variables
                     new_crit_table = dict(
                         (k, _np.array(v)[indices])
                         for i, (k, v) in enumerate(criteria_table.items())
                         if i != 0
                     )
                     conditions[list(criteria_table.keys())[0]] = unique_c
+                    # Send the remaining filtered parameters back into the function
                     check_coverage(new_crit_table, conditions)
 
         new_crit_table = criteria_table.copy()
+        unique = True
+        if len(new_crit_table.items()) == 1:
+            unique = False
+        # Make a loop over all variables from right to left to check combinations
         for key in reversed(criteria_table.keys()):
-            check_coverage(new_crit_table, conditions={})
+            check_coverage(new_crit_table, {}, unique)
             del new_crit_table[key]
-        logger.log_warning("\n".join(overlap_msg))
+
+        if len(overlap_msg) < 10:
+            logger.log_warning("\n".join(overlap_msg))
+        else:
+            logger.log_warning("\n".join(overlap_msg[:10]))
+            logger.log_warning(
+                f"{len(overlap_msg)} warnings found concerning coverage of the parameters. Only first 10 warnings are shown. See decoimpact.log file for all warnings."
+            )
         # Only show the first 10 lines. Print all warnings to a txt file.
 
     def _validate_criteria_on_overlap_and_gaps(
