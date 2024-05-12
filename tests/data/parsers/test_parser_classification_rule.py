@@ -201,11 +201,7 @@ def test_feedback_for_criteria_multiple_parameters(
     contents = dict(
         {
             "name": "testname",
-            "input_variables": [
-                "varA",
-                "varB",
-                "varC",
-            ],
+            "input_variables": ["varA", "varB", "varC", "varD"],
             "description": "test",
             "criteria_table": criteria_table,
             "output_variable": "output",
@@ -217,3 +213,29 @@ def test_feedback_for_criteria_multiple_parameters(
     data.parse_dict(contents, logger)
 
     logger.log_warning.assert_called_with(expected_warning_msg)
+
+
+def test_feedback_for_criteria_multiple_parameters_more_10_warnings():
+    """Test if a correct dictionary is parsed into a RuleData object"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variables": ["varA", "varB", "varC", "varD"],
+            "description": "test",
+            "criteria_table": [
+                ["output", "varA", "varB", "varC", "varD"],
+                [1, "<0", "<0", "0:10", "5"],
+                [3, "0", ">=0", "0:10", "5"],
+            ],
+            "output_variable": "output",
+        }
+    )
+    logger = Mock(ILogger)
+    # Act
+    data = ParserClassificationRule()
+    data.parse_dict(contents, logger)
+
+    logger.log_warning.assert_called_with(
+        f"11 warnings found concerning coverage of the parameters. Only first 10 warnings are shown. See decoimpact.log file for all warnings."
+    )
