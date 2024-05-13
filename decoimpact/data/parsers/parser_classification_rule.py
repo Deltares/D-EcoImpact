@@ -118,8 +118,8 @@ class ParserClassificationRule(IParserRuleBase):
         else:
             logger.log_warning("\n".join(overlap_msg[:10]))
             logger.log_warning(
-                f"{len(overlap_msg)} warnings found concerning coverage of the"
-                "parameters. Only first 10 warnings are shown. See decoimpact.log"
+                f"{len(overlap_msg)} warnings found concerning coverage of the "
+                "parameters. Only first 10 warnings are shown. See decoimpact.log "
                 "file for all warnings."
             )
         # Only show the first 10 lines. Print all warnings to a txt file.
@@ -135,7 +135,7 @@ class ParserClassificationRule(IParserRuleBase):
         # present, this will cause overlap
         if all_criteria.count("larger") + all_criteria.count("larger_equal") > 1:
             overlap_msg.append(
-                f"{prepend_msg}Overlap for variable {name}, multiple criteria with"
+                f"{prepend_msg}Overlap for variable {name}, multiple criteria with "
                 "operators > or >= are defined"
             )
 
@@ -143,7 +143,7 @@ class ParserClassificationRule(IParserRuleBase):
         # present, this will cause overlap
         if all_criteria.count("smaller") + all_criteria.count("smaller_equal") > 1:
             overlap_msg.append(
-                f"{prepend_msg}Overlap for variable {name}, multiple criteria with"
+                f"{prepend_msg}Overlap for variable {name}, multiple criteria with "
                 "operators < or <= are defined"
             )
 
