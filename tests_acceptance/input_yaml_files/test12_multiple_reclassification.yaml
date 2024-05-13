@@ -72,7 +72,7 @@ rules:
       output_variable: MIN_water_depth_mNAP
 
   - classification_rule:
-      name: test calssification for aquatic plants
+      name: test classification for aquatic plants
       description: Get flowing value waterlevel
       criteria_table:
         - [
