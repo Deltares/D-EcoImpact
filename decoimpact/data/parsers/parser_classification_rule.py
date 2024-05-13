@@ -10,9 +10,10 @@ Module for ParserClassificationRule class
 Classes:
     ParserClassificationRule
 """
+from bisect import bisect_left, bisect_right, insort
 from typing import Any, Dict
+
 import numpy as _np
-from bisect import insort, bisect_right, bisect_left
 
 from decoimpact.business.entities.rules.string_parser_utils import (
     read_str_comparison,
@@ -331,7 +332,7 @@ class ParserClassificationRule(IParserRuleBase):
 
     def _warn_message(self, name, overlap_msg, prepend_msg, start, end=None):
         comparison_string = f"range {start}:{end}"
-        if (start == end) or (end == None):
+        if (start == end) or (end is None):
             comparison_string = f"number {start}"
         overlap_msg.append(
             f"{prepend_msg}Overlap for variable {name} in {comparison_string}"
