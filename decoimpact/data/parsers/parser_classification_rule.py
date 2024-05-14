@@ -79,7 +79,7 @@ class ParserClassificationRule(IParserRuleBase):
                 name, criteria = next(iter(criteria_table.items()))
                 if cond_str != "":
                     # When checking a single parameter or the first parameter
-                    cond_str = f"For conditions: ({cond_str})."
+                    cond_str = f"For conditions: ({cond_str}). "
                 if unique:
                     # Little trick to ignore the duplicates when a combination of
                     # parameters is given.
@@ -120,9 +120,12 @@ class ParserClassificationRule(IParserRuleBase):
             logger.log_warning("\n".join(overlap_msg[:10]))
             logger.log_warning(
                 f"{len(overlap_msg)} warnings found concerning coverage of the "
-                "parameters. Only first 10 warnings are shown. See decoimpact.log "
-                "file for all warnings."
+                "parameters. Only first 10 warnings are shown. See "
+                "classification_warnings.log file for all warnings."
             )
+            f = open("classification_warnings.log", "w")
+            f.write("\n".join(overlap_msg))
+            f.close()
         # Only show the first 10 lines. Print all warnings to a txt file.
 
     def _validate_criteria_on_overlap_and_gaps(

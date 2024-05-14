@@ -190,7 +190,7 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
                 [2, "<0", "<0", ">10"],
                 [3, "<0", ">=0", "0:10"],
             ],
-            """For conditions: (varA: <0, varB: <0).Overlap for variable varC in number 10.0\nFor conditions: (varA: <0, varB: <0).Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0).Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0).Gap for variable varC in range 10.0:inf\nGap for variable varA in range 0.0:inf""",
+            """For conditions: (varA: <0, varB: <0). Overlap for variable varC in number 10.0\nFor conditions: (varA: <0, varB: <0). Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0). Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0). Gap for variable varC in range 10.0:inf\nGap for variable varA in range 0.0:inf""",
         ),
     ],
 )
@@ -238,5 +238,6 @@ def test_feedback_for_criteria_multiple_parameters_more_10_warnings():
     data.parse_dict(contents, logger)
 
     logger.log_warning.assert_called_with(
-        f"11 warnings found concerning coverage of the parameters. Only first 10 warnings are shown. See decoimpact.log file for all warnings."
+        "11 warnings found concerning coverage of the parameters. Only first 10 "
+        "warnings are shown. See classification_warnings.log file for all warnings."
     )
