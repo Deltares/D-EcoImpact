@@ -63,8 +63,9 @@ class ParserClassificationRule(IParserRuleBase):
             description,
         )
 
-    def _validate_table_coverage(self, criteria_table, logger: ILogger):
+    def _validate_table_coverage(self, crit_table, logger: ILogger):
         overlap_msg = []
+        criteria_table = crit_table.copy()
         del criteria_table["output"]
 
         def check_coverage(criteria_table, conditions={}, unique=True):

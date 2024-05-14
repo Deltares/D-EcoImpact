@@ -96,10 +96,10 @@ def type_of_classification(class_val) -> str:
         if "<" in class_val:
             read_str_comparison(class_val, "<")
             return "smaller"
-        try:
-            float(class_val)
-            return "number"
-        except ValueError as exc:
-            raise ValueError(f"No valid criteria is given: {class_val}") from exc
+        print(class_val, float(class_val))
 
-    raise ValueError(f"No valid criteria is given: {class_val}")
+    try:
+        float(class_val)
+        return "number"
+    except Exception as exc:
+        raise ValueError(f"No valid criteria is given: {class_val}") from exc

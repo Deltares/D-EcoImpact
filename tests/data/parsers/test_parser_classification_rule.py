@@ -42,9 +42,9 @@ def test_parse_dict_to_rule_data_logic():
             "description": "test",
             "criteria_table": [
                 ["output", "mesh2d_waterdepth", "mesh2d_sa1"],
-                [100, 0, "<=10"],
-                [300, "<0", "10:15"],
-                [400, ">0", ">=15"],
+                [100, 0, 30],
+                [300, 0, 0.5],
+                [400, 0, "0.3:0.6"],
             ],
             "output_variable": "output",
         }
