@@ -142,9 +142,12 @@ class ParserClassificationRule(IParserRuleBase):
         if type_of_classification(val) == "number":
             return [float(val), float(val), "equal"]
 
-        if type_of_classification(val) == "range":
+        elif type_of_classification(val) == "range":
             start_range, end_range = str_range_to_list(val)
             return [start_range, end_range, "equal"]
+
+        else:
+            return [float("-inf"), float("inf")]
 
     def _validate_criteria_on_overlap_and_gaps(
         self, name, criteria, msgs, pre_warn, logger: ILogger
@@ -156,7 +159,9 @@ class ParserClassificationRule(IParserRuleBase):
         # Check if there are multiple larger or larger and equal comparison values are
         # present, this will cause overlap
         smaller = [
-            i for i, c in enumerate(sorted_range_criteria) if c[0] == float("-inf")
+            i
+            for i, c in enumerate(sorted_range_criteria)
+            if (c[0] == float("-inf")) & (c[1] != float("inf"))
         ]
         if len(smaller) > 1:
             msgs.append(
@@ -169,7 +174,9 @@ class ParserClassificationRule(IParserRuleBase):
         # Check if there are multiple larger or larger and equal comparison values are
         # present, this will cause overlap
         larger = [
-            i for i, c in enumerate(sorted_range_criteria) if c[1] == float("inf")
+            i
+            for i, c in enumerate(sorted_range_criteria)
+            if (c[1] == float("inf")) & (c[0] != float("-inf"))
         ]
         if len(larger) > 1:
             msgs.append(
