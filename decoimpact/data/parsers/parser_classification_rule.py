@@ -10,7 +10,6 @@ Module for ParserClassificationRule class
 Classes:
     ParserClassificationRule
 """
-from bisect import bisect_left, bisect_right, insort
 from typing import Any, Dict
 
 import numpy as _np
@@ -225,7 +224,8 @@ class ParserClassificationRule(IParserRuleBase):
                     )
                     crit[1] = prev_c[1]
 
-                # The range starts within the previous range eg when the user gives the # criteria: 0:10 and 3:15, an overlap will occur
+                # The range starts within the previous range eg when the user
+                # gives the criteria: 0:10 and 3:15, an overlap will occur
                 elif begin_inside & (not end_inside) & (non_equal_overlap):
                     msgs = self._warn_message(
                         name,
@@ -261,6 +261,8 @@ class ParserClassificationRule(IParserRuleBase):
         return msgs
 
     def _check_inside_bounds(self, start, end, var, op_prev=None, op_cur=None):
+        # Check wether the next value falls wihtin the bounds of the previous range.
+        # Some exceptions on > and < defined values.
         if op_cur == "larger":
             left = var > start
         else:
@@ -270,13 +272,12 @@ class ParserClassificationRule(IParserRuleBase):
             right = var < end
         else:
             right = var <= end
-
-        # return (var > start) & (var < end)
         return left & right
 
     def _warn_message(self, name, msgs, pre_warn, start, end=None, type_warn="Overlap"):
-        comparison_string = f"range {start}:{end}"
+        # Create a warning message (default overlap) for given values
+        comp_str = f"range {start}:{end}"
         if (start == end) or (end is None):
-            comparison_string = f"number {start}"
-        msgs.append(f"{pre_warn}{type_warn} for variable {name} in {comparison_string}")
+            comp_str = f"number {start}"
+        msgs.append(f"{pre_warn}{type_warn} for variable {name} in {comp_str}")
         return msgs
