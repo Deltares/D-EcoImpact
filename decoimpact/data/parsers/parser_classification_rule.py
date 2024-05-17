@@ -120,7 +120,7 @@ class ParserClassificationRule(IParserRuleBase):
             logger.log_warning("\n".join(msgs[:10]))
             logger.log_warning(
                 f"{len(msgs)} warnings found concerning coverage of the "
-                "parameters. Only first 10 msgs are shown. See "
+                "parameters. Only first 10 warnings are shown. See "
                 "classification_warnings.log file for all warnings."
             )
             f = open("classification_warnings.log", "w")
