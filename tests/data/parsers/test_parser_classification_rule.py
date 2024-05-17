@@ -85,7 +85,11 @@ def test_parse_dict_to_rule_data_logic():
             """Gap for variable varF in number 0.0""",
         ),
         (
-            [["output", "varF"], [1, ">0"], [2, "<=0"]],
+            [["output", "varF2"], [1, ">0"], [2, "<=0"]],
+            "",
+        ),
+        (
+            [["output", "varF3"], [1, ">=0"], [2, "<0"]],
             "",
         ),
         (
@@ -97,6 +101,10 @@ def test_parse_dict_to_rule_data_logic():
             """Gap for variable varH in range -inf:0.0\nGap for variable varH in range 10.0:inf""",
         ),
         (
+            [["output", "varH2"], [1, "0:10"], [1, "10:15"]],
+            """Gap for variable varH2 in range -inf:0.0\nOverlap for variable varH2 in number 10.0\nGap for variable varH2 in range 15.0:inf""",
+        ),
+        (
             [["output", "varI"], [1, ">0"], [2, "<0"], [3, 0]],
             "",
         ),
@@ -106,11 +114,11 @@ def test_parse_dict_to_rule_data_logic():
         ),
         (
             [["output", "varK"], [1, "0:10"], [2, "3:5"]],
-            "Overlap for variable varK in range 3.0:5.0\nGap for variable varK in range -inf:0.0\nGap for variable varK in range 10.0:inf",
+            "Gap for variable varK in range -inf:0.0\nOverlap for variable varK in range 3.0:5.0\nGap for variable varK in range 10.0:inf",
         ),
         (
             [["output", "varL"], [1, "0:5"], [2, "10:15"], [3, "15:20"], [4, "7:17"]],
-            "Overlap for variable varL in number 15.0\nOverlap for variable varL in range 10.0:17.0\nGap for variable varL in range -inf:0.0\nGap for variable varL in range 5.0:7.0\nGap for variable varL in range 20.0:inf",
+            "Gap for variable varL in range -inf:0.0\nGap for variable varL in range 5.0:7.0\nOverlap for variable varL in range 10.0:15.0\nOverlap for variable varL in range 15.0:17.0\nGap for variable varL in range 20.0:inf",
         ),
         (
             [
@@ -121,11 +129,11 @@ def test_parse_dict_to_rule_data_logic():
                 [4, 0],
                 [5, ">=12"],
             ],
-            "Overlap for variable varM in range 12.0:15.0\nOverlap for variable varM in number 0.0\nOverlap for variable varM in number 10.0",
+            "Overlap for variable varM in number 0.0\nOverlap for variable varM in number 10.0\nOverlap for variable varM in range 12.0:15.0",
         ),
         (
             [["output", "varN"], [1, "0:5"], [2, 3], [3, ">=3"]],
-            "Overlap for variable varN in number 3.0\nOverlap for variable varN in range 3.0:5.0\nGap for variable varN in range -inf:0.0",
+            "Gap for variable varN in range -inf:0.0\nOverlap for variable varN in number 3.0\nOverlap for variable varN in range 3.0:5.0",
         ),
     ],
 )
@@ -144,8 +152,11 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
                 "varD",
                 "varE",
                 "varF",
+                "varF2",
+                "varF3",
                 "varG",
                 "varH",
+                "varH2",
                 "varI",
                 "varJ",
                 "varK",
@@ -190,7 +201,7 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
                 [2, "<0", "<0", ">10"],
                 [3, "<0", ">=0", "0:10"],
             ],
-            """For conditions: (varA: <0, varB: <0). Overlap for variable varC in number 10.0\nFor conditions: (varA: <0, varB: <0). Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0). Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0). Gap for variable varC in range 10.0:inf\nGap for variable varA in range 0.0:inf""",
+            """For conditions: (varA: <0, varB: <0). Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0). Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0). Gap for variable varC in range 10.0:inf\nGap for variable varA in range 0.0:inf""",
         ),
     ],
 )
