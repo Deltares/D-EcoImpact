@@ -7,8 +7,6 @@
 """Main script for running model using command-line"""
 
 
-import argparse
-import sys
 from pathlib import Path
 
 from decoimpact.business.application import Application
