@@ -21,7 +21,6 @@ from decoimpact.data.parsers.validation_utils import validate_table_with_input
 
 
 class ParserClassificationRule(IParserRuleBase):
-
     """Class for creating a ClassificationRuleData"""
 
     @property
@@ -47,10 +46,8 @@ class ParserClassificationRule(IParserRuleBase):
         output_variable_name = get_dict_element("output_variable", dictionary)
         description = get_dict_element("description", dictionary)
 
-        return ClassificationRuleData(
-            name,
-            input_variable_names,
-            criteria_table,
-            output_variable_name,
-            description,
-        )
+        rule_data = ClassificationRuleData(name, input_variable_names, criteria_table)
+        rule_data.description = description
+        rule_data.output_variable = output_variable_name
+
+        return rule_data

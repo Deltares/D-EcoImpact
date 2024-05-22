@@ -17,13 +17,10 @@ def test_step_function_rule_data_creation_logic():
 
     # Act
     data = StepFunctionRuleData(
-        "test_rule_name",
-        [1.0, 2.0, 3.0],
-        [10.0, 20.0, 30.0],
-        "test_input_vars_name",
-        "test_description",
-        "test_output_var_name",
+        "test_rule_name", [1.0, 2.0, 3.0], [10.0, 20.0, 30.0], "test_input_vars_name"
     )
+    data.description = "test_description"
+    data.output_variable = "test_output_var_name"
 
     # Assert
 

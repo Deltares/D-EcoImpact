@@ -18,12 +18,13 @@ from decoimpact.data.dictionary_utils import convert_table_element, get_dict_ele
 from decoimpact.data.entities.multiply_rule_data import MultiplyRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.data.parsers.validation_utils import (
-    validate_all_instances_number, validate_start_before_end, validate_type_date
+    validate_all_instances_number,
+    validate_start_before_end,
+    validate_type_date,
 )
 
 
 class ParserMultiplyRule(IParserRuleBase):
-
     """Class for creating a MultiplyRuleData"""
 
     @property
@@ -61,11 +62,14 @@ class ParserMultiplyRule(IParserRuleBase):
             date_range = list(zip(start_date, end_date))
         validate_all_instances_number(sum(multipliers, []), "Multipliers")
 
-        return MultiplyRuleData(
+        rule_data = MultiplyRuleData(
             name,
             multipliers,
             input_variable_name,
-            output_variable_name,
-            description,
-            date_range
+            date_range,
         )
+
+        rule_data.output_variable = output_variable_name
+        rule_data.description = description
+
+        return rule_data

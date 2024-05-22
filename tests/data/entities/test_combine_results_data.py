@@ -18,9 +18,7 @@ def test_combine_results_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    data = CombineResultsRuleData(
-        "test_name", ["input1", "input2"], "MULTIPLY", "output"
-    )
+    data = CombineResultsRuleData("test_name", ["input1", "input2"], "MULTIPLY")
 
     # Assert
 

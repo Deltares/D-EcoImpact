@@ -17,7 +17,8 @@ def test_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    data = RuleData("test_name", output_variable="foo")
+    data = RuleData("test_name")
+    data.output_variable = "foo"
 
     # Assert
 

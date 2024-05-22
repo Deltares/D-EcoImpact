@@ -27,10 +27,8 @@ class TimeAggregationRuleData(ITimeAggregationRuleData, RuleData):
         operation_parameter: float,
         input_variable: str,
         time_scale: str = "year",
-        output_variable: str = "output",
-        description: str = "",
     ):
-        super().__init__(name, output_variable, description)
+        super().__init__(name)
         self._input_variable = input_variable
         self._operation = operation
         self._operation_parameter = operation_parameter

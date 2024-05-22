@@ -20,7 +20,6 @@ from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
 class ParserFormulaRule(IParserRuleBase):
-
     """Class for creating a FormulaRuleData"""
 
     @property
@@ -45,13 +44,11 @@ class ParserFormulaRule(IParserRuleBase):
         if not description:
             description = ""
 
-        return FormulaRuleData(
-            name,
-            input_variable_names,
-            formula,
-            output_variable_name,
-            description,
-        )
+        rule_data = FormulaRuleData(name, input_variable_names, formula)
+        rule_data.output_variable = output_variable_name
+        rule_data.description = description
+
+        return rule_data
 
     def _validate_formula(self, formula: str):
         """

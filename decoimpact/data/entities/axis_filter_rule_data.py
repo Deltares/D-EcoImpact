@@ -20,15 +20,9 @@ class AxisFilterRuleData(IAxisFilterRuleData, RuleData):
     """Class for storing data related to axis filter rule rule"""
 
     def __init__(
-        self,
-        name: str,
-        layer_number: int,
-        axis_name: str,
-        input_variable: str,
-        output_variable: str = "output",
-        description: str = "",
+        self, name: str, layer_number: int, axis_name: str, input_variable: str
     ):
-        super().__init__(name, output_variable, description)
+        super().__init__(name)
         self._input_variable = input_variable
         self._layer_number = layer_number
         self._axis_name = axis_name

@@ -14,14 +14,14 @@ from decoimpact.data.entities.axis_filter_rule_data import AxisFilterRuleData
 
 def test_axis_filter_rule_data_creation_logic():
     """The AxisFilterRuleData should parse the provided dictionary
-    to correctly initialize itself during creation """
-    
-    #Act
-    data = AxisFilterRuleData("test_name", 3, "axis_name", "input", "output", "description")
-    
-    
-    #Assert
-    
+    to correctly initialize itself during creation"""
+
+    # Act
+    data = AxisFilterRuleData("test_name", 3, "axis_name", "input")
+    data.description = "description"
+
+    # Assert
+
     assert isinstance(data, IRuleData)
     assert data.input_variable == "input"
     assert data.layer_number == 3

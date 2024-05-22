@@ -26,11 +26,9 @@ class MultiplyRuleData(IMultiplyRuleData, RuleData):
         name: str,
         multipliers: List[List[float]],
         input_variable: str,
-        output_variable: str = "output",
-        description: str = "",
         date_range: Optional[List[List[str]]] = None,
     ):
-        super().__init__(name, output_variable, description)
+        super().__init__(name)
         self._input_variable = input_variable
         self._multipliers = multipliers
         self._date_range = date_range

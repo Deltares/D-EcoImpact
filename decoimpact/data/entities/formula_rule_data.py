@@ -13,6 +13,7 @@ Classes:
 """
 
 from typing import List
+
 from decoimpact.data.api.i_formula_rule_data import IFormulaRuleData
 from decoimpact.data.entities.rule_data import RuleData
 
@@ -20,15 +21,8 @@ from decoimpact.data.entities.rule_data import RuleData
 class FormulaRuleData(IFormulaRuleData, RuleData):
     """Class for storing data related to formula rule"""
 
-    def __init__(
-        self,
-        name: str,
-        input_variable_names: List[str],
-        formula: str,
-        output_variable: str,
-        description: str = "",
-    ):
-        super().__init__(name, output_variable, description)
+    def __init__(self, name: str, input_variable_names: List[str], formula: str):
+        super().__init__(name)
         self._input_variable_names = input_variable_names
         self._formula = formula
 

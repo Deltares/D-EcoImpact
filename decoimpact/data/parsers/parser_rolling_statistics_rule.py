@@ -44,6 +44,8 @@ class ParserRollingStatisticsRule(IParserRuleBase):
         operation = get_dict_element("operation", dictionary)
         time_scale = get_dict_element("time_scale", dictionary)
         period = get_dict_element("period", dictionary)
+        description = get_dict_element("description", dictionary, False)
+
         # if operation contains percentile,
         # extract percentile value as operation_parameter from operation:
         if str(operation)[:10] == "PERCENTILE":
@@ -80,12 +82,16 @@ class ParserRollingStatisticsRule(IParserRuleBase):
                 raise ValueError(message)
         output_variable_name = get_dict_element("output_variable", dictionary)
 
-        return RollingStatisticsRuleData(
+        rule_data = RollingStatisticsRuleData(
             name,
             operation_value,
             operation_parameter,
             input_variable_name,
             period,
             time_scale,
-            output_variable_name,
         )
+
+        rule_data.output_variable = output_variable_name
+        rule_data.description = description
+
+        return rule_data
