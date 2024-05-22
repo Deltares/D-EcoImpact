@@ -133,13 +133,14 @@ class ParserClassificationRule(IParserRuleBase):
             divide_table_in_unique_chunks(new_crit_table, {}, unique)
             del new_crit_table[key]
 
-        if len(msgs) < 2:
+        max_msg = 6
+        if len(msgs) < max_msg:
             logger.log_warning("\n".join(msgs))
         else:
-            logger.log_warning("\n".join(msgs[:10]))
+            logger.log_warning("\n".join(msgs[:max_msg]))
             logger.log_warning(
                 f"{len(msgs)} warnings found concerning coverage of the "
-                "parameters. Only first 10 warnings are shown. See "
+                f"parameters. Only first {max_msg} warnings are shown. See "
                 "classification_warnings.log file for all warnings."
             )
             f = open("classification_warnings.log", "w")

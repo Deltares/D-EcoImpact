@@ -268,6 +268,6 @@ def test_feedback_for_criteria_multiple_parameters_more_10_warnings():
     data.parse_dict(contents, logger)
 
     logger.log_warning.assert_called_with(
-        "11 warnings found concerning coverage of the parameters. Only first 10 "
+        "11 warnings found concerning coverage of the parameters. Only first 6 "
         "warnings are shown. See classification_warnings.log file for all warnings."
     )
