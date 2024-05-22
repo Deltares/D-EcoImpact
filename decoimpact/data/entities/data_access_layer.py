@@ -15,7 +15,7 @@ Classes:
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Any, List
+from typing import Any
 
 import xarray as _xr
 import yaml as _yaml

@@ -14,7 +14,6 @@ Interfaces:
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List
 
 import xarray as _xr
 
