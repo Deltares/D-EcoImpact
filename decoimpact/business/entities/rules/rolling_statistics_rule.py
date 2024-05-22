@@ -15,7 +15,6 @@ import copy as _cp
 import datetime as _dt
 
 # from itertools import groupby
-from os import name
 from typing import List
 
 import numpy as _np
