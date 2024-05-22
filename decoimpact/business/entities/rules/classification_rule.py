@@ -12,7 +12,6 @@ Classes:
 """
 
 from typing import Dict, List, Optional
-from xmlrpc.client import Boolean
 
 import xarray as _xr
 

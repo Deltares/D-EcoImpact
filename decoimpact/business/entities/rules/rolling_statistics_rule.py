@@ -39,32 +39,27 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: TimeOperationType,
-        operation_parameter: float = 0,
-        time_scale: str = "day",
-        period: float = 1,
     ):
-        """Constructs a RollingStatistics rule
-
-        Args:
-            name (str): Name of the rule
-            input_variable_names (List[str]): List of input variables
-            operation_type (TimeOperationType): Type of operation to perform
-            operation_parameter (float, optional): Extra parameter for operation.
-                                                   Defaults to 0.
-            time_scale (str, optional): time scale of the operation. Defaults to "day".
-            period (float, optional): number of days/hours of the period. Defaults to 1.
-        """
         super().__init__(name, input_variable_names)
         self._settings = TimeOperationSettings({"hour": "H", "day": "D"})
-        self._settings.operation_parameter = operation_parameter
+        self._settings.operation_parameter = 0
         self._settings.operation_type = operation_type
-        self._settings.time_scale = time_scale
-        self._period = period
+        self._settings.time_scale = "day"
+        self._period = 1
 
     @property
     def settings(self):
         """Time operation settings"""
         return self._settings
+
+    @property
+    def period(self) -> float:
+        """Operation type property"""
+        return self._period
+
+    @period.setter
+    def period(self, period: float):
+        self._period = period
 
     def validate(self, logger: ILogger) -> bool:
         """Validates if the rule is valid

@@ -142,13 +142,12 @@ class ModelBuilder(IModelBuilder):
 
         if isinstance(rule_data, IRollingStatisticsRuleData):
             rule = RollingStatisticsRule(
-                rule_data.name,
-                [rule_data.input_variable],
-                rule_data.operation,
-                rule_data.operation_parameter,
-                rule_data.time_scale,
-                rule_data.period,
+                rule_data.name, [rule_data.input_variable], rule_data.operation
             )
+            rule.settings.operation_parameter = rule_data.operation_parameter
+            rule.settings.time_scale = rule_data.time_scale
+            rule.period = rule_data.period
+
             ModelBuilder._set_default_fields(rule_data, rule)
             return rule
 
