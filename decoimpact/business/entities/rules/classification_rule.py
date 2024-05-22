@@ -35,10 +35,8 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         criteria_table: Dict[str, List],
-        output_variable_name: str = "output",
-        description: str = "",
     ):
-        super().__init__(name, input_variable_names, output_variable_name, description)
+        super().__init__(name, input_variable_names)
         self._criteria_table = criteria_table
 
     @property

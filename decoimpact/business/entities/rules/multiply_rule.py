@@ -30,11 +30,9 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         multipliers: List[List[float]],
-        output_variable_name: str = "output",
         date_range: Optional[List[List[str]]] = None,
-        description: str = "",
     ):
-        super().__init__(name, input_variable_names, output_variable_name, description)
+        super().__init__(name, input_variable_names)
         self._multipliers = multipliers
         self._date_range = date_range
 

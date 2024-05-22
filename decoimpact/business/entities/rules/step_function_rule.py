@@ -44,9 +44,8 @@ class StepFunctionRule(RuleBase, ICellBasedRule):
         input_variable_name: str,
         limits: List[float],
         responses: List[float],
-        output_variable_name="output",
     ):
-        super().__init__(name, [input_variable_name], output_variable_name)
+        super().__init__(name, [input_variable_name])
 
         self._limits = _np.array(limits)
         self._responses = _np.array(responses)

@@ -39,7 +39,8 @@ def test_execute_value_array_multiplied_by_multipliers_no_dates():
 
     # Arrange
     logger = Mock(ILogger)
-    rule = MultiplyRule("test", ["foo"], [[0.5, 4.0]], description="description")
+    rule = MultiplyRule("test", ["foo"], [[0.5, 4.0]])
+    rule.description = "description"
     data = [1, 2, 3, 4]
     value_array = _xr.DataArray(data)
 

@@ -21,7 +21,6 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 
 class AxisFilterRule(RuleBase, IArrayBasedRule):
-
     """Implementation for the layer filter rule"""
 
     def __init__(
@@ -30,10 +29,8 @@ class AxisFilterRule(RuleBase, IArrayBasedRule):
         input_variable_names: List[str],
         layer_number: int,
         axis_name: str,
-        output_variable_name: str = "output",
-        description: str = "",
     ):
-        super().__init__(name, input_variable_names, output_variable_name, description)
+        super().__init__(name, input_variable_names)
         self._layer_number = layer_number
         self._axis_name = axis_name
 
@@ -48,7 +45,6 @@ class AxisFilterRule(RuleBase, IArrayBasedRule):
         return self._axis_name
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
-
         """Obtain a 2D layer from a 3D variable
 
         Args:

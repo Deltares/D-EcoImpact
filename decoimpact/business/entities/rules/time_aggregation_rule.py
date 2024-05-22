@@ -36,10 +36,8 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         operation_type: TimeOperationType,
         operation_parameter: float = 0,
         time_scale: str = "year",
-        output_variable_name: str = "output",
-        description: str = "",
     ):
-        super().__init__(name, input_variable_names, output_variable_name, description)
+        super().__init__(name, input_variable_names)
         self._operation_type = operation_type
         self._operation_parameter = operation_parameter
         self._time_scale = time_scale.lower()

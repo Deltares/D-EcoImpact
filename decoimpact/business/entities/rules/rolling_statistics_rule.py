@@ -39,10 +39,8 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
         operation_parameter: float = 0,
         time_scale: str = "day",
         period: float = 1,
-        output_variable_name: str = "output",
-        description: str = "",
     ):
-        super().__init__(name, input_variable_names, output_variable_name, description)
+        super().__init__(name, input_variable_names)
         self._operation_type = operation_type
         self._time_scale = time_scale.lower()
         self._operation_parameter = operation_parameter
