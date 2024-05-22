@@ -1,3 +1,5 @@
+"""Example for building a model in code"""
+
 import xarray as _xr
 
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
@@ -13,9 +15,6 @@ from decoimpact.data.api.time_operation_type import TimeOperationType
 
 class ScreenLogger(ILogger):
     """Logger implementation based on default logging library"""
-
-    def __init__(self) -> None:
-        super().__init__()
 
     def log_error(self, message: str) -> None:
         print("error:" + message)
@@ -34,8 +33,8 @@ class ScreenLogger(ILogger):
 logger: ILogger = ScreenLogger()
 
 # read input dataset
-inputPath = "data/FM-VZM_0000_map.nc"
-inputDataset: _xr.Dataset = _xr.open_dataset(inputPath, mask_and_scale=True)
+INPUT_PATH = "data/FM-VZM_0000_map.nc"
+inputDataset: _xr.Dataset = _xr.open_dataset(INPUT_PATH, mask_and_scale=True)
 
 # create rules
 rule1 = MultiplyRule("multiply rule", ["mesh2d_sa1"], [0.0018066, 1e5])
