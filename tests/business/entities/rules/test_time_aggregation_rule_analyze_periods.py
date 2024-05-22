@@ -47,8 +47,8 @@ def test_validation_when_valid():
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.COUNT_PERIODS,
-        time_scale="month",
     )
+    rule.settings.time_scale = "month"
 
     valid = rule.validate(logger)
     assert valid
@@ -61,8 +61,8 @@ def test_validation_when_not_valid():
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.COUNT_PERIODS,
-        time_scale="awhile",
     )
+    rule.settings.time_scale = "awhile"
 
     valid = rule.validate(logger)
     allowed_time_scales = rule.settings.time_scale_mapping.keys()
@@ -473,8 +473,8 @@ def test_execute_value_array_condition_time_monthly_count_periods():
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.COUNT_PERIODS,
-        time_scale="month",
     )
+    rule.settings.time_scale = "month"
 
     time_condition = rule.execute(value_array_monthly, logger)
 

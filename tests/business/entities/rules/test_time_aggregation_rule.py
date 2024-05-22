@@ -210,11 +210,10 @@ def test_execute_value_array_aggregate_time_monthly_add():
     # create test set
     logger = Mock(ILogger)
     rule = TimeAggregationRule(
-        name="test",
-        input_variable_names=["foo"],
-        operation_type=TimeOperationType.ADD,
-        time_scale="month",
+        name="test", input_variable_names=["foo"], operation_type=TimeOperationType.ADD
     )
+
+    rule.settings.time_scale = "month"
 
     time_aggregation = rule.execute(value_array_monthly, logger)
 
@@ -236,10 +235,10 @@ def test_execute_value_array_aggregate_time_monthly_min():
     logger = Mock(ILogger)
     rule = TimeAggregationRule(
         name="test",
-        time_scale="month",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.MIN,
     )
+    rule.settings.time_scale = "month"
 
     time_aggregation = rule.execute(value_array_monthly, logger)
 
@@ -259,10 +258,10 @@ def test_execute_value_array_aggregate_time_monthly_max():
     logger = Mock(ILogger)
     rule = TimeAggregationRule(
         name="test",
-        time_scale="month",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.MAX,
     )
+    rule.settings.time_scale = "month"
 
     time_aggregation = rule.execute(value_array_monthly, logger)
 
@@ -288,10 +287,10 @@ def test_execute_value_array_aggregate_time_monthly_average():
     logger = Mock(ILogger)
     rule = TimeAggregationRule(
         name="test",
-        time_scale="month",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.AVERAGE,
     )
+    rule.settings.time_scale = "month"
 
     time_aggregation = rule.execute(value_array_monthly, logger)
 
@@ -313,10 +312,10 @@ def test_execute_value_array_aggregate_time_monthly_median():
     logger = Mock(ILogger)
     rule = TimeAggregationRule(
         name="test",
-        time_scale="month",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.MEDIAN,
     )
+    rule.settings.time_scale = "month"
 
     time_aggregation = rule.execute(value_array_monthly, logger)
 
@@ -339,10 +338,10 @@ def test_execute_value_array_aggregate_time_monthly_stdev():
     logger = Mock(ILogger)
     rule = TimeAggregationRule(
         name="test",
-        time_scale="month",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.STDEV,
     )
+    rule.settings.time_scale = "month"
 
     time_aggregation = rule.execute(value_array_monthly, logger)
     result_data = [0.0, 0.25, 0.05]
@@ -364,11 +363,11 @@ def test_execute_value_array_aggregate_time_monthly_percentile():
     logger = Mock(ILogger)
     rule = TimeAggregationRule(
         name="test",
-        time_scale="month",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.PERCENTILE,
-        operation_parameter=10,
     )
+    rule.settings.time_scale = "month"
+    rule.settings.operation_parameter = 10
 
     time_aggregation = rule.execute(value_array_monthly, logger)
     result_data = [0.1, 0.25, 0.21]
@@ -390,10 +389,10 @@ def test_operation_type_not_implemented():
     logger = Mock(ILogger)
     rule = TimeAggregationRule(
         name="test",
-        time_scale="month",
         input_variable_names=["foo"],
         operation_type="test",
     )
+    rule.settings.time_scale = "month"
 
     with pytest.raises(NotImplementedError) as exc_info:
         rule.execute(value_array_monthly, logger)

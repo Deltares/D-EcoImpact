@@ -23,7 +23,6 @@ from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
 class ParserRollingStatisticsRule(IParserRuleBase):
-
     """Class for creating a RollingStatisticsRuleData"""
 
     @property
@@ -86,7 +85,7 @@ class ParserRollingStatisticsRule(IParserRuleBase):
             operation_value,
             operation_parameter,
             input_variable_name,
-            output_variable_name,
             period,
             time_scale,
+            output_variable_name,
         )
