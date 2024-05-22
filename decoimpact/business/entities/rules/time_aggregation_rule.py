@@ -20,6 +20,9 @@ from xarray.core.resample import DataArrayResample
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
+from decoimpact.business.entities.rules.time_operation_settings import (
+    TimeOperationSettings,
+)
 from decoimpact.business.utils.data_array_utils import get_time_dimension_name
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.time_operation_type import TimeOperationType
@@ -38,30 +41,15 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         time_scale: str = "year",
     ):
         super().__init__(name, input_variable_names)
-        self._operation_type = operation_type
-        self._operation_parameter = operation_parameter
-        self._time_scale = time_scale.lower()
-        self._time_scale_mapping = {"month": "M", "year": "Y"}
+        self._settings = TimeOperationSettings({"month": "M", "year": "Y"})
+        self._settings.operation_parameter = operation_parameter
+        self._settings.operation_type = operation_type
+        self._settings.time_scale = time_scale
 
     @property
-    def operation_type(self):
-        """Operation type property"""
-        return self._operation_type
-
-    @property
-    def operation_parameter(self):
-        """Operation parameter property"""
-        return self._operation_parameter
-
-    @property
-    def time_scale(self):
-        """Time scale property"""
-        return self._time_scale
-
-    @property
-    def time_scale_mapping(self):
-        """Time scale mapping property"""
-        return self._time_scale_mapping
+    def settings(self):
+        """Time operation settings"""
+        return self._settings
 
     def validate(self, logger: ILogger) -> bool:
         """Validates if the rule is valid
@@ -70,12 +58,12 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             bool: wether the rule is valid
         """
         valid = True
-        allowed_time_scales = self._time_scale_mapping.keys()
+        allowed_time_scales = self._settings.time_scale_mapping.keys()
 
-        if self._time_scale not in allowed_time_scales:
+        if self._settings.time_scale not in allowed_time_scales:
             options = ",".join(allowed_time_scales)
             logger.log_error(
-                f"The provided time scale '{self._time_scale}' "
+                f"The provided time scale '{self._settings.time_scale}' "
                 f"of rule '{self._name}' is not supported.\n"
                 f"Please select one of the following types: "
                 f"{options}"
@@ -93,7 +81,8 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             DataArray: Aggregated values
         """
-        if self._operation_type is TimeOperationType.COUNT_PERIODS:
+        settings = self._settings
+        if settings.operation_type is TimeOperationType.COUNT_PERIODS:
             # Check if all values in a COUNT_PERIODS value array are either 0 or 1
             compare_values = (value_array == 0) | (value_array == 1)
             check_values = _xr.where(compare_values, True, False)
@@ -103,7 +92,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
                     " COUNT_PERIODS should only contain the values 0 and 1."
                 )
 
-        dim_name = get_dict_element(self._time_scale, self._time_scale_mapping)
+        dim_name = get_dict_element(settings.time_scale, settings.time_scale_mapping)
 
         time_dim_name = get_time_dimension_name(value_array, logger)
         aggregated_values = value_array.resample({time_dim_name: dim_name})
@@ -111,7 +100,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         result = self._perform_operation(aggregated_values)
         # create a new aggregated time dimension based on original time dimension
 
-        result_time_dim_name = f"{time_dim_name}_{self._time_scale}"
+        result_time_dim_name = f"{time_dim_name}_{settings.time_scale}"
         result = result.rename({time_dim_name: result_time_dim_name})
 
         for key, value in value_array[time_dim_name].attrs.items():
@@ -144,36 +133,37 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             TimeOperationType.AVG_DURATION_PERIODS,
         ]
 
-        if self._operation_type is TimeOperationType.ADD:
+        operation_type = self.settings.operation_type
+
+        if operation_type is TimeOperationType.ADD:
             result = aggregated_values.sum()
 
-        elif self._operation_type is TimeOperationType.MIN:
+        elif operation_type is TimeOperationType.MIN:
             result = aggregated_values.min()
 
-        elif self._operation_type is TimeOperationType.MAX:
+        elif operation_type is TimeOperationType.MAX:
             result = aggregated_values.max()
 
-        elif self._operation_type is TimeOperationType.AVERAGE:
+        elif operation_type is TimeOperationType.AVERAGE:
             result = aggregated_values.mean()
 
-        elif self._operation_type is TimeOperationType.MEDIAN:
+        elif operation_type is TimeOperationType.MEDIAN:
             result = aggregated_values.median()
 
-        elif self._operation_type in period_operations:
+        elif operation_type in period_operations:
             result = aggregated_values.reduce(self.analyze_groups, dim="time")
 
-        elif self._operation_type is TimeOperationType.STDEV:
+        elif operation_type is TimeOperationType.STDEV:
             result = aggregated_values.std()
 
-        elif self._operation_type is TimeOperationType.PERCENTILE:
+        elif operation_type is TimeOperationType.PERCENTILE:
             result = aggregated_values.quantile(
-                self._operation_parameter / 100
+                self.settings.operation_parameter / 100
             ).drop_vars("quantile")
 
         else:
             raise NotImplementedError(
-                f"The operation type '{self._operation_type}' "
-                "is currently not supported"
+                f"The operation type '{operation_type}' " "is currently not supported"
             )
 
         return _xr.DataArray(result)
@@ -250,11 +240,11 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         #  in case of 1 dimension:
         if no_axis == 1:
-            if self._operation_type is TimeOperationType.COUNT_PERIODS:
+            if self.settings.operation_type is TimeOperationType.COUNT_PERIODS:
                 group_result = self.count_groups(elem)
-            elif self._operation_type is TimeOperationType.MAX_DURATION_PERIODS:
+            elif self.settings.operation_type is TimeOperationType.MAX_DURATION_PERIODS:
                 group_result = _np.max((self.duration_groups(elem)))
-            elif self._operation_type is TimeOperationType.AVG_DURATION_PERIODS:
+            elif self.settings.operation_type is TimeOperationType.AVG_DURATION_PERIODS:
                 period = float(_np.sum(elem))
                 group_count = float(self.count_groups(elem))
                 group_result = _np.divide(
