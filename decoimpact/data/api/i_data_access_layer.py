@@ -20,6 +20,7 @@ import xarray as _xr
 
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
+from decoimpact.data.api.output_file_settings import OutputFileSettings
 
 
 class IDataAccessLayer(ABC):
@@ -49,15 +50,20 @@ class IDataAccessLayer(ABC):
         """
 
     @abstractmethod
-    def write_output_file(self, dataset: _xr.Dataset, path: Path,
-                          variables_to_remove: List[str], application_version: str,
-                          application_name: str) -> None:
+    def write_output_file(
+        self, dataset: _xr.Dataset, path: Path, settings: OutputFileSettings
+    ) -> None:
         """Write output files to provided path
 
         Args:
             dataset (XArray dataset): dataset to write
             path (str): path to output file
+            settings (OutputFileSettings): settings to use for saving output
 
         Returns:
             None
+
+        Raises:
+            FileExistsError: if output file location does not exist
+            OSError: if output file cannot be written
         """

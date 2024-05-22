@@ -23,6 +23,7 @@ from decoimpact.business.workflow.model_runner import ModelRunner as _ModelRunne
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_model_data import IModelData
+from decoimpact.data.api.output_file_settings import OutputFileSettings
 
 
 class Application:
@@ -93,12 +94,13 @@ class Application:
 
             # write output file
             if model.status == _ModelStatus.FINALIZED:
+                settings = OutputFileSettings(
+                    self.APPLICATION_NAME, self.APPLICATION_VERSION
+                )
+                settings.variables_to_save = model_data.output_variables
+
                 self._da_layer.write_output_file(
-                    model.output_dataset,
-                    model_data.output_path,
-                    model_data.output_variables,
-                    self.APPLICATION_VERSION,
-                    self.APPLICATION_NAME,
+                    model.output_dataset, model_data.output_path, settings
                 )
 
         except Exception as exc:  # pylint: disable=broad-except

@@ -47,9 +47,9 @@ rule3 = TimeAggregationRule(
     "get average chloride level",
     ["chloride_top_layer"],
     TimeOperationType.AVERAGE,
-    0,
-    "year",
 )
+rule3.settings.operation_parameter = 0
+rule3.settings.time_scale = "year"
 rule3.output_variable_name = "chloride_top_layer_year"
 
 rule4 = StepFunctionRule(
