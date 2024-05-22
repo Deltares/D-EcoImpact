@@ -52,12 +52,10 @@ def test_rolling_statistics_rule_without_time_dimension():
     # create test set
     logger = Mock(ILogger)
     rule = RollingStatisticsRule(
-        name="test",
-        input_variable_names=["foo"],
-        operation_type=TimeOperationType.ADD,
-        time_scale="day",
-        period=365,
+        name="test", input_variable_names=["foo"], operation_type=TimeOperationType.ADD
     )
+    rule.settings.time_scale = "day"
+    rule.period = 365
 
     test_data = [1.2, 0.4]
     test_array = _xr.DataArray(test_data, name="test_with_error")
@@ -81,9 +79,10 @@ def test_execute_value_array_rolling_statistics_max():
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.MAX,
-        time_scale="day",
-        period=2,
     )
+
+    rule.settings.time_scale = "day"
+    rule.period = 2
 
     rolling_statistic = rule.execute(value_array, logger)
 
@@ -92,20 +91,18 @@ def test_execute_value_array_rolling_statistics_max():
 
     # Assert
     assert _xr.testing.assert_equal(rolling_statistic, result_array) is None
-    
-    
+
+
 def test_execute_value_array_rolling_statistics_min():
     """RullingStatisticsRule (min, yearly)"""
 
     # create test set
     logger = Mock(ILogger)
     rule = RollingStatisticsRule(
-        name="test",
-        input_variable_names=["foo"],
-        operation_type=TimeOperationType.MIN,
-        time_scale="day",
-        period=2,
+        name="test", input_variable_names=["foo"], operation_type=TimeOperationType.MIN
     )
+    rule.settings.time_scale = "day"
+    rule.period = 2
 
     rolling_statistic = rule.execute(value_array, logger)
 
@@ -114,8 +111,8 @@ def test_execute_value_array_rolling_statistics_min():
 
     # Assert
     assert _xr.testing.assert_equal(rolling_statistic, result_array) is None
-    
-    
+
+
 def test_execute_value_array_rolling_statistics_average():
     """RullingStatisticsRule (average, yearly)"""
 
@@ -125,9 +122,10 @@ def test_execute_value_array_rolling_statistics_average():
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.MEDIAN,
-        time_scale="day",
-        period=2,
     )
+
+    rule.settings.time_scale = "day"
+    rule.period = 2
 
     rolling_statistic = rule.execute(value_array, logger)
 
@@ -145,12 +143,10 @@ def test_operation_type_not_implemented():
     # create test set
     logger = Mock(ILogger)
     rule = RollingStatisticsRule(
-        name="test",
-        input_variable_names=["foo"],
-        operation_type="test",
-        time_scale="day",
-        period=2,
+        name="test", input_variable_names=["foo"], operation_type="test"
     )
+    rule.settings.time_scale = "day"
+    rule.period = 2
 
     with pytest.raises(NotImplementedError) as exc_info:
         rule.execute(value_array, logger)

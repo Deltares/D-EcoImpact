@@ -57,20 +57,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             bool: wether the rule is valid
         """
-        valid = True
-        allowed_time_scales = self._settings.time_scale_mapping.keys()
-
-        if self._settings.time_scale not in allowed_time_scales:
-            options = ",".join(allowed_time_scales)
-            logger.log_error(
-                f"The provided time scale '{self._settings.time_scale}' "
-                f"of rule '{self._name}' is not supported.\n"
-                f"Please select one of the following types: "
-                f"{options}"
-            )
-            valid = False
-
-        return valid
+        return self.settings.validate(self.name, logger)
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
         """Aggregates the values for the specified start and end date
