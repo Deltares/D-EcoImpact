@@ -63,13 +63,27 @@ class ParserClassificationRule(IParserRuleBase):
         )
 
     def _validate_table_coverage(self, crit_table, logger: ILogger):
+        """Check if the criteria for the parameters given in the criteria_table
+        cover the entire range of data values. If not give the user feedback (warnings)
+        concerning gaps and overlaps.
+
+        Args:
+            crit_table (_type_): User input describing criteria per parameter
+        """
         msgs = []
         criteria_table = crit_table.copy()
         del criteria_table["output"]
 
-        def check_coverage(criteria_table, conditions={}, unique=True):
-            # This is a recursive function until all combinations of variables in the
-            # criteria table is checked on coverage.
+        def divide_table_in_unique_chunks(criteria_table, conditions={}, unique=True):
+            """This is a recursive function until all combinations of variables in the
+            criteria table is checked on coverage.
+
+            Args:
+                criteria_table (_type_): _description_
+                conditions (dict, optional): _description_. Defaults to {}.
+                unique (bool, optional): _description_. Defaults to True.
+            """
+            #
             # If there is only one variable, check on all conditions for coverage
             if len(criteria_table.items()) == 1:
                 cond_str = ", ".join(
@@ -81,8 +95,10 @@ class ParserClassificationRule(IParserRuleBase):
                     cond_str = f"For conditions: ({cond_str}). "
                 if unique:
                     # Little trick to ignore the duplicates when a combination of
-                    # parameters is given.
+                    # variables is given. This step is skipped when there is
+                    # only one parameter given in the criteria_table
                     criteria = _np.unique(criteria)
+                # WHen there is only one parameter left in the given table ()
                 self._validate_criteria_on_overlap_and_gaps(
                     name, criteria, msgs, cond_str, logger
                 )
@@ -102,18 +118,22 @@ class ParserClassificationRule(IParserRuleBase):
                     )
                     conditions[list(criteria_table.keys())[0]] = unique_c
                     # Send the remaining filtered parameters back into the function
-                    check_coverage(new_crit_table, conditions)
+                    divide_table_in_unique_chunks(new_crit_table, conditions)
 
         new_crit_table = criteria_table.copy()
         unique = True
+
+        # If only 1 parameter is given in the criteria_table check the first parameter
+        # on all values and not only the unique values.
         if len(new_crit_table.items()) == 1:
             unique = False
+
         # Make a loop over all variables from right to left to check combinations
         for key in reversed(criteria_table.keys()):
-            check_coverage(new_crit_table, {}, unique)
+            divide_table_in_unique_chunks(new_crit_table, {}, unique)
             del new_crit_table[key]
 
-        if len(msgs) < 10:
+        if len(msgs) < 2:
             logger.log_warning("\n".join(msgs))
         else:
             logger.log_warning("\n".join(msgs[:10]))
@@ -125,11 +145,22 @@ class ParserClassificationRule(IParserRuleBase):
             f = open("classification_warnings.log", "w")
             f.write("\n".join(msgs))
             f.close()
-        # Only show the first 10 lines. Print all msgs to a txt file.
+        # Only show the first 2 lines. Print all msgs to a txt file.
 
     def _convert_to_ranges(self, val):
-        # Make sure all type of accepted criteria is converted to range format
-        # [start, end]
+        """Make sure all type of accepted criteria is converted to range format
+        [start, end]
+
+        Args:
+            val: Criteria to be converted (number, range or comparison)
+
+        Returns:
+            [start, end]: Returns a range for the criteria given.
+                            number -> [val, val]
+                            comparison -> [-inf, val] or [val, inf]
+                            range -> val
+        """
+
         for bnd_name, operator in [("larger_equal", ">="), ("larger", ">")]:
             if type_of_classification(val) == bnd_name:
                 return [read_str_comparison(val, operator), float("inf"), bnd_name]
@@ -151,7 +182,27 @@ class ParserClassificationRule(IParserRuleBase):
     def _validate_criteria_on_overlap_and_gaps(
         self, name, criteria, msgs, pre_warn, logger: ILogger
     ):
+        """Go over the given criteria to determine if there are gaps or
+        overlaps.
+
+        Args:
+            name (_type_): Name of the parameter
+            criteria (_type_): The criteria (ranges, numbers of comparisons)
+            msgs (_type_): A list with all gathered warning messages
+            pre_warn (_type_): A prepend message that needs to be included
+            for parameter combinations
+
+        Returns:
+            _type_: _description_
+        """
+        # The list of criteria is converted to a list of ranges
         range_criteria = list(map(self._convert_to_ranges, criteria))
+
+        # The ranges needs to be sorted. First on "end" value (1.)
+        # then on "start" value (2.)
+        # For example: [[1, 4], [0, 5], [-inf, 2] [-inf, 0]]
+        # 1. [[-inf, 0], [-inf, 2], [1, 4], [0, 5]]
+        # 2. [[-inf, 0], [-inf, 2], [0, 5], [1, 4]]
         sorted_range_criteria = sorted(range_criteria, key=lambda x: x[1])
         sorted_range_criteria = sorted(sorted_range_criteria, key=lambda x: x[0])
 
@@ -187,7 +238,6 @@ class ParserClassificationRule(IParserRuleBase):
 
         for c_ind, crit in enumerate(sorted_range_criteria):
             if c_ind == 0:
-                print(crit)
                 if crit[0] != float("-inf"):
                     msgs = self._warn_message(
                         name, msgs, pre_warn, float("-inf"), crit[0], "Gap"
@@ -211,7 +261,6 @@ class ParserClassificationRule(IParserRuleBase):
                     & (crit[0] == prev_c[1])
                 )
 
-                print(crit, begin_inside, end_inside, non_equal_overlap)
                 # The range is inside the previous range eg when the user
                 # gives the criteria: 0:10 and 3:5, giving one overlap.
                 if begin_inside & end_inside:
