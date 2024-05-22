@@ -131,12 +131,11 @@ class ModelBuilder(IModelBuilder):
 
         if isinstance(rule_data, ITimeAggregationRuleData):
             rule = TimeAggregationRule(
-                rule_data.name,
-                [rule_data.input_variable],
-                rule_data.operation,
-                rule_data.operation_parameter,
-                rule_data.time_scale,
+                rule_data.name, [rule_data.input_variable], rule_data.operation
             )
+            rule.settings.operation_parameter = rule_data.operation_parameter
+            rule.settings.time_scale = rule_data.time_scale
+
             ModelBuilder._set_default_fields(rule_data, rule)
             return rule
 

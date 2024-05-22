@@ -21,7 +21,6 @@ from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
 class ParserTimeAggregationRule(IParserRuleBase):
-
     """Class for creating a TimeAggregationRuleData"""
 
     @property
@@ -83,6 +82,6 @@ class ParserTimeAggregationRule(IParserRuleBase):
             operation_value,
             operation_parameter,
             input_variable_name,
-            output_variable_name,
             time_scale,
+            output_variable_name,
         )

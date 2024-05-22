@@ -37,14 +37,12 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: TimeOperationType,
-        operation_parameter: float = 0,
-        time_scale: str = "year",
     ):
         super().__init__(name, input_variable_names)
         self._settings = TimeOperationSettings({"month": "M", "year": "Y"})
-        self._settings.operation_parameter = operation_parameter
+        self._settings.operation_parameter = 0
         self._settings.operation_type = operation_type
-        self._settings.time_scale = time_scale
+        self._settings.time_scale = "year"
 
     @property
     def settings(self):
