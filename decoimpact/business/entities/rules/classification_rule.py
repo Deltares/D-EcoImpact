@@ -11,7 +11,7 @@ Classes:
     ClassificationRule
 """
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 from xmlrpc.client import Boolean
 
 import xarray as _xr
@@ -73,6 +73,8 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
                 # range or comparison)
                 criteria = self.criteria_table[column_name][row]
                 comparison = self._get_comparison_for_criteria(criteria, data)
+                if comparison is None:
+                    comparison = True
 
                 # Criteria_comparison == 1 -> to check where the value is True
                 criteria_comparison = _xr.where(
@@ -89,11 +91,11 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
 
     def _get_comparison_for_criteria(
         self, criteria: str, data: _xr.DataArray
-    ) -> _xr.DataArray | Boolean:
+    ) -> Optional[_xr.DataArray]:
 
         criteria_class = type_of_classification(criteria)
 
-        comparison = True
+        comparison = None
         if criteria_class == "number":
             comparison = data == float(criteria)
 
