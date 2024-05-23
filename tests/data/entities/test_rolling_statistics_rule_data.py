@@ -20,7 +20,7 @@ def test_rulling_statistics_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    data = RollingStatisticsRuleData("test_name", TimeOperationType.MIN, 0, "input", 1)
+    data = RollingStatisticsRuleData("test_name", TimeOperationType.MIN, "input", 1)
 
     # Assert
 

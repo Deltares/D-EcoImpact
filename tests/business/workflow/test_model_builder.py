@@ -43,7 +43,7 @@ def test_create_rule_based_model():
     dataset_data = Mock(IDatasetData)
     da_layer = Mock(IDataAccessLayer)
 
-    multiply_rule_data = MultiplyRuleData("abc", [2, 5.86], "a")
+    multiply_rule_data = MultiplyRuleData("abc", [[2.0, 5.86]], "a")
     multiply_rule_data.output_variable = "b"
 
     step_function_rule_data = StepFunctionRuleData(
@@ -56,8 +56,9 @@ def test_create_rule_based_model():
     rule_data_layer_filter_rule.output_variable = "output_name"
 
     time_aggregation_rule = TimeAggregationRuleData(
-        "taname", TimeOperationType.MIN, 0, "var1", "Month"
+        "taname", TimeOperationType.MIN, "var1"
     )
+    time_aggregation_rule.time_scale = "Month"
     time_aggregation_rule.output_variable = "output"
 
     combine_results_rule_data = CombineResultsRuleData(
