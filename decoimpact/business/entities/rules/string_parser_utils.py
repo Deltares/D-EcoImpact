@@ -76,30 +76,33 @@ def type_of_classification(class_val) -> str:
     """
 
     if isinstance(class_val, (float, int)):
-        return "number"
-    if isinstance(class_val, str):
+        class_type = "number"
+    elif isinstance(class_val, str):
         class_val = class_val.strip()
         if class_val in ("-", ""):
-            return "NA"
-        if ":" in class_val:
+            class_type = "NA"
+        elif ":" in class_val:
             str_range_to_list(class_val)
-            return "range"
-        if ">=" in class_val:
+            class_type = "range"
+        elif ">=" in class_val:
             read_str_comparison(class_val, ">=")
-            return "larger_equal"
-        if "<=" in class_val:
+            class_type = "larger_equal"
+        elif "<=" in class_val:
             read_str_comparison(class_val, "<=")
-            return "smaller_equal"
-        if ">" in class_val:
+            class_type = "smaller_equal"
+        elif ">" in class_val:
             read_str_comparison(class_val, ">")
-            return "larger"
-        if "<" in class_val:
+            class_type = "larger"
+        elif "<" in class_val:
             read_str_comparison(class_val, "<")
-            return "smaller"
-        try:
-            float(class_val)
-            return "number"
-        except ValueError as exc:
-            raise ValueError(f"No valid criteria is given: {class_val}") from exc
+            class_type = "smaller"
+        else:
+            try:
+                float(class_val)
+                class_type = "number"
+            except ValueError as exc:
+                raise ValueError(f"No valid criteria is given: {class_val}") from exc
+    else:
+        raise ValueError(f"No valid criteria is given: {class_val}")
 
-    raise ValueError(f"No valid criteria is given: {class_val}")
+    return class_type

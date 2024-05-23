@@ -97,95 +97,70 @@ class ModelBuilder(IModelBuilder):
                 rule_data.multipliers,
                 rule_data.date_range,
             )
-            ModelBuilder._set_default_fields(rule_data, rule)
-            return rule
-
-        if isinstance(rule_data, ILayerFilterRuleData):
+        elif isinstance(rule_data, ILayerFilterRuleData):
             rule = LayerFilterRule(
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.layer_number,
             )
-            ModelBuilder._set_default_fields(rule_data, rule)
-            return rule
-
-        if isinstance(rule_data, IAxisFilterRuleData):
+        elif isinstance(rule_data, IAxisFilterRuleData):
             rule = AxisFilterRule(
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.layer_number,
                 rule_data.axis_name,
             )
-            ModelBuilder._set_default_fields(rule_data, rule)
-            return rule
-
-        if isinstance(rule_data, IStepFunctionRuleData):
+        elif isinstance(rule_data, IStepFunctionRuleData):
             rule = StepFunctionRule(
                 rule_data.name,
                 rule_data.input_variable,
                 rule_data.limits,
                 rule_data.responses,
             )
-            ModelBuilder._set_default_fields(rule_data, rule)
-            return rule
-
-        if isinstance(rule_data, ITimeAggregationRuleData):
+        elif isinstance(rule_data, ITimeAggregationRuleData):
             rule = TimeAggregationRule(
                 rule_data.name, [rule_data.input_variable], rule_data.operation
             )
             rule.settings.operation_parameter = rule_data.operation_parameter
             rule.settings.time_scale = rule_data.time_scale
-
-            ModelBuilder._set_default_fields(rule_data, rule)
-            return rule
-
-        if isinstance(rule_data, IRollingStatisticsRuleData):
+        elif isinstance(rule_data, IRollingStatisticsRuleData):
             rule = RollingStatisticsRule(
                 rule_data.name, [rule_data.input_variable], rule_data.operation
             )
             rule.settings.operation_parameter = rule_data.operation_parameter
             rule.settings.time_scale = rule_data.time_scale
             rule.period = rule_data.period
-
-            ModelBuilder._set_default_fields(rule_data, rule)
-            return rule
-
-        if isinstance(rule_data, ICombineResultsRuleData):
+        elif isinstance(rule_data, ICombineResultsRuleData):
             rule = CombineResultsRule(
                 rule_data.name,
                 rule_data.input_variable_names,
                 MultiArrayOperationType[rule_data.operation_type],
             )
-            ModelBuilder._set_default_fields(rule_data, rule)
-            return rule
-
-        if isinstance(rule_data, IResponseCurveRuleData):
+        elif isinstance(rule_data, IResponseCurveRuleData):
             rule = ResponseCurveRule(
                 rule_data.name,
                 rule_data.input_variable,
                 rule_data.input_values,
                 rule_data.output_values,
             )
-            ModelBuilder._set_default_fields(rule_data, rule)
-            return rule
-
-        if isinstance(rule_data, IFormulaRuleData):
+        elif isinstance(rule_data, IFormulaRuleData):
             rule = FormulaRule(
                 rule_data.name,
                 rule_data.input_variable_names,
                 rule_data.formula,
             )
-            ModelBuilder._set_default_fields(rule_data, rule)
-            return rule
-
-        if isinstance(rule_data, IClassificationRuleData):
+        elif isinstance(rule_data, IClassificationRuleData):
             rule = ClassificationRule(
                 rule_data.name, rule_data.input_variable_names, rule_data.criteria_table
             )
-            ModelBuilder._set_default_fields(rule_data, rule)
-            return rule
+        else:
+            error_str = (
+                f"The rule type of rule '{rule_data.name}' is currently "
+                "not implemented"
+            )
+            raise NotImplementedError(error_str)
 
-        error_str = (
-            f"The rule type of rule '{rule_data.name}' is currently " "not implemented"
-        )
-        raise NotImplementedError(error_str)
+        if isinstance(rule, RuleBase):
+            ModelBuilder._set_default_fields(rule_data, rule)
+
+        return rule
