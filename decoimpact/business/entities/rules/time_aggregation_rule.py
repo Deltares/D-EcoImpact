@@ -11,7 +11,6 @@ Classes:
     TimeAggregationRule
 """
 
-# from itertools import groupby
 from typing import List
 
 import numpy as _np
