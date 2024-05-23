@@ -16,22 +16,37 @@ from decoimpact.data.api.time_operation_type import TimeOperationType
 
 
 def parse_operation_values(operation_str: str) -> Tuple[TimeOperationType, float]:
+    """parses the operation_str to a TimeOperationType and optional
+    percentile value
+
+    Args:
+        operation_str (str): string containing the time operation type
+
+    Raises:
+        ValueError: if the time operation type is a unknown TimeOperationType
+        ValueError: the operation parameter (percentile value) is not a
+                    number or < 0 or > 100
+
+    Returns:
+        Tuple[TimeOperationType, float]: parsed TimeOperationType and percentile value
+    """
+
     # if operation contains percentile,
-    # extract percentile value as operation_parameter from operation:
+    # extract percentile value from operation:
     if str.startswith(operation_str, "PERCENTILE"):
         try:
-            operation_parameter = float(str(operation_str)[11:-1])
+            percentile_value = float(str(operation_str)[11:-1])
         except ValueError as exc:
             message = (
                 "Operation percentile is missing valid value like 'percentile(10)'"
             )
             raise ValueError(message) from exc
 
-        # test if operation_parameter is within expected limits:
-        if operation_parameter < 0 or operation_parameter > 100:
+        # test if percentile_value is within expected limits:
+        if percentile_value < 0 or percentile_value > 100:
             message = "Operation percentile should be a number between 0 and 100."
             raise ValueError(message)
-        return TimeOperationType.PERCENTILE, operation_parameter
+        return TimeOperationType.PERCENTILE, percentile_value
 
     # validate operation
     match_operation = [o for o in TimeOperationType if o.name == operation_str]

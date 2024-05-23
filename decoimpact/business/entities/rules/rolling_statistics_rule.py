@@ -42,7 +42,7 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
     ):
         super().__init__(name, input_variable_names)
         self._settings = TimeOperationSettings({"hour": "H", "day": "D"})
-        self._settings.operation_parameter = 0
+        self._settings.percentile_value = 0
         self._settings.operation_type = operation_type
         self._settings.time_scale = "day"
         self._period = 1
@@ -166,7 +166,7 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
 
         elif operation_type is TimeOperationType.PERCENTILE:
             result = data.quantile(
-                self.settings.operation_parameter / 100, dim=time_dim_name
+                self.settings.percentile_value / 100, dim=time_dim_name
             ).drop_vars("quantile")
 
         else:

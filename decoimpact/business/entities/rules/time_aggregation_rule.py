@@ -40,7 +40,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
     ):
         super().__init__(name, input_variable_names)
         self._settings = TimeOperationSettings({"month": "M", "year": "Y"})
-        self._settings.operation_parameter = 0
+        self._settings.percentile_value = 0
         self._settings.operation_type = operation_type
         self._settings.time_scale = "year"
 
@@ -143,7 +143,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         elif operation_type is TimeOperationType.PERCENTILE:
             result = aggregated_values.quantile(
-                self.settings.operation_parameter / 100
+                self.settings.percentile_value / 100
             ).drop_vars("quantile")
 
         else:

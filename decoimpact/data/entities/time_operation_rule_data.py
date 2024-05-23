@@ -26,7 +26,7 @@ class TimeOperationRuleData(RuleData):
     ):
         super().__init__(name)
         self._operation = operation
-        self._operation_parameter = 0
+        self._percentile_value = 0
         self._time_scale = "year"
 
     @property
@@ -35,13 +35,13 @@ class TimeOperationRuleData(RuleData):
         return self._operation
 
     @property
-    def operation_parameter(self) -> float:
+    def percentile_value(self) -> float:
         """Operation parameter"""
-        return self._operation_parameter
+        return self._percentile_value
 
-    @operation_parameter.setter
-    def operation_parameter(self, operation_parameter: float):
-        self._operation_parameter = operation_parameter
+    @percentile_value.setter
+    def percentile_value(self, percentile_value: float):
+        self._percentile_value = percentile_value
 
     @property
     def time_scale(self) -> str:

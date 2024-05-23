@@ -121,13 +121,13 @@ class ModelBuilder(IModelBuilder):
             rule = TimeAggregationRule(
                 rule_data.name, [rule_data.input_variable], rule_data.operation
             )
-            rule.settings.operation_parameter = rule_data.operation_parameter
+            rule.settings.percentile_value = rule_data.percentile_value
             rule.settings.time_scale = rule_data.time_scale
         elif isinstance(rule_data, IRollingStatisticsRuleData):
             rule = RollingStatisticsRule(
                 rule_data.name, [rule_data.input_variable], rule_data.operation
             )
-            rule.settings.operation_parameter = rule_data.operation_parameter
+            rule.settings.percentile_value = rule_data.percentile_value
             rule.settings.time_scale = rule_data.time_scale
             rule.period = rule_data.period
         elif isinstance(rule_data, ICombineResultsRuleData):

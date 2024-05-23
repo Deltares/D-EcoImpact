@@ -52,14 +52,14 @@ class ParserRollingStatisticsRule(IParserRuleBase):
                       a float or integer value. Received: {period}"
             raise ValueError(message)
 
-        operation_value, operation_parameter = parse_operation_values(operation)
+        operation_value, percentile_value = parse_operation_values(operation)
 
         rule_data = RollingStatisticsRuleData(
             name, operation_value, input_variable_name, period
         )
 
         rule_data.time_scale = time_scale
-        rule_data.operation_parameter = operation_parameter
+        rule_data.percentile_value = percentile_value
         rule_data.output_variable = output_variable_name
         rule_data.description = description
 

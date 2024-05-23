@@ -367,7 +367,7 @@ def test_execute_value_array_aggregate_time_monthly_percentile():
         operation_type=TimeOperationType.PERCENTILE,
     )
     rule.settings.time_scale = "month"
-    rule.settings.operation_parameter = 10
+    rule.settings.percentile_value = 10
 
     time_aggregation = rule.execute(value_array_monthly, logger)
     result_data = [0.1, 0.25, 0.21]

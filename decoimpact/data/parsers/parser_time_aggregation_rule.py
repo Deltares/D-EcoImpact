@@ -44,11 +44,11 @@ class ParserTimeAggregationRule(IParserRuleBase):
         time_scale: str = get_dict_element("time_scale", dictionary)
         output_variable_name: str = get_dict_element("output_variable", dictionary)
 
-        operation_value, operation_parameter = parse_operation_values(operation)
+        operation_value, percentile_value = parse_operation_values(operation)
 
         rule_data = TimeAggregationRuleData(name, operation_value, input_variable_name)
 
-        rule_data.operation_parameter = operation_parameter
+        rule_data.percentile_value = percentile_value
         rule_data.time_scale = time_scale
         rule_data.output_variable = output_variable_name
         rule_data.description = description
