@@ -46,14 +46,12 @@ class ModelDataBuilder:
         output_variables = self._parse_save_only_variables(contents)
         rules = list(self._parse_rules(contents))
 
-        return YamlModelData(
-            "Model 1",
-            input_version,
-            input_datasets,
-            output_path,
-            list(output_variables),
-            rules,
-        )
+        model_data = YamlModelData("Model 1", input_version)
+        model_data.datasets = input_datasets
+        model_data.output_path = output_path
+        model_data.output_variables = list(output_variables)
+        model_data.rules = rules
+        return model_data
 
     def _parse_input_version(self, contents: dict[Any, Any]) -> Optional[List[int]]:
         input_version = None
