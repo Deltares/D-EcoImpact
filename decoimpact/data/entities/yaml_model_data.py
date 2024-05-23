@@ -24,7 +24,6 @@ class YamlModelData(IModelData):
     """Implementation of the model data"""
 
     def __init__(self, name: str, version: List[int]):
-        super()
         self._name = name
         self._version = version
         self._datasets = []

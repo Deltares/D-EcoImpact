@@ -27,7 +27,6 @@ class RuleData(IRuleData, ABC):
         Args:
             info (dict[str, Any]):
         """
-        super()
         self._name = name
         self._output_variable = "output"
         self._description = ""
