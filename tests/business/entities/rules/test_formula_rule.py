@@ -9,6 +9,7 @@ Tests for RuleBase class
 """
 
 
+import math
 from unittest.mock import Mock
 
 import pytest
@@ -45,7 +46,7 @@ def test_execute_adding_value_arrays():
     result_value = rule.execute(values, logger)
 
     # Assert
-    assert result_value == 5.0
+    assert math.isclose(result_value, 5.0, abs_tol=1e-9)
 
 
 def test_execute_multiplying_value_arrays():
@@ -63,7 +64,7 @@ def test_execute_multiplying_value_arrays():
     result_value = rule.execute(values, logger)
 
     # Assert
-    assert result_value == 6.0
+    assert math.isclose(result_value, 6.0, abs_tol=1e-9)
 
 
 @pytest.mark.parametrize(

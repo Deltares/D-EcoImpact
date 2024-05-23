@@ -552,7 +552,7 @@ def test_process_rules_copies_multi_coords_correctly():
     result_array = result_array.assign_coords({"test": _xr.DataArray([2, 4, 5])})
 
     result_array_2 = _xr.DataArray([1, 2, 93])
-    result_array_2 = result_array.assign_coords({"test": _xr.DataArray([2, 4, 5])})
+    result_array_2 = result_array_2.assign_coords({"test": _xr.DataArray([2, 4, 5])})
 
     rule.input_variable_names = ["test"]
     rule.output_variable_name = "output"
