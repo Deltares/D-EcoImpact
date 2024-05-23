@@ -107,7 +107,7 @@ class ModelBuilder(IModelBuilder):
             rule = AxisFilterRule(
                 rule_data.name,
                 [rule_data.input_variable],
-                rule_data.layer_number,
+                rule_data.element_index,
                 rule_data.axis_name,
             )
         elif isinstance(rule_data, IStepFunctionRuleData):

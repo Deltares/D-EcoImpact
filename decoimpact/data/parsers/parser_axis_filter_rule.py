@@ -46,18 +46,18 @@ class ParserAxisFilterRule(IParserRuleBase):
             )
             raise ValueError(message)
 
-        layer_number = get_dict_element("layer_number", dictionary)
-        if not isinstance(layer_number, int):
+        element_index = get_dict_element("layer_number", dictionary)
+        if not isinstance(element_index, int):
             message = (
                 "Layer number should be an integer, "
-                f"received a {type(layer_number)}: {layer_number}"
+                f"received a {type(element_index)}: {element_index}"
             )
             raise ValueError(message)
         output_variable_name = get_dict_element("output_variable", dictionary)
 
         rule_data = AxisFilterRuleData(
             name,
-            layer_number,
+            element_index,
             axis_name,
             input_variable_name,
         )

@@ -40,6 +40,7 @@ class ModelDataBuilder:
         input_version = self._parse_input_version(contents)
         if not input_version:
             raise AttributeError(name="Version not available from input file")
+
         input_datasets = list(self._parse_input_datasets(contents))
         output_path = self._parse_output_dataset(contents)
         output_variables = self._parse_save_only_variables(contents)
@@ -93,7 +94,7 @@ class ModelDataBuilder:
         self, contents: dict[str, Any]
     ) -> Iterable[IDatasetData]:
         output_data: dict[str, Any] = get_dict_element("output-data", contents)
-        save_only_variables = output_data.get('save_only_variables', [])
+        save_only_variables = output_data.get("save_only_variables", [])
 
         # Convert to list if not already one
         if not isinstance(save_only_variables, list):

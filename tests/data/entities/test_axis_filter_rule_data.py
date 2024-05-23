@@ -24,5 +24,5 @@ def test_axis_filter_rule_data_creation_logic():
 
     assert isinstance(data, IRuleData)
     assert data.input_variable == "input"
-    assert data.layer_number == 3
+    assert data.element_index == 3
     assert data.axis_name == "axis_name"

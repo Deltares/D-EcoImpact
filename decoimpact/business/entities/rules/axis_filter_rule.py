@@ -21,23 +21,23 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 
 class AxisFilterRule(RuleBase, IArrayBasedRule):
-    """Implementation for the layer filter rule"""
+    """Implementation for the axis filter rule"""
 
     def __init__(
         self,
         name: str,
         input_variable_names: List[str],
-        layer_number: int,
+        element_index: int,
         axis_name: str,
     ):
         super().__init__(name, input_variable_names)
-        self._layer_number = layer_number
+        self._element_index = element_index
         self._axis_name = axis_name
 
     @property
-    def layer_number(self) -> int:
-        """Layer number property"""
-        return self._layer_number
+    def element_index(self) -> int:
+        """Value index of the provided axis to filter on"""
+        return self._element_index
 
     @property
     def axis_name(self) -> str:
@@ -62,12 +62,12 @@ class AxisFilterRule(RuleBase, IArrayBasedRule):
             raise IndexError(message)
 
         if not (
-            self._layer_number >= 0
-            and self._layer_number <= len(getattr(value_array, self._axis_name))
+            self._element_index >= 0
+            and self._element_index <= len(getattr(value_array, self._axis_name))
         ):
             message = f"""Layer number should be within range \
                 [0,{len(getattr(value_array, self._axis_name))}]"""
             logger.log_error(message)
             raise IndexError(message)
 
-        return value_array.isel({self._axis_name: self._layer_number - 1})
+        return value_array.isel({self._axis_name: self._element_index - 1})
