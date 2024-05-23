@@ -9,7 +9,7 @@ Module for ModelDataBuilder class
 """
 
 from pathlib import Path
-from typing import Any, Iterable, List
+from typing import Any, Iterable, List, Optional
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_dataset import IDatasetData
@@ -51,11 +51,11 @@ class ModelDataBuilder:
             input_version,
             input_datasets,
             output_path,
-            output_variables,
+            list(output_variables),
             rules,
         )
 
-    def _parse_input_version(self, contents: str) -> List[int]:
+    def _parse_input_version(self, contents: dict[Any, Any]) -> Optional[List[int]]:
         input_version = None
         try:
             # read version string
@@ -90,14 +90,12 @@ class ModelDataBuilder:
 
         return Path(output_data["filename"])
 
-    def _parse_save_only_variables(
-        self, contents: dict[str, Any]
-    ) -> Iterable[IDatasetData]:
+    def _parse_save_only_variables(self, contents: dict[str, Any]) -> Iterable[str]:
         output_data: dict[str, Any] = get_dict_element("output-data", contents)
         save_only_variables = output_data.get("save_only_variables", [])
 
         # Convert to list if not already one
-        if not isinstance(save_only_variables, list):
+        if isinstance(save_only_variables, str):
             save_only_variables = [save_only_variables]
 
         return save_only_variables

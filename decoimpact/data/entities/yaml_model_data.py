@@ -26,7 +26,7 @@ class YamlModelData(IModelData):
     def __init__(
         self,
         name: str,
-        version: str,
+        version: List[int],
         datasets: List[IDatasetData],
         output_path: Path,
         output_variables: List[str],
@@ -46,7 +46,7 @@ class YamlModelData(IModelData):
         return self._name
 
     @property
-    def version(self) -> str:
+    def version(self) -> List[int]:
         """Version of the model"""
         return self._version
 
