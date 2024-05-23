@@ -55,14 +55,11 @@ class ParserRollingStatisticsRule(IParserRuleBase):
         operation_value, operation_parameter = self._get_operation_values(operation)
 
         rule_data = RollingStatisticsRuleData(
-            name,
-            operation_value,
-            operation_parameter,
-            input_variable_name,
-            period,
-            time_scale,
+            name, operation_value, input_variable_name, period
         )
 
+        rule_data.time_scale = time_scale
+        rule_data.operation_parameter = operation_parameter
         rule_data.output_variable = output_variable_name
         rule_data.description = description
 

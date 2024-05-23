@@ -23,13 +23,11 @@ class TimeOperationRuleData(RuleData):
         self,
         name: str,
         operation: TimeOperationType,
-        operation_parameter: float,
-        time_scale: str = "year",
     ):
         super().__init__(name)
         self._operation = operation
-        self._operation_parameter = operation_parameter
-        self._time_scale = time_scale
+        self._operation_parameter = 0
+        self._time_scale = "year"
 
     @property
     def operation(self) -> TimeOperationType:
@@ -41,7 +39,15 @@ class TimeOperationRuleData(RuleData):
         """Operation parameter"""
         return self._operation_parameter
 
+    @operation_parameter.setter
+    def operation_parameter(self, operation_parameter: float):
+        self._operation_parameter = operation_parameter
+
     @property
     def time_scale(self) -> str:
         """Time scale type"""
         return self._time_scale
+
+    @time_scale.setter
+    def time_scale(self, time_scale: str):
+        self._time_scale = time_scale

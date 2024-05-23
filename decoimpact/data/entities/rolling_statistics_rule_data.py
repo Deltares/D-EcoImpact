@@ -27,12 +27,10 @@ class RollingStatisticsRuleData(TimeOperationRuleData, IRollingStatisticsRuleDat
         self,
         name: str,
         operation: TimeOperationType,
-        operation_parameter: float,
         input_variable: str,
         period: float,
-        time_scale: str = "year",
     ):
-        super().__init__(name, operation, operation_parameter, time_scale)
+        super().__init__(name, operation)
         self._input_variable = input_variable
         self._period = period
 

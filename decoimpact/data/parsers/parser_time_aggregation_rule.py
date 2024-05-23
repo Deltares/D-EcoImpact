@@ -37,12 +37,14 @@ class ParserTimeAggregationRule(IParserRuleBase):
             RuleBase: Rule based on the provided data
         """
         # get elements
-        name = get_dict_element("name", dictionary)
+        name: str = get_dict_element("name", dictionary)
         description: str = get_dict_element("description", dictionary, False)
-        input_variable_name = get_dict_element("input_variable", dictionary)
-        operation = get_dict_element("operation", dictionary)
-        time_scale = get_dict_element("time_scale", dictionary)
-        operation_parameter = None
+        input_variable_name: str = get_dict_element("input_variable", dictionary)
+        operation: str = get_dict_element("operation", dictionary)
+        time_scale: str = get_dict_element("time_scale", dictionary)
+        output_variable_name: str = get_dict_element("output_variable", dictionary)
+
+        operation_parameter = 0
 
         # if operation contains percentile,
         # extract percentile value as operation_parameter from operation:
@@ -76,12 +78,10 @@ class ParserTimeAggregationRule(IParserRuleBase):
                 message = "Operation percentile should be a number between 0 and 100."
                 raise ValueError(message)
 
-        output_variable_name = get_dict_element("output_variable", dictionary)
+        rule_data = TimeAggregationRuleData(name, operation_value, input_variable_name)
 
-        rule_data = TimeAggregationRuleData(
-            name, operation_value, operation_parameter, input_variable_name, time_scale
-        )
-
+        rule_data.operation_parameter = operation_parameter
+        rule_data.time_scale = time_scale
         rule_data.output_variable = output_variable_name
         rule_data.description = description
 

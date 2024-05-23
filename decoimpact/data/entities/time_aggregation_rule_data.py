@@ -20,15 +20,8 @@ from decoimpact.data.entities.time_operation_rule_data import TimeOperationRuleD
 class TimeAggregationRuleData(TimeOperationRuleData, ITimeAggregationRuleData):
     """Class for storing data related to time_aggregation rule"""
 
-    def __init__(
-        self,
-        name: str,
-        operation: TimeOperationType,
-        operation_parameter: float,
-        input_variable: str,
-        time_scale: str = "year",
-    ):
-        super().__init__(name, operation, operation_parameter, time_scale)
+    def __init__(self, name: str, operation: TimeOperationType, input_variable: str):
+        super().__init__(name, operation)
         self._input_variable = input_variable
 
     @property
