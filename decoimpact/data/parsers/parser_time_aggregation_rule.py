@@ -14,10 +14,10 @@ from typing import Any, Dict
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
-from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.dictionary_utils import get_dict_element
 from decoimpact.data.entities.time_aggregation_rule_data import TimeAggregationRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
+from decoimpact.data.parsers.time_operation_parsing import parse_operation_values
 
 
 class ParserTimeAggregationRule(IParserRuleBase):
@@ -44,39 +44,7 @@ class ParserTimeAggregationRule(IParserRuleBase):
         time_scale: str = get_dict_element("time_scale", dictionary)
         output_variable_name: str = get_dict_element("output_variable", dictionary)
 
-        operation_parameter = 0
-
-        # if operation contains percentile,
-        # extract percentile value as operation_parameter from operation:
-        if str(operation)[:10] == "PERCENTILE":
-            try:
-                operation_parameter = float(str(operation)[11:-1])
-            except ValueError as exc:
-                message = (
-                    "Operation percentile is missing valid value like 'percentile(10)'"
-                )
-                raise ValueError(message) from exc
-            operation = "PERCENTILE"
-
-        # validate operation
-        match_operation = [o for o in TimeOperationType if o.name == operation]
-        operation_value = next(iter(match_operation), None)
-
-        # validate operation_value (percentile(n); n = operation_value)
-        if not operation_value:
-            message = f"Operation is not of a predefined type. Should be in: \
-                      {[o.name for o in TimeOperationType]}. Received: {operation}"
-            raise ValueError(message)
-
-        # test if operation_parameter is within expected limits:
-        if operation_value == TimeOperationType.PERCENTILE:
-            if (
-                operation_parameter is None
-                or operation_parameter < 0
-                or operation_parameter > 100
-            ):
-                message = "Operation percentile should be a number between 0 and 100."
-                raise ValueError(message)
+        operation_value, operation_parameter = parse_operation_values(operation)
 
         rule_data = TimeAggregationRuleData(name, operation_value, input_variable_name)
 

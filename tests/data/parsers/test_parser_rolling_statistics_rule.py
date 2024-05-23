@@ -80,8 +80,10 @@ def test_parse_operation_type():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = f"Operation is not of a predefined type. Should be in: \
-                      {[o.name for o in TimeOperationType]}. Received: Minimum"
+    expected_message = (
+        "Operation 'Minimum' is not of a predefined type. Should be in:"
+        + f"{[o.name for o in TimeOperationType]}."
+    )
     assert exception_raised.args[0] == expected_message
 
 
