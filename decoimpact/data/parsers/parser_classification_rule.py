@@ -141,9 +141,9 @@ class ParserClassificationRule(IParserRuleBase):
             logger.log_warning(
                 f"{len(msgs)} warnings found concerning coverage of the "
                 f"parameters. Only first {max_msg} warnings are shown. See "
-                "classification_warnings.log file for all warnings."
+                "multiple_classification_rule_warnings.log file for all warnings."
             )
-            f = open("classification_warnings.log", "w")
+            f = open("multiple_classification_rule_warnings.log", "w")
             f.write("\n".join(msgs))
             f.close()
         # Only show the first 2 lines. Print all msgs to a txt file.
