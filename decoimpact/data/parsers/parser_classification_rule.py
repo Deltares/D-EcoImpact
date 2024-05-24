@@ -217,7 +217,7 @@ class ParserClassificationRule(IParserRuleBase):
         if len(smaller) > 1:
             msgs.append(
                 f"{pre_warn}Overlap for variable {name}, multiple criteria with "
-                "operators < or <= are defined"
+                "operators < or <= are defined."
             )
         for i in reversed(smaller[:-1]):
             del sorted_range_criteria[i]
@@ -232,7 +232,7 @@ class ParserClassificationRule(IParserRuleBase):
         if len(larger) > 1:
             msgs.append(
                 f"{pre_warn}Overlap for variable {name}, multiple criteria with "
-                "operators > or >= are defined"
+                "operators > or >= are defined."
             )
         for i in larger[1:]:
             del sorted_range_criteria[i]
@@ -329,5 +329,5 @@ class ParserClassificationRule(IParserRuleBase):
         comp_str = f"range {start}:{end}"
         if (start == end) or (end is None):
             comp_str = f"number {start}"
-        msgs.append(f"{pre_warn}{type_warn} for variable {name} in {comp_str}")
+        msgs.append(f"{pre_warn}{type_warn} for variable {name} in {comp_str}.")
         return msgs
