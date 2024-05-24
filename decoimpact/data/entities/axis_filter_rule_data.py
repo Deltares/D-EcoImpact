@@ -34,7 +34,7 @@ class AxisFilterRuleData(IAxisFilterRuleData, RuleData):
 
     @property
     def element_index(self) -> int:
-        """Property for the layer number"""
+        """Property for the index of the element on the axis to filter on"""
         return self._element_index
 
     @property
