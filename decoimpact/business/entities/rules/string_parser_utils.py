@@ -74,7 +74,7 @@ def type_of_classification(class_val) -> str:
     Returns:
         str: Type of classification
     """
-
+    class_type = None
     if isinstance(class_val, (float, int)):
         class_type = "number"
     elif isinstance(class_val, str):
@@ -96,13 +96,12 @@ def type_of_classification(class_val) -> str:
         elif "<" in class_val:
             read_str_comparison(class_val, "<")
             class_type = "smaller"
-        else:
-            try:
-                float(class_val)
-                class_type = "number"
-            except ValueError as exc:
-                raise ValueError(f"No valid criteria is given: {class_val}") from exc
-    else:
-        raise ValueError(f"No valid criteria is given: {class_val}")
+
+    if not class_type:
+        try:
+            float(class_val)
+            class_type = "number"
+        except TypeError as exc:
+            raise ValueError(f"No valid criteria is given: {class_val}") from exc
 
     return class_type
