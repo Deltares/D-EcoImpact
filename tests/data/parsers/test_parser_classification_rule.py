@@ -11,7 +11,7 @@ Tests for ParserClassificationRule class
 from typing import Any, List
 
 import pytest
-from mock import Mock
+from mock import Mock, call
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
@@ -188,7 +188,7 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
 
 
 @pytest.mark.parametrize(
-    "criteria_table, expected_warning_msg",
+    "criteria_table, calls",
     [
         (
             [
@@ -202,7 +202,7 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
                 [7, ">=0", ">=5", "<10"],
                 [8, ">=0", ">=5", ">=10"],
             ],
-            "",
+            [call("")],
         ),
         (
             [
@@ -211,7 +211,11 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
                 [2, "<0", "<0", ">10"],
                 [3, "<0", ">=0", "0:10"],
             ],
-            """For conditions: (varA: <0, varB: <0). Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0). Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0). Gap for variable varC in range 10.0:inf\nGap for variable varA in range 0.0:inf""",
+            [
+                call(
+                    """For conditions: (varA: <0, varB: <0). Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0). Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0, varB: >=0). Gap for variable varC in range 10.0:inf\nGap for variable varA in range 0.0:inf"""
+                )
+            ],
         ),
         (
             [
@@ -220,19 +224,51 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
                 [2, "<0", "<0", ">10"],
                 [3, "-", "-", "-"],
             ],
-            """For conditions: (varA: <0, varB: <0). Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0). Gap for variable varB in range 0.0:inf\nOverlap for variable varA in range -inf:0.0""",
+            [
+                call(
+                    """For conditions: (varA: <0, varB: <0). Gap for variable varC in range -inf:0.0\nFor conditions: (varA: <0). Gap for variable varB in range 0.0:inf\nOverlap for variable varA in range -inf:0.0"""
+                )
+            ],
+        ),
+        (
+            [
+                ["output", "MIN_water_depth_mNAP", "MAX_flow_velocity", "MAX_chloride"],
+                [1, "<0.10", "-", ">300"],  # to dry
+                [2, "<0.10", "-", "< 400"],  # also to dry
+                [3, ">4.0", ">3.0", "-"],  # to deep
+                [4, ">4.0", "<2.0", "-"],  # also to deep
+                [5, "-", "-", ">400"],  # to salty
+                [6, "-", ">1.5", "-"],  # to fast flowing
+                [7, "-", ">1.5", ">300"],  # alos to fast flowing
+                [8, "0.20:4.0", "0.0:1.5", "0:400"],  # perfect for aquatic plants
+            ],
+            [
+                call(
+                    "For conditions: (MIN_water_depth_mNAP: -, MAX_flow_velocity: -). Gap for variable MAX_chloride in range -inf:400.0\nFor conditions: (MIN_water_depth_mNAP: -, MAX_flow_velocity: >1.5). Overlap for variable MAX_chloride in range 300.0:inf\nFor conditions: (MIN_water_depth_mNAP: 0.20:4.0, MAX_flow_velocity: 0.0:1.5). Gap for variable MAX_chloride in range -inf:0.0\nFor conditions: (MIN_water_depth_mNAP: 0.20:4.0, MAX_flow_velocity: 0.0:1.5). Gap for variable MAX_chloride in range 400.0:inf\nFor conditions: (MIN_water_depth_mNAP: <0.10, MAX_flow_velocity: -). Overlap for variable MAX_chloride in range 300.0:400.0\nFor conditions: (MIN_water_depth_mNAP: -). Overlap for variable MAX_flow_velocity in range 1.5:inf"
+                ),
+                call(
+                    "12 warnings found concerning coverage of the parameters. Only first 6 "
+                    "warnings are shown. See classification_warnings.log file for all warnings."
+                ),
+            ],
         ),
     ],
 )
-def test_feedback_for_criteria_multiple_parameters(
-    criteria_table, expected_warning_msg
-):
+def test_feedback_for_criteria_multiple_parameters(criteria_table, calls):
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
     contents = dict(
         {
             "name": "testname",
-            "input_variables": ["varA", "varB", "varC", "varD"],
+            "input_variables": [
+                "varA",
+                "varB",
+                "varC",
+                "varD",
+                "MIN_water_depth_mNAP",
+                "MAX_flow_velocity",
+                "MAX_chloride",
+            ],
             "description": "test",
             "criteria_table": criteria_table,
             "output_variable": "output",
@@ -243,7 +279,7 @@ def test_feedback_for_criteria_multiple_parameters(
     data = ParserClassificationRule()
     data.parse_dict(contents, logger)
 
-    logger.log_warning.assert_called_with(expected_warning_msg)
+    logger.log_warning.assert_has_calls(calls)
 
 
 def test_feedback_for_criteria_multiple_parameters_more_10_warnings():
