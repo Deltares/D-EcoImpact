@@ -111,44 +111,39 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             DataArray: Values of operation type
         """
-        period_operations = [
-            TimeOperationType.COUNT_PERIODS,
-            TimeOperationType.MAX_DURATION_PERIODS,
-            TimeOperationType.AVG_DURATION_PERIODS,
-        ]
-
         operation_type = self.settings.operation_type
 
-        if operation_type is TimeOperationType.ADD:
-            result = aggregated_values.sum()
+        if (operation_type in [
+            TimeOperationType.MAX_DURATION_PERIODS,
+            TimeOperationType.AVG_DURATION_PERIODS
+        ]):
+            # use COUNT_PERIODS type for all __periods
+            operation_type = TimeOperationType.COUNT_PERIODS
 
-        elif operation_type is TimeOperationType.MIN:
-            result = aggregated_values.min()
-
-        elif operation_type is TimeOperationType.MAX:
-            result = aggregated_values.max()
-
-        elif operation_type is TimeOperationType.AVERAGE:
-            result = aggregated_values.mean()
-
-        elif operation_type is TimeOperationType.MEDIAN:
-            result = aggregated_values.median()
-
-        elif operation_type in period_operations:
-            result = aggregated_values.reduce(self.analyze_groups, dim="time")
-
-        elif operation_type is TimeOperationType.STDEV:
-            result = aggregated_values.std()
-
-        elif operation_type is TimeOperationType.PERCENTILE:
-            result = aggregated_values.quantile(
-                self.settings.percentile_value / 100
-            ).drop_vars("quantile")
-
-        else:
-            raise NotImplementedError(
-                f"The operation type '{operation_type}' " "is currently not supported"
-            )
+        match operation_type:
+            case TimeOperationType.ADD:
+                result = aggregated_values.sum()
+            case TimeOperationType.MIN:
+                result = aggregated_values.min()
+            case TimeOperationType.MAX:
+                result = aggregated_values.max()
+            case TimeOperationType.AVERAGE:
+                result = aggregated_values.mean()
+            case TimeOperationType.MEDIAN:
+                result = aggregated_values.median()
+            case TimeOperationType.COUNT_PERIODS:
+                result = aggregated_values.reduce(self.analyze_groups, dim="time")
+            case TimeOperationType.STDEV:
+                result = aggregated_values.std()
+            case TimeOperationType.PERCENTILE:
+                result = aggregated_values.quantile(
+                    self.settings.percentile_value / 100
+                ).drop_vars("quantile")
+            case _:
+                raise NotImplementedError(
+                    f"The operation type '{operation_type}' " +
+                    "is currently not supported"
+                )
 
         return _xr.DataArray(result)
 
