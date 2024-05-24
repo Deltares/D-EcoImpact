@@ -1,5 +1,6 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![TeamCity build status](https://dpcbuild.deltares.nl/app/rest/builds/buildType:id:DEcoImpact_UnitTests/statusIcon.svg)](https://dpcbuild.deltares.nl/viewType.html?buildTypeId=DEcoImpact_UnitTests)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Deltares_D-EcoImpact&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Deltares_D-EcoImpact)
 
 # D-EcoImpact
 
