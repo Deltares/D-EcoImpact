@@ -9,6 +9,9 @@ Module for parser strings
 """
 
 
+from typing import Any
+
+
 def str_range_to_list(range_string: str):
     """Convert a string with a range in the form "x:y" of floats to
     two elements (begin and end of range).
@@ -61,7 +64,7 @@ def read_str_comparison(compare_str: str, operator: str):
         ) from exc
 
 
-def type_of_classification(class_val) -> str:
+def type_of_classification(class_val: Any) -> str:
     """Determine which type of classification is required: number, range, or
     NA (not applicable)
 

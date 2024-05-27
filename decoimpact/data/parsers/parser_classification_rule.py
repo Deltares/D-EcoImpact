@@ -10,7 +10,7 @@ Module for ParserClassificationRule class
 Classes:
     ParserClassificationRule
 """
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 import numpy as _np
 
@@ -60,63 +60,81 @@ class ParserClassificationRule(IParserRuleBase):
 
         return rule_data
 
-    def _validate_table_coverage(self, crit_table, logger: ILogger):
+    def _divide_table_in_unique_chunks(
+        self,
+        criteria_table: Dict[str, Any],
+        msgs: List[str],
+        logger: ILogger,
+        conditions: Optional[Dict[str, Any]],
+        unique=True,
+    ):
+        """This is a recursive function until all combinations of variables in the
+        criteria table is checked on coverage.
+
+        Args:
+            criteria_table (Dict[Any,Any]): _description_
+            conditions (Optional[Dict[str, Any]]): _description_. Defaults to {}.
+            unique (bool, optional): _description_. Defaults to True.
+        """
+        #
+        # If there is only one variable, check on all conditions for coverage
+        if len(criteria_table.items()) == 1:
+            cond_str = ""
+
+            if conditions and len(conditions) > 0:
+                cond_str = ", ".join(
+                    [f"{key}: {value}" for key, value in conditions.items()]
+                )
+                # When checking a single parameter or the first parameter
+                cond_str = f"For conditions: ({cond_str}). "
+
+            name, criteria = next(iter(criteria_table.items()))
+            if unique:
+                # Little trick to ignore the duplicates when a combination of
+                # variables is given. This step is skipped when there is
+                # only one parameter given in the criteria_table
+                criteria = _np.unique(criteria)
+            # WHen there is only one parameter left in the given table ()
+            self._validate_criteria_on_overlap_and_gaps(
+                name, criteria, msgs, cond_str, logger
+            )
+        # Else evaluate the previous variables to get unique combinations back
+        else:
+            # This recursive function loops over all variables and filters it on
+            # unique values
+            crit_to_sort = list(criteria_table.values())[0]
+            for unique_c in _np.unique(crit_to_sort):
+                indices = [i for i, c in enumerate(crit_to_sort) if c == unique_c]
+
+                # Make a new criteria_table with the remaining variables
+                new_crit_table = dict(
+                    (k, _np.array(v)[indices])
+                    for i, (k, v) in enumerate(criteria_table.items())
+                    if i != 0
+                )
+
+                key = list(criteria_table.keys())[0]
+                if not conditions:
+                    conditions = {key: unique_c}
+                else:
+                    conditions[key] = unique_c
+
+                # Send the remaining filtered parameters back into the function
+                self._divide_table_in_unique_chunks(
+                    new_crit_table, msgs, logger, conditions
+                )
+
+    def _validate_table_coverage(self, crit_table: Dict[str, Any], logger: ILogger):
         """Check if the criteria for the parameters given in the criteria_table
         cover the entire range of data values. If not give the user feedback (warnings)
         concerning gaps and overlaps.
 
         Args:
-            crit_table (_type_): User input describing criteria per parameter
+            crit_table (Dict[str, Any]): User input describing criteria per parameter
         """
         msgs = []
         criteria_table = crit_table.copy()
         del criteria_table["output"]
-
-        def divide_table_in_unique_chunks(criteria_table, conditions={}, unique=True):
-            """This is a recursive function until all combinations of variables in the
-            criteria table is checked on coverage.
-
-            Args:
-                criteria_table (_type_): _description_
-                conditions (dict, optional): _description_. Defaults to {}.
-                unique (bool, optional): _description_. Defaults to True.
-            """
-            #
-            # If there is only one variable, check on all conditions for coverage
-            if len(criteria_table.items()) == 1:
-                cond_str = ", ".join(
-                    [f"{key}: {value}" for key, value in conditions.items()]
-                )
-                name, criteria = next(iter(criteria_table.items()))
-                if cond_str != "":
-                    # When checking a single parameter or the first parameter
-                    cond_str = f"For conditions: ({cond_str}). "
-                if unique:
-                    # Little trick to ignore the duplicates when a combination of
-                    # variables is given. This step is skipped when there is
-                    # only one parameter given in the criteria_table
-                    criteria = _np.unique(criteria)
-                # WHen there is only one parameter left in the given table ()
-                self._validate_criteria_on_overlap_and_gaps(
-                    name, criteria, msgs, cond_str, logger
-                )
-            # Else evaluate the previous variables to get unique combinations back
-            else:
-                # This recursive function loops over all variables and filters it on
-                # unique values
-                crit_to_sort = list(criteria_table.values())[0]
-                for unique_c in _np.unique(crit_to_sort):
-                    indices = [i for i, c in enumerate(crit_to_sort) if c == unique_c]
-
-                    # Make a new criteria_table with the remaining variables
-                    new_crit_table = dict(
-                        (k, _np.array(v)[indices])
-                        for i, (k, v) in enumerate(criteria_table.items())
-                        if i != 0
-                    )
-                    conditions[list(criteria_table.keys())[0]] = unique_c
-                    # Send the remaining filtered parameters back into the function
-                    divide_table_in_unique_chunks(new_crit_table, conditions)
 
         new_crit_table = criteria_table.copy()
         unique = True
@@ -128,7 +146,9 @@ class ParserClassificationRule(IParserRuleBase):
 
         # Make a loop over all variables from right to left to check combinations
         for key in reversed(criteria_table.keys()):
-            divide_table_in_unique_chunks(new_crit_table, {}, unique)
+            self._divide_table_in_unique_chunks(
+                new_crit_table, msgs, logger, {}, unique
+            )
             del new_crit_table[key]
 
         max_msg = 6
@@ -146,7 +166,8 @@ class ParserClassificationRule(IParserRuleBase):
             f.close()
         # Only show the first 2 lines. Print all msgs to a txt file.
 
-    def _convert_to_ranges(self, val):
+    # todo List[float] => Tuple[float, float, str]
+    def _convert_to_ranges(self, val: Any) -> List[Any]:
         """Make sure all type of accepted criteria is converted to range format
         [start, end]
 
@@ -179,20 +200,18 @@ class ParserClassificationRule(IParserRuleBase):
             return [float("-inf"), float("inf")]
 
     def _validate_criteria_on_overlap_and_gaps(
-        self, name, criteria, msgs, pre_warn, logger: ILogger
-    ):
-        """Go over the given criteria to determine if there are gaps or
-        overlaps.
+        self, name: str, criteria: Any, msgs: List[str], pre_warn: str
+    ) -> List[str]:
+        """Go over the given criteria to determine if there are gaps or overlaps.
 
         Args:
-            name (_type_): Name of the parameter
-            criteria (_type_): The criteria (ranges, numbers of comparisons)
-            msgs (_type_): A list with all gathered warning messages
-            pre_warn (_type_): A prepend message that needs to be included
-            for parameter combinations
+            name (str): Name of the parameter
+            criteria (Any): The criteria (ranges, numbers of comparisons)
+            msgs (List[str]): A list with all gathered warning messages
+            pre_warn (str): A prepend message that needs to be included
 
         Returns:
-            _type_: _description_
+            List[str]: A list with all gathered warning messages
         """
         # The list of criteria is converted to a list of ranges
         range_criteria = list(map(self._convert_to_ranges, criteria))
@@ -298,7 +317,7 @@ class ParserClassificationRule(IParserRuleBase):
                 name,
                 msgs,
                 pre_warn,
-                max([list_c[1] for list_c in sorted_range_criteria]),
+                max(list_c[1] for list_c in sorted_range_criteria),
                 float("inf"),
                 "Gap",
             )
@@ -308,8 +327,15 @@ class ParserClassificationRule(IParserRuleBase):
 
         return msgs
 
-    def _check_inside_bounds(self, start, end, var, op_prev=None, op_cur=None):
-        # Check wether the next value falls wihtin the bounds of the previous range.
+    def _check_inside_bounds(
+        self,
+        start: float,
+        end: float,
+        var: float,
+        op_prev: Optional[str] = None,
+        op_cur: Optional[str] = None,
+    ) -> bool:
+        # Check wether the next value falls within the bounds of the previous range.
         # Some exceptions on > and < defined values.
         if op_cur == "larger":
             left = var > start
@@ -322,7 +348,15 @@ class ParserClassificationRule(IParserRuleBase):
             right = var <= end
         return left & right
 
-    def _warn_message(self, name, msgs, pre_warn, start, end=None, type_warn="Overlap"):
+    def _warn_message(
+        self,
+        name: str,
+        msgs: List[str],
+        pre_warn: str,
+        start: float,
+        end: Optional[float] = None,
+        type_warn: Optional[str] = "Overlap",
+    ):
         # Create a warning message (default overlap) for given values
         comp_str = f"range {start}:{end}"
         if (start == end) or (end is None):
