@@ -86,6 +86,12 @@ class _Range:
             right = var <= self.end
         return left & right
 
+    def __str__(self) -> str:
+        return f"({self.start}-{self.end}) {self.bnd_name}"
+
+    def __repr__(self) -> str:
+        return str(self)
+
 
 def validate_table_coverage(crit_table: Dict[str, Any], logger: ILogger):
     """Check if the criteria for the parameters given in the criteria_table
@@ -320,6 +326,8 @@ def _validate_criteria_on_overlap_and_gaps(
                     )
                 )
 
+    # Create the final check over the not_covered_values and the covered_numbers
+    # Send warning with the combined messages
     if sorted_range_criteria[-1].end != float("inf"):
         msgs.append(
             _create_warn_message(
@@ -331,9 +339,6 @@ def _validate_criteria_on_overlap_and_gaps(
                 "Gap",
             )
         )
-
-    # Create the final check over the not_covered_values and the covered_numbers
-    # Send warning with the combined messages
 
     return msgs
 
