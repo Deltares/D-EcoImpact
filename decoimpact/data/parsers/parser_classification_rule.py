@@ -95,9 +95,7 @@ class ParserClassificationRule(IParserRuleBase):
                 # only one parameter given in the criteria_table
                 criteria = _np.unique(criteria)
             # WHen there is only one parameter left in the given table ()
-            self._validate_criteria_on_overlap_and_gaps(
-                name, criteria, msgs, cond_str, logger
-            )
+            self._validate_criteria_on_overlap_and_gaps(name, criteria, msgs, cond_str)
         # Else evaluate the previous variables to get unique combinations back
         else:
             # This recursive function loops over all variables and filters it on
