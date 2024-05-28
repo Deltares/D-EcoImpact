@@ -11,7 +11,7 @@ Module for validation logic of the (ClassificationRule) criteria table
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import numpy as _np
 
@@ -280,51 +280,21 @@ def _validate_criteria_on_overlap_and_gaps(
     for i in larger[1:]:
         del sorted_range_criteria[i]
 
-    for c_ind, crit in enumerate(sorted_range_criteria):
-        if c_ind == 0:
-            if crit.start != float("-inf"):
-                msgs.append(
-                    _create_warn_message(
-                        name, pre_warn, _Range(float("-inf"), crit.start), "Gap"
-                    )
-                )
+    if len(sorted_range_criteria) > 0 and (
+        sorted_range_criteria[0].start != float("-inf")
+    ):
 
-        else:
-            prev_c = sorted_range_criteria[c_ind - 1]
-            begin_inside, end_inside = prev_c.check_inside_bounds(crit)
-
-            # Exception is needed for when a > or < operator is defined. No overlap
-            # is defined but also not a gap, so begin_inside and end_inside cover
-            # these exceptions properly
-            non_equal_overlap = not (
-                (("equal" in crit.bnd_name) ^ ("equal" in prev_c.bnd_name))
-                & (crit.start == prev_c.end)
+        msgs.append(
+            _create_warn_message(
+                name,
+                pre_warn,
+                _Range(float("-inf"), sorted_range_criteria[0].start),
+                "Gap",
             )
+        )
 
-            # The range is inside the previous range eg when the user
-            # gives the criteria: 0:10 and 3:5, giving one overlap.
-            if begin_inside & end_inside:
-                msgs.append(_create_warn_message(name, pre_warn, crit))
-                crit.end = prev_c.end
-
-            # The range starts within the previous range eg when the user
-            # gives the criteria: 0:10 and 3:15, an overlap will occur
-            elif begin_inside & (not end_inside) & (non_equal_overlap):
-                msgs.append(
-                    _create_warn_message(name, pre_warn, _Range(crit.start, prev_c.end))
-                )
-
-            # Because the list is sorted it can never occur that (not
-            # "begin_inside) & end_inside" happens
-
-            # The range is completely outside the previous range eg when the user
-            # gives the criteria: 0:10 and 15:20, a gap will occur
-            elif (not begin_inside) & (not end_inside) & (non_equal_overlap):
-                msgs.append(
-                    _create_warn_message(
-                        name, pre_warn, _Range(prev_c.end, crit.start), "Gap"
-                    )
-                )
+    for message in _check_ranges(name, pre_warn, sorted_range_criteria):
+        msgs.append(message)
 
     # Create the final check over the not_covered_values and the covered_numbers
     # Send warning with the combined messages
@@ -341,6 +311,46 @@ def _validate_criteria_on_overlap_and_gaps(
         )
 
     return msgs
+
+
+def _check_ranges(
+    name: str, pre_warn: str, sorted_range_criteria: List[_Range]
+) -> Iterable[str]:
+    for c_ind, crit in enumerate(sorted_range_criteria):
+        if c_ind == 0:
+            continue
+
+        prev_c = sorted_range_criteria[c_ind - 1]
+        begin_inside, end_inside = prev_c.check_inside_bounds(crit)
+
+        # Exception is needed for when a > or < operator is defined. No overlap
+        # is defined but also not a gap, so begin_inside and end_inside cover
+        # these exceptions properly
+        non_equal_overlap = not (
+            (("equal" in crit.bnd_name) ^ ("equal" in prev_c.bnd_name))
+            & (crit.start == prev_c.end)
+        )
+
+        # The range is inside the previous range eg when the user
+        # gives the criteria: 0:10 and 3:5, giving one overlap.
+        if begin_inside & end_inside:
+            yield _create_warn_message(name, pre_warn, crit)
+            crit.end = prev_c.end
+
+        # The range starts within the previous range eg when the user
+        # gives the criteria: 0:10 and 3:15, an overlap will occur
+        elif begin_inside & (not end_inside) & (non_equal_overlap):
+            yield _create_warn_message(name, pre_warn, _Range(crit.start, prev_c.end))
+
+        # Because the list is sorted it can never occur that (not
+        # "begin_inside) & end_inside" happens
+
+        # The range is completely outside the previous range eg when the user
+        # gives the criteria: 0:10 and 15:20, a gap will occur
+        elif (not begin_inside) & (not end_inside) & (non_equal_overlap):
+            yield _create_warn_message(
+                name, pre_warn, _Range(prev_c.end, crit.start), "Gap"
+            )
 
 
 def _create_warn_message(
