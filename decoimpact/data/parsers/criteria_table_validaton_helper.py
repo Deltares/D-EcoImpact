@@ -11,7 +11,7 @@ Module for validation logic of the (ClassificationRule) criteria table
 
 from __future__ import annotations
 
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
 import numpy as _np
 
@@ -252,33 +252,10 @@ def _validate_criteria_on_overlap_and_gaps(
 
     # Check if there are multiple larger or larger and equal comparison values are
     # present, this will cause overlap
-    smaller = [
-        i
-        for i, c in enumerate(sorted_range_criteria)
-        if (c.start == float("-inf")) & (c.end != float("inf"))
-    ]
-    if len(smaller) > 1:
-        msgs.append(
-            f"{pre_warn}Overlap for variable {name}, multiple criteria with "
-            "operators < or <= are defined"
-        )
-    for i in reversed(smaller[:-1]):
-        del sorted_range_criteria[i]
-
-    # Check if there are multiple larger or larger and equal comparison values are
-    # present, this will cause overlap
-    larger = [
-        i
-        for i, c in enumerate(sorted_range_criteria)
-        if (c.end == float("inf")) & (c.start != float("-inf"))
-    ]
-    if len(larger) > 1:
-        msgs.append(
-            f"{pre_warn}Overlap for variable {name}, multiple criteria with "
-            "operators > or >= are defined"
-        )
-    for i in larger[1:]:
-        del sorted_range_criteria[i]
+    for message in _check_for_multiple_inf_values(
+        name, pre_warn, sorted_range_criteria
+    ):
+        msgs.append(message)
 
     if len(sorted_range_criteria) > 0 and (
         sorted_range_criteria[0].start != float("-inf")
@@ -311,6 +288,44 @@ def _validate_criteria_on_overlap_and_gaps(
         )
 
     return msgs
+
+
+def _check_for_multiple_inf_values(
+    name: str, pre_warn: str, sorted_range_criteria: List[_Range]
+) -> Iterable[str]:
+
+    def check_start_inf_function(range_to_check: _Range) -> bool:
+        return (range_to_check.start == float("-inf")) & (
+            range_to_check.end != float("inf")
+        )
+
+    def check_end_inf_function(range_to_check: _Range) -> bool:
+        return (range_to_check.end == float("inf")) & (
+            range_to_check.start != float("-inf")
+        )
+
+    checks: List[Tuple[Callable[[_Range], bool], str, bool]] = [
+        (check_start_inf_function, "< or <=", True),
+        (check_end_inf_function, "> or >=", False),
+    ]
+
+    for check_function, operator_str, keep_last in checks:
+        multiples = [
+            i for i, c in enumerate(sorted_range_criteria) if check_function(c)
+        ]
+
+        if keep_last:
+            multiples = list(reversed(multiples))
+
+        # remove duplicates for further checking
+        for i in multiples[1:]:
+            del sorted_range_criteria[i]
+
+        if len(multiples) > 1:
+            yield (
+                f"{pre_warn}Overlap for variable {name}, multiple criteria with "
+                + f"operators {operator_str} are defined"
+            )
 
 
 def _check_ranges(
