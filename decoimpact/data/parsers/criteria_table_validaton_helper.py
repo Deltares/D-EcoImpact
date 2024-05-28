@@ -115,7 +115,9 @@ def validate_table_coverage(crit_table: Dict[str, Any], logger: ILogger):
     # Make a loop over all variables from right to left to check combinations
     msgs = []
     for key in reversed(criteria_table.keys()):
-        _divide_table_in_unique_chunks(new_crit_table, msgs, logger, {}, unique)
+        msgs = msgs + list(
+            _divide_table_in_unique_chunks(new_crit_table, logger, {}, unique)
+        )
         del new_crit_table[key]
 
     max_msg = 6
@@ -135,11 +137,10 @@ def validate_table_coverage(crit_table: Dict[str, Any], logger: ILogger):
 
 def _divide_table_in_unique_chunks(
     criteria_table: Dict[str, Any],
-    msgs: List[str],
     logger: ILogger,
     conditions: Optional[Dict[str, Any]],
     unique=True,
-):
+) -> Iterable[str]:
     """This is a recursive function until all combinations of variables in the
     criteria table is checked on coverage.
 
@@ -167,7 +168,9 @@ def _divide_table_in_unique_chunks(
             # only one parameter given in the criteria_table
             criteria = _np.unique(criteria)
         # WHen there is only one parameter left in the given table ()
-        _validate_criteria_on_overlap_and_gaps(name, criteria, msgs, cond_str)
+        for message in _validate_criteria_on_overlap_and_gaps(name, criteria, cond_str):
+            yield message
+
     # Else evaluate the previous variables to get unique combinations back
     else:
         # This recursive function loops over all variables and filters it on
@@ -190,7 +193,10 @@ def _divide_table_in_unique_chunks(
                 conditions[key] = unique_c
 
             # Send the remaining filtered parameters back into the function
-            _divide_table_in_unique_chunks(new_crit_table, msgs, logger, conditions)
+            for message in _divide_table_in_unique_chunks(
+                new_crit_table, logger, conditions
+            ):
+                yield message
 
 
 def _convert_to_range(val: Any) -> _Range:
@@ -226,8 +232,8 @@ def _convert_to_range(val: Any) -> _Range:
 
 
 def _validate_criteria_on_overlap_and_gaps(
-    name: str, criteria: Any, msgs: List[str], pre_warn: str
-) -> List[str]:
+    name: str, criteria: Any, pre_warn: str
+) -> Iterable[str]:
     """Go over the given criteria to determine if there are gaps or overlaps.
 
     Args:
@@ -255,39 +261,30 @@ def _validate_criteria_on_overlap_and_gaps(
     for message in _check_for_multiple_inf_values(
         name, pre_warn, sorted_range_criteria
     ):
-        msgs.append(message)
+        yield message
 
     if len(sorted_range_criteria) > 0 and (
         sorted_range_criteria[0].start != float("-inf")
     ):
-
-        msgs.append(
-            _create_warn_message(
-                name,
-                pre_warn,
-                _Range(float("-inf"), sorted_range_criteria[0].start),
-                "Gap",
-            )
+        yield _create_warn_message(
+            name,
+            pre_warn,
+            _Range(float("-inf"), sorted_range_criteria[0].start),
+            "Gap",
         )
 
     for message in _check_ranges(name, pre_warn, sorted_range_criteria):
-        msgs.append(message)
+        yield message
 
     # Create the final check over the not_covered_values and the covered_numbers
     # Send warning with the combined messages
     if sorted_range_criteria[-1].end != float("inf"):
-        msgs.append(
-            _create_warn_message(
-                name,
-                pre_warn,
-                _Range(
-                    max(list_c.end for list_c in sorted_range_criteria), float("inf")
-                ),
-                "Gap",
-            )
+        yield _create_warn_message(
+            name,
+            pre_warn,
+            _Range(max(list_c.end for list_c in sorted_range_criteria), float("inf")),
+            "Gap",
         )
-
-    return msgs
 
 
 def _check_for_multiple_inf_values(
