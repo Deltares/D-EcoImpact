@@ -9,7 +9,9 @@ Module for validation logic of the (ClassificationRule) criteria table
 
 """
 
-from typing import Any, Dict, List, Optional
+from __future__ import annotations
+
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as _np
 
@@ -21,6 +23,70 @@ from decoimpact.business.entities.rules.string_parser_utils import (
 from decoimpact.crosscutting.i_logger import ILogger
 
 
+class _Range:
+    """Internal class for storing range properties"""
+
+    def __init__(self, start: float, end: float, bnd_name: str = "") -> None:
+        self._start: float = start
+        self._end: float = end
+        self._bnd_name: str = bnd_name
+
+    @property
+    def start(self) -> float:
+        """Start of the range"""
+        return self._start
+
+    @property
+    def end(self) -> float:
+        """End of the range"""
+        return self._end
+
+    @end.setter
+    def end(self, end: float):
+        self._end = end
+
+    @property
+    def bnd_name(self) -> str:
+        """Bnd_name of the range"""
+        return self._bnd_name
+
+    def check_inside_bounds(self, range_to_compare: _Range) -> Tuple[bool, bool]:
+        """Checks if the start and end of provided range (range_to_compare)
+        are inside the scope of this range
+
+        Args:
+            range_to_compare (_Range): Range to check
+
+        Returns:
+            Tuple[bool, bool]: begin inside, end inside
+        """
+        begin_inside = self._check_inside_bounds(
+            range_to_compare.start, range_to_compare.bnd_name
+        )
+        end_inside = self._check_inside_bounds(
+            range_to_compare.end, range_to_compare.bnd_name
+        )
+        return begin_inside, end_inside
+
+    def _check_inside_bounds(
+        self,
+        var: float,
+        op_cur: Optional[str] = None,
+    ) -> bool:
+        # Check wether the next value falls within the bounds of the previous range.
+        # Some exceptions on > and < defined values.
+        if op_cur == "larger":
+            left = var > self.start
+        else:
+            left = var >= self.start
+
+        if self.bnd_name == "smaller":
+            right = var < self.end
+        else:
+            right = var <= self.end
+        return left & right
+
+
 def validate_table_coverage(crit_table: Dict[str, Any], logger: ILogger):
     """Check if the criteria for the parameters given in the criteria_table
     cover the entire range of data values. If not give the user feedback (warnings)
@@ -29,7 +95,6 @@ def validate_table_coverage(crit_table: Dict[str, Any], logger: ILogger):
     Args:
         crit_table (Dict[str, Any]): User input describing criteria per parameter
     """
-    msgs = []
     criteria_table = crit_table.copy()
     del criteria_table["output"]
 
@@ -42,6 +107,7 @@ def validate_table_coverage(crit_table: Dict[str, Any], logger: ILogger):
         unique = False
 
     # Make a loop over all variables from right to left to check combinations
+    msgs = []
     for key in reversed(criteria_table.keys()):
         _divide_table_in_unique_chunks(new_crit_table, msgs, logger, {}, unique)
         del new_crit_table[key]
@@ -50,16 +116,15 @@ def validate_table_coverage(crit_table: Dict[str, Any], logger: ILogger):
     if len(msgs) < max_msg:
         logger.log_warning("\n".join(msgs))
     else:
+        # Only show the first 6 lines. Print all msgs to a txt file.
         logger.log_warning("\n".join(msgs[:max_msg]))
         logger.log_warning(
             f"{len(msgs)} warnings found concerning coverage of the "
             f"parameters. Only first {max_msg} warnings are shown. See "
             "classification_warnings.log file for all warnings."
         )
-        f = open("classification_warnings.log", "w")
-        f.write("\n".join(msgs))
-        f.close()
-    # Only show the first 2 lines. Print all msgs to a txt file.
+        with open("classification_warnings.log", "w", encoding="utf-8") as file:
+            file.write("\n".join(msgs))
 
 
 def _divide_table_in_unique_chunks(
@@ -122,7 +187,7 @@ def _divide_table_in_unique_chunks(
             _divide_table_in_unique_chunks(new_crit_table, msgs, logger, conditions)
 
 
-def _convert_to_ranges(val: Any) -> List[Any]:
+def _convert_to_range(val: Any) -> _Range:
     """Make sure all type of accepted criteria is converted to range format
     [start, end]
 
@@ -138,20 +203,20 @@ def _convert_to_ranges(val: Any) -> List[Any]:
 
     for bnd_name, operator in [("larger_equal", ">="), ("larger", ">")]:
         if type_of_classification(val) == bnd_name:
-            return [read_str_comparison(val, operator), float("inf"), bnd_name]
+            return _Range(read_str_comparison(val, operator), float("inf"), bnd_name)
 
     for bnd_name, operator in [("smaller_equal", "<="), ("smaller", "<")]:
         if type_of_classification(val) == bnd_name:
-            return [float("-inf"), read_str_comparison(val, operator), bnd_name]
+            return _Range(float("-inf"), read_str_comparison(val, operator), bnd_name)
 
     if type_of_classification(val) == "number":
-        return [float(val), float(val), "equal"]
+        return _Range(float(val), float(val), "equal")
 
     if type_of_classification(val) == "range":
         start_range, end_range = str_range_to_list(val)
-        return [start_range, end_range, "equal"]
+        return _Range(start_range, end_range, "equal")
 
-    return [float("-inf"), float("inf"), ""]
+    return _Range(float("-inf"), float("inf"))
 
 
 def _validate_criteria_on_overlap_and_gaps(
@@ -169,22 +234,22 @@ def _validate_criteria_on_overlap_and_gaps(
         List[str]: A list with all gathered warning messages
     """
     # The list of criteria is converted to a list of ranges
-    range_criteria = list(map(_convert_to_ranges, criteria))
+    range_criteria = list(map(_convert_to_range, criteria))
 
     # The ranges needs to be sorted. First on "end" value (1.)
     # then on "start" value (2.)
     # For example: [[1, 4], [0, 5], [-inf, 2] [-inf, 0]]
     # 1. [[-inf, 0], [-inf, 2], [1, 4], [0, 5]]
     # 2. [[-inf, 0], [-inf, 2], [0, 5], [1, 4]]
-    sorted_range_criteria = sorted(range_criteria, key=lambda x: x[1])
-    sorted_range_criteria = sorted(sorted_range_criteria, key=lambda x: x[0])
+    sorted_range_criteria = sorted(range_criteria, key=lambda x: x.end)
+    sorted_range_criteria = sorted(sorted_range_criteria, key=lambda x: x.start)
 
     # Check if there are multiple larger or larger and equal comparison values are
     # present, this will cause overlap
     smaller = [
         i
         for i, c in enumerate(sorted_range_criteria)
-        if (c[0] == float("-inf")) & (c[1] != float("inf"))
+        if (c.start == float("-inf")) & (c.end != float("inf"))
     ]
     if len(smaller) > 1:
         msgs.append(
@@ -199,7 +264,7 @@ def _validate_criteria_on_overlap_and_gaps(
     larger = [
         i
         for i, c in enumerate(sorted_range_criteria)
-        if (c[1] == float("inf")) & (c[0] != float("-inf"))
+        if (c.end == float("inf")) & (c.start != float("-inf"))
     ]
     if len(larger) > 1:
         msgs.append(
@@ -211,50 +276,36 @@ def _validate_criteria_on_overlap_and_gaps(
 
     for c_ind, crit in enumerate(sorted_range_criteria):
         if c_ind == 0:
-            if crit[0] != float("-inf"):
-                msgs = _warn_message(
-                    name, msgs, pre_warn, float("-inf"), crit[0], "Gap"
+            if crit.start != float("-inf"):
+                msgs.append(
+                    _create_warn_message(
+                        name, pre_warn, _Range(float("-inf"), crit.start), "Gap"
+                    )
                 )
 
         else:
             prev_c = sorted_range_criteria[c_ind - 1]
-
-            begin_inside = _check_inside_bounds(
-                prev_c[0], prev_c[1], crit[0], op_prev=prev_c[-1], op_cur=crit[-1]
-            )
-            end_inside = _check_inside_bounds(
-                prev_c[0], prev_c[1], crit[1], op_prev=prev_c[-1], op_cur=crit[-1]
-            )
+            begin_inside, end_inside = prev_c.check_inside_bounds(crit)
 
             # Exception is needed for when a > or < operator is defined. No overlap
             # is defined but also not a gap, so begin_inside and end_inside cover
             # these exceptions properly
             non_equal_overlap = not (
-                (("equal" in str(crit[-1])) ^ ("equal" in str(prev_c[-1])))
-                & (crit[0] == prev_c[1])
+                (("equal" in crit.bnd_name) ^ ("equal" in prev_c.bnd_name))
+                & (crit.start == prev_c.end)
             )
 
             # The range is inside the previous range eg when the user
             # gives the criteria: 0:10 and 3:5, giving one overlap.
             if begin_inside & end_inside:
-                msgs = _warn_message(
-                    name,
-                    msgs,
-                    pre_warn,
-                    crit[0],
-                    crit[1],
-                )
-                crit[1] = prev_c[1]
+                msgs.append(_create_warn_message(name, pre_warn, crit))
+                crit.end = prev_c.end
 
             # The range starts within the previous range eg when the user
             # gives the criteria: 0:10 and 3:15, an overlap will occur
             elif begin_inside & (not end_inside) & (non_equal_overlap):
-                msgs = _warn_message(
-                    name,
-                    msgs,
-                    pre_warn,
-                    crit[0],
-                    prev_c[1],
+                msgs.append(
+                    _create_warn_message(name, pre_warn, _Range(crit.start, prev_c.end))
                 )
 
             # Because the list is sorted it can never occur that (not
@@ -263,16 +314,22 @@ def _validate_criteria_on_overlap_and_gaps(
             # The range is completely outside the previous range eg when the user
             # gives the criteria: 0:10 and 15:20, a gap will occur
             elif (not begin_inside) & (not end_inside) & (non_equal_overlap):
-                msgs = _warn_message(name, msgs, pre_warn, prev_c[1], crit[0], "Gap")
+                msgs.append(
+                    _create_warn_message(
+                        name, pre_warn, _Range(prev_c.end, crit.start), "Gap"
+                    )
+                )
 
-    if sorted_range_criteria[-1][1] != float("inf"):
-        msgs = _warn_message(
-            name,
-            msgs,
-            pre_warn,
-            max(list_c[1] for list_c in sorted_range_criteria),
-            float("inf"),
-            "Gap",
+    if sorted_range_criteria[-1].end != float("inf"):
+        msgs.append(
+            _create_warn_message(
+                name,
+                pre_warn,
+                _Range(
+                    max(list_c.end for list_c in sorted_range_criteria), float("inf")
+                ),
+                "Gap",
+            )
         )
 
     # Create the final check over the not_covered_values and the covered_numbers
@@ -281,38 +338,15 @@ def _validate_criteria_on_overlap_and_gaps(
     return msgs
 
 
-def _check_inside_bounds(
-    start: float,
-    end: float,
-    var: float,
-    op_prev: Optional[str] = None,
-    op_cur: Optional[str] = None,
-) -> bool:
-    # Check wether the next value falls within the bounds of the previous range.
-    # Some exceptions on > and < defined values.
-    if op_cur == "larger":
-        left = var > start
-    else:
-        left = var >= start
-
-    if op_prev == "smaller":
-        right = var < end
-    else:
-        right = var <= end
-    return left & right
-
-
-def _warn_message(
+def _create_warn_message(
     name: str,
-    msgs: List[str],
     pre_warn: str,
-    start: float,
-    end: Optional[float] = None,
+    range_used: _Range,
     type_warn: Optional[str] = "Overlap",
-):
+) -> str:
     # Create a warning message (default overlap) for given values
-    comp_str = f"range {start}:{end}"
-    if (start == end) or (end is None):
-        comp_str = f"number {start}"
-    msgs.append(f"{pre_warn}{type_warn} for variable {name} in {comp_str}")
-    return msgs
+    comp_str = f"range {range_used.start}:{range_used.end}"
+    if range_used.start == range_used.end:
+        comp_str = f"number {range_used.start}"
+
+    return f"{pre_warn}{type_warn} for variable {name} in {comp_str}"
