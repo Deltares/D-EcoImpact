@@ -41,7 +41,6 @@ def get_dict_element(
     return None
 
 
-# todo List[Any] => List[str]
 def convert_table_element(table: List[Any]) -> Dict[Any, Any]:
     """Convert a table element into a dictionary
 

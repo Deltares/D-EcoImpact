@@ -8,8 +8,6 @@
 Tests for ParserClassificationRule class
 """
 
-from typing import Any, List
-
 import pytest
 from mock import Mock
 
