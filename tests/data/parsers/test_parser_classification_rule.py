@@ -248,7 +248,7 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
                 ),
                 call(
                     "12 warnings found concerning coverage of the parameters. Only first 6 "
-                    "warnings are shown. See classification_warnings.log file for all warnings."
+                    "warnings are shown. See multiple_classification_rule_warnings.log file for all warnings."
                 ),
             ],
         ),
@@ -305,5 +305,6 @@ def test_feedback_for_criteria_multiple_parameters_more_10_warnings():
 
     logger.log_warning.assert_called_with(
         "11 warnings found concerning coverage of the parameters. Only first 6 "
-        "warnings are shown. See classification_warnings.log file for all warnings."
+        "warnings are shown. See multiple_classification_rule_warnings.log file "
+        "for all warnings."
     )

@@ -96,7 +96,6 @@ def type_of_classification(class_val) -> str:
         if "<" in class_val:
             read_str_comparison(class_val, "<")
             return "smaller"
-        print(class_val, float(class_val))
 
     try:
         float(class_val)
