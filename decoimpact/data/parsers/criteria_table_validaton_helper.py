@@ -129,9 +129,11 @@ def validate_table_coverage(crit_table: Dict[str, Any], logger: ILogger):
         logger.log_warning(
             f"{len(msgs)} warnings found concerning coverage of the "
             f"parameters. Only first {max_msg} warnings are shown. See "
-            "classification_warnings.log file for all warnings."
+            "multiple_classification_rule_warnings.log file for all warnings."
         )
-        with open("classification_warnings.log", "w", encoding="utf-8") as file:
+        with open(
+            "multiple_classification_rule_warnings.log", "w", encoding="utf-8"
+        ) as file:
             file.write("\n".join(msgs))
 
 
@@ -325,7 +327,7 @@ def _check_for_multiple_inf_values(
         if len(multiples) > 1:
             yield (
                 f"{pre_warn}Overlap for variable {name}, multiple criteria with "
-                + f"operators {operator_str} are defined"
+                + f"operators {operator_str} are defined."
             )
 
 
@@ -380,4 +382,4 @@ def _create_warn_message(
     if range_used.start == range_used.end:
         comp_str = f"number {range_used.start}"
 
-    return f"{pre_warn}{type_warn} for variable {name} in {comp_str}"
+    return f"{pre_warn}{type_warn} for variable {name} in {comp_str}."
