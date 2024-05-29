@@ -175,11 +175,11 @@ def _divide_table_in_unique_chunks(
             ):
                 yield message
 
-            return
-
-    # If there is only one variable, check on all conditions for coverage
-    name, criteria = list(criteria_table.items())[0]
-    _check_variable_conditions(name, criteria, conditions, unique)
+    else:
+        # If there is only one variable, check on all conditions for coverage
+        name, criteria = list(criteria_table.items())[0]
+        for message in _check_variable_conditions(name, criteria, conditions, unique):
+            yield message
 
 
 def _check_variable_conditions(
