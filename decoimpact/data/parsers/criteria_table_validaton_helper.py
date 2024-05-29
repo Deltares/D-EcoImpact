@@ -161,7 +161,8 @@ def _divide_table_in_unique_chunks(
             # When checking a single parameter or the first parameter
             cond_str = f"For conditions: ({cond_str}). "
 
-        name, criteria = next(iter(criteria_table.items()))
+        name, criteria = list(criteria_table.items())[0]
+
         if unique:
             # Little trick to ignore the duplicates when a combination of
             # variables is given. This step is skipped when there is
