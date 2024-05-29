@@ -62,7 +62,10 @@ def read_command_line_arguments():
         print("D-EcoImpact version:", version)
         sys.exit()
     else:
-        print("\nNo inputfile given. Exiting. \n")
+        print("\nNo inputfile given.\n")
+        print("===========================================")
         parser.print_help()
+        print("===========================================")
+        input("\nPlease provide an input.yaml file. Hit Enter to exit.\n")
         sys.exit()
     return input_path
