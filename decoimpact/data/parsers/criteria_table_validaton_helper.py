@@ -149,33 +149,9 @@ def _divide_table_in_unique_chunks(
         conditions (Optional[Dict[str, Any]]): _description_. Defaults to {}.
         unique (bool, optional): _description_. Defaults to True.
     """
-    #
-    # If there is only one variable, check on all conditions for coverage
-    if len(criteria_table.items()) == 1:
-        cond_str = ""
-
-        if conditions and len(conditions) > 0:
-            cond_str = ", ".join(
-                [f"{key}: {value}" for key, value in conditions.items()]
-            )
-            # When checking a single parameter or the first parameter
-            cond_str = f"For conditions: ({cond_str}). "
-
-        name, criteria = list(criteria_table.items())[0]
-
-        if unique:
-            # Little trick to ignore the duplicates when a combination of
-            # variables is given. This step is skipped when there is
-            # only one parameter given in the criteria_table
-            criteria = _np.unique(criteria)
-        # WHen there is only one parameter left in the given table ()
-        for message in _validate_criteria_on_overlap_and_gaps(name, criteria, cond_str):
-            yield message
-
-    # Else evaluate the previous variables to get unique combinations back
-    else:
-        # This recursive function loops over all variables and filters it on
-        # unique values
+    # This recursive function loops over all variables and filters it on
+    # unique values
+    if len(criteria_table.items()) != 1:
         crit_to_sort = list(criteria_table.values())[0]
         for unique_c in _np.unique(crit_to_sort):
             indices = [i for i, c in enumerate(crit_to_sort) if c == unique_c]
@@ -198,6 +174,33 @@ def _divide_table_in_unique_chunks(
                 new_crit_table, logger, conditions
             ):
                 yield message
+
+            return
+
+    # If there is only one variable, check on all conditions for coverage
+    name, criteria = list(criteria_table.items())[0]
+    _check_variable_conditions(name, criteria, conditions, unique)
+
+
+def _check_variable_conditions(
+    name: str, criteria: Any, conditions: Optional[Dict[str, Any]], unique: bool
+) -> Iterable[str]:
+    cond_str = ""
+
+    if conditions and len(conditions) > 0:
+        cond_str = ", ".join([f"{key}: {value}" for key, value in conditions.items()])
+        # When checking a single parameter or the first parameter
+        cond_str = f"For conditions: ({cond_str}). "
+
+    if unique:
+        # Little trick to ignore the duplicates when a combination of
+        # variables is given. This step is skipped when there is
+        # only one parameter given in the criteria_table
+        criteria = _np.unique(criteria)
+
+    # WHen there is only one parameter left in the given table ()
+    for message in _validate_criteria_on_overlap_and_gaps(name, criteria, cond_str):
+        yield message
 
 
 def _convert_to_range(val: Any) -> _Range:
