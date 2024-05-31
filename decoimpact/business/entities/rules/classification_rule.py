@@ -11,7 +11,7 @@ Classes:
     ClassificationRule
 """
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import xarray as _xr
 
@@ -35,10 +35,8 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         criteria_table: Dict[str, List],
-        output_variable_name: str = "output",
-        description: str = "",
     ):
-        super().__init__(name, input_variable_names, output_variable_name, description)
+        super().__init__(name, input_variable_names)
         self._criteria_table = criteria_table
 
     @property
@@ -73,31 +71,9 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
                 # Retrieving criteria and applying it in correct format (number,
                 # range or comparison)
                 criteria = self.criteria_table[column_name][row]
-                criteria_class = type_of_classification(criteria)
-
-                comparison = True
-                if criteria_class == "number":
-                    comparison = data == float(criteria)
-
-                elif criteria_class == "range":
-                    begin, end = str_range_to_list(criteria)
-                    comparison = (data >= begin) & (data <= end)
-
-                elif criteria_class == "larger_equal":
-                    comparison_val = read_str_comparison(criteria, ">=")
-                    comparison = data >= float(comparison_val)
-
-                elif criteria_class == "smaller_equal":
-                    comparison_val = read_str_comparison(criteria, "<=")
-                    comparison = data <= float(comparison_val)
-
-                elif criteria_class == "larger":
-                    comparison_val = read_str_comparison(criteria, ">")
-                    comparison = data > float(comparison_val)
-
-                elif criteria_class == "smaller":
-                    comparison_val = read_str_comparison(criteria, "<")
-                    comparison = data < float(comparison_val)
+                comparison = self._get_comparison_for_criteria(criteria, data)
+                if comparison is None:
+                    comparison = True
 
                 # Criteria_comparison == 1 -> to check where the value is True
                 criteria_comparison = _xr.where(
@@ -111,3 +87,35 @@ class ClassificationRule(RuleBase, IMultiArrayBasedRule):
 
             result_array = _xr.where(criteria_comparison, out, default_val)
         return result_array
+
+    def _get_comparison_for_criteria(
+        self, criteria: str, data: _xr.DataArray
+    ) -> Optional[_xr.DataArray]:
+
+        criteria_class = type_of_classification(criteria)
+
+        comparison = None
+        if criteria_class == "number":
+            comparison = data == float(criteria)
+
+        elif criteria_class == "range":
+            begin, end = str_range_to_list(criteria)
+            comparison = (data >= begin) & (data <= end)
+
+        elif criteria_class == "larger_equal":
+            comparison_val = read_str_comparison(criteria, ">=")
+            comparison = data >= float(comparison_val)
+
+        elif criteria_class == "smaller_equal":
+            comparison_val = read_str_comparison(criteria, "<=")
+            comparison = data <= float(comparison_val)
+
+        elif criteria_class == "larger":
+            comparison_val = read_str_comparison(criteria, ">")
+            comparison = data > float(comparison_val)
+
+        elif criteria_class == "smaller":
+            comparison_val = read_str_comparison(criteria, "<")
+            comparison = data < float(comparison_val)
+
+        return comparison

@@ -21,7 +21,6 @@ from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
 class ParserResponseCurveRule(IParserRuleBase):
-
     """Class for creating a ResponseRuleData"""
 
     @property
@@ -49,9 +48,7 @@ class ParserResponseCurveRule(IParserRuleBase):
 
         # check that response table has exactly two columns:
         if not len(response_table) == 2:
-            raise ValueError(
-                "ERROR: response table should have exactly 2 columns"
-            )
+            raise ValueError("ERROR: response table should have exactly 2 columns")
 
         # validate input values to be int/float
         if not all(isinstance(m, (int, float)) for m in input_values):
@@ -85,11 +82,11 @@ class ParserResponseCurveRule(IParserRuleBase):
 
         output_variable_name = get_dict_element("output_variable", dictionary)
 
-        return ResponseCurveRuleData(
-            name,
-            input_variable_name,
-            input_values,
-            output_values,
-            output_variable_name,
-            description,
+        rule_data = ResponseCurveRuleData(
+            name, input_variable_name, input_values, output_values
         )
+
+        rule_data.output_variable = output_variable_name
+        rule_data.description = description
+
+        return rule_data

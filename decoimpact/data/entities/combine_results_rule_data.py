@@ -21,15 +21,8 @@ from decoimpact.data.entities.rule_data import RuleData
 class CombineResultsRuleData(ICombineResultsRuleData, RuleData):
     """Class for storing data related to combine results rule"""
 
-    def __init__(
-        self,
-        name: str,
-        input_variable_names: List[str],
-        operation_type: str,
-        output_variable: str,
-        description: str = "",
-    ):
-        super().__init__(name, output_variable, description)
+    def __init__(self, name: str, input_variable_names: List[str], operation_type: str):
+        super().__init__(name)
         self._input_variable_names = input_variable_names
         self._operation_type = operation_type
 

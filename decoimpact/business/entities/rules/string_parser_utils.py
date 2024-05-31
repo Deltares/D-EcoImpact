@@ -9,6 +9,9 @@ Module for parser strings
 """
 
 
+from typing import Any
+
+
 def str_range_to_list(range_string: str):
     """Convert a string with a range in the form "x:y" of floats to
     two elements (begin and end of range).
@@ -61,7 +64,7 @@ def read_str_comparison(compare_str: str, operator: str):
         ) from exc
 
 
-def type_of_classification(class_val) -> str:
+def type_of_classification(class_val: Any) -> str:
     """Determine which type of classification is required: number, range, or
     NA (not applicable)
 
@@ -74,31 +77,34 @@ def type_of_classification(class_val) -> str:
     Returns:
         str: Type of classification
     """
-
+    class_type = None
     if isinstance(class_val, (float, int)):
-        return "number"
-    if isinstance(class_val, str):
+        class_type = "number"
+    elif isinstance(class_val, str):
         class_val = class_val.strip()
         if class_val in ("-", ""):
-            return "NA"
-        if ":" in class_val:
+            class_type = "NA"
+        elif ":" in class_val:
             str_range_to_list(class_val)
-            return "range"
-        if ">=" in class_val:
+            class_type = "range"
+        elif ">=" in class_val:
             read_str_comparison(class_val, ">=")
-            return "larger_equal"
-        if "<=" in class_val:
+            class_type = "larger_equal"
+        elif "<=" in class_val:
             read_str_comparison(class_val, "<=")
-            return "smaller_equal"
-        if ">" in class_val:
+            class_type = "smaller_equal"
+        elif ">" in class_val:
             read_str_comparison(class_val, ">")
-            return "larger"
-        if "<" in class_val:
+            class_type = "larger"
+        elif "<" in class_val:
             read_str_comparison(class_val, "<")
-            return "smaller"
+            class_type = "smaller"
 
-    try:
-        float(class_val)
-        return "number"
-    except Exception as exc:
-        raise ValueError(f"No valid criteria is given: {class_val}") from exc
+    if not class_type:
+        try:
+            float(class_val)
+            class_type = "number"
+        except TypeError as exc:
+            raise ValueError(f"No valid criteria is given: {class_val}") from exc
+
+    return class_type

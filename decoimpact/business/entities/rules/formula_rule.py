@@ -32,15 +32,8 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
 
     formula_output_name: str = "formula_result"
 
-    def __init__(
-        self,
-        name: str,
-        input_variable_names: List[str],
-        formula: str,
-        output_variable_name: str = "output",
-        description: str = "",
-    ):
-        super().__init__(name, input_variable_names, output_variable_name, description)
+    def __init__(self, name: str, input_variable_names: List[str], formula: str):
+        super().__init__(name, input_variable_names)
         self._formula = formula
         self._byte_code = None
         self._setup_environment()
@@ -67,7 +60,6 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
         return self._formula
 
     def execute(self, values: Dict[str, float], logger: ILogger) -> float:
-
         """Calculates the formula based on the
         Args:
             values (DataArray): values to Formula

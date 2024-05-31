@@ -220,8 +220,8 @@ def test_run_rule_based_model():
 
 def test_make_output_variables_list():
     # Arrange
-    vars = ("var1", "var2", "var3", "var4", "var5")
-    dataset = _xr.Dataset(data_vars=dict.fromkeys(vars))
+    variables = ("var1", "var2", "var3", "var4", "var5")
+    dataset = _xr.Dataset(data_vars=dict.fromkeys(variables))
     dataset["var1"].attrs = {"cf_role": "mesh_topology", "test_bounds": "var2"}
     dataset["var2"].attrs = {"test_connectivity": "var4"}
     dataset["var3"].attrs = {"test_connectivity": "var5"}

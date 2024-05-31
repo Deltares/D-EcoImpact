@@ -23,7 +23,6 @@ from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
 class ParserCombineResultsRule(IParserRuleBase):
-
     """Class for creating a CombineResultsRuleData"""
 
     @property
@@ -49,13 +48,11 @@ class ParserCombineResultsRule(IParserRuleBase):
         if not description:
             description = ""
 
-        return CombineResultsRuleData(
-            name,
-            input_variable_names,
-            operation_type,
-            output_variable_name,
-            description,
-        )
+        rule_data = CombineResultsRuleData(name, input_variable_names, operation_type)
+        rule_data.output_variable = output_variable_name
+        rule_data.description = description
+
+        return rule_data
 
     def _validate_operation_type(self, operation_type: str):
         """

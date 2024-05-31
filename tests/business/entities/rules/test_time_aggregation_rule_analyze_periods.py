@@ -35,9 +35,9 @@ def test_create_time_aggregation_rule_should_set_defaults():
     assert rule.name == "test"
     assert rule.description == ""
     assert isinstance(rule, TimeAggregationRule)
-    assert rule.operation_type == TimeOperationType.COUNT_PERIODS
-    assert rule.time_scale == "year"
-    assert rule.time_scale_mapping == {"month": "M", "year": "Y"}
+    assert rule.settings.operation_type == TimeOperationType.COUNT_PERIODS
+    assert rule.settings.time_scale == "year"
+    assert rule.settings.time_scale_mapping == {"month": "M", "year": "Y"}
 
 
 def test_validation_when_valid():
@@ -47,8 +47,8 @@ def test_validation_when_valid():
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.COUNT_PERIODS,
-        time_scale="month"
     )
+    rule.settings.time_scale = "month"
 
     valid = rule.validate(logger)
     assert valid
@@ -61,14 +61,14 @@ def test_validation_when_not_valid():
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.COUNT_PERIODS,
-        time_scale="awhile"
     )
+    rule.settings.time_scale = "awhile"
 
     valid = rule.validate(logger)
-    allowed_time_scales = rule._time_scale_mapping.keys()
+    allowed_time_scales = rule.settings.time_scale_mapping.keys()
     options = ",".join(allowed_time_scales)
     logger.log_error.assert_called_with(
-        f"The provided time scale '{rule.time_scale}' "
+        f"The provided time scale '{rule.settings.time_scale}' "
         f"of rule '{rule.name}' is not supported.\n"
         f"Please select one of the following types: "
         f"{options}"
@@ -130,7 +130,7 @@ def test_analyze_groups_function_not_only_1_and_0():
     [
         ("COUNT_PERIODS", [2, 2, 2, 2]),
         ("MAX_DURATION_PERIODS", [2, 2, 3, 3]),
-        ("AVG_DURATION_PERIODS", [1.5, 1.5, 2, 2])
+        ("AVG_DURATION_PERIODS", [1.5, 1.5, 2, 2]),
     ],
 )
 def test_analyze_groups_function(operation_type, expected_result_data):
@@ -189,7 +189,7 @@ def test_analyze_groups_function(operation_type, expected_result_data):
     [
         ("COUNT_PERIODS", [0, 1, 0, 0]),
         ("MAX_DURATION_PERIODS", [0, 1, 0, 0]),
-        ("AVG_DURATION_PERIODS", [0, 1, 0, 0])
+        ("AVG_DURATION_PERIODS", [0, 1, 0, 0]),
     ],
 )
 def test_analyze_groups_function_no_periods(operation_type, expected_result_data):
@@ -248,7 +248,7 @@ def test_analyze_groups_function_no_periods(operation_type, expected_result_data
     [
         ("COUNT_PERIODS", [[2, 2, 2, 2], [1, 2, 2, 2], [2, 1, 2, 2]]),
         ("MAX_DURATION_PERIODS", [[2, 2, 3, 3], [1, 2, 3, 3], [2, 2, 3, 3]]),
-        ("AVG_DURATION_PERIODS", [[1.5, 1.5, 2, 2], [1, 1.5, 2, 2], [1.5, 2, 2, 2]])
+        ("AVG_DURATION_PERIODS", [[1.5, 1.5, 2, 2], [1, 1.5, 2, 2], [1.5, 2, 2, 2]]),
     ],
 )
 def test_analyze_groups_function_2d(operation_type, expected_result_data):
@@ -308,18 +308,27 @@ def test_analyze_groups_function_2d(operation_type, expected_result_data):
 @pytest.mark.parametrize(
     "operation_type, expected_result_data",
     [
-        ("COUNT_PERIODS", [
-            [[2, 2, 2, 2], [1, 2, 2, 2], [2, 1, 2, 2]],
-            [[2, 2, 2, 2], [1, 2, 2, 2], [2, 1, 2, 2]]
-        ]),
-        ("MAX_DURATION_PERIODS", [
-            [[2, 2, 3, 3], [1, 2, 3, 3], [2, 2, 3, 3]],
-            [[2, 2, 3, 3], [1, 2, 3, 3], [2, 2, 3, 3]]
-        ]),
-        ("AVG_DURATION_PERIODS", [
-            [[1.5, 1.5, 2, 2], [1, 1.5, 2, 2], [1.5, 2, 2, 2]],
-            [[1.5, 1.5, 2, 2], [1, 1.5, 2, 2], [1.5, 2, 2, 2]]
-        ], )
+        (
+            "COUNT_PERIODS",
+            [
+                [[2, 2, 2, 2], [1, 2, 2, 2], [2, 1, 2, 2]],
+                [[2, 2, 2, 2], [1, 2, 2, 2], [2, 1, 2, 2]],
+            ],
+        ),
+        (
+            "MAX_DURATION_PERIODS",
+            [
+                [[2, 2, 3, 3], [1, 2, 3, 3], [2, 2, 3, 3]],
+                [[2, 2, 3, 3], [1, 2, 3, 3], [2, 2, 3, 3]],
+            ],
+        ),
+        (
+            "AVG_DURATION_PERIODS",
+            [
+                [[1.5, 1.5, 2, 2], [1, 1.5, 2, 2], [1.5, 2, 2, 2]],
+                [[1.5, 1.5, 2, 2], [1, 1.5, 2, 2], [1.5, 2, 2, 2]],
+            ],
+        ),
     ],
 )
 def test_count_groups_function_3d(operation_type, expected_result_data):
@@ -330,15 +339,18 @@ def test_count_groups_function_3d(operation_type, expected_result_data):
         operation_type=TimeOperationType[operation_type],
     )
 
-    t_data = [[
-        [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
-        [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
-        [0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
-    ], [
-        [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
-        [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
-        [0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
-    ]]
+    t_data = [
+        [
+            [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+            [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+            [0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        ],
+        [
+            [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+            [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+            [0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+        ],
+    ]
     t_time = [
         "2000-01-01",
         "2000-01-02",
@@ -417,8 +429,8 @@ def test_execute_value_array_condition_time_yearly_count_periods():
         name="test",
         input_variable_names=["dry"],
         operation_type=TimeOperationType.COUNT_PERIODS,
-        output_variable_name="number_of_dry_periods",
     )
+    rule.output_variable_name = "number_of_dry_periods"
 
     assert isinstance(rule, TimeAggregationRule)
     time_condition = rule.execute(test_array_yearly, logger)
@@ -461,8 +473,8 @@ def test_execute_value_array_condition_time_monthly_count_periods():
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.COUNT_PERIODS,
-        time_scale="month",
     )
+    rule.settings.time_scale = "month"
 
     time_condition = rule.execute(value_array_monthly, logger)
 

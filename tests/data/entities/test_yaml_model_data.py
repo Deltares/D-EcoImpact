@@ -9,6 +9,7 @@ Tests for YamlModelData class
 """
 
 
+from pathlib import Path
 from unittest.mock import Mock
 
 import xarray as _xr
@@ -28,11 +29,14 @@ def test_yaml_model_data_default_settings_and_type():
     # Arrange
     datasets = [Mock(DatasetData)]
     rules = [Mock(MultiplyRuleData)]
-    output_dataset = Mock(_xr.Dataset)
-    version='0.0.0'
+    version = [0, 0, 0]
 
     # Act
-    model_data = YamlModelData("Model 1", version, datasets, output_dataset, [], rules)
+    model_data = YamlModelData("Model 1", version)
+    model_data.output_path = Path("")
+    model_data.datasets = datasets
+    model_data.output_variables = []
+    model_data.rules = rules
 
     # Assert
 

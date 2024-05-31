@@ -19,7 +19,6 @@ from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
 class ParserStepFunctionRule(IParserRuleBase):
-
     """Class for creating a StepFunction"""
 
     @property
@@ -54,14 +53,12 @@ class ParserStepFunctionRule(IParserRuleBase):
             sorted_map = sorted(unsorted_map, key=lambda x: x[0])
             limits, responses = map(list, zip(*sorted_map))
 
-        return StepFunctionRuleData(
-            name,
-            limits,
-            responses,
-            input_variable_name,
-            description,
-            output_variable_name,
-        )
+        rule_data = StepFunctionRuleData(name, limits, responses, input_variable_name)
+
+        rule_data.output_variable = output_variable_name
+        rule_data.description = description
+
+        return rule_data
 
     def _are_sorted(self, list_numbers: List[float]):
         return all(a < b for a, b in zip(list_numbers, list_numbers[1:]))

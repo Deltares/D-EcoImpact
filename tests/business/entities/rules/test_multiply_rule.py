@@ -11,8 +11,8 @@ Tests for RuleBase class
 
 from unittest.mock import Mock
 
-import xarray as _xr
 import numpy as _np
+import xarray as _xr
 
 from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
 from decoimpact.crosscutting.i_logger import ILogger
@@ -29,7 +29,7 @@ def test_create_multiply_rule_should_set_defaults():
     assert rule.input_variable_names == ["foo"]
     assert rule.output_variable_name == "output"
     assert rule.multipliers == [[0.5, 3.0]]
-    assert rule.date_range == []
+    assert rule.date_range is None
     assert isinstance(rule, MultiplyRule)
 
 
@@ -39,7 +39,8 @@ def test_execute_value_array_multiplied_by_multipliers_no_dates():
 
     # Arrange
     logger = Mock(ILogger)
-    rule = MultiplyRule("test", ["foo"], [[0.5, 4.0]], description="description")
+    rule = MultiplyRule("test", ["foo"], [[0.5, 4.0]])
+    rule.description = "description"
     data = [1, 2, 3, 4]
     value_array = _xr.DataArray(data)
 
@@ -62,7 +63,7 @@ def test_execute_value_array_multiplied_by_multipliers_with_dates():
         "test",
         ["foo"],
         [[1], [100, 10]],
-        date_range=[["01-01", "10-01"], ["11-01", "20-01"]]
+        date_range=[["01-01", "10-01"], ["11-01", "20-01"]],
     )
 
     values = [0.1, 0.7, 0.2, 0.2, 0.3, 0.1]
@@ -88,7 +89,7 @@ def test_execute_value_array_multiplied_by_multipliers_with_dates():
 
 
 def test_execute_value_array_multiplied_by_multipliers_with_dates_missing_dates():
-    """Test executing Multiply Rule with multipliers and a date range. And check 
+    """Test executing Multiply Rule with multipliers and a date range. And check
     that the values that are outside the given periods are filled with None"""
 
     # Arrange
@@ -97,7 +98,7 @@ def test_execute_value_array_multiplied_by_multipliers_with_dates_missing_dates(
         "test",
         ["foo"],
         [[2], [100, 10]],
-        date_range=[["02-01", "10-01"], ["11-01", "20-01"]]
+        date_range=[["02-01", "10-01"], ["11-01", "20-01"]],
     )
 
     values = [0.1, 0.7, 0.2, 0.2, 0.3, 0.1]

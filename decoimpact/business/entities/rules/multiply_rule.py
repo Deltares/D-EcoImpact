@@ -12,7 +12,7 @@ Classes:
 """
 
 from datetime import datetime as _dt
-from typing import List
+from typing import List, Optional
 
 import numpy as _np
 import xarray as _xr
@@ -30,11 +30,9 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         multipliers: List[List[float]],
-        output_variable_name: str = "output",
-        date_range: List[List[str]] = [],
-        description: str = "",
+        date_range: Optional[List[List[str]]] = None,
     ):
-        super().__init__(name, input_variable_names, output_variable_name, description)
+        super().__init__(name, input_variable_names)
         self._multipliers = multipliers
         self._date_range = date_range
 
@@ -44,7 +42,7 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
         return self._multipliers
 
     @property
-    def date_range(self) -> List[List[str]]:
+    def date_range(self) -> Optional[List[List[str]]]:
         """Date range property"""
         return self._date_range
 
@@ -63,16 +61,15 @@ class MultiplyRule(RuleBase, IArrayBasedRule):
         result_multipliers = [_np.prod(mp) for mp in self._multipliers]
         old_dr = _xr.DataArray(value_array)
         new_dr = _xr.full_like(old_dr, _np.nan)
-        for (index, _mp) in enumerate(result_multipliers):
-            if len(self.date_range) != 0:
+
+        for index, _mp in enumerate(result_multipliers):
+            if self.date_range is not None and len(self.date_range) != 0:
                 # Date is given in DD-MM, convert to MM-DD for comparison
                 start = self._convert_datestr(self.date_range[index][0])
                 end = self._convert_datestr(self.date_range[index][1])
                 dr_date = old_dr.time.dt.strftime(r"%m-%d")
                 new_dr = _xr.where(
-                    (start < dr_date) & (dr_date < end),
-                    old_dr * _mp,
-                    new_dr
+                    (start < dr_date) & (dr_date < end), old_dr * _mp, new_dr
                 )
             else:
                 new_dr = old_dr * _mp

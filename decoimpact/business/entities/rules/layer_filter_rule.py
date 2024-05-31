@@ -21,18 +21,10 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 
 class LayerFilterRule(RuleBase, IArrayBasedRule):
-
     """Implementation for the layer filter rule"""
 
-    def __init__(
-        self,
-        name: str,
-        input_variable_names: List[str],
-        layer_number: int,
-        output_variable_name: str = "output",
-        description: str = "",
-    ):
-        super().__init__(name, input_variable_names, output_variable_name, description)
+    def __init__(self, name: str, input_variable_names: List[str], layer_number: int):
+        super().__init__(name, input_variable_names)
         self._layer_number = layer_number
 
     @property
@@ -41,7 +33,6 @@ class LayerFilterRule(RuleBase, IArrayBasedRule):
         return self._layer_number
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
-
         """Obtain a 2D layer from a 3D variable
 
         Args:

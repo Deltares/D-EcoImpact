@@ -90,9 +90,7 @@ class TestRemoveVariables:
                 variable4=variable4,
             )
         )
-        dataset["variable2"].attrs = {
-            "cf_role": "mesh_topology"
-        }
+        dataset["variable2"].attrs = {"cf_role": "mesh_topology"}
         variable_to_keep = [variable2]
 
         # Act
@@ -103,7 +101,7 @@ class TestRemoveVariables:
         assert variable2 in dataset
         assert variable3 not in dataset
         assert variable4 not in dataset
-        
+
     def test_reduce_for_writing_throws_exception_for_non_existing_variable(self):
         """Tests if reduce dataset for writing throws error when save_only_variable is
         not present in dataset."""
@@ -121,22 +119,22 @@ class TestRemoveVariables:
                 variable4=variable4,
             )
         )
-        dataset["variable2"].attrs = {
-            "cf_role": "mesh_topology"
-        }
+        dataset["variable2"].attrs = {"cf_role": "mesh_topology"}
         logger = Mock(ILogger)
-        variable_to_keep = ['non_existing_variable']
+        variable_to_keep = ["non_existing_variable"]
 
         # Assert
         with pytest.raises(OSError) as error:
             utilities.reduce_dataset_for_writing(dataset, variable_to_keep, logger)
 
-
         # Assert
-        assert error.value.args[0] == f"ERROR: variable non_existing_variable is not present in dataset"
+        assert (
+            error.value.args[0]
+            == "ERROR: variable non_existing_variable is not present in dataset"
+        )
 
     def test_leave_multiple_variables(self):
-        """Tests if remove all variables except multiple variable removes all 
+        """Tests if remove all variables except multiple variable removes all
         variables, and keeps the desired variables."""
 
         # Arrange
@@ -152,9 +150,7 @@ class TestRemoveVariables:
                 variable4=variable4,
             )
         )
-        dataset["variable2"].attrs = {
-            "cf_role": "mesh_topology"
-        }
+        dataset["variable2"].attrs = {"cf_role": "mesh_topology"}
         variables_to_keep = [variable2, variable4]
 
         # Act
@@ -327,8 +323,7 @@ class TestGetDummyVariableInUgrid:
             == """No dummy variable defined and therefore input dataset does
             not comply with UGrid convention."""
         )
-        
-        
+
     def test_get_dummy_and_dependent_var_list(self):
         """Test if you receive the name of the dummy and dependent variables variable
         in a ugrid dataset"""
@@ -346,7 +341,7 @@ class TestGetDummyVariableInUgrid:
         var_list = utilities.get_dummy_and_dependent_var_list(ds)
 
         # Assert
-        assert sorted(var_list) == sorted(['var2', 'var5', 'var3', 'var1'])
+        assert sorted(var_list) == sorted(["var2", "var5", "var3", "var1"])
 
 
 class TestGetDependentVarsByVarName:

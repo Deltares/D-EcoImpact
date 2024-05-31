@@ -18,9 +18,7 @@ def test_time_aggregation_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    data = TimeAggregationRuleData(
-        "test_name", TimeOperationType.MIN, None, "input", "output", "description"
-    )
+    data = TimeAggregationRuleData("test_name", TimeOperationType.MIN, "input")
 
     # Assert
 

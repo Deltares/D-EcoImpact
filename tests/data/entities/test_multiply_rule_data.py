@@ -17,7 +17,7 @@ def test_multiply_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    data = MultiplyRuleData("test_name", [1.0, 2.0], "input", "output", "description")
+    data = MultiplyRuleData("test_name", [1.0, 2.0], "input")
 
     # Assert
 

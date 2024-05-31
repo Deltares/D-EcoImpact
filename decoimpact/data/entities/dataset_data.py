@@ -28,7 +28,6 @@ class DatasetData(IDatasetData):
         Args:
             dataset (dict[str, Any]):
         """
-        super()
         self._path = Path(get_dict_element("filename", dataset)).resolve()
         self._start_date = str(get_dict_element("start_date", dataset, False))
         self._end_date = str(get_dict_element("end_date", dataset, False))

@@ -27,7 +27,7 @@ def test_create_combine_results_rule_with_defaults():
 
     # Arrange & Act
     rule = CombineResultsRule(
-        "test_rule_name", ["foo", "hello"], MultiArrayOperationType.MULTIPLY, "output"
+        "test_rule_name", ["foo", "hello"], MultiArrayOperationType.MULTIPLY
     )
     # Assert
     assert isinstance(rule, CombineResultsRule)
@@ -44,7 +44,7 @@ def test_no_validate_error_with_correct_rule():
     # Arrange
     logger = Mock(ILogger)
     rule = CombineResultsRule(
-        "test_rule_name", ["foo", "hello"], MultiArrayOperationType.MULTIPLY, "output"
+        "test_rule_name", ["foo", "hello"], MultiArrayOperationType.MULTIPLY
     )
 
     # Act
@@ -60,12 +60,11 @@ def test_create_combine_results_rule_with_all_fields():
 
     # Arrange & Act
     rule = CombineResultsRule(
-        "test_rule_name",
-        ["foo", "hello"],
-        MultiArrayOperationType.MULTIPLY,
-        "output",
-        "test description",
+        "test_rule_name", ["foo", "hello"], MultiArrayOperationType.MULTIPLY
     )
+
+    rule.description = "test description"
+
     # Assert
     assert isinstance(rule, CombineResultsRule)
     assert rule.name == "test_rule_name"
@@ -80,10 +79,12 @@ def test_execute_error_combine_results_rule_different_lengths():
 
     # Arrange & Act
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY
     )
-    value_array = {"foo_data": _xr.DataArray([1, 2, 3]),
-                   "hello_data": _xr.DataArray([4, 3, 2, 1])}
+    value_array = {
+        "foo_data": _xr.DataArray([1, 2, 3]),
+        "hello_data": _xr.DataArray([4, 3, 2, 1]),
+    }
 
     # Assert
     with pytest.raises(ValueError) as exc_info:
@@ -98,10 +99,12 @@ def test_execute_error_combine_results_rule_different_shapes():
 
     # Arrange & Act
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, "output"
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY
     )
-    value_array = {"foo_data": _xr.DataArray([[1, 2], [3, 4]]),
-                   "hello_data": _xr.DataArray([4, 3, 2, 1])}
+    value_array = {
+        "foo_data": _xr.DataArray([[1, 2], [3, 4]]),
+        "hello_data": _xr.DataArray([4, 3, 2, 1]),
+    }
 
     # Assert
     with pytest.raises(ValueError) as exc_info:
@@ -129,9 +132,11 @@ def test_all_operations_combine_results_rule(
     """Test the outcome of each operand for the combine results rule"""
     # Arrange
     logger = Mock(ILogger)
-    dict_vars = {"var1_name": _xr.DataArray([20, 7, 3]), 
-                 "var2_name": _xr.DataArray([4, 5, 6]), 
-                 "var3_name": _xr.DataArray([15, 12, 24])}
+    dict_vars = {
+        "var1_name": _xr.DataArray([20, 7, 3]),
+        "var2_name": _xr.DataArray([4, 5, 6]),
+        "var3_name": _xr.DataArray([15, 12, 24]),
+    }
     # raw_data = [[20, 7, 3], [4, 5, 6], [15, 12, 24]]
     # xarray_data = [_xr.DataArray(arr) for arr in raw_data]
 
@@ -140,7 +145,6 @@ def test_all_operations_combine_results_rule(
         "test_name",
         ["var1_name", "var2_name", "var3_name"],
         operation,
-        "output",
     )
     obtained_result = rule.execute(dict_vars, logger)
 
@@ -163,10 +167,7 @@ def test_dims_present_in_result():
 
     # Act
     rule = CombineResultsRule(
-        "test_name",
-        ["var1_name", "var2_name"],
-        MultiArrayOperationType.ADD,
-        "output",
+        "test_name", ["var1_name", "var2_name"], MultiArrayOperationType.ADD
     )
     obtained_result = rule.execute(dict_data, logger)
 

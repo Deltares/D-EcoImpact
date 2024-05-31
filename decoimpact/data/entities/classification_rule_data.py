@@ -26,10 +26,8 @@ class ClassificationRuleData(IClassificationRuleData, RuleData):
         name: str,
         input_variable_names: List[str],
         criteria_table: Dict[str, List],
-        output_variable: str = "output",
-        description: str = "",
     ):
-        super().__init__(name, output_variable, description)
+        super().__init__(name)
         self._input_variable_names = input_variable_names
         self._criteria_table = criteria_table
 

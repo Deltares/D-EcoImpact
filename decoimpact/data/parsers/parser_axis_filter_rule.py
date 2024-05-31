@@ -20,7 +20,6 @@ from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
 class ParserAxisFilterRule(IParserRuleBase):
-
     """Class for creating a AxisFilterRuleData"""
 
     @property
@@ -47,16 +46,20 @@ class ParserAxisFilterRule(IParserRuleBase):
             )
             raise ValueError(message)
 
-        layer_number = get_dict_element("layer_number", dictionary)
-        if not isinstance(layer_number, int):
+        element_index = get_dict_element("layer_number", dictionary)
+        if not isinstance(element_index, int):
             message = (
                 "Layer number should be an integer, "
-                f"received a {type(layer_number)}: {layer_number}"
+                f"received a {type(element_index)}: {element_index}"
             )
             raise ValueError(message)
         output_variable_name = get_dict_element("output_variable", dictionary)
 
-        return AxisFilterRuleData(
-            name, layer_number, axis_name, input_variable_name,
-            output_variable_name, description
+        rule_data = AxisFilterRuleData(
+            name, element_index, axis_name, input_variable_name
         )
+
+        rule_data.output_variable = output_variable_name
+        rule_data.description = description
+
+        return rule_data

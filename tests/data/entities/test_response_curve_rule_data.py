@@ -18,9 +18,9 @@ def test_response_curve_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    data = ResponseCurveRuleData(
-        "test_name", "input", [1, 2, 3], [3, 2, 0], "output", "description"
-    )
+    data = ResponseCurveRuleData("test_name", "input", [1, 2, 3], [3, 2, 0])
+    data.output_variable = "output"
+    data.description = "description"
 
     assert isinstance(data, IRuleData)
     assert data.name == "test_name"
