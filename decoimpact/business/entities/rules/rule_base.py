@@ -22,18 +22,11 @@ from decoimpact.crosscutting.i_logger import ILogger
 class RuleBase(IRule, ABC):
     """Implementation of the rule base"""
 
-    def __init__(
-        self,
-        name: str,
-        input_variable_names: List[str],
-        output_variable_name: str = "output",
-        description: str = "",
-    ):
-
+    def __init__(self, name: str, input_variable_names: List[str]):
         self._name = name
-        self._description = description
+        self._description = ""
         self._input_variable_names = input_variable_names
-        self._output_variable_name = output_variable_name
+        self._output_variable_name = "output"
 
     @property
     def name(self) -> str:

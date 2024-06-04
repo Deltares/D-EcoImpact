@@ -34,7 +34,7 @@ class ITimeAggregationRuleData(IRuleData, ABC):
 
     @property
     @abstractmethod
-    def operation_parameter(self) -> float:
+    def percentile_value(self) -> float:
         """Operation parameter"""
 
     @property

@@ -43,7 +43,6 @@ def test_parse_dict_to_rule_data_logic():
             "name": "testname",
             "input_variables": ["foo", "bar"],
             "operation": "Multiply",
-            # "operation_parameter": None,
             "output_variable": "test_output_name",
             "description": "test description",
         }

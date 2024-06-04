@@ -17,7 +17,7 @@ def test_layer_filter_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    data = LayerFilterRuleData("test_name", 3, "input", "output", "description")
+    data = LayerFilterRuleData("test_name", 3, "input")
 
     # Assert
 

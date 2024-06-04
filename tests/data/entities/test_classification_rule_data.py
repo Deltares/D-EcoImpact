@@ -17,13 +17,11 @@ def test_classification_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Arrange
-    test_table = [
-        ["a", "output"],
-        [1, 2]
-    ]
+    test_table = {"a": [1], "output": [2]}
 
     # Act
-    data = ClassificationRuleData("test_name", ["foo", "bar"], test_table, "output", "description")
+    data = ClassificationRuleData("test_name", ["foo", "bar"], test_table)
+    data.description = "description"
 
     # Assert
 

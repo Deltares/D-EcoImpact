@@ -62,8 +62,9 @@ def remove_variables(dataset: _xr.Dataset, variables: list[str]) -> _xr.Dataset:
     return dataset
 
 
-def remove_all_variables_except(dataset: _xr.Dataset,
-                                variables_to_keep: List[str]) -> _xr.Dataset:
+def remove_all_variables_except(
+    dataset: _xr.Dataset, variables_to_keep: List[str]
+) -> _xr.Dataset:
     """Remove all variables from dataset except provided list of variables.
 
     Args:
@@ -78,8 +79,9 @@ def remove_all_variables_except(dataset: _xr.Dataset,
 
     all_variables = list_vars(dataset)
 
-    variables_to_remove = [item for item in all_variables if item not in
-                           list(variables_to_keep)]
+    variables_to_remove = [
+        item for item in all_variables if item not in list(variables_to_keep)
+    ]
 
     cleaned_dataset = remove_variables(dataset, variables_to_remove)
 
@@ -315,31 +317,9 @@ def rec_search_dep_vars(
     return dep_vars
 
 
-def get_time_dimension_name(variable: _xr.DataArray, logger: ILogger) -> str:
-    """Retrieves the dimension name
-
-    Args:
-        value_array (DataArray): values to get time dimension
-
-    Raises:
-        ValueError: If time dimension could not be found
-
-    Returns:
-        str: time dimension name
-    """
-
-    for dim in variable.dims:
-        dim_values = variable[dim]
-        if dim_values.dtype.name == "datetime64[ns]":
-            return str(dim)
-
-    message = f"No time dimension found for {variable.name}"
-    logger.log_error(message)
-    raise ValueError(message)
-
-
-def reduce_dataset_for_writing(dataset: _xr.Dataset, save_only_variables: List[str],
-                               logger: ILogger):
+def reduce_dataset_for_writing(
+    dataset: _xr.Dataset, save_only_variables: List[str], logger: ILogger
+):
     """Reduce dataset before writing by only saving selected variables
 
     Args:

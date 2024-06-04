@@ -30,6 +30,7 @@ from decoimpact.business.entities.rules.response_curve_rule import ResponseCurve
 from decoimpact.business.entities.rules.rolling_statistics_rule import (
     RollingStatisticsRule,
 )
+from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.business.entities.rules.step_function_rule import StepFunctionRule
 from decoimpact.business.entities.rules.time_aggregation_rule import TimeAggregationRule
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
@@ -83,97 +84,83 @@ class ModelBuilder(IModelBuilder):
             yield ModelBuilder._create_rule(rule_data_object)
 
     @staticmethod
+    def _set_default_fields(rule_data: IRuleData, rule: RuleBase):
+        rule.description = rule_data.description
+        rule.output_variable_name = rule_data.output_variable
+
+    @staticmethod
     def _create_rule(rule_data: IRuleData) -> IRule:
         if isinstance(rule_data, IMultiplyRuleData):
-            return MultiplyRule(
+            rule = MultiplyRule(
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.multipliers,
-                rule_data.output_variable,
                 rule_data.date_range,
             )
-
-        if isinstance(rule_data, ILayerFilterRuleData):
-            return LayerFilterRule(
+        elif isinstance(rule_data, ILayerFilterRuleData):
+            rule = LayerFilterRule(
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.layer_number,
-                rule_data.output_variable,
             )
-
-        if isinstance(rule_data, IAxisFilterRuleData):
-            return AxisFilterRule(
+        elif isinstance(rule_data, IAxisFilterRuleData):
+            rule = AxisFilterRule(
                 rule_data.name,
                 [rule_data.input_variable],
-                rule_data.layer_number,
+                rule_data.element_index,
                 rule_data.axis_name,
-                rule_data.output_variable,
             )
-
-        if isinstance(rule_data, IStepFunctionRuleData):
-            return StepFunctionRule(
+        elif isinstance(rule_data, IStepFunctionRuleData):
+            rule = StepFunctionRule(
                 rule_data.name,
                 rule_data.input_variable,
                 rule_data.limits,
                 rule_data.responses,
-                rule_data.output_variable,
             )
-
-        if isinstance(rule_data, ITimeAggregationRuleData):
-            return TimeAggregationRule(
-                rule_data.name,
-                [rule_data.input_variable],
-                rule_data.operation,
-                rule_data.operation_parameter,
-                rule_data.output_variable,
-                rule_data.time_scale,
+        elif isinstance(rule_data, ITimeAggregationRuleData):
+            rule = TimeAggregationRule(
+                rule_data.name, [rule_data.input_variable], rule_data.operation
             )
-
-        if isinstance(rule_data, IRollingStatisticsRuleData):
-            return RollingStatisticsRule(
-                rule_data.name,
-                [rule_data.input_variable],
-                rule_data.operation,
-                rule_data.operation_parameter,
-                rule_data.output_variable,
-                rule_data.time_scale,
-                rule_data.period,
+            rule.settings.percentile_value = rule_data.percentile_value
+            rule.settings.time_scale = rule_data.time_scale
+        elif isinstance(rule_data, IRollingStatisticsRuleData):
+            rule = RollingStatisticsRule(
+                rule_data.name, [rule_data.input_variable], rule_data.operation
             )
-
-        if isinstance(rule_data, ICombineResultsRuleData):
-            return CombineResultsRule(
+            rule.settings.percentile_value = rule_data.percentile_value
+            rule.settings.time_scale = rule_data.time_scale
+            rule.period = rule_data.period
+        elif isinstance(rule_data, ICombineResultsRuleData):
+            rule = CombineResultsRule(
                 rule_data.name,
                 rule_data.input_variable_names,
                 MultiArrayOperationType[rule_data.operation_type],
-                rule_data.output_variable,
-                rule_data.description,
             )
-        if isinstance(rule_data, IResponseCurveRuleData):
-            return ResponseCurveRule(
+        elif isinstance(rule_data, IResponseCurveRuleData):
+            rule = ResponseCurveRule(
                 rule_data.name,
                 rule_data.input_variable,
                 rule_data.input_values,
                 rule_data.output_values,
-                rule_data.output_variable,
-                rule_data.description,
             )
-        if isinstance(rule_data, IFormulaRuleData):
-            return FormulaRule(
+        elif isinstance(rule_data, IFormulaRuleData):
+            rule = FormulaRule(
                 rule_data.name,
                 rule_data.input_variable_names,
                 rule_data.formula,
-                rule_data.output_variable,
-                rule_data.description,
             )
-        if isinstance(rule_data, IClassificationRuleData):
-            return ClassificationRule(
-                rule_data.name,
-                rule_data.input_variable_names,
-                rule_data.criteria_table,
-                rule_data.output_variable,
-                rule_data.description,
+        elif isinstance(rule_data, IClassificationRuleData):
+            rule = ClassificationRule(
+                rule_data.name, rule_data.input_variable_names, rule_data.criteria_table
             )
-        error_str = (
-            f"The rule type of rule '{rule_data.name}' is currently " "not implemented"
-        )
-        raise NotImplementedError(error_str)
+        else:
+            error_str = (
+                f"The rule type of rule '{rule_data.name}' is currently "
+                "not implemented"
+            )
+            raise NotImplementedError(error_str)
+
+        if isinstance(rule, RuleBase):
+            ModelBuilder._set_default_fields(rule_data, rule)
+
+        return rule

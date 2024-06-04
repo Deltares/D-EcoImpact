@@ -9,7 +9,7 @@ Module for dictionary utilities
 
 """
 
-from typing import Dict, List, Optional, TypeVar
+from typing import Any, Dict, List, Optional, TypeVar
 
 ValueT = TypeVar("ValueT")
 
@@ -41,16 +41,16 @@ def get_dict_element(
     return None
 
 
-def convert_table_element(table: List) -> Dict:
+def convert_table_element(table: List[Any]) -> Dict[Any, Any]:
     """Convert a table element into a dictionary
 
     Args:
-        table (list): Table to convert
+        table (list[Any]): Table to convert
     Raises:
         ValueError: When table is not correctly defined
 
     Returns:
-        Dict: readable dictionary with parsed headers and values.
+        Dict[Any, Any]: readable dictionary with parsed headers and values.
     """
 
     if len(table) <= 1:

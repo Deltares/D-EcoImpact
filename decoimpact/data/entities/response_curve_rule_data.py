@@ -27,10 +27,8 @@ class ResponseCurveRuleData(IResponseCurveRuleData, RuleData):
         input_variable: str,
         input_values: List[float],
         output_values: List[float],
-        output_variable: str = "output",
-        description: str = "",
     ):
-        super().__init__(name, output_variable, description)
+        super().__init__(name)
         self._input_variable = input_variable
         self._input_values = input_values
         self._output_values = output_values

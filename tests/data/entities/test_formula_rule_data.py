@@ -18,9 +18,7 @@ def test_formula_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    data = FormulaRuleData(
-        "test_name", ["input1", "input2"], "input1 + input2", "output"
-    )
+    data = FormulaRuleData("test_name", ["input1", "input2"], "input1 + input2")
 
     # Assert
 

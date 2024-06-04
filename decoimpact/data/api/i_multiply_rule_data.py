@@ -14,7 +14,7 @@ Interfaces:
 
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 
 from decoimpact.data.api.i_rule_data import IRuleData
 
@@ -34,5 +34,5 @@ class IMultiplyRuleData(IRuleData, ABC):
 
     @property
     @abstractmethod
-    def date_range(self) -> List[List[str]]:
+    def date_range(self) -> Optional[List[List[str]]]:
         """Array with date ranges"""

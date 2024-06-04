@@ -9,6 +9,7 @@ Tests for RuleBase class
 """
 
 
+import math
 from unittest.mock import Mock
 
 import pytest
@@ -21,7 +22,9 @@ def test_create_formula_rule_should_set_defaults():
     """Test creating a RuleBase with defaults"""
 
     # Arrange & Act
-    rule = FormulaRule("test", ["foo", "bar"], "foo + bar", "outputname")
+    rule = FormulaRule("test", ["foo", "bar"], "foo + bar")
+    rule.output_variable_name = "outputname"
+
     # Assert
     assert rule.name == "test"
     assert rule.description == ""
@@ -36,14 +39,14 @@ def test_execute_adding_value_arrays():
 
     # Arrange
     logger = Mock(ILogger)
-    rule = FormulaRule("test", ["foo", "bar"], "foo + bar", "outputname")
+    rule = FormulaRule("test", ["foo", "bar"], "foo + bar")
     values = {"foo": 1.0, "bar": 4.0}
 
     # Act
     result_value = rule.execute(values, logger)
 
     # Assert
-    assert result_value == 5.0
+    assert math.isclose(result_value, 5.0, abs_tol=1e-9)
 
 
 def test_execute_multiplying_value_arrays():
@@ -51,7 +54,7 @@ def test_execute_multiplying_value_arrays():
 
     # Arrange
     logger = Mock(ILogger)
-    rule = FormulaRule("test", ["foo", "bar"], "foo * bar", "outputname")
+    rule = FormulaRule("test", ["foo", "bar"], "foo * bar")
     values = {
         "foo": 2.0,
         "bar": 3.0,
@@ -61,7 +64,7 @@ def test_execute_multiplying_value_arrays():
     result_value = rule.execute(values, logger)
 
     # Assert
-    assert result_value == 6.0
+    assert math.isclose(result_value, 6.0, abs_tol=1e-9)
 
 
 @pytest.mark.parametrize(
@@ -75,7 +78,7 @@ def test_execute_comparing_value_arrays(
 
     # Arrange
     logger = Mock(ILogger)
-    rule = FormulaRule("test", ["foo", "bar"], "foo > bar", "outputname")
+    rule = FormulaRule("test", ["foo", "bar"], "foo > bar")
     values = {
         "foo": input_value1,
         "bar": input_value2,
@@ -93,7 +96,7 @@ def test_execute_unwanted_python_code():
 
     # Arrange
     logger = Mock(ILogger)
-    rule = FormulaRule("test", ["foo", "bar"], "print('hoi')", "outputname")
+    rule = FormulaRule("test", ["foo", "bar"], "print('hoi')")
     values = {
         "foo": 2.0,
         "bar": 3.0,
@@ -115,7 +118,7 @@ def test_formula_has_incorrect_variable_names():
 
     # Arrange
     logger = Mock(ILogger)
-    rule = FormulaRule("test", ["foo", "bar"], "foo + bas", "outputname")
+    rule = FormulaRule("test", ["foo", "bar"], "foo + bas")
     values = {
         "foo": 2.0,
         "bar": 3.0,
@@ -141,7 +144,8 @@ def test_validate_of_invalid_python_code(formula: str, expected_output_value: bo
 
     # Arrange
     logger = Mock(ILogger)
-    rule = FormulaRule("test", ["foo", "bar"], formula, "outputname")
+    rule = FormulaRule("test", ["foo", "bar"], formula)
+    rule.output_variable_name = "outputname"
 
     # Act
     result = rule.validate(logger)

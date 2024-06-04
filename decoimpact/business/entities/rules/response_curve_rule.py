@@ -29,10 +29,8 @@ class ResponseCurveRule(RuleBase, ICellBasedRule):
         input_variable_name: str,
         input_values: List[float],
         output_values: List[float],
-        output_variable_name="output",
-        description: str = "",
     ):
-        super().__init__(name, [input_variable_name], output_variable_name, description)
+        super().__init__(name, [input_variable_name])
 
         self._input_values = _np.array(input_values)
         self._output_values = _np.array(output_values)

@@ -23,22 +23,13 @@ from decoimpact.data.api.i_rule_data import IRuleData
 class YamlModelData(IModelData):
     """Implementation of the model data"""
 
-    def __init__(
-        self,
-        name: str,
-        version: str,
-        datasets: List[IDatasetData],
-        output_path: Path,
-        output_variables: List[str],
-        rules: List[IRuleData],
-    ):
-        super()
+    def __init__(self, name: str, version: List[int]):
         self._name = name
         self._version = version
-        self._datasets = datasets
-        self._output_path = output_path
-        self._output_variables = output_variables
-        self._rules = rules
+        self._datasets = []
+        self._output_path = Path("")
+        self._output_variables = []
+        self._rules = []
 
     @property
     def name(self) -> str:
@@ -46,7 +37,7 @@ class YamlModelData(IModelData):
         return self._name
 
     @property
-    def version(self) -> str:
+    def version(self) -> List[int]:
         """Version of the model"""
         return self._version
 
@@ -55,17 +46,33 @@ class YamlModelData(IModelData):
         """Datasets of the model"""
         return self._datasets
 
+    @datasets.setter
+    def datasets(self, datasets: List[IDatasetData]):
+        self._datasets = datasets
+
     @property
     def output_path(self) -> Path:
         """Model path to the output file"""
         return self._output_path
+
+    @output_path.setter
+    def output_path(self, output_path: Path):
+        self._output_path = output_path
 
     @property
     def output_variables(self) -> List[str]:
         """Output variables"""
         return self._output_variables
 
+    @output_variables.setter
+    def output_variables(self, output_variables: List[str]):
+        self._output_variables = output_variables
+
     @property
     def rules(self) -> List[IRuleData]:
         """Rules of the model"""
         return self._rules
+
+    @rules.setter
+    def rules(self, rules: List[IRuleData]):
+        self._rules = rules

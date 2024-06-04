@@ -13,8 +13,6 @@ Classes:
 
 import copy as _cp
 import datetime as _dt
-
-# from itertools import groupby
 from typing import List
 
 import numpy as _np
@@ -22,7 +20,10 @@ import xarray as _xr
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
-from decoimpact.business.utils.dataset_utils import get_time_dimension_name
+from decoimpact.business.entities.rules.time_operation_settings import (
+    TimeOperationSettings,
+)
+from decoimpact.business.utils.data_array_utils import get_time_dimension_name
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.dictionary_utils import get_dict_element
@@ -36,38 +37,27 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: TimeOperationType,
-        operation_parameter: float = 0,
-        time_scale: str = "day",
-        period: float = 1,
-        output_variable_name: str = "output",
-        description: str = "",
     ):
-        super().__init__(name, input_variable_names, output_variable_name, description)
-        self._operation_type = operation_type
-        self._time_scale = time_scale.lower()
-        self._operation_parameter = operation_parameter
-        self._time_scale_mapping = {"hour": "H", "day": "D"}
-        self._period = period
+        super().__init__(name, input_variable_names)
+        self._settings = TimeOperationSettings({"hour": "H", "day": "D"})
+        self._settings.percentile_value = 0
+        self._settings.operation_type = operation_type
+        self._settings.time_scale = "day"
+        self._period = 1
 
     @property
-    def operation_type(self):
+    def settings(self):
+        """Time operation settings"""
+        return self._settings
+
+    @property
+    def period(self) -> float:
         """Operation type property"""
-        return self._operation_type
+        return self._period
 
-    @property
-    def operation_parameter(self):
-        """Operation parameter property"""
-        return self._operation_parameter
-
-    @property
-    def time_scale(self):
-        """Time scale property"""
-        return self._time_scale
-
-    @property
-    def time_scale_mapping(self):
-        """Time scale mapping property"""
-        return self._time_scale_mapping
+    @period.setter
+    def period(self, period: float):
+        self._period = period
 
     def validate(self, logger: ILogger) -> bool:
         """Validates if the rule is valid
@@ -75,20 +65,8 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
         Returns:
             bool: wether the rule is valid
         """
-        valid = True
-        allowed_time_scales = self._time_scale_mapping.keys()
 
-        if self._time_scale not in allowed_time_scales:
-            options = ",".join(allowed_time_scales)
-            logger.log_error(
-                f"The provided time scale '{self._time_scale}' "
-                f"of rule '{self._name}' is not supported.\n"
-                f"Please select one of the following types: "
-                f"{options}"
-            )
-            valid = False
-
-        return valid
+        return self.settings.validate(self.name, logger)
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
         """Calculating the rolling statistics for a given period
@@ -100,14 +78,15 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
             DataArray: Aggregated values
         """
 
-        time_scale = get_dict_element(self._time_scale, self._time_scale_mapping)
+        time_scale = get_dict_element(
+            self.settings.time_scale, self.settings.time_scale_mapping
+        )
 
         time_dim_name = get_time_dimension_name(value_array, logger)
 
         result = self._perform_operation(
             value_array,
             time_dim_name,
-            self._period,
             time_scale,
             logger,
         )
@@ -117,7 +96,6 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
         self,
         values: _xr.DataArray,
         time_dim_name: str,
-        period: float,
         time_scale: str,
         logger: ILogger,
     ) -> _xr.DataArray:
@@ -141,49 +119,57 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
         result_array = result_array.where(False, _np.nan)
 
         if time_scale == "H":
-            operation_time_delta = _dt.timedelta(hours=period)
+            operation_time_delta = _dt.timedelta(hours=self._period)
         elif time_scale == "D":
-            operation_time_delta = _dt.timedelta(days=period)
+            operation_time_delta = _dt.timedelta(days=self._period)
         else:
             logger.log_error(f"Invalid time scale provided : '{time_scale}'.")
 
         time_delta_ms = _np.array([operation_time_delta], dtype="timedelta64[ms]")[0]
         last_timestamp = values.time.isel(time=-1).values
-        for timestep in values.time.values:  # Interested in vectorizing this loop
-            if last_timestamp - timestep < time_delta_ms:
+        for time_step in values.time.values:  # Interested in vectorizing this loop
+            if last_timestamp - time_step < time_delta_ms:
                 break
-            data = values.sel(time=slice(timestep, timestep + time_delta_ms))
+
+            data = values.sel(time=slice(time_step, time_step + time_delta_ms))
             last_timestamp_data = data.time.isel(time=-1).values
-
-            if self._operation_type is TimeOperationType.ADD:
-                result = data.sum(dim=time_dim_name)
-
-            elif self._operation_type is TimeOperationType.MIN:
-                result = data.min(dim=time_dim_name)
-
-            elif self._operation_type is TimeOperationType.MAX:
-                result = data.max(dim=time_dim_name)
-
-            elif self._operation_type is TimeOperationType.AVERAGE:
-                result = data.mean(dim=time_dim_name)
-
-            elif self._operation_type is TimeOperationType.MEDIAN:
-                result = data.median(dim=time_dim_name)
-
-            elif self._operation_type is TimeOperationType.STDEV:
-                result = data.std(dim=time_dim_name)
-
-            elif self._operation_type is TimeOperationType.PERCENTILE:
-                result = data.quantile(
-                    self._operation_parameter / 100, dim=time_dim_name
-                ).drop_vars("quantile")
-
-            else:
-                raise NotImplementedError(
-                    f"The operation type '{self._operation_type}' "
-                    "is currently not supported"
-                )
+            result = self._apply_operation(data, time_dim_name)
 
             result_array.loc[{"time": last_timestamp_data}] = result
 
         return _xr.DataArray(result_array)
+
+    def _apply_operation(
+        self, data: _xr.DataArray, time_dim_name: str
+    ) -> _xr.DataArray:
+        operation_type = self.settings.operation_type
+
+        if operation_type is TimeOperationType.ADD:
+            result = data.sum(dim=time_dim_name)
+
+        elif operation_type is TimeOperationType.MIN:
+            result = data.min(dim=time_dim_name)
+
+        elif operation_type is TimeOperationType.MAX:
+            result = data.max(dim=time_dim_name)
+
+        elif operation_type is TimeOperationType.AVERAGE:
+            result = data.mean(dim=time_dim_name)
+
+        elif operation_type is TimeOperationType.MEDIAN:
+            result = data.median(dim=time_dim_name)
+
+        elif operation_type is TimeOperationType.STDEV:
+            result = data.std(dim=time_dim_name)
+
+        elif operation_type is TimeOperationType.PERCENTILE:
+            result = data.quantile(
+                self.settings.percentile_value / 100, dim=time_dim_name
+            ).drop_vars("quantile")
+
+        else:
+            raise NotImplementedError(
+                f"The operation type '{operation_type}' " "is currently not supported"
+            )
+
+        return result

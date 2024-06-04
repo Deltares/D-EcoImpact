@@ -19,6 +19,7 @@ import xarray as _xr
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.crosscutting.logger_factory import LoggerFactory
 from decoimpact.data.api.i_model_data import IModelData
+from decoimpact.data.api.output_file_settings import OutputFileSettings
 from decoimpact.data.entities.data_access_layer import DataAccessLayer
 from decoimpact.data.entities.dataset_data import DatasetData
 from decoimpact.data.entities.yaml_model_data import YamlModelData
@@ -109,7 +110,8 @@ def test_dataset_data_write_output_file_should_write_file():
     application_name = "D-EcoImpact"
 
     # Act
-    da_layer.write_output_file(dataset, path, [], application_version, application_name)
+    settings = OutputFileSettings(application_name, application_version)
+    da_layer.write_output_file(dataset, path, settings)
 
     # Assert
     assert path.is_file()
@@ -129,7 +131,8 @@ def test_dataset_data_write_output_file_should_check_if_path_exists():
 
     # Act
     with pytest.raises(FileExistsError) as exc_info:
-        da_layer.write_output_file(dataset, path, [], application_version, application_name)
+        settings = OutputFileSettings(application_name, application_version)
+        da_layer.write_output_file(dataset, path, settings)
 
     exception_raised = exc_info.value
 
@@ -153,7 +156,8 @@ def test_dataset_data_write_output_file_should_check_if_extension_is_correct():
 
     # Act
     with pytest.raises(NotImplementedError) as exc_info:
-        da_layer.write_output_file(dataset, path, [], application_version, application_name)
+        settings = OutputFileSettings(application_name, application_version)
+        da_layer.write_output_file(dataset, path, settings)
 
     exception_raised = exc_info.value
 

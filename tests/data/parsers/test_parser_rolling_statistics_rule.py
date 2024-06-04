@@ -32,8 +32,8 @@ def test_parser_rolling_statistics_rule_creation_logic():
 
     assert isinstance(data, IParserRuleBase)
     assert data.rule_type_name == "rolling_statistics_rule"
-    
-   
+
+
 def test_parse_dict_to_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
@@ -44,8 +44,7 @@ def test_parse_dict_to_rule_data_logic():
             "operation": "MIN",
             "output_variable": "output",
             "time_scale": "day",
-            "period": "2"
-            
+            "period": "2",
         }
     )
     logger = Mock(ILogger)
@@ -68,7 +67,7 @@ def test_parse_operation_type():
             "operation": "Minimum",
             "output_variable": "output",
             "time_scale": "year",
-            "period":"2"
+            "period": "2",
         }
     )
     logger = Mock(ILogger)
@@ -81,10 +80,12 @@ def test_parse_operation_type():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = f"Operation is not of a predefined type. Should be in: \
-                      {[o.name for o in TimeOperationType]}. Received: Minimum"
+    expected_message = (
+        "Operation 'Minimum' is not of a predefined type. Should be in:"
+        + f"{[o.name for o in TimeOperationType]}."
+    )
     assert exception_raised.args[0] == expected_message
-    
+
 
 def test_parse_operation_percentile_valid_parameter():
     """Test if operation percentile is parsed correctly"""
@@ -96,7 +97,7 @@ def test_parse_operation_percentile_valid_parameter():
             "operation": "PERCENTILE(999)",
             "output_variable": "output",
             "time_scale": "year",
-            "period": "2"
+            "period": "2",
         }
     )
     logger = Mock(ILogger)
@@ -110,4 +111,4 @@ def test_parse_operation_percentile_valid_parameter():
 
     # Assert
     expected_message = "Operation percentile should be a number between 0 and 100."
-    assert exception_raised.args[0] == expected_message        
+    assert exception_raised.args[0] == expected_message

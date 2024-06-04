@@ -305,36 +305,13 @@ class RuleProcessor:
         ref_var = value_arrays[_np.argmax(len_dims)]
         for ind_vars, enough_dims in enumerate(most_dims_bool):
             if not enough_dims:
-                # Let the user know which variables will be broadcast to all dimensions
                 var_orig = value_arrays[ind_vars]
-                dims_orig = var_orig.dims
-                dims_result = ref_var.dims
-                dims_diff = list(str(x) for x in dims_result if x not in dims_orig)
-                str_dims_broadcasted = ",".join(dims_diff)
-                logger.log_info(
-                    f"""Variable {var_orig.name} will be expanded to the following \
-dimensions: {str_dims_broadcasted} """
+                value_arrays[ind_vars] = self._expand_dimensions_of_variable(
+                    var_orig, ref_var, logger
                 )
-                # perform the broadcast
-
-                var_broadcasted = _xr.broadcast(var_orig, ref_var)[0]
-                # Make sure the dimensions are in the same order
-                value_arrays[ind_vars] = var_broadcasted.transpose(*ref_var.dims)
 
         # Check if all variables now have the same dimensions
-        for val_index in range(len(value_arrays) - 1):
-            var1 = value_arrays[val_index]
-            var2 = value_arrays[val_index + 1]
-            diff = set(var1.dims) ^ set(var2.dims)
-
-            # If the variables with the most dimensions have different dimensions,
-            # stop the calculation
-            if len(diff) != 0:
-                raise NotImplementedError(
-                    f"Can not execute rule {rule.name} with variables with different \
-                    dimensions. Variable {var1.name} with dimensions:{var1.dims} is \
-                    different than {var2.name} with dimensions:{var2.dims}"
-                )
+        self._check_variable_dimensions(value_arrays, rule)
 
         result_variable = _np.zeros_like(ref_var.to_numpy())
         cell_values = {}
@@ -370,3 +347,48 @@ dimensions: {str_dims_broadcasted} """
             f"Key {name} was not found in input datasets or "
             "in calculated output dataset.",
         )
+
+    def _check_variable_dimensions(
+        self, value_arrays: List[_xr.DataArray], rule: IMultiCellBasedRule
+    ):
+        for val_index in range(len(value_arrays) - 1):
+            var1 = value_arrays[val_index]
+            var2 = value_arrays[val_index + 1]
+            diff = set(var1.dims) ^ set(var2.dims)
+
+            # If the variables with the most dimensions have different dimensions,
+            # stop the calculation
+            if len(diff) != 0:
+                raise NotImplementedError(
+                    f"Can not execute rule {rule.name} with variables with different \
+                    dimensions. Variable {var1.name} with dimensions:{var1.dims} is \
+                    different than {var2.name} with dimensions:{var2.dims}"
+                )
+
+    def _expand_dimensions_of_variable(
+        self, var_orig: _xr.DataArray, ref_var: _xr.DataArray, logger: ILogger
+    ):
+        """Creates a new data-array with the values of the var_org expanded to
+        include all dimensions of the ref_var
+
+        Args:
+            var_orig (_xr.DataArray): variable to expand with extra dimensions
+            ref_var (_xr.DataArray): reference variable to synchronize the
+                                     dimensions with
+            logger (ILogger): logger for logging messages
+        """
+        # Let the user know which variables will be broadcast to all dimensions
+        dims_orig = var_orig.dims
+        dims_result = ref_var.dims
+        dims_diff = list(str(x) for x in dims_result if x not in dims_orig)
+        str_dims_broadcasted = ",".join(dims_diff)
+        logger.log_info(
+            f"""Variable {var_orig.name} will be expanded to the following \
+dimensions: {str_dims_broadcasted} """
+        )
+
+        # perform the broadcast
+        var_broadcasted = _xr.broadcast(var_orig, ref_var)[0]
+
+        # Make sure the dimensions are in the same order
+        return var_broadcasted.transpose(*ref_var.dims)

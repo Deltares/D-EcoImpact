@@ -20,7 +20,6 @@ from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
 class ParserLayerFilterRule(IParserRuleBase):
-
     """Class for creating a LayerFilterRuleData"""
 
     @property
@@ -48,6 +47,9 @@ class ParserLayerFilterRule(IParserRuleBase):
             raise ValueError(message)
         output_variable_name = get_dict_element("output_variable", dictionary)
 
-        return LayerFilterRuleData(
-            name, layer_number, input_variable_name, output_variable_name, description
-        )
+        rule_data = LayerFilterRuleData(name, layer_number, input_variable_name)
+
+        rule_data.output_variable = output_variable_name
+        rule_data.description = description
+
+        return rule_data

@@ -20,6 +20,7 @@ from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.i_rule_data import IRuleData
+from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.entities.combine_results_rule_data import CombineResultsRuleData
 from decoimpact.data.entities.formula_rule_data import FormulaRuleData
 from decoimpact.data.entities.layer_filter_rule_data import LayerFilterRuleData
@@ -42,29 +43,31 @@ def test_create_rule_based_model():
     dataset_data = Mock(IDatasetData)
     da_layer = Mock(IDataAccessLayer)
 
-    multiply_rule_data = MultiplyRuleData("abc", [2, 5.86], "a", "b")
+    multiply_rule_data = MultiplyRuleData("abc", [[2.0, 5.86]], "a")
+    multiply_rule_data.output_variable = "b"
+
     step_function_rule_data = StepFunctionRuleData(
-        "step_function_name",
-        [0.0, 20.0, 100.0],
-        [1.0, 2.0, 3.0],
-        "input_name",
-        "descript_step_func_rule",
-        "output_step_func_name",
+        "step_function_name", [0.0, 20.0, 100.0], [1.0, 2.0, 3.0], "input_name"
     )
-    rule_data_layer_filter_rule = LayerFilterRuleData(
-        "lfrname", ["var1"], 2, "output_name"
-    )
+    step_function_rule_data.description = "descript_step_func_rule"
+    step_function_rule_data.output_variable = "output_step_func_name"
+
+    rule_data_layer_filter_rule = LayerFilterRuleData("lfrname", 2, "var1")
+    rule_data_layer_filter_rule.output_variable = "output_name"
+
     time_aggregation_rule = TimeAggregationRuleData(
-        "taname", ["var1"], "MIN", "output", "Month"
+        "taname", TimeOperationType.MIN, "var1"
     )
+    time_aggregation_rule.time_scale = "Month"
+    time_aggregation_rule.output_variable = "output"
 
     combine_results_rule_data = CombineResultsRuleData(
-        "test_rule_name", ["foo", "hello"], "MULTIPLY", "output"
+        "test_rule_name", ["foo", "hello"], "MULTIPLY"
     )
+    combine_results_rule_data.output_variable = "output"
 
-    formula_rule_data = FormulaRuleData(
-        "test_rule_name", ["foo", "bar"], "foo + bar", "output"
-    )
+    formula_rule_data = FormulaRuleData("test_rule_name", ["foo", "bar"], "foo + bar")
+    formula_rule_data.output_variable = "output"
 
     model_data.name = "Test model"
     model_data.datasets = [dataset_data]

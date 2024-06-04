@@ -28,8 +28,8 @@ class IAxisFilterRuleData(IRuleData, ABC):
 
     @property
     @abstractmethod
-    def layer_number(self) -> int:
-        """Property for the layer number"""
+    def element_index(self) -> int:
+        """Property for the index of the element on the axis to filter on"""
 
     @property
     @abstractmethod

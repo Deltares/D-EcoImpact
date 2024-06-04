@@ -27,10 +27,8 @@ class StepFunctionRuleData(IStepFunctionRuleData, RuleData):
         limits: List[float],
         responses: List[float],
         input_variable: str,
-        description: str = "",
-        output_variable: str = "output",
     ):
-        super().__init__(name, output_variable, description)
+        super().__init__(name)
         self._input_variable = input_variable
         self._limits = limits
         self._responses = responses
