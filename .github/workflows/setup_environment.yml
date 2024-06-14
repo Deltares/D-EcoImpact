@@ -1,6 +1,6 @@
-name: Setup environment
+name: "Setup environment"
 
-on: workflow_call
+on: [push, workflow_call]
 
 jobs:
   setup-environment:
