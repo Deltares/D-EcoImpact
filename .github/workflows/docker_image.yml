@@ -1,11 +1,6 @@
 name: "Publish to GHCR"
 
-on:
-  workflow_dispatch:
-    inputs:
-      parameter:
-        description: My Parameter
-  push: -- Add this here
+on: [push, workflow_dispatch]
 
 jobs:
   build_tag_push_to_ghcr:
