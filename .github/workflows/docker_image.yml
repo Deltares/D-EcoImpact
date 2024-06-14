@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      -name: Setup
+      - name: Setup
         uses: ./.github/workflows/setup_environment.yml
       - name: Get current version
         run: |
