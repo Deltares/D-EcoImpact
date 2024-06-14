@@ -1,9 +1,9 @@
 name: Setup environment
 
-on: [workflow_call]
+on: workflow_call
 
 jobs:
-  create-release:
+  setup-environment:
     runs-on: ubuntu-latest
     steps:
       - name: checkout code
