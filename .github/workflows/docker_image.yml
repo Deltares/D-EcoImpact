@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Get current version
         run: |
+          python --version
+          poetry --version
           PROJECT_VERSION=$(poetry version --short)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
 
