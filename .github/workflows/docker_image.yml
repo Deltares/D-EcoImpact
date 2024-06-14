@@ -25,7 +25,6 @@ jobs:
           poetry-version: 1.4.2
       - name: Get current version
         run: |
-          poetry --version
           PROJECT_VERSION=$(poetry version --short)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
 
@@ -47,5 +46,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.PROJECT_VERSION }}
+          tags: [
+              ${{ steps.meta.outputs.args.DOCKER_META_IMAGES }}:latest,
+              ${{ steps.meta.outputs.args.DOCKER_META_IMAGES }}:${{ env.PROJECT_VERSION }}
+              ]
           labels: ${{ steps.meta.outputs.labels }}
