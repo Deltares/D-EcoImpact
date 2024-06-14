@@ -1,6 +1,8 @@
 name: "Publish to GHCR"
 
-on: workflow_dispatch
+on:
+  workflow_dispatch: {}
+  pull_request: -- Add this here
 
 jobs:
   build_tag_push_to_ghcr:
