@@ -1,0 +1,15 @@
+name: "Publish to GHCR"
+
+on:
+  workflow_dispatch:
+    inputs:
+      parameter:
+        description: My Parameter
+  push: -- Add this here
+
+jobs:
+  build_tag_push_to_ghcr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build, Tag and Push Docker Image to GHCR
+        uses: GlueOps/github-actions-build-push-containers@main
