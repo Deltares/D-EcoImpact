@@ -9,7 +9,7 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.VERSION_DECOIMPACT }}
+          token: ${{ secrets.VERSION_DECOIMPACT || github.token }}
           fetch-depth: 0
       - name: install python
         uses: actions/setup-python@v4
