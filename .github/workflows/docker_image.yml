@@ -47,6 +47,6 @@ jobs:
           context: .
           push: true
           tags: |
-              ${{ steps.meta.outputs.args.DOCKER_META_IMAGES }}:latest
-              ${{ steps.meta.outputs.args.DOCKER_META_IMAGES }}:${{ env.PROJECT_VERSION }}
+              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.PROJECT_VERSION }}
           labels: ${{ steps.meta.outputs.labels }}
