@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Setup environment
-      uses: ./.github/workflows/setup_environment.yml 
+      uses: ./.github/workflows/setup_environment.yml
     - name: bump version and update template_input.yaml
       run: |
         PROJECT_VERSION=$(poetry version --short)
