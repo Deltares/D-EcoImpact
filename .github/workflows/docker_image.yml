@@ -10,6 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: downcase REPO
+        run: |
+          echo "IMAGE_NAME=${IMAGE_NAME,,}" >>${GITHUB_ENV}
       - name: checkout code
         uses: actions/checkout@v4
         with:
@@ -34,13 +37,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata for the Docker image
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
       - name: Build and push the Docker image
         uses: docker/build-push-action@v5
         with:
@@ -49,4 +45,3 @@ jobs:
           tags: |
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.PROJECT_VERSION }}
-          labels: ${{ steps.meta.outputs.labels }}
