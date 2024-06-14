@@ -8,10 +8,10 @@ env:
 
 jobs:
   build:
+    uses: ./.github/workflows/setup_environment.yml
     runs-on: ubuntu-latest
+    needs: setup-environment
     steps:
-      - name: Setup
-        uses: ./.github/workflows/setup_environment.yml
       - name: Get current version
         run: |
           python --version
