@@ -21,6 +21,7 @@ env:
 
 jobs:
   bump-up-version:
+    secrets: inherit
     uses: ./.github/workflows/version_upgrade.yml
 
   create-release:
