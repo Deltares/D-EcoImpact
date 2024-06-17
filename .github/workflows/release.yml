@@ -14,6 +14,7 @@ on:
         options:
         - minor
         - major
+  push:
 
 env:
   RELEASE_TYPE: ${{ github.event.inputs.release_type }}
