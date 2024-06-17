@@ -15,4 +15,5 @@ env:
 jobs:
   bump-up-version:
     # if: github.event.pull_request.merged == true
+    secrets: inherit
     uses: ./.github/workflows/version_upgrade.yml
