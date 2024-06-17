@@ -37,7 +37,7 @@ def test_create_time_aggregation_rule_should_set_defaults():
     assert isinstance(rule, TimeAggregationRule)
     assert rule.settings.operation_type == TimeOperationType.COUNT_PERIODS
     assert rule.settings.time_scale == "year"
-    assert rule.settings.time_scale_mapping == {"month": "M", "year": "Y"}
+    assert rule.settings.time_scale_mapping == {"month": "ME", "year": "YE"}
 
 
 def test_validation_when_valid():
@@ -172,7 +172,7 @@ def test_analyze_groups_function(operation_type, expected_result_data):
     ]
     t_time = [_np.datetime64(t) for t in t_time]
     input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
-    result = input_array.resample(time="Y").reduce(rule.analyze_groups)
+    result = input_array.resample(time="YE").reduce(rule.analyze_groups)
 
     # expected results
     expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
@@ -231,7 +231,7 @@ def test_analyze_groups_function_no_periods(operation_type, expected_result_data
     ]
     t_time = [_np.datetime64(t) for t in t_time]
     input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
-    result = input_array.resample(time="Y").reduce(rule.analyze_groups)
+    result = input_array.resample(time="YE").reduce(rule.analyze_groups)
 
     # expected results
     expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
@@ -291,7 +291,7 @@ def test_analyze_groups_function_2d(operation_type, expected_result_data):
     input_array = _xr.DataArray(
         t_data, coords=[t_cells, t_time], dims=["cells", "time"]
     )
-    result = input_array.resample(time="Y").reduce(rule.analyze_groups)
+    result = input_array.resample(time="YE").reduce(rule.analyze_groups)
 
     # expected results
     expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
@@ -379,7 +379,7 @@ def test_count_groups_function_3d(operation_type, expected_result_data):
     input_array = _xr.DataArray(
         t_data, coords=[t_cols, t_cells, t_time], dims=["cols", "cells", "time"]
     )
-    result = input_array.resample(time="Y").reduce(rule.analyze_groups)
+    result = input_array.resample(time="YE").reduce(rule.analyze_groups)
 
     # expected results
     expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
