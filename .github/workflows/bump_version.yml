@@ -14,5 +14,5 @@ env:
 
 jobs:
   bump-up-version:
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     uses: ./.github/workflows/version_upgrade.yml
