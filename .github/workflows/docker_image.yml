@@ -1,6 +1,11 @@
+# This workflow should be triggered when a release is done (workflow_call)
+# And also need to be able to run manually (workflow_dispatch). It uses
+# the current version from poetry as a tag for the docker container and 
+# pushes the container to ghcr.
+
 name: "Publish to GHCR"
 
-on: [push, workflow_dispatch]
+on: [workflow_call, workflow_dispatch]
 
 env:
   REGISTRY: ghcr.io
