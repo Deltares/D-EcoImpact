@@ -37,7 +37,7 @@ jobs:
           prerelease: false
 
   create-documentation:
-    needs: create-release
+    needs: bump-up-version
     secrets: inherit
     uses: ./.github/workflows/mkdocs_documentation.yml
     with:
