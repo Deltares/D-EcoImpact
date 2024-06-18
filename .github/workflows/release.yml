@@ -31,15 +31,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ env.PROJECT_VERSION }}
-          release_name: Release ${{ env.PROJECT_VERSION }}
+          tag_name: ${{ needs.bump-up-version.outputs.project_version }}
+          release_name: Release ${{ needs.bump-up-version.outputs.project_version }}
           draft: false
           prerelease: false
       - name: Install Dependencies
         run: poetry install
       - name: Create new version of mkdocs and publish
         run: |
-          poetry run mike deploy --push --update-aliases ${PROJECT_VERSION} latest
+          poetry run mike deploy --push --update-aliases ${{ needs.bump-up-version.outputs.project_version }} latest
           poetry run mike set-default --push latest
 
   docker-build:
