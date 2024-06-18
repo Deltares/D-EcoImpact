@@ -31,11 +31,9 @@ jobs:
           poetry-version: 1.4.2
       - name: bump version and update template_input.yaml
         run: |
-          echo hallo ${{ inputs.release_type }}
-          echo hello testing. Release type: ${{ github.event.inputs.release_type }}
           git config user.name github-actions
           git config user.email github-actions@github.com
-          poetry version ${{ github.event.inputs.release_type }}
+          poetry version ${{ inputs.release_type }}
           PROJECT_VERSION=$(poetry version --short)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
           sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
@@ -44,5 +42,5 @@ jobs:
           PROJECT_VERSION=$(poetry version --short)
           git add template_input.yaml
           git add pyproject.toml
-          git commit -m "bump ${{ github.event.inputs.release_type }} version: $PROJECT_VERSION"
+          git commit -m "bump ${{ inputs.release_type }} version: $PROJECT_VERSION"
           git push
