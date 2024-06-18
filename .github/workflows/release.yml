@@ -20,8 +20,8 @@ jobs:
   bump-up-version:
     secrets: inherit
     uses: ./.github/workflows/version_upgrade.yml
-      env:
-        RELEASE_TYPE: ${{ github.event.inputs.release_type }}
+    env:
+      RELEASE_TYPE: ${{ github.event.inputs.release_type }}
 
   create-release:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
         run: |
           poetry run mike deploy --push --update-aliases ${PROJECT_VERSION} latest
           poetry run mike set-default --push latest
-  
+
   docker-build:
     needs: create-release
     uses: ./.github/workflows/docker_image.yml
