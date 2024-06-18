@@ -35,9 +35,6 @@ jobs:
           release_name: Release ${{ needs.bump-up-version.outputs.project_version }}
           draft: false
           prerelease: false
-      - name: Install Dependencies
-        run: poetry install
-
 
   create-documentation:
     needs: create-release
