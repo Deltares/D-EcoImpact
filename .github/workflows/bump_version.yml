@@ -15,4 +15,4 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/version_upgrade.yml
     with:
-      RELEASE_TYPE: patch
+      release_type: patch
