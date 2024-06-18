@@ -24,6 +24,8 @@ jobs:
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: 1.4.2
+      - name: Install Dependencies
+        run: poetry install
       - name: Create new version of mkdocs and publish
         run: |
           poetry run mike deploy --push --update-aliases ${{ inputs.project_version }} latest
