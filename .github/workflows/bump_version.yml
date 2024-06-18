@@ -17,5 +17,5 @@ jobs:
     # if: github.event.pull_request.merged == true
     secrets: inherit
     uses: ./.github/workflows/version_upgrade.yml
-    env:
+    with:
       RELEASE_TYPE: ${{ env.RELEASE_TYPE }}
