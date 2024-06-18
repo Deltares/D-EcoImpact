@@ -28,6 +28,7 @@ jobs:
         run: poetry install
       - name: Create new version of mkdocs and publish
         run: |
-          echo hallo ${{ inputs.project_version }} 
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           poetry run mike deploy --push --update-aliases ${{ inputs.project_version }} latest
           poetry run mike set-default --push latest
