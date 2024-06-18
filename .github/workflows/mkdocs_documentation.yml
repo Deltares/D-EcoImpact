@@ -28,5 +28,6 @@ jobs:
         run: poetry install
       - name: Create new version of mkdocs and publish
         run: |
+          echo hallo ${{ inputs.project_version }} 
           poetry run mike deploy --push --update-aliases ${{ inputs.project_version }} latest
           poetry run mike set-default --push latest
