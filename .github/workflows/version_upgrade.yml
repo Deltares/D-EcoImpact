@@ -10,11 +10,16 @@ on:
       release_type:
         required: true
         type: string
+    outputs:
+      project_version:
+        value: ${{ jobs.upgrade-version.outputs.job_output_version}}
 
 
 jobs:
   upgrade-version:
     runs-on: ubuntu-latest
+    outputs:
+      job_output_version: ${{ steps.get-version.outputs.PROJECT_VERSION}}
     steps:
       - name: checkout code
         uses: actions/checkout@v4
@@ -30,6 +35,7 @@ jobs:
         with:
           poetry-version: 1.4.2
       - name: bump version and update template_input.yaml
+        id: get-version
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
