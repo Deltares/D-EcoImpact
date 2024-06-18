@@ -19,8 +19,8 @@ jobs:
   bump-up-version:
     secrets: inherit
     uses: ./.github/workflows/version_upgrade.yml
-    env:
-      RELEASE_TYPE: ${{ github.event.inputs.release_type }}
+    with:
+      release_type: ${{ github.event.inputs.release_type }}
 
   create-release:
     runs-on: ubuntu-latest
