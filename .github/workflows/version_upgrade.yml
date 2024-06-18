@@ -9,6 +9,8 @@ on:
     inputs:
       release_type:
         required: true
+        type: string
+
 
 jobs:
   upgrade-version:
