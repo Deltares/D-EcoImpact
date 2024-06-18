@@ -9,13 +9,10 @@ on:
   push:
   workflow_dispatch:
 
-env:
-  RELEASE_TYPE: patch
-
 jobs:
   bump-up-version:
     # if: github.event.pull_request.merged == true
     secrets: inherit
     uses: ./.github/workflows/version_upgrade.yml
     with:
-      RELEASE_TYPE: ${{ env.RELEASE_TYPE }}
+      RELEASE_TYPE: patch
