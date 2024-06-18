@@ -6,8 +6,6 @@ on:
       - closed
     branches:
       - main
-  push:
-  workflow_dispatch:
 
 jobs:
   bump-up-version:
