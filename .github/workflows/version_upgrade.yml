@@ -4,7 +4,11 @@
 
 name: Version upgrade with poetry
 
-on: workflow_call
+on:
+  workflow_call:
+    env:
+      RELEASE_TYPE:
+        required: true
 
 jobs:
   upgrade-version:
