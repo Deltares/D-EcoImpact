@@ -1,3 +1,5 @@
+# Bump a patch version with poetry when a pull requst is merged
+
 name: bump patch version using poetry
 
 on:
@@ -9,7 +11,7 @@ on:
 
 jobs:
   bump-up-version:
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     secrets: inherit
     uses: ./.github/workflows/version_upgrade.yml
     with:

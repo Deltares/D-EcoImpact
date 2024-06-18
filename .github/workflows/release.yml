@@ -1,5 +1,5 @@
-# This workflow should be triggered when a release of the main is needed. 
-# It creates a tag and regenerates the documentation to generate a release. 
+# This workflow should be triggered when a release of the main is needed.
+# It creates a tag and regenerates the documentation to generate a release.
 # It does not bump the version number, that happens for the merged pull request.
 
 name: Release major or minor version (create tag and documentation)
