@@ -25,6 +25,7 @@ class DepthAverageRule(RuleBase, IArrayBasedRule):
     def __init__(
         self,
         name: str,
+        # variable_vertical_coordinates: str = 'mesh2d_interface_z',
         input_variable_names: List[str],
     ):
         super().__init__(name, input_variable_names)
@@ -37,17 +38,33 @@ class DepthAverageRule(RuleBase, IArrayBasedRule):
             DataArray: Averaged values
         """
 
-        # TO DO: calculate depth average
-        # Use setup of the time_aggregation_rule.
-        # Define the name of the depth dimension
-        # resamplen not needed
-        # _perform_operation should be adapted/integrated into execute for only DEPTH_AVERAGE
-        # use the volume based average (take depth differences into account as well as dry/wet cells)
+        # get array with vertical dimensions (=depths) of layers
+        #   :vertical_dimensions = mesh2d_nLayers: mesh2d_nInterfaces
+        #   --> mesh2d_interface_z(mesh2d_nInterfaces=23)
+        # TO DO: how to retrieve this?
+        variable_vertical_coordinates = "mesh2d_interface_z"
+        depths = value_array.variables[variable_vertical_coordinates]
+        # QUESTION: is this variables with coordinates available this way?
 
-        # For calculation -> array based (use functionality of xarray for the performance)
-        # 1. Calculate layer depth and add as a serperate varaiable
-        # 2. Calculate average over depth
-        # Same output!
-        dr = _xr.DataArray(value_array)
+        # assemble array with heights of each layer (and add it to output)
+        # assumption: input array starts with bottom and works to top
+        # for example [-7,-2,-1] where -7=bottom and 0=surface
+        layer_heights = _xr.DataArray()
+        # loop through layers and calculate heigth:
+        for i in range(len(depths)):
+            if i < len(depths) - 1:
+                next_depth = depths[i + 1]
+            else:
+                next_depth = 0
+            height = depths[i] - next_depth
+            layer_heights.append(height)
+        # TO DO: add this to output
 
-        return dr
+        # multiply value with size to get relative value
+
+        # determine total size of vertical dimensions
+
+        # calculate depth average (use xarray for best performance)
+        result_average = _xr.DataArray()  # (this is a place holder)
+
+        return result_average
