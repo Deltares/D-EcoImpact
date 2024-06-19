@@ -27,7 +27,7 @@ from decoimpact.data.parsers.parser_step_function_rule import ParserStepFunction
 from decoimpact.data.parsers.parser_time_aggregation_rule import (
     ParserTimeAggregationRule,
 )
-from decoimpact.data.parsers.parser_depth_avarage_rule import ParserDepthAvarageRule
+from decoimpact.data.parsers.parser_depth_average_rule import ParserDepthAvarageRule
 
 
 def rule_parsers() -> Iterator[IParserRuleBase]:
