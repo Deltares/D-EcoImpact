@@ -10,11 +10,8 @@ Module for DepthAverageRule class
 Classes:
     DepthAverageRule
 """
+from typing import List
 
-from datetime import datetime as _dt
-from typing import List, Optional
-
-import numpy as _np
 import xarray as _xr
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
@@ -41,6 +38,16 @@ class DepthAverageRule(RuleBase, IArrayBasedRule):
         """
 
         # TO DO: calculate depth average
+        # Use setup of the time_aggregation_rule.
+        # Define the name of the depth dimension
+        # resamplen not needed
+        # _perform_operation should be adapted/integrated into execute for only DEPTH_AVERAGE
+        # use the volume based average (take depth differences into account as well as dry/wet cells)
+
+        # For calculation -> array based (use functionality of xarray for the performance)
+        # 1. Calculate layer depth and add as a serperate varaiable
+        # 2. Calculate average over depth
+        # Same output!
         dr = _xr.DataArray(value_array)
 
         return dr
