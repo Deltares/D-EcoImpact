@@ -1,7 +1,8 @@
 # This workflow should be triggered when a release is done (workflow_call)
 # And also need to be able to run manually (workflow_dispatch). It uses
-# the current version from poetry as a tag for the docker container and 
-# pushes the container to ghcr.
+# the current version from poetry as a tag for the docker container and
+# pushes the container to the GitHub Container Registry
+# (ghcr.io/deltares/d-ecoimpact:latest).
 
 name: "Publish to GHCR"
 
@@ -15,6 +16,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Convert Deltares/D-EcoImpact to deltares/d-ecoimpact because
+      # image name can't support uppercase
       - name: downcase REPO
         run: |
           echo "IMAGE_NAME=${IMAGE_NAME,,}" >>${GITHUB_ENV}
