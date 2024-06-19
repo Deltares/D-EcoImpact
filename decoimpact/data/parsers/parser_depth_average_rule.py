@@ -36,7 +36,7 @@ class ParserDepthAvarageRule(IParserRuleBase):
             RuleBase: Rule based on the provided data
         """
         name = get_dict_element("name", dictionary)
-        input_variable_name = get_dict_element("input_variable", dictionary)
+        input_variable_names = [get_dict_element("input_variable", dictionary)]
         output_variable_name = get_dict_element("output_variable", dictionary)
         description = get_dict_element("description", dictionary, False) or ""
 
