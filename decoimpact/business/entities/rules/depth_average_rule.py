@@ -50,12 +50,12 @@ class DepthAverageRule(RuleBase, IArrayBasedRule):
         layer_heights = []  # QUESTION: convert to _xr.DataArray() ? (how?)
 
         # loop through layers and calculate heigth:
-        for i in range(len(depths)):
+        for i, depth in enumerate(depths):
             if i < len(depths) - 1:
                 next_depth = depths[i + 1]
             else:
                 next_depth = 0
-            height = depths[i] - next_depth
+            height = depth - next_depth
             layer_heights.append(height)
         # TO DO: add this to output
 
