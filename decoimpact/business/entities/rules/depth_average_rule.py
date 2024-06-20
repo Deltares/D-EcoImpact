@@ -10,8 +10,6 @@ Module for DepthAverageRule class
 Classes:
     DepthAverageRule
 """
-from typing import List
-
 import xarray as _xr
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
@@ -26,9 +24,9 @@ class DepthAverageRule(RuleBase, IArrayBasedRule):
         self,
         name: str,
         # variable_vertical_coordinates: str = 'mesh2d_interface_z',
-        input_variable_names: List[str],
+        input_variable_name: str,
     ):
-        super().__init__(name, input_variable_names)
+        super().__init__(name, [input_variable_name])
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
         """Calculate depth average of assumed z-layers.
