@@ -44,12 +44,13 @@ class DepthAverageRule(RuleBase, IArrayBasedRule):
         # TO DO: how to retrieve this?
         variable_vertical_coordinates = "mesh2d_interface_z"
         depths = value_array.variables[variable_vertical_coordinates]
-        # QUESTION: is this variables with coordinates available this way?
+        # QUESTION: is this variable with coordinates available this way?
 
         # assemble array with heights of each layer (and add it to output)
         # assumption: input array starts with bottom and works to top
         # for example [-7,-2,-1] where -7=bottom and 0=surface
-        layer_heights = _xr.DataArray()
+        layer_heights = []  # QUESTION: convert to _xr.DataArray() ? (how?)
+
         # loop through layers and calculate heigth:
         for i in range(len(depths)):
             if i < len(depths) - 1:
@@ -61,10 +62,10 @@ class DepthAverageRule(RuleBase, IArrayBasedRule):
         # TO DO: add this to output
 
         # multiply value with size to get relative value
-
-        # determine total size of vertical dimensions
+        relative_values = value_array * layer_heights
 
         # calculate depth average (use xarray for best performance)
-        result_average = _xr.DataArray()  # (this is a place holder)
+        depth_average = relative_values / sum(layer_heights)
+        # QUESTION: how to deal with rounding? is it better to use the min(depths)?
 
-        return result_average
+        return depth_average
