@@ -45,10 +45,10 @@ class DepthAverageRule(RuleBase, IArrayBasedRule):
         # QUESTION: is this variable with coordinates available this way?
 
         # assemble array with heights of each layer (and add it to output)
-        # assumption: input array starts with bottom and works to top
+        # assumption: input array starts with bottom and works to top (=0)
         # for example [-7,-2,-1] where -7=bottom and 0=surface
-        layer_heights = []  # QUESTION: convert to _xr.DataArray() ? (how?)
-
+        # TO DO: check whether depths are starting at the bottom?
+        layer_heights = []
         # loop through layers and calculate heigth:
         for i, depth in enumerate(depths):
             if i < len(depths) - 1:
@@ -59,10 +59,8 @@ class DepthAverageRule(RuleBase, IArrayBasedRule):
             layer_heights.append(height)
         # TO DO: add this to output
 
-        # multiply value with size to get relative value
+        # calculate depth average using relative value
         relative_values = value_array * layer_heights
-
-        # calculate depth average (use xarray for best performance)
         depth_average = relative_values / sum(layer_heights)
         # QUESTION: how to deal with rounding? is it better to use the min(depths)?
 
