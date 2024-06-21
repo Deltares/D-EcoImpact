@@ -10,8 +10,6 @@ Module for DepthAverageRule class
 Classes:
     DepthAverageRule
 """
-from typing import List
-
 import xarray as _xr
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
@@ -25,9 +23,10 @@ class DepthAverageRule(RuleBase, IArrayBasedRule):
     def __init__(
         self,
         name: str,
-        input_variable_names: List[str],
+        # variable_vertical_coordinates: str = 'mesh2d_interface_z',
+        input_variable_name: str,
     ):
-        super().__init__(name, input_variable_names)
+        super().__init__(name, [input_variable_name])
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
         """Calculate depth average of assumed z-layers.
@@ -37,17 +36,32 @@ class DepthAverageRule(RuleBase, IArrayBasedRule):
             DataArray: Averaged values
         """
 
-        # TO DO: calculate depth average
-        # Use setup of the time_aggregation_rule.
-        # Define the name of the depth dimension
-        # resamplen not needed
-        # _perform_operation should be adapted/integrated into execute for only DEPTH_AVERAGE
-        # use the volume based average (take depth differences into account as well as dry/wet cells)
+        # get array with vertical dimensions (=depths) of layers
+        #   :vertical_dimensions = mesh2d_nLayers: mesh2d_nInterfaces
+        #   --> mesh2d_interface_z(mesh2d_nInterfaces=23)
+        # TO DO: how to retrieve this?
+        variable_vertical_coordinates = "mesh2d_interface_z"
+        depths = value_array.variables[variable_vertical_coordinates]
+        # QUESTION: is this variable with coordinates available this way?
 
-        # For calculation -> array based (use functionality of xarray for the performance)
-        # 1. Calculate layer depth and add as a serperate varaiable
-        # 2. Calculate average over depth
-        # Same output!
-        dr = _xr.DataArray(value_array)
+        # assemble array with heights of each layer (and add it to output)
+        # assumption: input array starts with bottom and works to top (=0)
+        # for example [-7,-2,-1] where -7=bottom and 0=surface
+        # TO DO: check whether depths are starting at the bottom?
+        layer_heights = []
+        # loop through layers and calculate heigth:
+        for i, depth in enumerate(depths):
+            if i < len(depths) - 1:
+                next_depth = depths[i + 1]
+            else:
+                next_depth = 0
+            height = depth - next_depth
+            layer_heights.append(height)
+        # TO DO: add this to output
 
-        return dr
+        # calculate depth average using relative value
+        relative_values = value_array * layer_heights
+        depth_average = relative_values / sum(layer_heights)
+        # QUESTION: how to deal with rounding? is it better to use the min(depths)?
+
+        return depth_average

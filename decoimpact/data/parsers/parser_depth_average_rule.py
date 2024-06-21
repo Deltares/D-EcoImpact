@@ -15,7 +15,7 @@ from typing import Any, Dict
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.dictionary_utils import get_dict_element
-from decoimpact.data.entities.layer_filter_rule_data import LayerFilterRuleData
+from decoimpact.data.entities.depth_average_layer_data import DepthAverageRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
@@ -40,6 +40,13 @@ class ParserDepthAvarageRule(IParserRuleBase):
         output_variable_name = get_dict_element("output_variable", dictionary)
         description = get_dict_element("description", dictionary, False) or ""
 
-        # TODO
+        rule_data = DepthAverageRuleData(name, input_variable_name)
+
+        rule_data.output_variable = output_variable_name
+        rule_data.description = description
+
+        # TO DO
         # Validate: input_variable_name -> is correct parameter mesh2d_nLayers present
         # Check if 1D/2D/3D have always this parameter
+
+        return rule_data
