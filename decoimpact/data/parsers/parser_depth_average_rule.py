@@ -15,7 +15,7 @@ from typing import Any, Dict
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.dictionary_utils import get_dict_element
-from decoimpact.data.entities.depth_average_layer_data import DepthAverageRuleData
+from decoimpact.data.entities.depth_average_rule_data import DepthAverageRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 

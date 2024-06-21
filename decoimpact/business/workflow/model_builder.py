@@ -19,6 +19,7 @@ from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.axis_filter_rule import AxisFilterRule
 from decoimpact.business.entities.rules.classification_rule import ClassificationRule
 from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
+from decoimpact.business.entities.rules.depth_average_rule import DepthAverageRule
 from decoimpact.business.entities.rules.formula_rule import FormulaRule
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.layer_filter_rule import LayerFilterRule
@@ -96,6 +97,11 @@ class ModelBuilder(IModelBuilder):
                 [rule_data.input_variable],
                 rule_data.multipliers,
                 rule_data.date_range,
+            )
+        elif isinstance(rule_data, ILayerFilterRuleData):
+            rule = DepthAverageRule(
+                rule_data.name,
+                [rule_data.input_variable],
             )
         elif isinstance(rule_data, ILayerFilterRuleData):
             rule = LayerFilterRule(
