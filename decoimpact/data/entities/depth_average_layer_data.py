@@ -12,8 +12,6 @@ Classes:
 
 """
 
-from typing import Dict, List
-
 from decoimpact.data.api.i_depth_average_rule_data import IDepthAverageRuleData
 from decoimpact.data.entities.rule_data import RuleData
 
