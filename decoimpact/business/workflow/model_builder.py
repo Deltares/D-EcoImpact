@@ -40,6 +40,7 @@ from decoimpact.data.api.i_axis_filter_rule_data import IAxisFilterRuleData
 from decoimpact.data.api.i_classification_rule_data import IClassificationRuleData
 from decoimpact.data.api.i_combine_results_rule_data import ICombineResultsRuleData
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
+from decoimpact.data.api.i_depth_average_rule_data import IDepthAverageRuleData
 from decoimpact.data.api.i_formula_rule_data import IFormulaRuleData
 from decoimpact.data.api.i_layer_filter_rule_data import ILayerFilterRuleData
 from decoimpact.data.api.i_model_data import IModelData
@@ -98,7 +99,7 @@ class ModelBuilder(IModelBuilder):
                 rule_data.multipliers,
                 rule_data.date_range,
             )
-        elif isinstance(rule_data, ILayerFilterRuleData):
+        elif isinstance(rule_data, IDepthAverageRuleData):
             rule = DepthAverageRule(
                 rule_data.name,
                 [rule_data.input_variable],
