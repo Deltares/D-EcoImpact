@@ -99,6 +99,11 @@ class ModelBuilder(IModelBuilder):
                 rule_data.multipliers,
                 rule_data.date_range,
             )
+        elif isinstance(rule_data, IDepthAverageRuleData):
+            rule = DepthAverageRule(
+                rule_data.name,
+                [rule_data.input_variable],
+            )
         elif isinstance(rule_data, ILayerFilterRuleData):
             rule = LayerFilterRule(
                 rule_data.name,
