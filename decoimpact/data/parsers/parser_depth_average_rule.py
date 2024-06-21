@@ -45,7 +45,7 @@ class ParserDepthAvarageRule(IParserRuleBase):
         rule_data.output_variable = output_variable_name
         rule_data.description = description
 
-        # TODO
+        # TO DO
         # Validate: input_variable_name -> is correct parameter mesh2d_nLayers present
         # Check if 1D/2D/3D have always this parameter
 
