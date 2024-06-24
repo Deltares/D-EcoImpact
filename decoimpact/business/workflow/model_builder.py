@@ -102,7 +102,7 @@ class ModelBuilder(IModelBuilder):
         elif isinstance(rule_data, IDepthAverageRuleData):
             rule = DepthAverageRule(
                 rule_data.name,
-                [rule_data.input_variable],
+                rule_data.input_variables,
             )
         elif isinstance(rule_data, ILayerFilterRuleData):
             rule = LayerFilterRule(
@@ -162,7 +162,7 @@ class ModelBuilder(IModelBuilder):
             )
         elif isinstance(rule_data, IDepthAverageRuleData):
             rule = DepthAverageRule(
-                rule_data.name, rule_data.input_variable, rule_data.output_variable
+                rule_data.name, [rule_data.input_variable], rule_data.output_variable
             )
         else:
             error_str = (

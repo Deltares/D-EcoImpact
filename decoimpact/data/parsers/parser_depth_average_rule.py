@@ -10,7 +10,7 @@ Module for ParserDepthAvarageRule class
 Classes:
     ParserDepthAvarageRule
 """
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
@@ -35,12 +35,15 @@ class ParserDepthAvarageRule(IParserRuleBase):
         Returns:
             RuleBase: Rule based on the provided data
         """
-        name = get_dict_element("name", dictionary)
-        input_variable_names = [get_dict_element("input_variable", dictionary)]
-        output_variable_name = get_dict_element("output_variable", dictionary)
-        description = get_dict_element("description", dictionary, False) or ""
+        name: str = get_dict_element("name", dictionary)
+        input_variable_names: List[str] = [
+            get_dict_element("input_variable", dictionary),
+            "mesh2d_interface_z",
+        ]
+        output_variable_name: str = get_dict_element("output_variable", dictionary)
+        description: str = get_dict_element("description", dictionary, False) or ""
 
-        rule_data = DepthAverageRuleData(name, input_variable_name)
+        rule_data = DepthAverageRuleData(name, input_variable_names)
 
         rule_data.output_variable = output_variable_name
         rule_data.description = description

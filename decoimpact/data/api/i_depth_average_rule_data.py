@@ -14,6 +14,7 @@ Interfaces:
 
 
 from abc import ABC, abstractmethod
+from typing import List
 
 from decoimpact.data.api.i_rule_data import IRuleData
 
@@ -23,5 +24,5 @@ class IDepthAverageRuleData(IRuleData, ABC):
 
     @property
     @abstractmethod
-    def input_variable(self) -> str:
-        """Name of the input variable"""
+    def input_variables(self) -> List[str]:
+        """List with input variable name and standard depth name"""

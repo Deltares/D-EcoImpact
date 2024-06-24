@@ -12,6 +12,7 @@ Classes:
 
 """
 
+from typing import List
 from decoimpact.data.api.i_depth_average_rule_data import IDepthAverageRuleData
 from decoimpact.data.entities.rule_data import RuleData
 
@@ -22,12 +23,12 @@ class DepthAverageRuleData(IDepthAverageRuleData, RuleData):
     def __init__(
         self,
         name: str,
-        input_variable: str,
+        input_variables: List[str],
     ):
         super().__init__(name)
-        self._input_variable = input_variable
+        self._input_variables = input_variables
 
     @property
-    def input_variable(self) -> str:
-        """Name of the input variable"""
-        return self._input_variable
+    def input_variables(self) -> List[str]:
+        """List with input variable and the standard depth name"""
+        return self._input_variables
