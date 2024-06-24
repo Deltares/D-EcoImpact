@@ -47,35 +47,29 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # get array with vertical dimensions (=depths) of layers
         #   :vertical_dimensions = mesh2d_nLayers: mesh2d_nInterfaces
         #   --> mesh2d_interface_z(mesh2d_nInterfaces=23)
-        # TO DO: how to retrieve this?
         # variable_vertical_coordinates = "mesh2d_interface_z"
 
-        print(value_arrays)
-        print(value_arrays.keys())
-        # values_over_height = value_arrays[0].sum(dim="mesh2d_nLayers")
-        # total_heights = value_arrays[1].sum(dim="mesh2d_nLayers")
-        # print(value_arrays)
-        # depths = value_arrays[variable_vertical_coordinates].values
-        # QUESTION: is this variable with coordinates available this way?
+        # TODO:
+        # - add comments
+        # - make sure 'salinity' is not hardcoded, but use either first value from value_arrays or use a generic key here
+        # -
 
-        # assemble array with heights of each layer (and add it to output)
-        # assumption: input array starts with bottom and works to top (=0)
-        # for example [-7,-2,-1] where -7=bottom and 0=surface
-        # TO DO: check whether depths are starting at the bottom?
-        # layer_heights = []
-        # # loop through layers and calculate heigth:
-        # for i, depth in enumerate(depths):
-        #     if i < len(depths) - 1:
-        #         next_depth = depths[i + 1]
-        #     else:
-        #         next_depth = 0
-        #     height = depth - next_depth
-        #     layer_heights.append(height)
-        # # TO DO: add this to output
+        depths = value_arrays["mesh2d_interface_z"]
+
+        layer_heights = depths.diff(dim="mesh2d_nInterfaces")
 
         # # calculate depth average using relative value
-        # relative_values = value_array * layer_heights
-        # depth_average = relative_values / sum(layer_heights)
-        # # QUESTION: how to deal with rounding? is it better to use the min(depths)?
+        relative_values = value_arrays["salinity"].dot(
+            layer_heights, "mesh2d_nInterfaces"
+        )
+        sum_relative_values = relative_values.sum(dim="mesh2d_nLayers")
 
-        return value_arrays["salinity"]
+        # TODO: this goes wrong!! cannot sum layer_heights -> for every column different total height, because of dry cells!! do something smart with the nan cells in the salinity!
+        depth_average = sum_relative_values / sum(layer_heights)
+        print("hoi")
+        print(sum(layer_heights).values)
+        print(relative_values.values[1, 2328, :])
+        print(sum_relative_values.values[1, 2328])
+        print(depth_average.values[1, 2328])
+
+        return depth_average
