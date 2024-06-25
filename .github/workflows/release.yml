@@ -45,3 +45,5 @@ jobs:
   docker-build:
     needs: bump-up-version
     uses: ./.github/workflows/docker_image.yml
+    with:
+      project_version: ${{ needs.bump-up-version.outputs.project_version }}

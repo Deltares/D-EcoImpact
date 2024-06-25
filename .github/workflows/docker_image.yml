@@ -6,11 +6,18 @@
 
 name: "Publish to GHCR"
 
-on: [workflow_call, workflow_dispatch]
+on:
+  workflow_call:
+    inputs:
+      project_version:
+        required: true
+        type: string
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  PROJECT_VERSION: ${{ inputs.project_version }} || false
 
 jobs:
   build:
@@ -35,6 +42,7 @@ jobs:
         with:
           poetry-version: 1.4.2
       - name: Get current version
+        if: ${{ env.PROJECT_VERSION }}
         run: |
           PROJECT_VERSION=$(poetry version --short)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
