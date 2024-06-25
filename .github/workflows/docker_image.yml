@@ -11,13 +11,13 @@ on:
     inputs:
       project_version:
         required: true
+        default: false
         type: string
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  PROJECT_VERSION: ${{ inputs.project_version }} || false
 
 jobs:
   build:
@@ -60,4 +60,4 @@ jobs:
           push: true
           tags: |
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.PROJECT_VERSION }}
+              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.project_version || env.PROJECT_VERSION }}
