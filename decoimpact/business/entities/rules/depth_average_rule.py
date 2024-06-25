@@ -26,7 +26,6 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
     def __init__(
         self,
         name: str,
-        # variable_vertical_coordinates: str = 'mesh2d_interface_z',
         input_variable_names: List[str],
     ):
         super().__init__(name, input_variable_names)
@@ -43,33 +42,34 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         Returns:
             DataArray: Averaged values
         """
+        interface_name = "mesh2d_interface_z"
+        layer_name = "mesh2d_nLayers"
 
-        # get array with vertical dimensions (=depths) of layers
-        #   :vertical_dimensions = mesh2d_nLayers: mesh2d_nInterfaces
-        #   --> mesh2d_interface_z(mesh2d_nInterfaces=23)
-        # variable_vertical_coordinates = "mesh2d_interface_z"
+        # The first DataArray in our value_arrays contains the values to be averaged
+        # But the name of the key is given by the user, so just take the first
+        variables = next(iter(value_arrays.values()))
+        depths = value_arrays[interface_name]
 
-        # TODO:
-        # - add comments
-        # - make sure 'salinity' is not hardcoded, but use either first value from value_arrays or use a generic key here
-        # -
+        # Calculate the layer heights between depths
+        layer_heights = depths.diff(dim=interface_name)
 
-        depths = value_arrays["mesh2d_interface_z"]
+        # Give new dimension (dim of heights is always N-1 of dim depths)
+        layer_heights = layer_heights.rename({interface_name: layer_name})
 
-        layer_heights = depths.diff(dim="mesh2d_nInterfaces")
+        # Broadcast the heights in all dimensions
+        heigths_all_dims = layer_heights.broadcast_like(variables)
 
-        # # calculate depth average using relative value
-        relative_values = value_arrays["salinity"].dot(
-            layer_heights, "mesh2d_nInterfaces"
-        )
-        sum_relative_values = relative_values.sum(dim="mesh2d_nLayers")
+        # Use the nan filtering of the variables to set the correct depth per column
+        heights_all_filtered = heigths_all_dims.where(variables.notnull())
 
-        # TODO: this goes wrong!! cannot sum layer_heights -> for every column different total height, because of dry cells!! do something smart with the nan cells in the salinity!
-        depth_average = sum_relative_values / sum(layer_heights)
-        print("hoi")
-        print(sum(layer_heights).values)
-        print(relative_values.values[1, 2328, :])
-        print(sum_relative_values.values[1, 2328])
-        print(depth_average.values[1, 2328])
+        # Calculate depth average using relative value
+        relative_values = variables.dot(layer_heights, interface_name)
+
+        # Calculate total height and total value in column
+        sum_relative_values = relative_values.sum(dim=layer_name)
+        sum_heights = heights_all_filtered.sum(dim=layer_name)
+
+        # Calculate average
+        depth_average = sum_relative_values / sum_heights
 
         return depth_average
