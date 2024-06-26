@@ -39,6 +39,8 @@ class ParserDepthAvarageRule(IParserRuleBase):
         input_variable_names: List[str] = [
             get_dict_element("input_variable", dictionary),
             "depth_interfaces",
+            "water_level",
+            "bed_level",
         ]
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         description: str = get_dict_element("description", dictionary, False) or ""
