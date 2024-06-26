@@ -43,8 +43,6 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         Returns:
             DataArray: Averaged values
         """
-        print(value_arrays)
-
         interface_name = "depth_interfaces"
         interface_dim_name = "mesh2d_nInterfaces"
         layer_name = "mesh2d_nLayers"
@@ -75,5 +73,4 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # Calculate average
         depth_average = sum_relative_values / sum_heights
 
-        print(depth_average)
         return depth_average
