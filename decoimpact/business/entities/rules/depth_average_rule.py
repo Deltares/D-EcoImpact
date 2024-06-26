@@ -22,7 +22,7 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 
 class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
-    """Implementation for the depthaverage rule"""
+    """Implementation for the depth average rule"""
 
     def __init__(
         self,
