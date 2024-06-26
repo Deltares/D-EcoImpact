@@ -11,6 +11,7 @@ Classes:
     DepthAverageRule
 """
 from typing import Dict, List
+
 import xarray as _xr
 
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
@@ -21,7 +22,7 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 
 class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
-    """Implementation for the depthaverage rule"""
+    """Implementation for the depth average rule"""
 
     def __init__(
         self,
