@@ -38,7 +38,7 @@ class ParserDepthAvarageRule(IParserRuleBase):
         name: str = get_dict_element("name", dictionary)
         input_variable_names: List[str] = [
             get_dict_element("input_variable", dictionary),
-            "mesh2d_interface_z",
+            "depth_interfaces",
         ]
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         description: str = get_dict_element("description", dictionary, False) or ""

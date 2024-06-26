@@ -11,6 +11,7 @@ Classes:
     DepthAverageRule
 """
 from typing import Dict, List
+
 import xarray as _xr
 
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
@@ -42,19 +43,27 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         Returns:
             DataArray: Averaged values
         """
-        interface_name = "mesh2d_interface_z"
+        print(value_arrays)
+
+        interface_name = "depth_interfaces"
         layer_name = "mesh2d_nLayers"
 
         # The first DataArray in our value_arrays contains the values to be averaged
         # But the name of the key is given by the user, so just take the first
         variables = next(iter(value_arrays.values()))
-        depths = value_arrays[interface_name]
+        # depths interfaces = borders of the layers in terms of depth
+        depths_interfaces = value_arrays[interface_name]
+
+        print("PRINT DEPTHS_INTERFACES:")
+        print(depths_interfaces)
+        print(depths_interfaces.values)
 
         # Calculate the layer heights between depths
-        layer_heights = depths.diff(dim=interface_name)
+        layer_heights = depths_interfaces.diff("mesh2d_nInterfaces")
+        layer_heights = layer_heights.rename({"mesh2d_nInterfaces": "mesh2d_nLayers"})
 
-        # Give new dimension (dim of heights is always N-1 of dim depths)
-        layer_heights = layer_heights.rename({interface_name: layer_name})
+        print("PRINT LAYER_HEIGHTS:")
+        print(layer_heights)
 
         # Broadcast the heights in all dimensions
         heigths_all_dims = layer_heights.broadcast_like(variables)
@@ -63,7 +72,9 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         heights_all_filtered = heigths_all_dims.where(variables.notnull())
 
         # Calculate depth average using relative value
-        relative_values = variables.dot(layer_heights, interface_name)
+        relative_values = layer_heights.dot(
+            variables
+        )  # moet interface_name hier niet weg? hier heights_all_filtered ipv layer_heights?
 
         # Calculate total height and total value in column
         sum_relative_values = relative_values.sum(dim=layer_name)

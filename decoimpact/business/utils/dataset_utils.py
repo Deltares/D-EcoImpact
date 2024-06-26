@@ -200,11 +200,11 @@ def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
         if ("cf_role", "mesh_topology") in dataset[name].attrs.items()
     ]
 
-    if len(dummy) == 0:
-        raise ValueError(
-            """No dummy variable defined and therefore input dataset does
-            not comply with UGrid convention."""
-        )
+    # if len(dummy) == 0:
+    #     raise ValueError(
+    #         """No dummy variable defined and therefore input dataset does
+    #         not comply with UGrid convention."""
+    #     )
 
     return dummy
 
