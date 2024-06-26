@@ -16,9 +16,6 @@ import pytest
 import xarray as _xr
 
 from decoimpact.business.entities.rules.depth_average_rule import DepthAverageRule
-from decoimpact.business.entities.rules.multi_array_operation_type import (
-    MultiArrayOperationType,
-)
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -51,3 +48,26 @@ def test_no_validate_error_with_correct_rule():
     # Assert
     assert isinstance(rule, DepthAverageRule)
     assert valid
+
+
+def test_aggregate_time_rule_without_time_dimension():
+    """DepthAverageRule should give an error when a dataset with incorrect dimensions are
+    used"""
+    # create test set
+    logger = Mock(ILogger)
+    rule = DepthAverageRule(
+        name="test",
+        input_variable_names=["foo"],
+    )
+
+    test_data = [1.2, 0.4]
+    test_array = _xr.DataArray(test_data, name="test_with_error")
+
+    with pytest.raises(ValueError) as exc_info:
+        rule.execute(test_array, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = "Incorrect dimensions found for test_with_error"
+    assert exception_raised.args[0] == expected_message
