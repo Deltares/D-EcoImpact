@@ -26,27 +26,28 @@ def test_create_depth_average_rule_with_defaults():
     """Test creating a depth average rule with defaults"""
 
     # Arrange & Act
-    rule = DepthAverageRule("test_rule_name", "foo")
+    rule = DepthAverageRule("test_rule_name", ["foo", "hello"])
+
     # Assert
     assert isinstance(rule, DepthAverageRule)
     assert rule.name == "test_rule_name"
     assert rule.description == ""
-    assert rule.input_variable_names == "foo"
+    assert rule.input_variable_names == ["foo", "hello"]
     assert rule.output_variable_name == "output"
 
 
 def test_no_validate_error_with_correct_rule():
-    """Test a correct combine results rule validates without error"""
+    """Test a correct depth average rule validates without error"""
 
     # Arrange
     logger = Mock(ILogger)
-    rule = CombineResultsRule(
-        "test_rule_name", ["foo", "hello"], MultiArrayOperationType.MULTIPLY
+    rule = DepthAverageRule(
+        "test_rule_name", ["foo", "hello"],
     )
 
     # Act
     valid = rule.validate(logger)
 
     # Assert
-    assert isinstance(rule, CombineResultsRule)
+    assert isinstance(rule, DepthAverageRule)
     assert valid
