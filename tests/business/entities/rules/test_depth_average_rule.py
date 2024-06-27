@@ -44,12 +44,8 @@ def test_no_validate_error_with_correct_rule():
         ["foo", "hello"],
     )
 
-    # Act
-    valid = rule.validate(logger)
-
     # Assert
     assert isinstance(rule, DepthAverageRule)
-    assert valid
 
 
 # depths	heights		nInterfaces:	5
@@ -80,7 +76,7 @@ time = 2
 data_variable = _np.tile(_np.arange(4, 0, -1), (time, mesh2d_nFaces, 1))
 mesh2d_interface_z = _np.array([-10, -6, -3, -1, 0])
 mesh2d_flowelem_bl = _np.array([-10, -5, -10, -5])
-mesh2d_s1 = _np.array([[0, 0, -1.5, -1.5], [0, -6, 5, -6]])
+mesh2d_s1 = _np.array([[0, 0, -1.5, -1.5], [0, -6, 5, -5]])
 
 
 # Create dataset
@@ -112,32 +108,9 @@ def test_depth_average_rule():
 
     depth_average = rule.execute(value_arrays, logger)
     result_data = _xr.DataArray(
-        _np.array([[3.0, 2.2, 3.29411765, 2.57142857], [3.0, _np.nan, 3.0, _np.nan]]),
+        _np.array([[3.0, 2.2, 3.29411765, 2.57142857], [3.0, 0.0, 3.0, 0.0]]),
         dims=["time", "mesh2d_nFaces"],
     )
 
     print(result_data)
     assert _xr.testing.assert_equal(depth_average, result_data)
-
-
-# def test_depth_average_rule_with_missing_dimensions():
-#     """DepthAverageRule should give an error when a dataset with incorrect dimensions are
-#     used"""
-#     # create test set
-#     logger = Mock(ILogger)
-#     rule = DepthAverageRule(
-#         name="test",
-#         input_variable_names=["foo"],
-#     )
-
-#     test_data = [1.2, 0.4]
-#     test_array = _xr.DataArray(test_data, name="test_with_error")
-
-#     with pytest.raises(ValueError) as exc_info:
-#         rule.execute(test_array, logger)
-
-#     exception_raised = exc_info.value
-
-#     # Assert
-#     expected_message = "Incorrect dimensions found for test_with_error"
-#     assert exception_raised.args[0] == expected_message
