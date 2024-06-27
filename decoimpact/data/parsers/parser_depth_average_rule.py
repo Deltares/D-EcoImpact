@@ -5,10 +5,10 @@
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
-Module for ParserDepthAvarageRule class
+Module for ParserDepthAverageRule class
 
 Classes:
-    ParserDepthAvarageRule
+    ParserDepthAverageRule
 """
 from typing import Any, Dict, List
 
@@ -19,8 +19,8 @@ from decoimpact.data.entities.depth_average_rule_data import DepthAverageRuleDat
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 
 
-class ParserDepthAvarageRule(IParserRuleBase):
-    """Class for creating a ParserDepthAvarageRule"""
+class ParserDepthAverageRule(IParserRuleBase):
+    """Class for creating a ParserDepthAverageRule"""
 
     @property
     def rule_type_name(self) -> str:

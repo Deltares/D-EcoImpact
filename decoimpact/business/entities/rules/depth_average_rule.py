@@ -13,6 +13,7 @@ Classes:
 from typing import Dict, List
 
 import xarray as _xr
+import numpy as _np
 
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
@@ -30,9 +31,6 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         input_variable_names: List[str],
     ):
         super().__init__(name, input_variable_names)
-
-    def validate(self, logger: ILogger) -> bool:
-        return True
 
     def execute(
         self, value_arrays: Dict[str, _xr.DataArray], logger: ILogger
@@ -59,14 +57,19 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         water_level_values = value_arrays[water_level_name]
         bed_level_values = value_arrays[bed_level_name]
 
+        # Broadcast the depths to the dimensions of the bed levels and
+        # correct the depths to the bed level, in other words all depths lower
+        # than bed level will be corrected to bed level.
         depths_interfaces_broadcasted = depths_interfaces.broadcast_like(
             bed_level_values
         )
-
         corrected_depth_bed = depths_interfaces_broadcasted.where(
             bed_level_values < depths_interfaces_broadcasted, bed_level_values
         )
 
+        # Make a similiar correction for the waterlevels (first broadcast to match
+        # dimensions and then replace all values higher than waterlevel with
+        # waterlevel)
         corrected_depth_bed = corrected_depth_bed.broadcast_like(water_level_values)
         corrected_depths = corrected_depth_bed.where(
             water_level_values > corrected_depth_bed, water_level_values
@@ -76,22 +79,15 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         layer_heights = corrected_depths.diff(dim=dim_interfaces_name)
         layer_heights = layer_heights.rename({dim_interfaces_name: dim_layer_name})
 
-        # Broadcast the heights in all dimensions
-        # heigths_all_dims = layer_heights.broadcast_like(variables)
-
         # Use the nan filtering of the variables to set the correct depth per column
         heights_all_filtered = layer_heights.where(variables.notnull())
 
-        # # Calculate depth average using relative value
-        # relative_values = variables * heights_all_filtered
-
-        relative_values = variables.dot(heights_all_filtered, interface_name)
+        # Calculate depth average using relative value
+        relative_values = variables.dot(heights_all_filtered, interface_name, _np.nan)
 
         # Calculate total height and total value in column
         sum_relative_values = relative_values.sum(dim=dim_layer_name)
         sum_heights = heights_all_filtered.sum(dim=dim_layer_name)
-
-        # TO DO: do not use sum_heights, but filtered on layers between bed level and water level
 
         # Calculate average
         depth_average = sum_relative_values / sum_heights
