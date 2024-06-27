@@ -14,7 +14,6 @@ on:
         default: false
         type: string
   workflow_dispatch:
-  push:
 
 env:
   REGISTRY: ghcr.io
