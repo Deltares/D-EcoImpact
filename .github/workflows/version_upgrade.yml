@@ -41,7 +41,6 @@ jobs:
           git config user.email github-actions@github.com
           poetry version ${{ inputs.release_type }}
           PROJECT_VERSION=$(poetry version --short)
-          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_OUTPUT
           sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
       - name: commit changes
@@ -49,5 +48,5 @@ jobs:
           PROJECT_VERSION=$(poetry version --short)
           git add template_input.yaml
           git add pyproject.toml
-          git commit -m "bump ${{ inputs.release_type }} version: $PROJECT_VERSION"
+          git commit -m "bump ${{ inputs.release_type }} version: ${{ steps.get-version.outputs.PROJECT_VERSION }}"
           git push
