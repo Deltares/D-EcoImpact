@@ -13,8 +13,8 @@ from unittest.mock import Mock
 
 import numpy as _np
 import pytest
-from tomlkit import value
 import xarray as _xr
+from tomlkit import value
 
 from decoimpact.business.entities.rules.depth_average_rule import DepthAverageRule
 from decoimpact.crosscutting.i_logger import ILogger
@@ -108,7 +108,7 @@ def test_depth_average_rule():
 
     depth_average = rule.execute(value_arrays, logger)
     result_data = _xr.DataArray(
-        _np.array([[3.0, 2.2, 3.29411765, 2.57142857], [3.0, 0.0, 3.0, 0.0]]),
+        _np.array([[3.0, 2.2, 3.29411765, 2.57142857], [3.0, _np.nan, 3.0, _np.nan]]),
         dims=["time", "mesh2d_nFaces"],
     )
 
