@@ -82,7 +82,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         heights_all_filtered = layer_heights.where(variables.notnull())
 
         # Calculate depth average using relative value
-        relative_values = variables.dot(heights_all_filtered, interface_name)
+        relative_values = variables.dot(heights_all_filtered)
 
         # Calculate total height and total value in column
         sum_relative_values = relative_values.sum(dim=dim_layer_name)
@@ -91,8 +91,4 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # Calculate average
         depth_average = sum_relative_values / sum_heights
 
-        # Correction needed fore division by zero!
-        # If height = 0 -> 0, but if variable = nan -> nan
-        depth_average = depth_average.where(sum_heights != 0, 0)
-        depth_average = depth_average.where(sum_relative_values.notnull())
         return depth_average
