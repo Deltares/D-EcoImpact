@@ -33,16 +33,38 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         Returns:
             DataArray: Averaged values
         """
+
+        # The first DataArray in our value_arrays contains the values to be averaged
+        # But the name of the key is given by the user, so just take the first
+        variable_key = next(iter(value_arrays.keys()))
+        variables = value_arrays[variable_key]
+
+        # These are the same names as provided in the parser. So these
+        # are present in the data and don't have to be checked here
         interface_name = "mesh2d_interface_z"
         water_level_name = "mesh2d_s1"
         bed_level_name = "mesh2d_flowelem_bl"
 
+        # These dimension names should be checked. If there is no depth dimension
+        # let the user know with a warning
         dim_layer_name = "mesh2d_nLayers"
         dim_interfaces_name = "mesh2d_nInterfaces"
 
-        # The first DataArray in our value_arrays contains the values to be averaged
-        # But the name of the key is given by the user, so just take the first
-        variables = next(iter(value_arrays.values()))
+        # TODO: is this the way or do we just take the dimensions available in
+        # the interface_z?
+        warn_message = ""
+        if dim_layer_name not in variables.dims:
+            warn_message = f"No dimension: ${dim_layer_name} present. "
+        if dim_interfaces_name not in value_arrays[interface_name].dims:
+            warn_message = (
+                f"${warn_message}No dimension: ${dim_interfaces_name} present. "
+            )
+        if warn_message != "":
+            logger.log_warning(
+                f"{warn_message} No vertical dimension found, returning original \
+                values for {variable_key}"
+            )
+            return variables
 
         # depths interfaces = borders of the layers in terms of depth
         depths_interfaces = value_arrays[interface_name]
