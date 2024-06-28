@@ -10,7 +10,7 @@ Module for DepthAverageRule class
 Classes:
     DepthAverageRule
 """
-from typing import Dict, List
+from typing import Dict
 
 import xarray as _xr
 
