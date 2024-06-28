@@ -47,28 +47,55 @@ def test_no_validate_error_with_correct_rule():
     # Assert
     assert isinstance(rule, DepthAverageRule)
 
+    # Complex example calculated output by hand
+    # depths	heights		nInterfaces:	5
+    # 0	        1		    nLayers:	    4
+    # -1	    2		    nFaces:         4
+    # -3	    3		    time:       	2
+    # -6	    4
+    # -10
+    #
+    # valuables
+    # 1    1    1	 1			1	 1	  1	   1
+    # 2    2    2    2			2	 2	  2	   2
+    # 3    3	3    3			3	 3	  3	   3
+    # 4    4    4	 4			4	 4	  4	   4
+    # water_level
+    # 0    0    -1.5 -1.5		0	-6	  5	   -5
+    # bed_level
+    # -10  -5   -10	 -5
+    # output
+    # 3	2.2	3.294117647	2.571428571			3	0	3	0
 
-# depths	heights		nInterfaces:	5
-# 0	        1		    nLayers:	    4
-# -1	    2		    nFaces:         4
-# -3	    3		    time:       	2
-# -6	    4
-# -10
-#
-# valuables
-# 1    1    1	 1			1	 1	  1	   1
-# 2    2    2    2			2	 2	  2	   2
-# 3    3	3    3			3	 3	  3	   3
-# 4    4    4	 4			4	 4	  4	   4
-# water_level
-# 0    0    -1.5 -1.5		0	-6	  5	   -5
-# bed_level
-# -10  -5   -10	 -5
-# output
-# 3	2.2	3.294117647	2.571428571			3	0	3	0
 
-
-def test_depth_average_rule_complex():
+@pytest.mark.parametrize(
+    "data_variable, mesh2d_interface_z, mesh2d_flowelem_bl, mesh2d_s1, result_data",
+    [
+        [
+            _np.array([[[20, 40], [91, 92]]]),
+            _np.array([0, -1, -2]),
+            _np.array([-2, -2]),
+            _np.array([[0, 0]]),
+            _np.array([[30.0, 91.5]]),
+        ],
+        [
+            _np.tile(_np.arange(4, 0, -1), (2, 4, 1)),
+            _np.array([-10, -6, -3, -1, 0]),
+            _np.array([-10, -5, -10, -5]),
+            _np.array([[0, 0, -1.5, -1.5], [0, -6, 5, -5]]),
+            _np.array(
+                [[3.0, 2.2, 3.29411765, 2.57142857], [3.0, _np.nan, 3.0, _np.nan]]
+            ),
+        ],
+    ],
+)
+def test_depth_average_rule(
+    data_variable: List[List[List[float]]],
+    mesh2d_interface_z: List[float],
+    mesh2d_flowelem_bl: List[float],
+    mesh2d_s1: List[List[float]],
+    result_data: List[List[List[float]]],
+):
     """Make sure the calculation of the depth average is correct. Including
     differing water and bed levels."""
     logger = Mock(ILogger)
@@ -76,17 +103,6 @@ def test_depth_average_rule_complex():
         name="test",
         input_variable_names=["foo"],
     )
-
-    # create complicated test data where water level and bed level cross data layers
-    mesh2d_nFaces = 4
-    mesh2d_nLayers = 4
-    mesh2d_nInterfaces = 5
-    time = 2
-
-    data_variable = _np.tile(_np.arange(4, 0, -1), (time, mesh2d_nFaces, 1))
-    mesh2d_interface_z = _np.array([-10, -6, -3, -1, 0])
-    mesh2d_flowelem_bl = _np.array([-10, -5, -10, -5])
-    mesh2d_s1 = _np.array([[0, 0, -1.5, -1.5], [0, -6, 5, -5]])
 
     # Create dataset
     ds = _xr.Dataset(
@@ -107,51 +123,9 @@ def test_depth_average_rule_complex():
 
     depth_average = rule.execute(value_arrays, logger)
 
-    result_data = _xr.DataArray(
-        _np.array([[3.0, 2.2, 3.29411765, 2.57142857], [3.0, _np.nan, 3.0, _np.nan]]),
+    result_array = _xr.DataArray(
+        result_data,
         dims=["time", "mesh2d_nFaces"],
     )
 
-    assert _xr.testing.assert_allclose(depth_average, result_data, atol=1e-08) is None
-
-
-def test_depth_average_rule_simple():
-    logger = Mock(ILogger)
-    rule = DepthAverageRule(
-        name="test",
-        input_variable_names=["foo"],
-    )
-
-    # create simple test data
-    mesh2d_nFaces = 2
-    mesh2d_nLayers = 2
-    mesh2d_nInterfaces = 3
-    time = 1
-    data_variable = _np.array([[[20, 40], [91, 92]]])
-    mesh2d_interface_z = _np.array([0, -1, -2])
-    mesh2d_flowelem_bl = _np.array([-2, -2])
-    mesh2d_s1 = _np.array([[0, 0]])
-
-    ds = _xr.Dataset(
-        {
-            "var_3d": (["time", "mesh2d_nFaces", "mesh2d_nLayers"], data_variable),
-            "mesh2d_interface_z": (["mesh2d_nInterfaces"], mesh2d_interface_z),
-            "mesh2d_flowelem_bl": (["mesh2d_nFaces"], mesh2d_flowelem_bl),
-            "mesh2d_s1": (["time", "mesh2d_nFaces"], mesh2d_s1),
-        }
-    )
-    value_arrays = {
-        "var_3d": ds["var_3d"],
-        "mesh2d_interface_z": ds["mesh2d_interface_z"],
-        "mesh2d_flowelem_bl": ds["mesh2d_flowelem_bl"],
-        "mesh2d_s1": ds["mesh2d_s1"],
-    }
-
-    depth_average = rule.execute(value_arrays, logger)
-
-    result_data = _xr.DataArray(
-        _np.array([[30.0, 91.5]]),
-        dims=["time", "mesh2d_nFaces"],
-    )
-
-    assert _xr.testing.assert_equal(depth_average, result_data) is None
+    assert _xr.testing.assert_allclose(depth_average, result_array, atol=1e-08) is None
