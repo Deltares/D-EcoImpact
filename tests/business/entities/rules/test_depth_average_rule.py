@@ -104,21 +104,15 @@ def test_depth_average_rule_complex():
         "mesh2d_flowelem_bl": ds["mesh2d_flowelem_bl"],
         "mesh2d_s1": ds["mesh2d_s1"],
     }
-    print("value_arrays:")
-    print(value_arrays)
 
     depth_average = rule.execute(value_arrays, logger)
-    print("depth_average:")
-    print(depth_average)
 
     result_data = _xr.DataArray(
         _np.array([[3.0, 2.2, 3.29411765, 2.57142857], [3.0, _np.nan, 3.0, _np.nan]]),
         dims=["time", "mesh2d_nFaces"],
     )
 
-    print("result_data:")
-    print(result_data)
-    assert _xr.testing.assert_equal(depth_average, result_data) is None
+    assert _xr.testing.assert_allclose(depth_average, result_data, atol=1e-08) is None
 
 
 def test_depth_average_rule_simple():
