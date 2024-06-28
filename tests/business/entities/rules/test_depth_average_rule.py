@@ -68,35 +68,34 @@ def test_no_validate_error_with_correct_rule():
 # 3	2.2	3.294117647	2.571428571			3	0	3	0
 
 
-mesh2d_nFaces = 4
-mesh2d_nLayers = 4
-mesh2d_nInterfaces = 5
-time = 2
-
-data_variable = _np.tile(_np.arange(4, 0, -1), (time, mesh2d_nFaces, 1))
-mesh2d_interface_z = _np.array([-10, -6, -3, -1, 0])
-mesh2d_flowelem_bl = _np.array([-10, -5, -10, -5])
-mesh2d_s1 = _np.array([[0, 0, -1.5, -1.5], [0, -6, 5, -5]])
-
-
-# Create dataset
-ds = _xr.Dataset(
-    {
-        "var_3d": (["time", "mesh2d_nFaces", "mesh2d_nLayers"], data_variable),
-        "mesh2d_interface_z": (["mesh2d_nInterfaces"], mesh2d_interface_z),
-        "mesh2d_flowelem_bl": (["mesh2d_nFaces"], mesh2d_flowelem_bl),
-        "mesh2d_s1": (["time", "mesh2d_nFaces"], mesh2d_s1),
-    }
-)
-
-
-def test_depth_average_rule():
+def test_depth_average_rule_complex():
     """Make sure the calculation of the depth average is correct. Including
     differing water and bed levels."""
     logger = Mock(ILogger)
     rule = DepthAverageRule(
         name="test",
         input_variable_names=["foo"],
+    )
+
+    # create complicated test data where water level and bed level cross data layers
+    mesh2d_nFaces = 4
+    mesh2d_nLayers = 4
+    mesh2d_nInterfaces = 5
+    time = 2
+
+    data_variable = _np.tile(_np.arange(4, 0, -1), (time, mesh2d_nFaces, 1))
+    mesh2d_interface_z = _np.array([-10, -6, -3, -1, 0])
+    mesh2d_flowelem_bl = _np.array([-10, -5, -10, -5])
+    mesh2d_s1 = _np.array([[0, 0, -1.5, -1.5], [0, -6, 5, -5]])
+
+    # Create dataset
+    ds = _xr.Dataset(
+        {
+            "var_3d": (["time", "mesh2d_nFaces", "mesh2d_nLayers"], data_variable),
+            "mesh2d_interface_z": (["mesh2d_nInterfaces"], mesh2d_interface_z),
+            "mesh2d_flowelem_bl": (["mesh2d_nFaces"], mesh2d_flowelem_bl),
+            "mesh2d_s1": (["time", "mesh2d_nFaces"], mesh2d_s1),
+        }
     )
 
     value_arrays = {
@@ -122,27 +121,6 @@ def test_depth_average_rule():
     assert _xr.testing.assert_equal(depth_average, result_data) is None
 
 
-mesh2d_nFaces = 2
-mesh2d_nLayers = 2
-mesh2d_nInterfaces = 3
-time = 1
-
-data_variable = _np.array([[[20, 40], [91, 92]]])
-mesh2d_interface_z = _np.array([0, -1, -2])
-mesh2d_flowelem_bl = _np.array([-2, -2])
-mesh2d_s1 = _np.array([[0, 0]])
-
-# Create dataset
-ds = _xr.Dataset(
-    {
-        "var_3d": (["time", "mesh2d_nFaces", "mesh2d_nLayers"], data_variable),
-        "mesh2d_interface_z": (["mesh2d_nInterfaces"], mesh2d_interface_z),
-        "mesh2d_flowelem_bl": (["mesh2d_nFaces"], mesh2d_flowelem_bl),
-        "mesh2d_s1": (["time", "mesh2d_nFaces"], mesh2d_s1),
-    }
-)
-
-
 def test_depth_average_rule_simple():
     logger = Mock(ILogger)
     rule = DepthAverageRule(
@@ -150,6 +128,24 @@ def test_depth_average_rule_simple():
         input_variable_names=["foo"],
     )
 
+    # create simple test data
+    mesh2d_nFaces = 2
+    mesh2d_nLayers = 2
+    mesh2d_nInterfaces = 3
+    time = 1
+    data_variable = _np.array([[[20, 40], [91, 92]]])
+    mesh2d_interface_z = _np.array([0, -1, -2])
+    mesh2d_flowelem_bl = _np.array([-2, -2])
+    mesh2d_s1 = _np.array([[0, 0]])
+
+    ds = _xr.Dataset(
+        {
+            "var_3d": (["time", "mesh2d_nFaces", "mesh2d_nLayers"], data_variable),
+            "mesh2d_interface_z": (["mesh2d_nInterfaces"], mesh2d_interface_z),
+            "mesh2d_flowelem_bl": (["mesh2d_nFaces"], mesh2d_flowelem_bl),
+            "mesh2d_s1": (["time", "mesh2d_nFaces"], mesh2d_s1),
+        }
+    )
     value_arrays = {
         "var_3d": ds["var_3d"],
         "mesh2d_interface_z": ds["mesh2d_interface_z"],
