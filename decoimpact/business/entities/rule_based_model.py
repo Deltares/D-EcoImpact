@@ -214,7 +214,7 @@ class RuleBasedModel(IModel):
         rule_input_vars = [rule.input_variable_names for rule in self._rules]
         rule_output_vars = [rule.output_variable_name for rule in self._rules]
 
-        needed_input_per_rule = dict()
+        needed_input_per_rule = {}
         for index, inputs_per_rule in enumerate(rule_input_vars):
             needed_input_per_rule[rule_names[index]] = _lu.items_not_in(
                 inputs_per_rule, rule_output_vars
