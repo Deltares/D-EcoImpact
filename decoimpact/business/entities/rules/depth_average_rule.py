@@ -22,7 +22,7 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 
 class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
-    """Implementation for the depthaverage rule"""
+    """Implementation for the depth average rule"""
 
     def execute(
         self, value_arrays: Dict[str, _xr.DataArray], logger: ILogger
@@ -30,12 +30,14 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         """Calculate depth average of assumed z-layers.
         Args:
             value_array (DataArray): Values to multiply
+
         Returns:
             DataArray: Averaged values
         """
 
         # The first DataArray in our value_arrays contains the values to be averaged
-        # But the name of the key is given by the user, so just take the first
+        # but the name of the key is given by the user, and is unknown here, so
+        # just used the first value.
         variables = next(iter(value_arrays.values()))
 
         # depths interfaces = borders of the layers in terms of depth
@@ -61,9 +63,9 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
             )
             return variables
 
-        # Broadcast the depths to the dimensions of the bed levels and
-        # correct the depths to the bed level, in other words all depths lower
-        # than bed level will be corrected to bed level.
+        # Broadcast the depths to the dimensions of the bed levels. Then make a
+        # correction for the depths to the bed level, in other words all depths lower
+        # than the bed level will be corrected to the bed level.
         depths_interfaces_broadcasted = depths_interfaces.broadcast_like(
             bed_level_values
         )
