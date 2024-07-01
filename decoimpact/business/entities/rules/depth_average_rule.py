@@ -45,31 +45,28 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         water_level_name = "mesh2d_s1"
         bed_level_name = "mesh2d_flowelem_bl"
 
-        # These dimension names should be checked. If there is no depth dimension
-        # let the user know with a warning
-        dim_layer_name = "mesh2d_nLayers"
-        dim_interfaces_name = "mesh2d_nInterfaces"
-
-        # TODO: is this the way or do we just take the dimensions available in
-        # the interface_z?
-        warn_message = ""
-        if dim_layer_name not in variables.dims:
-            warn_message = f"No dimension: ${dim_layer_name} present. "
-        if dim_interfaces_name not in value_arrays[interface_name].dims:
-            warn_message = (
-                f"${warn_message}No dimension: ${dim_interfaces_name} present. "
-            )
-        if warn_message != "":
-            logger.log_warning(
-                f"{warn_message} No vertical dimension found, returning original \
-                values for {variable_key}"
-            )
-            return variables
-
         # depths interfaces = borders of the layers in terms of depth
         depths_interfaces = value_arrays[interface_name]
         water_level_values = value_arrays[water_level_name]
         bed_level_values = value_arrays[bed_level_name]
+
+        # Get the dimension names for the interfaces and for the layers
+        dim_interfaces_name = list(depths_interfaces.dims)[0]
+        interfaces_dim_len = depths_interfaces[dim_interfaces_name].size
+
+        dim_layer_names = [
+            d for d in variables.dims if d not in water_level_values.dims
+        ]
+        dim_layer_name = dim_layer_names[0]
+        layer_dim_len = variables[dim_layer_name].size
+
+        # interface dimension should always be one larger than layer dimension
+        # Otherwise give an error to the user
+        if interfaces_dim_len != layer_dim_len + 1:
+            logger.log_warning(
+                f"The number of interfaces (= {interfaces_dim_len})"
+                f"should be number of layers (= {layer_dim_len}) + 1."
+            )
 
         # Broadcast the depths to the dimensions of the bed levels and
         # correct the depths to the bed level, in other words all depths lower
