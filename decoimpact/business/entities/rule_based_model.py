@@ -142,8 +142,11 @@ class RuleBasedModel(IModel):
             var_list = _du.get_dummy_and_dependent_var_list(dataset)
 
         mapping_keys = list((self._mappings or {}).keys())
+        rule_names = [rule.name for rule in self._rules]
+        all_inputs = self._get_direct_rule_inputs(rule_names)
+        all_input_variables = _lu.flatten_list(list(all_inputs.values()))
 
-        all_vars = var_list + mapping_keys + self._get_direct_rule_inputs()
+        all_vars = var_list + mapping_keys + all_input_variables
         return _lu.remove_duplicates_from_list(all_vars)
 
     def _validate_mappings(self, mappings: dict[str, str], logger: ILogger) -> bool:
