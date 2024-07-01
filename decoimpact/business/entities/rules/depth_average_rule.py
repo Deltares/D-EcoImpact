@@ -36,8 +36,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
 
         # The first DataArray in our value_arrays contains the values to be averaged
         # But the name of the key is given by the user, so just take the first
-        variable_key = next(iter(value_arrays.keys()))
-        variables = value_arrays[variable_key]
+        variables = next(iter(value_arrays.values()))
 
         # depths interfaces = borders of the layers in terms of depth
         depths_interfaces = value_arrays["mesh2d_interface_z"]
@@ -48,10 +47,9 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         dim_interfaces_name = list(depths_interfaces.dims)[0]
         interfaces_len = depths_interfaces[dim_interfaces_name].size
 
-        dim_layer_names = [
+        dim_layer_name = [
             d for d in variables.dims if d not in water_level_values.dims
-        ]
-        dim_layer_name = dim_layer_names[0]
+        ][0]
         layer_len = variables[dim_layer_name].size
 
         # interface dimension should always be one larger than layer dimension
@@ -77,12 +75,12 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # dimensions and then replace all values higher than waterlevel with
         # waterlevel)
         corrected_depth_bed = corrected_depth_bed.broadcast_like(water_level_values)
-        corrected_depths = corrected_depth_bed.where(
+        corrected_depth_bed = corrected_depth_bed.where(
             water_level_values > corrected_depth_bed, water_level_values
         )
 
         # Calculate the layer heights between depths
-        layer_heights = corrected_depths.diff(dim=dim_interfaces_name)
+        layer_heights = corrected_depth_bed.diff(dim=dim_interfaces_name)
         layer_heights = layer_heights.rename({dim_interfaces_name: dim_layer_name})
 
         # Use the nan filtering of the variables to set the correct depth per column
@@ -91,11 +89,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # Calculate depth average using relative value
         relative_values = variables * heights_all_filtered
 
-        # Calculate total height and total value in column
-        sum_relative_values = relative_values.sum(dim=dim_layer_name)
-        sum_heights = heights_all_filtered.sum(dim=dim_layer_name)
-
         # Calculate average
-        depth_average = sum_relative_values / sum_heights
-
-        return depth_average
+        return relative_values.sum(dim=dim_layer_name) / heights_all_filtered.sum(
+            dim=dim_layer_name
+        )
