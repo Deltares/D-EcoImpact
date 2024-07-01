@@ -160,10 +160,6 @@ class ModelBuilder(IModelBuilder):
             rule = ClassificationRule(
                 rule_data.name, rule_data.input_variable_names, rule_data.criteria_table
             )
-        elif isinstance(rule_data, IDepthAverageRuleData):
-            rule = DepthAverageRule(
-                rule_data.name, [rule_data.input_variable], rule_data.output_variable
-            )
         else:
             error_str = (
                 f"The rule type of rule '{rule_data.name}' is currently "
