@@ -52,21 +52,22 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
 
         # Get the dimension names for the interfaces and for the layers
         dim_interfaces_name = list(depths_interfaces.dims)[0]
-        interfaces_dim_len = depths_interfaces[dim_interfaces_name].size
+        interfaces_len = depths_interfaces[dim_interfaces_name].size
 
         dim_layer_names = [
             d for d in variables.dims if d not in water_level_values.dims
         ]
         dim_layer_name = dim_layer_names[0]
-        layer_dim_len = variables[dim_layer_name].size
+        layer_len = variables[dim_layer_name].size
 
         # interface dimension should always be one larger than layer dimension
         # Otherwise give an error to the user
-        if interfaces_dim_len != layer_dim_len + 1:
-            logger.log_warning(
-                f"The number of interfaces (= {interfaces_dim_len})"
-                f"should be number of layers (= {layer_dim_len}) + 1."
+        if interfaces_len != layer_len + 1:
+            logger.log_error(
+                f"The number of interfaces should be number of layers + 1. Number of"
+                f"interfaces = {interfaces_len}. Number of layers = {layer_len}."
             )
+            return variables
 
         # Broadcast the depths to the dimensions of the bed levels and
         # correct the depths to the bed level, in other words all depths lower

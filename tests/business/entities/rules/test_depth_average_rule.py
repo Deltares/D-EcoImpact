@@ -129,3 +129,45 @@ def test_depth_average_rule(
     )
 
     assert _xr.testing.assert_allclose(depth_average, result_array, atol=1e-08) is None
+
+
+def test_dimension_error():
+    """Make sure the calculation of the depth average is correct. Including
+    differing water and bed levels."""
+    logger = Mock(ILogger)
+    rule = DepthAverageRule(
+        name="test",
+        input_variable_names=["foo"],
+    )
+
+    # Create dataset
+    ds = _xr.Dataset(
+        {
+            "var_3d": (
+                ["time", "mesh2d_nFaces", "mesh2d_nLayers"],
+                _np.array([[[20, 40], [91, 92]]]),
+            ),
+            "mesh2d_interface_z": (
+                ["mesh2d_nInterfaces"],
+                _np.array([0, -1, -2, -3, -4]),
+            ),
+            "mesh2d_flowelem_bl": (
+                ["mesh2d_nFaces"],
+                _np.array([-2, -2]),
+            ),
+            "mesh2d_s1": (["time", "mesh2d_nFaces"], _np.array([[0, 0]])),
+        }
+    )
+
+    value_arrays = {
+        "var_3d": ds["var_3d"],
+        "mesh2d_interface_z": ds["mesh2d_interface_z"],
+        "mesh2d_flowelem_bl": ds["mesh2d_flowelem_bl"],
+        "mesh2d_s1": ds["mesh2d_s1"],
+    }
+
+    rule.execute(value_arrays, logger)
+    logger.log_error.assert_called_with(
+        "The number of interfaces should be number of layers + 1. Number of"
+        "interfaces = 5. Number of layers = 2."
+    )
