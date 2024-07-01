@@ -104,9 +104,8 @@ class RuleBasedModel(IModel):
             self._input_datasets, self._make_output_variables_list(), self._mappings
         )
         self._rule_processor = RuleProcessor(self._rules, self._output_dataset)
-        success = self._rule_processor.initialize(logger)
 
-        if not success:
+        if not self._rule_processor.initialize(logger):
             logger.log_error("Initialization failed.")
 
     def execute(self, logger: ILogger) -> None:
@@ -177,8 +176,7 @@ class RuleBasedModel(IModel):
             valid = False
 
         # check for duplicates that will be created because of mapping
-        mapping_vars_created = list(mappings.values())
-        duplicates_created = _lu.items_in(mapping_vars_created, input_vars)
+        duplicates_created = _lu.items_in(list(mappings.values()), input_vars)
 
         if len(duplicates_created) > 0:
             logger.log_error(
@@ -195,7 +193,7 @@ class RuleBasedModel(IModel):
         # check for missing rule inputs
         for rule_name, rule_input in rule_inputs.items():
             needed_rule_inputs = _lu.remove_duplicates_from_list(rule_input)
-            rule_input_vars = input_vars + mapping_vars_created
+            rule_input_vars = input_vars + list(mappings.values())
             missing_rule_inputs = _lu.items_not_in(needed_rule_inputs, rule_input_vars)
             if len(missing_rule_inputs) > 0:
                 logger.log_error(
