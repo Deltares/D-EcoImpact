@@ -193,7 +193,7 @@ class RuleBasedModel(IModel):
         # check for missing rule inputs
         for rule_name, rule_input in rule_inputs.items():
             needed_rule_inputs = _lu.remove_duplicates_from_list(rule_input)
-            rule_input_vars = input_vars + mapping_vars_created
+            rule_input_vars = input_vars + list(mappings.values())
             missing_rule_inputs = _lu.items_not_in(needed_rule_inputs, rule_input_vars)
             if len(missing_rule_inputs) > 0:
                 logger.log_error(

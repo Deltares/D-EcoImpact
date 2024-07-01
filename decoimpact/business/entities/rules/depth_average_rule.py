@@ -84,12 +84,12 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         layer_heights = layer_heights.rename({dim_interfaces_name: dim_layer_name})
 
         # Use the nan filtering of the variables to set the correct depth per column
-        heights_all_filtered = layer_heights.where(variables.notnull())
+        layer_heights = layer_heights.where(variables.notnull())
 
         # Calculate depth average using relative value
-        relative_values = variables * heights_all_filtered
+        relative_values = variables * layer_heights
 
         # Calculate average
-        return relative_values.sum(dim=dim_layer_name) / heights_all_filtered.sum(
+        return relative_values.sum(dim=dim_layer_name) / layer_heights.sum(
             dim=dim_layer_name
         )
