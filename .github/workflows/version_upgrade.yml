@@ -1,0 +1,52 @@
+# This workflow is used in bump_version and release workflows. It
+# install poetry and updates the version of the code. It gives back
+# the new version which can be used in the consequent workflows.
+
+name: Version upgrade with poetry
+
+on:
+  workflow_call:
+    inputs:
+      release_type:
+        required: true
+        type: string
+    outputs:
+      project_version:
+        value: ${{ jobs.upgrade-version.outputs.job_output_version}}
+
+
+jobs:
+  upgrade-version:
+    runs-on: ubuntu-latest
+    outputs:
+      job_output_version: ${{ steps.get-version.outputs.PROJECT_VERSION}}
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.VERSION_DECOIMPACT }}
+          fetch-depth: 0
+      - name: install python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: 1.4.2
+      - name: bump version and update template_input.yaml
+        id: get-version
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          poetry version ${{ inputs.release_type }}
+          PROJECT_VERSION=$(poetry version --short)
+          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_OUTPUT
+          sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
+      - name: commit changes
+        run: |
+          PROJECT_VERSION=$(poetry version --short)
+          git add template_input.yaml
+          git add pyproject.toml
+          git commit -m "bump ${{ inputs.release_type }} version: ${{ steps.get-version.outputs.PROJECT_VERSION }}"
+          git push

@@ -1,6 +1,5 @@
-# This workflow should be triggered when a release of the main is needed. 
-# It creates a tag and regenerates the documentation to generate a release. 
-# It does not bump the version number, that happens for the merged pull request.
+# This workflow should be triggered when a release of the main is needed.
+# It creates a tag and regenerates the documentation to generate a release.
 
 name: Release major or minor version (create tag and documentation)
 
@@ -16,49 +15,35 @@ on:
         - major
 
 jobs:
+  bump-up-version:
+    secrets: inherit
+    uses: ./.github/workflows/version_upgrade.yml
+    with:
+      release_type: ${{ github.event.inputs.release_type }}
+
   create-release:
     runs-on: ubuntu-latest
+    needs: bump-up-version
     steps:
-      - name: checkout code
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.VERSION_DECOIMPACT }}
-          fetch-depth: 0
-      - name: install python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.11
-      - name: Install poetry
-        uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: 1.4.2
-      - name: bump version and update template_input.yaml
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          poetry version ${{ github.event.inputs.release_type }}
-          PROJECT_VERSION=$(poetry version --short)
-          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
-          sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
-      - name: commit changes
-        run: |
-            PROJECT_VERSION=$(poetry version --short)
-            git add template_input.yaml
-            git add pyproject.toml
-            git commit -m "bump version: $PROJECT_VERSION"
-            git push
       - name: Create Release
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ env.PROJECT_VERSION }}
-          release_name: Release ${{ env.PROJECT_VERSION }}
+          tag_name: ${{ needs.bump-up-version.outputs.project_version }}
+          release_name: Release ${{ needs.bump-up-version.outputs.project_version }}
           draft: false
           prerelease: false
-      - name: Install Dependencies
-        run: poetry install
-      - name: Create new version of mkdocs and publish
-        run: |
-          poetry run mike deploy --push --update-aliases ${PROJECT_VERSION} latest
-          poetry run mike set-default --push latest
+
+  create-documentation:
+    needs: bump-up-version
+    secrets: inherit
+    uses: ./.github/workflows/mkdocs_documentation.yml
+    with:
+      project_version: ${{ needs.bump-up-version.outputs.project_version }}
+
+  docker-build:
+    needs: bump-up-version
+    uses: ./.github/workflows/docker_image.yml
+    with:
+      project_version: ${{ needs.bump-up-version.outputs.project_version }}
