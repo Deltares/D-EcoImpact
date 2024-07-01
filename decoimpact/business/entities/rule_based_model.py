@@ -12,7 +12,7 @@ Classes:
 
 """
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import xarray as _xr
 
@@ -185,31 +185,38 @@ class RuleBasedModel(IModel):
             )
             valid = False
 
+        rule_names = [rule.name for rule in self._rules]
+
+        rule_inputs = self._get_direct_rule_inputs(rule_names)
+
         # check for missing rule inputs
-        needed_rule_inputs = _lu.remove_duplicates_from_list(
-            self._get_direct_rule_inputs()
-        )
-        rule_input_vars = input_vars + mapping_vars_created
-        missing_rule_inputs = _lu.items_not_in(needed_rule_inputs, rule_input_vars)
-        if len(missing_rule_inputs) > 0:
-            logger.log_error(
-                f"Missing the variables '{', '.join(missing_rule_inputs)}' that "
-                "are required by some rules."
-            )
-            valid = False
+        for rule_name, rule_input in rule_inputs.items():
+            needed_rule_inputs = _lu.remove_duplicates_from_list(rule_input)
+            rule_input_vars = input_vars + mapping_vars_created
+            missing_rule_inputs = _lu.items_not_in(needed_rule_inputs, rule_input_vars)
+            if len(missing_rule_inputs) > 0:
+                logger.log_error(
+                    f"Missing the variables '{', '.join(missing_rule_inputs)}' that "
+                    f"are required by '{rule_name}'."
+                )
+                valid = False
 
         return valid
 
-    def _get_direct_rule_inputs(self) -> List[str]:
+    def _get_direct_rule_inputs(self, rule_names) -> Dict[str, List[str]]:
         """Gets the input variables directly needed by rules from
         input datasets.
 
         Returns:
-            List[str]:
+           Dict[str, List[str]]
         """
-        rule_input_vars = _lu.flatten_list(
-            [rule.input_variable_names for rule in self._rules]
-        )
+        rule_input_vars = [rule.input_variable_names for rule in self._rules]
         rule_output_vars = [rule.output_variable_name for rule in self._rules]
 
-        return _lu.items_not_in(rule_input_vars, rule_output_vars)
+        needed_input_per_rule = dict()
+        for index, inputs_per_rule in enumerate(rule_input_vars):
+            needed_input_per_rule[rule_names[index]] = _lu.items_not_in(
+                inputs_per_rule, rule_output_vars
+            )
+
+        return needed_input_per_rule
