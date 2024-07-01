@@ -39,16 +39,10 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         variable_key = next(iter(value_arrays.keys()))
         variables = value_arrays[variable_key]
 
-        # These are the same names as provided in the parser. So these
-        # are present in the data and don't have to be checked here
-        interface_name = "mesh2d_interface_z"
-        water_level_name = "mesh2d_s1"
-        bed_level_name = "mesh2d_flowelem_bl"
-
         # depths interfaces = borders of the layers in terms of depth
-        depths_interfaces = value_arrays[interface_name]
-        water_level_values = value_arrays[water_level_name]
-        bed_level_values = value_arrays[bed_level_name]
+        depths_interfaces = value_arrays["mesh2d_interface_z"]
+        water_level_values = value_arrays["mesh2d_s1"]
+        bed_level_values = value_arrays["mesh2d_flowelem_bl"]
 
         # Get the dimension names for the interfaces and for the layers
         dim_interfaces_name = list(depths_interfaces.dims)[0]
