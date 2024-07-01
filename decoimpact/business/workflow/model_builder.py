@@ -93,89 +93,83 @@ class ModelBuilder(IModelBuilder):
     @staticmethod
     def _create_rule(rule_data: IRuleData) -> IRule:
 
-        match rule_data:
-            case IMultiplyRuleData():
-                rule = MultiplyRule(
-                    rule_data.name,
-                    [rule_data.input_variable],
-                    rule_data.multipliers,
-                    rule_data.date_range,
-                )
-            case IDepthAverageRuleData():
-                rule = DepthAverageRule(
-                    rule_data.name,
-                    rule_data.input_variables,
-                )
-            case ILayerFilterRuleData():
-                rule = LayerFilterRule(
-                    rule_data.name,
-                    [rule_data.input_variable],
-                    rule_data.layer_number,
-                )
-            case IAxisFilterRuleData():
-                rule = AxisFilterRule(
-                    rule_data.name,
-                    [rule_data.input_variable],
-                    rule_data.element_index,
-                    rule_data.axis_name,
-                )
-            case IStepFunctionRuleData():
-                rule = StepFunctionRule(
-                    rule_data.name,
-                    rule_data.input_variable,
-                    rule_data.limits,
-                    rule_data.responses,
-                )
-            case ITimeAggregationRuleData():
-                rule = TimeAggregationRule(
-                    rule_data.name, [rule_data.input_variable], rule_data.operation
-                )
-                rule.settings.percentile_value = rule_data.percentile_value
-                rule.settings.time_scale = rule_data.time_scale
-
-            case IRollingStatisticsRuleData():
-                rule = RollingStatisticsRule(
-                    rule_data.name, [rule_data.input_variable], rule_data.operation
-                )
-                rule.settings.percentile_value = rule_data.percentile_value
-                rule.settings.time_scale = rule_data.time_scale
-                rule.period = rule_data.period
-
-            case ICombineResultsRuleData():
-                rule = CombineResultsRule(
-                    rule_data.name,
-                    rule_data.input_variable_names,
-                    MultiArrayOperationType[rule_data.operation_type],
-                )
-
-            case IResponseCurveRuleData():
-                rule = ResponseCurveRule(
-                    rule_data.name,
-                    rule_data.input_variable,
-                    rule_data.input_values,
-                    rule_data.output_values,
-                )
-
-            case IFormulaRuleData():
-                rule = FormulaRule(
-                    rule_data.name,
-                    rule_data.input_variable_names,
-                    rule_data.formula,
-                )
-
-            case IClassificationRuleData():
-                rule = ClassificationRule(
-                    rule_data.name,
-                    rule_data.input_variable_names,
-                    rule_data.criteria_table
-                )
-
-            case _:
-                error_str = (
-                    f"The rule type of rule '{rule_data.name}' is currently "
-                    "not implemented"
-                )
-                raise NotImplementedError(error_str)
+        # TODO: from python >3.10 we can use match/case, better solution
+        # until then disable pylint.
+        # pylint: disable=too-many-branches
+        if isinstance(rule_data, IMultiplyRuleData):
+            rule = MultiplyRule(
+                rule_data.name,
+                [rule_data.input_variable],
+                rule_data.multipliers,
+                rule_data.date_range,
+            )
+        elif isinstance(rule_data, IDepthAverageRuleData):
+            rule = DepthAverageRule(
+                rule_data.name,
+                rule_data.input_variables,
+            )
+        elif isinstance(rule_data, ILayerFilterRuleData):
+            rule = LayerFilterRule(
+                rule_data.name,
+                [rule_data.input_variable],
+                rule_data.layer_number,
+            )
+        elif isinstance(rule_data, IAxisFilterRuleData):
+            rule = AxisFilterRule(
+                rule_data.name,
+                [rule_data.input_variable],
+                rule_data.element_index,
+                rule_data.axis_name,
+            )
+        elif isinstance(rule_data, IStepFunctionRuleData):
+            rule = StepFunctionRule(
+                rule_data.name,
+                rule_data.input_variable,
+                rule_data.limits,
+                rule_data.responses,
+            )
+        elif isinstance(rule_data, ITimeAggregationRuleData):
+            rule = TimeAggregationRule(
+                rule_data.name, [rule_data.input_variable], rule_data.operation
+            )
+            rule.settings.percentile_value = rule_data.percentile_value
+            rule.settings.time_scale = rule_data.time_scale
+        elif isinstance(rule_data, IRollingStatisticsRuleData):
+            rule = RollingStatisticsRule(
+                rule_data.name, [rule_data.input_variable], rule_data.operation
+            )
+            rule.settings.percentile_value = rule_data.percentile_value
+            rule.settings.time_scale = rule_data.time_scale
+            rule.period = rule_data.period
+        elif isinstance(rule_data, ICombineResultsRuleData):
+            rule = CombineResultsRule(
+                rule_data.name,
+                rule_data.input_variable_names,
+                MultiArrayOperationType[rule_data.operation_type],
+            )
+        elif isinstance(rule_data, IResponseCurveRuleData):
+            rule = ResponseCurveRule(
+                rule_data.name,
+                rule_data.input_variable,
+                rule_data.input_values,
+                rule_data.output_values,
+            )
+        elif isinstance(rule_data, IFormulaRuleData):
+            rule = FormulaRule(
+                rule_data.name,
+                rule_data.input_variable_names,
+                rule_data.formula,
+            )
+        elif isinstance(rule_data, IClassificationRuleData):
+            rule = ClassificationRule(
+                rule_data.name, rule_data.input_variable_names, rule_data.criteria_table
+            )
+        else:
+            error_str = (
+                f"The rule type of rule '{rule_data.name}' is currently "
+                "not implemented"
+            )
+            raise NotImplementedError(error_str)
 
         if isinstance(rule, RuleBase):
             ModelBuilder._set_default_fields(rule_data, rule)
