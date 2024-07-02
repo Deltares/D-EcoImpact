@@ -1,5 +1,5 @@
 # This file is part of D-EcoImpact
-# Copyright (C) 2022-2023 Stichting Deltares
+# Copyright (C) 2022-2024 Stichting Deltares
 # This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
@@ -48,11 +48,14 @@ def test_run_model_with_invalid_model_should_fail():
     assert model.status == ModelStatus.FAILED
 
 
-@pytest.mark.parametrize("method", [
-    "initialize",
-    "execute",
-    "finalize",
-])
+@pytest.mark.parametrize(
+    "method",
+    [
+        "initialize",
+        "execute",
+        "finalize",
+    ],
+)
 def test_run_model_with_model_throwing_exception_should_fail(method: str):
     """Test that model runner puts the model into the Failed state
     if an error occurred during the execution of the provided method"""
