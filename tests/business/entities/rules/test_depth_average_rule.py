@@ -88,7 +88,7 @@ def test_depth_average_rule(
     data_variable: List[float],
     mesh2d_interface_z: List[float],
     mesh2d_flowelem_bl: List[float],
-    mesh2d_s1: List[List[float]],
+    mesh2d_s1: List[float],
     result_data: List[float],
 ):
     """Make sure the calculation of the depth average is correct. Including
