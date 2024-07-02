@@ -1,5 +1,5 @@
 # This file is part of D-EcoImpact
-# Copyright (C) 2022-2023 Stichting Deltares
+# Copyright (C) 2022-2024 Stichting Deltares
 # This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
@@ -60,7 +60,7 @@ def test_model_data_builder_parse_dict_to_model_data():
 
     # Act
     data = ModelDataBuilder(logger)
-    contents["version"] = '0.0.0'
+    contents["version"] = "0.0.0"
     parsed_data = data.parse_yaml_data(contents)
 
     # Assert
@@ -77,7 +77,7 @@ def test_model_data_builder_gives_error_when_rule_not_defined():
     # Act
     data = ModelDataBuilder(logger)
     contents["rules"][0] = {"wrong_rule": "test"}
-    contents["version"] = '0.0.0'
+    contents["version"] = "0.0.0"
 
     with pytest.raises(KeyError) as exc_info:
         data.parse_yaml_data(contents)

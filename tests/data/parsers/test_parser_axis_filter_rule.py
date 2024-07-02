@@ -1,5 +1,5 @@
 # This file is part of D-EcoImpact
-# Copyright (C) 2022-2023 Stichting Deltares
+# Copyright (C) 2022-2024 Stichting Deltares
 # This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
@@ -28,8 +28,8 @@ def test_parser_axis_filter_rule_creation_logic():
 
     assert isinstance(data, IParserRuleBase)
     assert data.rule_type_name == "axis_filter_rule"
-    
-    
+
+
 def test_parse_dict_to__axis_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
@@ -51,8 +51,8 @@ def test_parse_dict_to__axis_rule_data_logic():
 
     # Assert
     assert isinstance(parsed_dict, IRuleData)
-    
-    
+
+
 def test_parse_wrong_dict_to_axis_rule_data_logic():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
@@ -78,8 +78,8 @@ def test_parse_wrong_dict_to_axis_rule_data_logic():
     # Assert
     expected_message = "Missing element axis_name"
     assert exception_raised.args[0] == expected_message
-    
-    
+
+
 def test_parse_axis_name_type():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange

@@ -19,6 +19,7 @@ from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.axis_filter_rule import AxisFilterRule
 from decoimpact.business.entities.rules.classification_rule import ClassificationRule
 from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
+from decoimpact.business.entities.rules.depth_average_rule import DepthAverageRule
 from decoimpact.business.entities.rules.formula_rule import FormulaRule
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.layer_filter_rule import LayerFilterRule
@@ -39,6 +40,7 @@ from decoimpact.data.api.i_axis_filter_rule_data import IAxisFilterRuleData
 from decoimpact.data.api.i_classification_rule_data import IClassificationRuleData
 from decoimpact.data.api.i_combine_results_rule_data import ICombineResultsRuleData
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
+from decoimpact.data.api.i_depth_average_rule_data import IDepthAverageRuleData
 from decoimpact.data.api.i_formula_rule_data import IFormulaRuleData
 from decoimpact.data.api.i_layer_filter_rule_data import ILayerFilterRuleData
 from decoimpact.data.api.i_model_data import IModelData
@@ -90,12 +92,21 @@ class ModelBuilder(IModelBuilder):
 
     @staticmethod
     def _create_rule(rule_data: IRuleData) -> IRule:
+
+        # from python >3.10 we can use match/case, better solution
+        # until then disable pylint.
+        # pylint: disable=too-many-branches
         if isinstance(rule_data, IMultiplyRuleData):
             rule = MultiplyRule(
                 rule_data.name,
                 [rule_data.input_variable],
                 rule_data.multipliers,
                 rule_data.date_range,
+            )
+        elif isinstance(rule_data, IDepthAverageRuleData):
+            rule = DepthAverageRule(
+                rule_data.name,
+                rule_data.input_variables,
             )
         elif isinstance(rule_data, ILayerFilterRuleData):
             rule = LayerFilterRule(
@@ -162,5 +173,4 @@ class ModelBuilder(IModelBuilder):
 
         if isinstance(rule, RuleBase):
             ModelBuilder._set_default_fields(rule_data, rule)
-
         return rule

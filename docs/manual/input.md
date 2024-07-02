@@ -1,3 +1,16 @@
+---
+title: Just say hello!
+author: My Friend
+header-includes: |
+    \usepackage{tikz,pgfplots}
+    \usepackage{fancyhdr}
+    \pagestyle{fancy}
+    \fancyhead[CO,CE]{This is fancy}
+    \fancyfoot[CO,CE]{So is this}
+    \fancyfoot[LE,RO]{\thepage}
+abstract: This is a pandoc test with Markdown + inline LaTeX
+---
+
 # Structure of the model input file and functionality
 
 D-Eco Impact is steered through a YAML input file. This input file informs the model which data to use, what ecological knowledge rules to apply and where to write the output data. 
@@ -19,8 +32,8 @@ output-data:
 
 In the input data the variables that are present in the input data provided through “filename” are selected for use. It is possible to filter the input data by providing a start date or end date (format: "dd-mm-yyyy"); this is optional. The variables that are used can be selected under “variable_mapping”. Here you are also able to rename variables as the name used for storage is often cryptic. 
 
-At output data the location where the output file needs to be written can be provided through “filename”. In this output file only variables that have been used from the input data and variables that have been created in the model are stored. It is possible to reduce the file size with the optional parameter "save_only_variables", which can take the name of one or several variables. 
-The model needs at least one rule under “rules” to execute.  
+At output data the location where the output file needs to be written can be provided through “filename”. In this output file only variables that have been used from the input data and variables that have been created in the model are stored. It is possible to reduce the file size with the optional parameter "save_only_variables", which can take the name of one or several variables.
+The model needs at least one rule under “rules” to execute.
 
 ```
 #FORMAT
@@ -48,7 +61,7 @@ version: 0.1.5
 
 # Mapping: mesh2d_sa1              : Salinity (PSU)
 #          mesh2d_s1                : Water level (m NAP)
-#          mesh2d_waterdepth : Water depth (m NAP) 
+#          mesh2d_waterdepth : Water depth (m NAP)
 input-data:
   - dataset:
       filename: examples/data/FM-VZM_0000_map.nc
@@ -145,7 +158,7 @@ When using the multiply rule with a start and end date (or multiple start and en
 ### Layer filter rule
 
 ```
-FORMAT  
+FORMAT
 - layer_filter_rule:
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
@@ -174,7 +187,7 @@ The layer filter rule allows for the extraction of a layer from 3D variables. Th
 ### Time aggregation rule
 
 ```
-FORMAT  
+FORMAT
 - time_aggregation_rule:
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
@@ -184,7 +197,7 @@ FORMAT
       output_variable: <one_output_variable_name>
 ```
 
-The time aggregation rule allows for calculating a statistical summary over the time axes of 3D and 2D variables. This could be used for calculating the maximum value over a year (e.g., for water level) or the minimum value over a month (e.g., oxygen concentration). The rule operates both on 3D variables and 2D variables as long as they have a time axis and returns a 3D or 2D result depending on input with the statistic calculated for a new time axis (e.g., year or month). 
+The time aggregation rule allows for calculating a statistical summary over the time axes of 3D and 2D variables. This could be used for calculating the maximum value over a year (e.g., for water level) or the minimum value over a month (e.g., oxygen concentration). The rule operates both on 3D variables and 2D variables as long as they have a time axis and returns a 3D or 2D result depending on input with the statistic calculated for a new time axis (e.g., year or month).
 Operations available: Add, Average, Median, Min, Max, period statistics, Stdev and Percentile(n). When using percentile, add a number for the nth percentile with brackets like this: percentile(10). Stdev calculates the standard- deviation over the time period. Under period statistics are explained further in the text.
 
 Time aggregation available: Year, Month
@@ -237,7 +250,7 @@ Calculate the number of consecutive periods of dry time monthly
 ### Step function rule
 
 ```
-FORMAT  
+FORMAT
 - step_function_rule::
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
@@ -267,7 +280,7 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
             - [   1.2 , 3.0 ]
             - [   1.3 , 4.0 ]
             - [ 999.0 , 4.0 ]
-      input_variable: salinity      
+      input_variable: salinity
       output_variable: salinity_class
 
 ```
@@ -299,7 +312,7 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
 ### Response curve rule
 
 ```
-FORMAT  
+FORMAT
 - response_curve_rule:
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
@@ -311,14 +324,14 @@ FORMAT
       output_variable: <one_output_variable_name>
 ```
 
-The response curve rule performs a linear interpolation over the provided values of the variables of 3D and 2D variables time dependent arrays. This could be used for a fuzzy logic translation of variables into ecological responses to these variables (e.g., suitability for aquatic plants based on light availability). The rule operates both on 3D variables and 2D variables, independent of the time axes, and returns decimal or fractional values in a 3D or 2D result, either with time axis, depending on input. 
+The response curve rule performs a linear interpolation over the provided values of the variables of 3D and 2D variables time dependent arrays. This could be used for a fuzzy logic translation of variables into ecological responses to these variables (e.g., suitability for aquatic plants based on light availability). The rule operates both on 3D variables and 2D variables, independent of the time axes, and returns decimal or fractional values in a 3D or 2D result, either with time axis, depending on input.
 
 The rule needs to be applied to an existing 2D/3D variable with or without time axis. A new 2D/3D variable with or without time axis is created when the rule is executed.
 
 
 ```
-#EXAMPLE  : Response of the habitat suitability of Long-leaf pond weed 
-# (Potamogeton nodosus)  to water depth. 
+#EXAMPLE  : Response of the habitat suitability of Long-leaf pond weed
+# (Potamogeton nodosus)  to water depth.
 # Suitable between 0.0 – 2.0 m and highly suitable between 0.5 – 1.0 m
 - response_curve_rule:
       name: HSI Pond weed water depth
@@ -331,7 +344,7 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
            - [   1.0 ,   1.0 ]
            - [   2.0 ,   0.0 ]
            - [ 999.0 ,   0.0 ]
-      input_variable: water_depth      
+      input_variable: water_depth
       output_variable: HSI_Pnodosus_water_depth
 
 ```
@@ -344,7 +357,7 @@ The rule needs to be applied to an existing 2D/3D variable with or without time 
 ### Combine results rule
 
 ```
-FORMAT  
+FORMAT
 - combine_results_rule:
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
@@ -353,19 +366,19 @@ FORMAT
       output_variable: <one_output_variable_name>
 ```
 
-The combine results rule combines the output of two or more variables to one output variable. The way this data is combined depends on the operation chosen. This could be used for adding mutual exclusive results (e.g., habitat suitability based on flow velocity and water depth) or asses difference between results (e.g., waterlevel and bathymetry to get the water depth).The rule operates one or multiple  3D variables or 2D variables, independent of the time axes, as long as these all have the same dimensions and returns a single 3D or 2D result, either with time axis, depending on input. 
+The combine results rule combines the output of two or more variables to one output variable. The way this data is combined depends on the operation chosen. This could be used for adding mutual exclusive results (e.g., habitat suitability based on flow velocity and water depth) or asses difference between results (e.g., waterlevel and bathymetry to get the water depth).The rule operates one or multiple  3D variables or 2D variables, independent of the time axes, as long as these all have the same dimensions and returns a single 3D or 2D result, either with time axis, depending on input.
 
 Operations available: Add, Subtract, Multiply, Average, Median, Min and Max
 
 The rule needs to be applied to an existing 2D/3D variables with or without time axis. A new 2D/3D variable with or without time axis is created when the rule is executed.
 
 ```
-#EXAMPLE  : Calculate bathymetry over time 
+#EXAMPLE  : Calculate bathymetry over time
 # This is just an example, there is a variable bed level without time (mesh2d_flowelem_bl)
 
 - combine_results_rule:
       name: Calculate bathymetry
-      description: Calculate bathymetry over time by adding water level and water depth      
+      description: Calculate bathymetry over time by adding water level and water depth
       operation: subtract
       input_variables: ["water_level","water_depth"]
       output_variable: bathymetry_time
@@ -380,7 +393,7 @@ The rule needs to be applied to an existing 2D/3D variables with or without time
 ### Formula rule
 
 ```
-FORMAT  
+FORMAT
 - formula_rule:
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
@@ -389,24 +402,24 @@ FORMAT
       output_variable: <one_output_variable_name>
 ```
 
-With the formula based rule multiple variables can be combined in a flexible way. Operations that are supported are the standard operators. 
+With the formula based rule multiple variables can be combined in a flexible way. Operations that are supported are the standard operators.
 
 
 The rule needs to be applied to an existing 2D/3D variables with or without time axis. A new 2D/3D variable with or without time axis is created when the rule is executed.
 
 ```
-#EXAMPLE  : Calculate bathymetry over time 
+#EXAMPLE  : Calculate bathymetry over time
 # This is just an example, there is a variable bedlevel without time (mesh2d_flowelem_bl)
 
 - formula_rule:
       name: Calculate bathymetry
-      description: Calculate bathymetry over time by adding water level and water depth      
+      description: Calculate bathymetry over time by adding water level and water depth
       formula: water_level + water_depth
       input_variables: ["water_level","water_depth"]
       output_variable: bathymetry_time
 ```
 
-A lot of operators are supported with the formula based rule. Given two variables "x" and "y", formulas can be implemented for the following operators: 
+A lot of operators are supported with the formula based rule. Given two variables "x" and "y", formulas can be implemented for the following operators:
 
 | **Operator** | **Name** | **Example** |
 |:---:|:---:|:---:|
@@ -418,7 +431,7 @@ A lot of operators are supported with the formula based rule. Given two variable
 | ** | Exponentiation | x ** y |
 | // | Floor division | x // y |
 
-When a formula results in a boolean, it will be converted to a float result. Meaning that True = 1 and False = 0. Comparison, logical, identity, identity and bitwise operators are supported: 
+When a formula results in a boolean, it will be converted to a float result. Meaning that True = 1 and False = 0. Comparison, logical, identity, identity and bitwise operators are supported:
 
 | **Operator** | **Name** | **Example** |
 |:---:|:---:|:---:|
@@ -452,7 +465,7 @@ For more information on these operators click [here](https://www.w3schools.com/p
 ### (Multiple) Classification rule
 
 ```
-FORMAT  
+FORMAT
 - classification_rule:
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
@@ -470,7 +483,7 @@ The rule needs to be applied to an existing 2D/3D variables with or without time
 
 Criteria ranges available are:
 
-|**Criteria range**| **Example**|**Description**| 
+|**Criteria range**| **Example**|**Description**|
 |:---:|:---:|:---:|
 | "-" | "-" | Value is not applicable to category, all is allowed |
 | "criteria_value" | "5" | Value is exectly the criteria value (only applicable for integers) |
@@ -478,14 +491,14 @@ Criteria ranges available are:
 | "<criteria_value" | "<0.5" | Value needs to be smaller than criteria value |
 | ">criteria_value" | ">=1" | Value needs to larger than or equal to criteria value |
 | "<criteria_value" | "<=0.5" | Value needs to be smaller than or equal to criteria value |
-| "criteria_value1:criteria_value2" | "0.2:4" | Value needs to be equal or be in between criteria_value1 and criteria_value2 | 
+| "criteria_value1:criteria_value2" | "0.2:4" | Value needs to be equal or be in between criteria_value1 and criteria_value2 |
 
 ```
 #EXAMPLE  : Determine the suitability for aquatic vegetation based on classification
   - classification_rule:
       name: Classification for aquatic plants
       description: Derive the classification for aquatic plants based on water depth, flow velocity and chloride levels
-      criteria_table: 
+      criteria_table:
         - ["output", "MIN_water_depth_mNAP", "MAX_flow_velocity", "MAX_chloride"]
         - [     1  ,               "<0.10" ,                "-" ,            "-"] # too dry
         - [     2  ,                ">4.0" ,                "-" ,            "-"] # too deep
@@ -495,11 +508,11 @@ Criteria ranges available are:
       input_variables: ["MIN_water_depth_mNAP", "MAX_flow_velocity", "MAX_chloride"]
       output_variable: aquatic_plant_classes
 
-      
+
   - classification_rule:
       name: Suitability for aquatic plants
       description: Derive the suitability for aquatic plants based on the classification
-      criteria_table: 
+      criteria_table:
         - ["output", "aquatic_plant_classes"]
         - [     0  ,                   "1:4"] # not suitable
         - [     1  ,                     "5"] # suitable
@@ -516,7 +529,7 @@ Criteria ranges available are:
 ### Rolling statistic rule
 
 ```
-FORMAT  
+FORMAT
 - rolling_statistics_rule:
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
@@ -531,7 +544,7 @@ The rolling statistic rule allows for a rolling statistic based on the chosen op
 Operations available: Add, Average, Median, Min, Max, count_periods, Stdev and Percentile(n). When using percentile, add a number for the nth percentile with brackets like this: percentile(10).
 
 Time scales available: hour, day
-Period can be a float or integer value. 
+Period can be a float or integer value.
 
 The rule needs to be applied to an existing 2D/3D variables with time axis. A new 2D/3D variable with the same time axis is created when the rule is executed.
 
@@ -574,7 +587,7 @@ In the example shown above the stripe indicates the time period covered (4 times
 ### Axis filter rule
 
 ```
-FORMAT  
+FORMAT
 - axis_filter_rule:
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
@@ -607,7 +620,7 @@ The rule needs to be applied to an existing 2D/3D variables with or without time
 
 It is possible to include data in the YAML file that originates from another file. At the moment this is only applicable to another YAML file. This can be useful for storing large classification_rule tables in a separate file (for a better overview of the work file), but this functionality is not limited to that specific rule.
 
-Here is the original rule: 
+Here is the original rule:
 ```
 #EXAMPLE  : Original
 # This is a simplified example, only top layer of flow velocity and chloride was used and year statistics
@@ -615,7 +628,7 @@ Here is the original rule:
   - classification_rule:
       name: classification for aquatic plants
       description: classification for aquatic plants based on water depth, flow velocity and chloride.
-      criteria_table: 
+      criteria_table:
         - ["output", "MIN_water_depth_mNAP", "MAX_flow_velocity", "MAX_chloride"]
         - [     1  ,               "<0.10" ,                "-" ,            "-"] # too dry
         - [     2  ,                ">4.0" ,                "-" ,            "-"] # too deep
@@ -644,4 +657,105 @@ And this is the included file from tables/aquatic_plant_criteria.yaml:
         - [     3  ,                   "-" ,                "-" ,         ">400"] # too salty
         - [     4  ,                   "-" ,             ">1.5" ,            "-"] # too fast flowing
         - [     5  ,            "0.10:4.0" ,          "0.0:1.5" ,        "0:400"] # perfect for aquatic plants
+```
+
+
+### Depth average rule
+
+```
+FORMAT
+- depth_average_rule:
+      name: <name_of_rule_in_text>
+      description: <description_of_rule_in_text>
+      input_variable: <one_input_variable_name>
+      output_variable: <one_output_variable_name>
+```
+
+The depth average rule allows for an averaging over depth using the weighted values according to a mesh with z-layers. The file must include a variable called 'mesh2d_interface_z' over which the the input variable will be averaged. The input_variable will be a 2D/3D with or without time axis and the output_variable has the same dimensions excluding the dimension for the depth, as it will be represented as one averaged value per cell.
+
+An explanation of how the depth rule works is shown with the example below.
+
+![Example depth average rule](../assets/images/3_depth_average.png "An example of a very simplified grid with Z-layers. This model has 6 faces, 4 layers and 2 timesteps.")
+
+The image shows a simplified model with the following dimensions:
+- mesh2d_nFaces = 6 (number of faces)
+- mesh2d_nLayers = 4 (number of layers in the z direction)
+- mesh2d_nInterfaces = 5 (number of interfaces that define the depth)
+- time = 2
+
+Belows the variables belonging to this example.
+
+$$
+mesh2d\_interface\_z_{(mesh2d\_nInterfaces)} =
+\begin{bmatrix}
+\ 0 \\
+\ -2 \\
+\ -5 \\
+\ -6.5 \\
+\ -8.5 \\
+\end{bmatrix}
+$$
+$$
+input\_variable _{(time, nFaces, nLayers)}=
+\begin{bmatrix}
+      \begin{bmatrix}
+            1 & 1 & 1 & 1 & 1 & 1 \\
+            2 & 2 & 2 & 2 & 2 & 2 \\
+            3 & 3 & 3 & 3 & 3 & 3 \\
+            4 & 4 & 4 & 4 & 4 & 4
+      \end{bmatrix}
+      \begin{bmatrix}
+            1 & 1 & NaN & 1 & 1 & NaN \\
+            2 & 2 & 2 & 2 & 2 & 2 \\
+            3 & 3 & 3 & 3 & 3 & 3 \\
+            4 & 4 & 4 & 4 & 4 & 4
+      \end{bmatrix}
+\end{bmatrix}
+
+$$
+$$
+mesh2d\_s1 _{(mesh2d\_nFaces, time)} =
+\begin{bmatrix}
+      -1.4 & -1.4 \\
+      -1.6 & -1.6 \\
+      -1.6 & -2 \\
+      -1.4 & -1.4 \\
+      -1.6 & -1.6 \\
+      -1.6 & -2
+\end{bmatrix}
+
+$$
+$$
+mesh2d\_flowelem\_bl _{(mesh2d\_nFaces)}=
+\begin{bmatrix}
+      -7.8 \\ -7.3 \\ -7.9 \\-8.5 \\ -7 \\ -7.9 \\
+\end{bmatrix}
+$$
+
+This example should result in the following output_variable. This example is added to the unit test as well
+
+$$
+input\_variable _{(nFaces, time)}=
+\begin{bmatrix}
+      2.546875 & 2.546875 \\
+      2.473684 & 2.473684 \\
+      2.619048 & 2.728814 \\
+      2.690141 & 2.690141 \\
+      2.388889 & 2.388889 \\
+      2.619048 & 2.728814 \\
+\end{bmatrix}
+$$
+
+2 3 1.5 2
+
+
+Below an example of an input_file for the depth average rule.
+
+```
+#EXAMPLE  : Determine a depth average for over salinity
+  - depth_average_rule:
+      name: test depth average
+      description: Test depth average
+      input_variable: salinity
+      output_variable: average_salinity
 ```

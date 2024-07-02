@@ -1,5 +1,5 @@
 # This file is part of D-EcoImpact
-# Copyright (C) 2022-2023 Stichting Deltares
+# Copyright (C) 2022-2024 Stichting Deltares
 # This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
@@ -14,8 +14,7 @@ from os import getenv
 from pytest import LogCaptureFixture
 
 
-def find_log_message_by_level(
-        captured_log: LogCaptureFixture, level: str) -> LogRecord:
+def find_log_message_by_level(captured_log: LogCaptureFixture, level: str) -> LogRecord:
     """Finds the correct record from the captured_log using the provided level
     Only one message is expected to be found
 
@@ -29,8 +28,7 @@ def find_log_message_by_level(
         LogRecord: found record for the provided log level
 
     """
-    records = list(
-        filter(lambda r: r.levelname == level, captured_log.records))
+    records = list(filter(lambda r: r.levelname == level, captured_log.records))
 
     # expect only one message for the provided level
     assert len(records) == 1
@@ -44,5 +42,5 @@ def get_test_data_path() -> str:
     Returns:
         str: path to the default test data folder
     """
-    test_info: str = getenv('PYTEST_CURRENT_TEST', "")
+    test_info: str = getenv("PYTEST_CURRENT_TEST", "")
     return test_info.split(".py::")[0] + "_data"

@@ -1,5 +1,5 @@
 # This file is part of D-EcoImpact
-# Copyright (C) 2022-2023 Stichting Deltares
+# Copyright (C) 2022-2024 Stichting Deltares
 # This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
@@ -117,7 +117,11 @@ def test_table_lentgh_all_rows():
     """Test if all rows have the same lenght."""
 
     # Arrange
-    test_list: List = [["header1", "header2", "header1"], ["val1", "val2", "val4"], ["val1", "val2"]]
+    test_list: List = [
+        ["header1", "header2", "header1"],
+        ["val1", "val2", "val4"],
+        ["val1", "val2"],
+    ]
 
     # Act
     with pytest.raises(ValueError) as exc_info:
