@@ -1,5 +1,5 @@
 # This file is part of D-EcoImpact
-# Copyright (C) 2022-2023 Stichting Deltares
+# Copyright (C) 2022-2024 Stichting Deltares
 # This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
@@ -35,7 +35,7 @@ def test_running_application():
     model_data.version = [0, 0, 0]
 
     application = Application(logger, data_layer, model_builder)
-    application.APPLICATION_VERSION = '0.0.0'
+    application.APPLICATION_VERSION = "0.0.0"
     application.APPLICATION_VERSION_PARTS = [0, 0, 0]
 
     # Act

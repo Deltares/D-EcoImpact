@@ -1,5 +1,5 @@
 # This file is part of D-EcoImpact
-# Copyright (C) 2022-2023 Stichting Deltares
+# Copyright (C) 2022-2024 Stichting Deltares
 # This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
@@ -118,8 +118,8 @@ def test_multiply_parser_with_multipliers_table_correct():
                 ["01-01", "15-07", [1, 100]],
                 ["16-07", "31-12", [0]],
                 ["16-7", "31-12", [1]],
-                ["1-11", "31-12", [0]]
-            ]
+                ["1-11", "31-12", [0]],
+            ],
         }
     )
     logger = Mock(ILogger)
@@ -135,27 +135,24 @@ def test_multiply_parser_with_multipliers_table_correct():
     "multipliers_table, expected_message",
     [
         (
-            [
-                ["date", "end_date", "multipliers"],
-                ["01-01", "15-07", [1, 100]]
-            ],
-            "Missing element start_date"
+            [["date", "end_date", "multipliers"], ["01-01", "15-07", [1, 100]]],
+            "Missing element start_date",
         ),
         (
             [
                 ["start_date", "not_end_date", "multipliers"],
-                ["01-01", "15-07", [1, 100]]
+                ["01-01", "15-07", [1, 100]],
             ],
-            "Missing element end_date"
+            "Missing element end_date",
         ),
         (
             [
                 ["start_date", "end_date", "something_else"],
-                ["01-01", "15-07", [1, 100]]
+                ["01-01", "15-07", [1, 100]],
             ],
-            "Missing element multipliers"
+            "Missing element multipliers",
         ),
-    ]
+    ],
 )
 def test_multiply_parser_with_multipliers_incorrect_headers(
     multipliers_table: List[List[Any]], expected_message: str
@@ -167,7 +164,7 @@ def test_multiply_parser_with_multipliers_incorrect_headers(
             "name": "testname",
             "input_variable": "input",
             "output_variable": "output",
-            "multipliers_table": multipliers_table
+            "multipliers_table": multipliers_table,
         }
     )
     logger = Mock(ILogger)

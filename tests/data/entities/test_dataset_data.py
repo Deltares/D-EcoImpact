@@ -1,5 +1,5 @@
 # This file is part of D-EcoImpact
-# Copyright (C) 2022-2023 Stichting Deltares
+# Copyright (C) 2022-2024 Stichting Deltares
 # This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
@@ -33,9 +33,8 @@ def test_dataset_data_creation_logic():
     assert str(data.path).endswith("test.yaml")
     assert "test" in data.mapping
     assert data.mapping["test"] == "new"
-    assert data.start_date == 'None'
+    assert data.start_date == "None"
     assert data.end_date == "31-12-2020"
-
 
 
 def test_dataset_data_time_filter():
@@ -59,6 +58,5 @@ def test_dataset_data_time_filter():
     assert isinstance(data, IDatasetData)
     assert str(data.path).endswith("test.yaml")
     assert data.start_date == "01-01-2019"
-    assert data.end_date == 'None'
+    assert data.end_date == "None"
     # the result 'None' should result in not filtering the data set on end date
-

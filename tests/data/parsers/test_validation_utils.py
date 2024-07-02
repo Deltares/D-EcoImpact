@@ -1,5 +1,5 @@
 # This file is part of D-EcoImpact
-# Copyright (C) 2022-2023 Stichting Deltares
+# Copyright (C) 2022-2024 Stichting Deltares
 # This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
@@ -16,7 +16,7 @@ from decoimpact.data.parsers.validation_utils import (
     validate_all_instances_number,
     validate_start_before_end,
     validate_table_with_input,
-    validate_type_date
+    validate_type_date,
 )
 
 
@@ -155,11 +155,7 @@ def test_validate_table_with_input_correct():
     """Test if all headers of table matches the list of input variable names"""
 
     # Arrange
-    test_table: Dict[str, Any] = {
-        "a": 1,
-        "b": 2,
-        "output": 3
-    }
+    test_table: Dict[str, Any] = {"a": 1, "b": 2, "output": 3}
     test_inputs: List[str] = ["a", "b"]
 
     # Assert
@@ -170,11 +166,7 @@ def test_validate_table_with_input_incorrect():
     """Test if all headers of table matches the list of input variable names"""
 
     # Arrange
-    test_table: Dict[str, Any] = {
-        "a": 1,
-        "b": 2,
-        "output": 3
-    }
+    test_table: Dict[str, Any] = {"a": 1, "b": 2, "output": 3}
     test_inputs: List[str] = ["a", "c"]
     headers = list(test_table.keys())
     difference = list(set(headers) - set(test_inputs))
@@ -197,11 +189,7 @@ def test_validate_table_with_input_incorrect_output():
     """Test if all headers of table matches the list of input variable names"""
 
     # Arrange
-    test_table: Dict[str, Any] = {
-        "a": 1,
-        "b": 2,
-        "out": 3
-    }
+    test_table: Dict[str, Any] = {"a": 1, "b": 2, "out": 3}
     test_inputs: List[str] = ["a", "b"]
 
     # Act
@@ -211,5 +199,6 @@ def test_validate_table_with_input_incorrect_output():
     exception_raised = exc_info.value
 
     # Assert
-    assert exception_raised.args[0] == "Define an output column with the header 'output'."
-
+    assert (
+        exception_raised.args[0] == "Define an output column with the header 'output'."
+    )

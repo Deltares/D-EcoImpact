@@ -645,3 +645,52 @@ And this is the included file from tables/aquatic_plant_criteria.yaml:
         - [     4  ,                   "-" ,             ">1.5" ,            "-"] # too fast flowing
         - [     5  ,            "0.10:4.0" ,          "0.0:1.5" ,        "0:400"] # perfect for aquatic plants
 ```
+
+
+### Depth average rule
+
+```
+FORMAT
+- depth_average_rule:
+      name: <name_of_rule_in_text>
+      description: <description_of_rule_in_text>
+      input_variable: <one_input_variable_name>
+      output_variable: <one_output_variable_name>
+```
+
+The depth average rule allows for an averaging over depth using the weighted values according to a mesh with z-layers. The file must include a variable called 'mesh2d_interface_z' over which the the input variable will be averaged. The input_variable will be a 2D/3D with or without time axis and the output_variable has the same dimensions excluding the dimension for the depth, as it will be represented as one averaged value per cell.
+
+An explanation of how the depth rule works is shown in the table below:
+
+
+<!-- TODO: MAKE THIS LOOK NICER -->
+Complex example calculated output by hand
+depths	heights		nInterfaces:	5
+0	        1		    nLayers:	    4
+-1	    2		    nFaces:         4
+-3	    3		    time:       	2
+-6	    4
+-10
+
+valuables
+1    1    1	 1			1	 1	  1	   1
+2    2    2    2			2	 2	  2	   2
+3    3	3    3			3	 3	  3	   3
+4    4    4	 4			4	 4	  4	   4
+water_level
+0    0    -1.5 -1.5		0	-6	  5	   -5
+bed_level
+-10  -5   -10	 -5
+output
+3	2.2	3.294117647	2.571428571			3	0	3	0
+
+In the example shown above the stripe indicates the time period covered (4 timesteps in this case) and with i the location where the result of the statistic over that period is written. Hence, the first three timesteps in this example will not contain any values. This is repeated until the time series has been covered.
+
+```
+#EXAMPLE  : Determine a rolling statistic over salinity levels
+  - depth_average_rule:
+      name: test depth average
+      description: Test depth average
+      input_variable: salinity
+      output_variable: average_salinity
+```
