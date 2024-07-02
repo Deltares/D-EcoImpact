@@ -19,6 +19,11 @@ from decoimpact.business.entities.rules.i_multi_array_based_rule import (
 )
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.crosscutting.delft3d_specific_data import (
+    INTERFACES_NAME,
+    BED_LEVEL_NAME,
+    WATER_LEVEL_NAME,
+)
 
 
 class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
@@ -28,6 +33,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         self, value_arrays: Dict[str, _xr.DataArray], logger: ILogger
     ) -> _xr.DataArray:
         """Calculate depth average of assumed z-layers.
+
         Args:
             value_array (DataArray): Values to multiply
 
@@ -41,9 +47,9 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         variables = next(iter(value_arrays.values()))
 
         # depths interfaces = borders of the layers in terms of depth
-        depths_interfaces = value_arrays["mesh2d_interface_z"]
-        water_level_values = value_arrays["mesh2d_s1"]
-        bed_level_values = value_arrays["mesh2d_flowelem_bl"]
+        depths_interfaces = value_arrays[INTERFACES_NAME]
+        water_level_values = value_arrays[WATER_LEVEL_NAME]
+        bed_level_values = value_arrays[BED_LEVEL_NAME]
 
         # Get the dimension names for the interfaces and for the layers
         dim_interfaces_name = list(depths_interfaces.dims)[0]
@@ -73,7 +79,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
             bed_level_values < depths_interfaces_broadcasted, bed_level_values
         )
 
-        # Make a similiar correction for the waterlevels (first broadcast to match
+        # Make a similar correction for the waterlevels (first broadcast to match
         # dimensions and then replace all values higher than waterlevel with
         # waterlevel)
         corrected_depth_bed = corrected_depth_bed.broadcast_like(water_level_values)
@@ -85,7 +91,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         layer_heights = corrected_depth_bed.diff(dim=dim_interfaces_name)
         layer_heights = layer_heights.rename({dim_interfaces_name: dim_layer_name})
 
-        # Use the nan filtering of the variables to set the correct depth per column
+        # Use the NaN filtering of the variables to set the correct depth per column
         layer_heights = layer_heights.where(variables.notnull())
 
         # Calculate depth average using relative value

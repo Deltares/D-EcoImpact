@@ -18,7 +18,7 @@ from decoimpact.data.entities.rule_data import RuleData
 
 
 class DepthAverageRuleData(IDepthAverageRuleData, RuleData):
-    """Class for storing data related to formula rule"""
+    """Class for storing data related to depth average rule"""
 
     def __init__(
         self,
@@ -30,5 +30,5 @@ class DepthAverageRuleData(IDepthAverageRuleData, RuleData):
 
     @property
     def input_variables(self) -> List[str]:
-        """List with input variable and the standard depth name"""
+        """List with input variables"""
         return self._input_variables

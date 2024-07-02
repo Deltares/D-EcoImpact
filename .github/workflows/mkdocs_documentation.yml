@@ -1,0 +1,34 @@
+name: Create Mkdocs documentation
+
+on:
+  workflow_call:
+    inputs:
+      project_version:
+        required: true
+        type: string
+
+jobs:
+  create-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.VERSION_DECOIMPACT }}
+          fetch-depth: 0
+      - name: install python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: 1.4.2
+      - name: Install Dependencies
+        run: poetry install
+      - name: Create new version of mkdocs and publish
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          poetry run mike deploy --push --update-aliases ${{ inputs.project_version }} latest
+          poetry run mike set-default --push latest

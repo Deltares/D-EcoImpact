@@ -38,7 +38,6 @@ def test_no_validate_error_with_correct_rule():
     """Test a correct depth average rule validates without error"""
 
     # Arrange
-    logger = Mock(ILogger)
     rule = DepthAverageRule(
         "test_rule_name",
         ["foo", "hello"],
@@ -46,26 +45,6 @@ def test_no_validate_error_with_correct_rule():
 
     # Assert
     assert isinstance(rule, DepthAverageRule)
-
-    # Complex example calculated output by hand
-    # depths	heights		nInterfaces:	5
-    # 0	        1		    nLayers:	    4
-    # -1	    2		    nFaces:         4
-    # -3	    3		    time:       	2
-    # -6	    4
-    # -10
-    #
-    # valuables
-    # 1    1    1	 1			1	 1	  1	   1
-    # 2    2    2    2			2	 2	  2	   2
-    # 3    3	3    3			3	 3	  3	   3
-    # 4    4    4	 4			4	 4	  4	   4
-    # water_level
-    # 0    0    -1.5 -1.5		0	-6	  5	   -5
-    # bed_level
-    # -10  -5   -10	 -5
-    # output
-    # 3	2.2	3.294117647	2.571428571			3	0	3	0
 
 
 @pytest.mark.parametrize(
@@ -87,14 +66,29 @@ def test_no_validate_error_with_correct_rule():
                 [[3.0, 2.2, 3.29411765, 2.57142857], [3.0, _np.nan, 3.0, _np.nan]]
             ),
         ],
+        # Added this next test as to match the example in documentation
+        [
+            _np.tile(_np.arange(4, 0, -1), (2, 6, 1)),
+            _np.array([-8.5, -6.5, -5, -2, 0]),
+            _np.array([-7.8, -7.3, -7.9, -8.5, -7, -7.9]),
+            _np.array(
+                [[-1.4, -1.6, -1.6, -1.4, -1.6, -1.6], [-1.4, -1.6, -2, -1.4, -1.6, -2]]
+            ),
+            _np.array(
+                [
+                    [2.546875, 2.473684, 2.619048, 2.690141, 2.388889, 2.619048],
+                    [2.546875, 2.473684, 2.728814, 2.690141, 2.388889, 2.728814],
+                ]
+            ),
+        ],
     ],
 )
 def test_depth_average_rule(
-    data_variable: List[List[List[float]]],
+    data_variable: List[float],
     mesh2d_interface_z: List[float],
     mesh2d_flowelem_bl: List[float],
-    mesh2d_s1: List[List[float]],
-    result_data: List[List[List[float]]],
+    mesh2d_s1: List[float],
+    result_data: List[float],
 ):
     """Make sure the calculation of the depth average is correct. Including
     differing water and bed levels."""
@@ -132,8 +126,7 @@ def test_depth_average_rule(
 
 
 def test_dimension_error():
-    """Make sure the calculation of the depth average is correct. Including
-    differing water and bed levels."""
+    """If the number of interfaces > number of layers + 1. Give an error, no calculation is possible"""
     logger = Mock(ILogger)
     rule = DepthAverageRule(
         name="test",
