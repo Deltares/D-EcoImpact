@@ -20,9 +20,9 @@ from decoimpact.business.entities.rules.i_multi_array_based_rule import (
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.crosscutting.delft3d_specific_data import (
-    interfaces_name,
-    bed_level_name,
-    water_level_name,
+    INTERFACES_NAME,
+    BED_LEVEL_NAME,
+    WATER_LEVEL_NAME,
 )
 
 
@@ -47,9 +47,9 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         variables = next(iter(value_arrays.values()))
 
         # depths interfaces = borders of the layers in terms of depth
-        depths_interfaces = value_arrays[interfaces_name]
-        water_level_values = value_arrays[water_level_name]
-        bed_level_values = value_arrays[bed_level_name]
+        depths_interfaces = value_arrays[INTERFACES_NAME]
+        water_level_values = value_arrays[WATER_LEVEL_NAME]
+        bed_level_values = value_arrays[BED_LEVEL_NAME]
 
         # Get the dimension names for the interfaces and for the layers
         dim_interfaces_name = list(depths_interfaces.dims)[0]

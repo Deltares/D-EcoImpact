@@ -18,9 +18,9 @@ from decoimpact.data.dictionary_utils import get_dict_element
 from decoimpact.data.entities.depth_average_rule_data import DepthAverageRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.crosscutting.delft3d_specific_data import (
-    interfaces_name,
-    bed_level_name,
-    water_level_name,
+    INTERFACES_NAME,
+    BED_LEVEL_NAME,
+    WATER_LEVEL_NAME,
 )
 
 
@@ -43,9 +43,9 @@ class ParserDepthAverageRule(IParserRuleBase):
         name: str = get_dict_element("name", dictionary)
         input_variable_names: List[str] = [
             get_dict_element("input_variable", dictionary),
-            interfaces_name,
-            water_level_name,
-            bed_level_name,
+            INTERFACES_NAME,
+            WATER_LEVEL_NAME,
+            BED_LEVEL_NAME,
         ]
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         description: str = get_dict_element("description", dictionary, False) or ""
