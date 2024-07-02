@@ -93,7 +93,7 @@ class ModelBuilder(IModelBuilder):
     @staticmethod
     def _create_rule(rule_data: IRuleData) -> IRule:
 
-        # todo: from python >3.10 we can use match/case, better solution
+        # from python >3.10 we can use match/case, better solution
         # until then disable pylint.
         # pylint: disable=too-many-branches
         if isinstance(rule_data, IMultiplyRuleData):
