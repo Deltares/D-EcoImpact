@@ -38,7 +38,6 @@ def test_no_validate_error_with_correct_rule():
     """Test a correct depth average rule validates without error"""
 
     # Arrange
-    logger = Mock(ILogger)
     rule = DepthAverageRule(
         "test_rule_name",
         ["foo", "hello"],
