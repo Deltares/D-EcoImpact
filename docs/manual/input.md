@@ -1,3 +1,16 @@
+---
+title: Just say hello!
+author: My Friend
+header-includes: |
+    \usepackage{tikz,pgfplots}
+    \usepackage{fancyhdr}
+    \pagestyle{fancy}
+    \fancyhead[CO,CE]{This is fancy}
+    \fancyfoot[CO,CE]{So is this}
+    \fancyfoot[LE,RO]{\thepage}
+abstract: This is a pandoc test with Markdown + inline LaTeX
+---
+
 # Structure of the model input file and functionality
 
 D-Eco Impact is steered through a YAML input file. This input file informs the model which data to use, what ecological knowledge rules to apply and where to write the output data. 
@@ -660,34 +673,86 @@ FORMAT
 
 The depth average rule allows for an averaging over depth using the weighted values according to a mesh with z-layers. The file must include a variable called 'mesh2d_interface_z' over which the the input variable will be averaged. The input_variable will be a 2D/3D with or without time axis and the output_variable has the same dimensions excluding the dimension for the depth, as it will be represented as one averaged value per cell.
 
-An explanation of how the depth rule works is shown in the table below:
+An explanation of how the depth rule works is shown with the example below.
+
+![Example depth average rule](../assets/images/3_depth_average.png "An example of a very simplified grid with Z-layers. This model has 6 faces, 4 layers and 2 timesteps.")
+
+The image shows a simplified model with the following dimensions:
+- mesh2d_nFaces = 6 (number of faces)
+- mesh2d_nLayers = 4 (number of layers in the z direction)
+- mesh2d_nInterfaces = 5 (number of interfaces that define the depth)
+- time = 2
+
+Belows the variables belonging to this example.
+
+$$
+mesh2d\_interface\_z_{(mesh2d\_nInterfaces)} =
+\begin{bmatrix}
+\ 0 \\
+\ -2 \\
+\ -5 \\
+\ -6.5 \\
+\ -8.5 \\
+\end{bmatrix}
+$$
+$$
+input\_variable _{(time, nFaces, nLayers)}=
+\begin{bmatrix}
+      \begin{bmatrix}
+            1 & 1 & 1 & 1 & 1 & 1 \\
+            2 & 2 & 2 & 2 & 2 & 2 \\
+            3 & 3 & 3 & 3 & 3 & 3 \\
+            4 & 4 & 4 & 4 & 4 & 4
+      \end{bmatrix}
+      \begin{bmatrix}
+            1 & 1 & NaN & 1 & 1 & NaN \\
+            2 & 2 & 2 & 2 & 2 & 2 \\
+            3 & 3 & 3 & 3 & 3 & 3 \\
+            4 & 4 & 4 & 4 & 4 & 4
+      \end{bmatrix}
+\end{bmatrix}
+
+$$
+$$
+mesh2d\_s1 _{(mesh2d\_nFaces, time)} =
+\begin{bmatrix}
+      -1.4 & -1.4 \\
+      -1.6 & -1.6 \\
+      -1.6 & -2 \\
+      -1.4 & -1.4 \\
+      -1.6 & -1.6 \\
+      -1.6 & -2
+\end{bmatrix}
+
+$$
+$$
+mesh2d\_flowelem\_bl _{(mesh2d\_nFaces)}=
+\begin{bmatrix}
+      -7.8 \\ -7.3 \\ -7.9 \\-8.5 \\ -7 \\ -7.9 \\
+\end{bmatrix}
+$$
+
+This example should result in the following output_variable. This example is added to the unit test as well
+
+$$
+input\_variable _{(nFaces, time)}=
+\begin{bmatrix}
+      2.546875 & 2.546875 \\
+      2.473684 & 2.473684 \\
+      2.619048 & 2.728814 \\
+      2.690141 & 2.690141 \\
+      2.388889 & 2.388889 \\
+      2.619048 & 2.728814 \\
+\end{bmatrix}
+$$
+
+2 3 1.5 2
 
 
-<!-- TODO: MAKE THIS LOOK NICER -->
-Complex example calculated output by hand
-depths	heights		nInterfaces:	5
-0	        1		    nLayers:	    4
--1	    2		    nFaces:         4
--3	    3		    time:       	2
--6	    4
--10
-
-valuables
-1    1    1	 1			1	 1	  1	   1
-2    2    2    2			2	 2	  2	   2
-3    3	3    3			3	 3	  3	   3
-4    4    4	 4			4	 4	  4	   4
-water_level
-0    0    -1.5 -1.5		0	-6	  5	   -5
-bed_level
--10  -5   -10	 -5
-output
-3	2.2	3.294117647	2.571428571			3	0	3	0
-
-In the example shown above the stripe indicates the time period covered (4 timesteps in this case) and with i the location where the result of the statistic over that period is written. Hence, the first three timesteps in this example will not contain any values. This is repeated until the time series has been covered.
+Below an example of an input_file for the depth average rule.
 
 ```
-#EXAMPLE  : Determine a rolling statistic over salinity levels
+#EXAMPLE  : Determine a depth average for over salinity
   - depth_average_rule:
       name: test depth average
       description: Test depth average
