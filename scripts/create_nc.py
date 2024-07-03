@@ -6,9 +6,8 @@ This file creates a simple NetCDF containing a simplified 3D grid with
 import numpy as np
 import xarray as xr
 
-
 # Create coordinates
-mesh2d_nFaces = 2
+mesh2d_nFaces = 3
 mesh2d_node_x = np.random.rand(mesh2d_nFaces)
 mesh2d_node_y = np.random.rand(mesh2d_nFaces)
 mesh2d_edge_x = np.random.rand(mesh2d_nFaces)
@@ -18,32 +17,34 @@ mesh2d_face_y = np.random.rand(mesh2d_nFaces)
 mesh2d_nLayers = 3
 timesteps = 10
 
-
 data_variable = np.zeros((timesteps, mesh2d_nFaces, mesh2d_nLayers))
 
 mesh2d_interface_z = np.array([0, -1, -3, -7])
-mesh2d_flowelem_bl = np.array([-7, -6])
-mesh2d_s1 = np.broadcast_to(np.array([0, 0]), (timesteps, mesh2d_nFaces))
+mesh2d_flowelem_bl = np.array([-7, -6, -3])
+mesh2d_s1 = np.broadcast_to(np.array([0, -0.5, -3]), (timesteps, mesh2d_nFaces))
 
 data_variable_A = data_variable.copy()
 data_variable_B = data_variable.copy()
 data_variable_C = data_variable.copy()
 
 # Set different values on different levels
-data_variable_A[:, :, 0] = np.array([11, 11])
-data_variable_A[:, :, 1] = np.array([14, 14])
-data_variable_A[:, :, 2] = np.array([19, 19])
+data_variable_A[0:5, :, 0] = np.array([11, 11, 3])
+data_variable_A[0:5, :, 1] = np.array([14, 14, 3])
+data_variable_A[0:5, :, 2] = np.array([19, 19, 3])
+data_variable_A[6:9, :, 0] = np.array([5, 5, 2])
+data_variable_A[6:9, :, 1] = np.array([3, 3, 2])
+data_variable_A[6:9, :, 2] = np.array([1, 1, 2])
 
-
-data_variable_B[:, :, 0] = np.array([11, 11])
-data_variable_B[:, :, 1] = np.array([14, 14])
-data_variable_B[:, :, 2] = np.array([19, 19])
+data_variable_B[:, :, 0] = np.array([11, 11, 11])
+data_variable_B[:, :, 1] = np.array([14, 14, 14])
+data_variable_B[:, :, 2] = np.array([19, 19, 19])
 data_variable_B[:, 1, 2] = np.array([np.NaN])
 
-data_variable_C[:, :, 0] = np.array([11, 11])
-data_variable_C[:, :, 1] = np.array([14, 14])
-data_variable_C[:, :, 2] = np.array([19, 19])
+data_variable_C[:, :, 0] = np.array([11, 11, 11])
+data_variable_C[:, :, 1] = np.array([14, 14, 14])
+data_variable_C[:, :, 2] = np.array([19, 19, 19])
 data_variable_C[:, 1, 2] = np.array([-999])
+
 # Create dataset
 ds = xr.Dataset(
     {
