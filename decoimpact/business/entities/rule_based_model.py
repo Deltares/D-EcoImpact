@@ -209,7 +209,7 @@ class RuleBasedModel(IModel):
         input datasets.
 
         Returns:
-           Dict[str, List[str]]
+            Dict[str, List[str]]
         """
         rule_input_vars = [rule.input_variable_names for rule in self._rules]
         rule_output_vars = [rule.output_variable_name for rule in self._rules]
