@@ -671,11 +671,11 @@ FORMAT
       output_variable: <one_output_variable_name>
 ```
 
-The depth average rule allows for an averaging over depth using the weighted values according to a mesh with z-layers. The file must include a variable called 'mesh2d_interface_z' over which the the input variable will be averaged. The input_variable will be a 2D/3D with or without time axis and the output_variable has the same dimensions excluding the dimension for the depth, as it will be represented as one averaged value per cell.
+The depth average rule allows for an averaging over depth using the weighted values according to a mesh with z-layers. The input file must include a variable called 'mesh2d_interface_z' over which the the input variable will be averaged. The input_variable will be a 2D/3D variable, with or without time axis. The output_variable has the same dimensions, excluding the dimension for the depth, as it will be represented as one averaged value per cell.
 
-An explanation of how the depth rule works is shown with the example below.
+An explanation of how the depth rule works is shown in the example below.
 
-![Example depth average rule](../assets/images/3_depth_average.png "An example of a very simplified grid with Z-layers. This model has 6 faces, 4 layers and 2 timesteps.")
+![Example depth average rule](../assets/images/3_depth_average.png "An example of a simplified grid with Z-layers. This model has 6 faces, 4 layers and 2 timesteps.")
 
 The image shows a simplified model with the following dimensions:
 - mesh2d_nFaces = 6 (number of faces)
@@ -683,7 +683,7 @@ The image shows a simplified model with the following dimensions:
 - mesh2d_nInterfaces = 5 (number of interfaces that define the depth)
 - time = 2
 
-Belows the variables belonging to this example.
+Below are the variables belonging to this example:
 
 $$
 mesh2d\_interface\_z_{(mesh2d\_nInterfaces)} =
@@ -732,7 +732,7 @@ mesh2d\_flowelem\_bl _{(mesh2d\_nFaces)}=
 \end{bmatrix}
 $$
 
-This example should result in the following output_variable. This example is added to the unit test as well
+This example results in the following output_variable.
 
 $$
 input\_variable _{(nFaces, time)}=
@@ -746,10 +746,8 @@ input\_variable _{(nFaces, time)}=
 \end{bmatrix}
 $$
 
-2 3 1.5 2
 
-
-Below an example of an input_file for the depth average rule.
+Below is an example of an input_file for the depth average rule:
 
 ```
 #EXAMPLE  : Determine a depth average for over salinity
