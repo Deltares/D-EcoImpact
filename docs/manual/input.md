@@ -1,16 +1,3 @@
----
-title: Just say hello!
-author: My Friend
-header-includes: |
-    \usepackage{tikz,pgfplots}
-    \usepackage{fancyhdr}
-    \pagestyle{fancy}
-    \fancyhead[CO,CE]{This is fancy}
-    \fancyfoot[CO,CE]{So is this}
-    \fancyfoot[LE,RO]{\thepage}
-abstract: This is a pandoc test with Markdown + inline LaTeX
----
-
 # Structure of the model input file and functionality
 
 D-Eco Impact is steered through a YAML input file. This input file informs the model which data to use, what ecological knowledge rules to apply and where to write the output data. 
