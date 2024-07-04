@@ -69,12 +69,17 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
             )
             return variables
 
+        # Deal with open layer system at water level and bottom
+        depths_interfaces.values[-1] = 10000
+        depths_interfaces.values[0] = -10000
+
         # Broadcast the depths to the dimensions of the bed levels. Then make a
         # correction for the depths to the bed level, in other words all depths lower
         # than the bed level will be corrected to the bed level.
         depths_interfaces_broadcasted = depths_interfaces.broadcast_like(
             bed_level_values
         )
+
         corrected_depth_bed = depths_interfaces_broadcasted.where(
             bed_level_values < depths_interfaces_broadcasted, bed_level_values
         )
