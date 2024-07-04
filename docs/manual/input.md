@@ -602,6 +602,105 @@ The rule needs to be applied to an existing 2D/3D variables with or without time
 
 ![Result Axis filter rule](../assets/images/3_result_axis_filter.png "Salinity(in PSU, left-hand) is subset so that only face cell 13 is left (channel entrance) reducing the data to a 2D salinity plot for multiple time steps (in PSU, right-hand) while maintaining in this case the time dimension and layer dimension (face dimension is selected upon in this example and is therefore omitted in the results). ")
 
+### Depth average rule
+
+```
+FORMAT
+- depth_average_rule:
+      name: <name_of_rule_in_text>
+      description: <description_of_rule_in_text>
+      input_variable: <one_input_variable_name>
+      output_variable: <one_output_variable_name>
+```
+
+The depth average rule allows for an averaging over depth using the weighted values according to a mesh with z-layers. The input file must include a variable called 'mesh2d_interface_z' over which the the input variable will be averaged. The input_variable will be a 2D/3D variable, with or without time axis. The output_variable has the same dimensions, excluding the dimension for the depth, as it will be represented as one averaged value per cell.
+
+An explanation of how the depth rule works is shown in the example below.
+
+![Example depth average rule](../assets/images/3_depth_average.png "An example of a simplified grid with Z-layers. This model has 6 faces, 4 layers and 2 timesteps.")
+
+The image shows a simplified model with the following dimensions:
+- mesh2d_nFaces = 6 (number of faces)
+- mesh2d_nLayers = 4 (number of layers in the z direction)
+- mesh2d_nInterfaces = 5 (number of interfaces that define the depth)
+- time = 2
+
+Below are the variables belonging to this example:
+
+$$
+mesh2d\_interface\_z_{(mesh2d\_nInterfaces)} =
+\begin{bmatrix}
+\ 0 \\
+\ -2 \\
+\ -5 \\
+\ -6.5 \\
+\ -8.5 \\
+\end{bmatrix}
+$$
+
+$$
+salinity _{(time, nFaces, nLayers)}=
+\begin{bmatrix}
+      \begin{bmatrix}
+            1 & 1 & 1 & 1 & 1 & 1 \\
+            2 & 2 & 2 & 2 & 2 & 2 \\
+            3 & 3 & 3 & 3 & 3 & 3 \\
+            4 & 4 & 4 & 4 & 4 & 4
+      \end{bmatrix}
+      \begin{bmatrix}
+            1 & 1 & NaN & 1 & 1 & 1 \\
+            2 & 2 & 2 & 2 & 2 & 2 \\
+            3 & 3 & 3 & 3 & 3 & 3 \\
+            4 & 4 & 4 & 4 & 4 & 4
+      \end{bmatrix}
+\end{bmatrix}
+$$
+
+$$
+mesh2d\_s1 _{(mesh2d\_nFaces, time)} =
+\begin{bmatrix}
+      -1.4 & 0 \\
+      -1.6 & -1.6 \\
+      -3 & -3 \\
+      -1.4 & 3 \\
+      -1.6 & -1.6 \\
+      -1.6 & -1.6
+\end{bmatrix}
+$$
+
+$$
+mesh2d\_flowelem\_bl _{(mesh2d\_nFaces)}=
+\begin{bmatrix}
+      -7.8 \\ -7.3 \\ -5.2 \\-9.5 \\ -7 \\ -1.6 \\
+\end{bmatrix}
+$$
+
+This example results in the following output_variable.
+
+$$
+input\_variable _{(nFaces, time)}=
+\begin{bmatrix}
+      2.546875 & 2.269231 \\
+      2.473684 & 2.473684 \\
+      2.090909 & 2.090909 \\
+      2.851852 & 2.2 \\
+      2.388889 & 2.388889 \\
+      NaN & NaN \\
+\end{bmatrix}
+$$
+
+
+Below is an example of an input_file for the depth average rule:
+
+```
+#EXAMPLE  : Determine a depth average for over salinity
+  - depth_average_rule:
+      name: test depth average
+      description: Test depth average
+      input_variable: salinity
+      output_variable: average_salinity
+```
+
 
 ##Including data from another YAML file
 
@@ -644,103 +743,4 @@ And this is the included file from tables/aquatic_plant_criteria.yaml:
         - [     3  ,                   "-" ,                "-" ,         ">400"] # too salty
         - [     4  ,                   "-" ,             ">1.5" ,            "-"] # too fast flowing
         - [     5  ,            "0.10:4.0" ,          "0.0:1.5" ,        "0:400"] # perfect for aquatic plants
-```
-
-
-### Depth average rule
-
-```
-FORMAT
-- depth_average_rule:
-      name: <name_of_rule_in_text>
-      description: <description_of_rule_in_text>
-      input_variable: <one_input_variable_name>
-      output_variable: <one_output_variable_name>
-```
-
-The depth average rule allows for an averaging over depth using the weighted values according to a mesh with z-layers. The input file must include a variable called 'mesh2d_interface_z' over which the the input variable will be averaged. The input_variable will be a 2D/3D variable, with or without time axis. The output_variable has the same dimensions, excluding the dimension for the depth, as it will be represented as one averaged value per cell.
-
-An explanation of how the depth rule works is shown in the example below.
-
-![Example depth average rule](../assets/images/3_depth_average.png "An example of a simplified grid with Z-layers. This model has 6 faces, 4 layers and 2 timesteps.")
-
-The image shows a simplified model with the following dimensions:
-- mesh2d_nFaces = 6 (number of faces)
-- mesh2d_nLayers = 4 (number of layers in the z direction)
-- mesh2d_nInterfaces = 5 (number of interfaces that define the depth)
-- time = 2
-
-Below are the variables belonging to this example:
-
-$$
-mesh2d\_interface\_z_{(mesh2d\_nInterfaces)} =
-\begin{bmatrix}
-\ 0 \\
-\ -2 \\
-\ -5 \\
-\ -6.5 \\
-\ -8.5 \\
-\end{bmatrix}
-$$
-$$
-input\_variable _{(time, nFaces, nLayers)}=
-\begin{bmatrix}
-      \begin{bmatrix}
-            1 & 1 & 1 & 1 & 1 & 1 \\
-            2 & 2 & 2 & 2 & 2 & 2 \\
-            3 & 3 & 3 & 3 & 3 & 3 \\
-            4 & 4 & 4 & 4 & 4 & 4
-      \end{bmatrix}
-      \begin{bmatrix}
-            1 & 1 & NaN & 1 & 1 & NaN \\
-            2 & 2 & 2 & 2 & 2 & 2 \\
-            3 & 3 & 3 & 3 & 3 & 3 \\
-            4 & 4 & 4 & 4 & 4 & 4
-      \end{bmatrix}
-\end{bmatrix}
-
-$$
-$$
-mesh2d\_s1 _{(mesh2d\_nFaces, time)} =
-\begin{bmatrix}
-      -1.4 & -1.4 \\
-      -1.6 & -1.6 \\
-      -1.6 & -2 \\
-      -1.4 & -1.4 \\
-      -1.6 & -1.6 \\
-      -1.6 & -2
-\end{bmatrix}
-
-$$
-$$
-mesh2d\_flowelem\_bl _{(mesh2d\_nFaces)}=
-\begin{bmatrix}
-      -7.8 \\ -7.3 \\ -7.9 \\-8.5 \\ -7 \\ -7.9 \\
-\end{bmatrix}
-$$
-
-This example results in the following output_variable.
-
-$$
-input\_variable _{(nFaces, time)}=
-\begin{bmatrix}
-      2.546875 & 2.546875 \\
-      2.473684 & 2.473684 \\
-      2.619048 & 2.728814 \\
-      2.690141 & 2.690141 \\
-      2.388889 & 2.388889 \\
-      2.619048 & 2.728814 \\
-\end{bmatrix}
-$$
-
-
-Below is an example of an input_file for the depth average rule:
-
-```
-#EXAMPLE  : Determine a depth average for over salinity
-  - depth_average_rule:
-      name: test depth average
-      description: Test depth average
-      input_variable: salinity
-      output_variable: average_salinity
 ```
