@@ -28,12 +28,12 @@ data_variable_B = data_variable.copy()
 data_variable_C = data_variable.copy()
 
 # Set different values on different levels
-data_variable_A[0:5, :, 0] = np.array([11, 11, 3])
-data_variable_A[0:5, :, 1] = np.array([14, 14, 3])
-data_variable_A[0:5, :, 2] = np.array([19, 19, 3])
-data_variable_A[6:9, :, 0] = np.array([5, 5, 2])
-data_variable_A[6:9, :, 1] = np.array([3, 3, 2])
-data_variable_A[6:9, :, 2] = np.array([1, 1, 2])
+data_variable_A[0:6, :, 0] = np.array([11, 11, 3])
+data_variable_A[0:6, :, 1] = np.array([14, 14, 3])
+data_variable_A[0:6, :, 2] = np.array([19, 19, 3])
+data_variable_A[6:, :, 0] = np.array([5, 5, 2])
+data_variable_A[6:, :, 1] = np.array([3, 3, 2])
+data_variable_A[6:, :, 2] = np.array([1, 1, 2])
 
 data_variable_B[:, :, 0] = np.array([11, 11, 11])
 data_variable_B[:, :, 1] = np.array([14, 14, 14])
