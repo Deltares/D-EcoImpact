@@ -159,7 +159,10 @@ class RuleBasedModel(IModel):
             bool: if mappings are valid
         """
         input_vars = _lu.flatten_list(
-            [_du.list_vars(ds) for ds in self._input_datasets]
+            [
+                _lu.flatten_list([_du.list_vars(ds), _du.list_coords(ds)])
+                for ds in self._input_datasets
+            ]
         )
 
         valid = True
