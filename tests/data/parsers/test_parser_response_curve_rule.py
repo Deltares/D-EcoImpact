@@ -1,5 +1,5 @@
 # This file is part of D-EcoImpact
-# Copyright (C) 2022-2023 Stichting Deltares
+# Copyright (C) 2022-2024 Stichting Deltares
 # This program is free software distributed under the
 # GNU Affero General Public License version 3.0
 # A copy of the GNU Affero General Public License can be found at
@@ -24,11 +24,11 @@ def _get_example_response_curve_rule_dict():
             "description": "description",
             "input_variable": "input",
             "response_table": [
-                    ["input", "output"],
-                    [1, 3],
-                    [2, 2],
-                    [3, 0],
-                ],
+                ["input", "output"],
+                [1, 3],
+                [2, 2],
+                [3, 0],
+            ],
             "output_variable": "outputvar",
         }
     )
@@ -101,11 +101,11 @@ def test_parse_input_values_type():
             "description": "description",
             "input_variable": "input",
             "response_table": [
-                    ["input", "output"],
-                    ["a", 3],
-                    ["b", 2],
-                    [2, 0],
-                ],
+                ["input", "output"],
+                ["a", 3],
+                ["b", 2],
+                [2, 0],
+            ],
             "output_variable": "output",
         }
     )
@@ -173,11 +173,11 @@ def test_parse_response_table_columns():
             "description": "description",
             "input_variable": "input",
             "response_table": [
-                    ["input", "output", "extra"],
-                    [1, 4, 7],
-                    [2, 5, 8],
-                    [3, 6, 9],
-                ],
+                ["input", "output", "extra"],
+                [1, 4, 7],
+                [2, 5, 8],
+                [3, 6, 9],
+            ],
             "output_variable": "output",
         }
     )
@@ -191,7 +191,5 @@ def test_parse_response_table_columns():
     exception_raised = exc_info.value
 
     # Assert
-    expected_message = (
-        "ERROR: response table should have exactly 2 columns"
-    )
+    expected_message = "ERROR: response table should have exactly 2 columns"
     assert exception_raised.args[0] == expected_message

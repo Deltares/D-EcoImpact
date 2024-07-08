@@ -12,7 +12,7 @@ Classes:
 
 """
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import xarray as _xr
 
@@ -104,9 +104,8 @@ class RuleBasedModel(IModel):
             self._input_datasets, self._make_output_variables_list(), self._mappings
         )
         self._rule_processor = RuleProcessor(self._rules, self._output_dataset)
-        success = self._rule_processor.initialize(logger)
 
-        if not success:
+        if not self._rule_processor.initialize(logger):
             logger.log_error("Initialization failed.")
 
     def execute(self, logger: ILogger) -> None:
@@ -142,8 +141,11 @@ class RuleBasedModel(IModel):
             var_list = _du.get_dummy_and_dependent_var_list(dataset)
 
         mapping_keys = list((self._mappings or {}).keys())
+        rule_names = [rule.name for rule in self._rules]
+        all_inputs = self._get_direct_rule_inputs(rule_names)
+        all_input_variables = _lu.flatten_list(list(all_inputs.values()))
 
-        all_vars = var_list + mapping_keys + self._get_direct_rule_inputs()
+        all_vars = var_list + mapping_keys + all_input_variables
         return _lu.remove_duplicates_from_list(all_vars)
 
     def _validate_mappings(self, mappings: dict[str, str], logger: ILogger) -> bool:
@@ -157,7 +159,10 @@ class RuleBasedModel(IModel):
             bool: if mappings are valid
         """
         input_vars = _lu.flatten_list(
-            [_du.list_vars(ds) for ds in self._input_datasets]
+            [
+                _lu.flatten_list([_du.list_vars(ds), _du.list_coords(ds)])
+                for ds in self._input_datasets
+            ]
         )
 
         valid = True
@@ -174,8 +179,7 @@ class RuleBasedModel(IModel):
             valid = False
 
         # check for duplicates that will be created because of mapping
-        mapping_vars_created = list(mappings.values())
-        duplicates_created = _lu.items_in(mapping_vars_created, input_vars)
+        duplicates_created = _lu.items_in(list(mappings.values()), input_vars)
 
         if len(duplicates_created) > 0:
             logger.log_error(
@@ -185,31 +189,38 @@ class RuleBasedModel(IModel):
             )
             valid = False
 
+        rule_names = [rule.name for rule in self._rules]
+
+        rule_inputs = self._get_direct_rule_inputs(rule_names)
+
         # check for missing rule inputs
-        needed_rule_inputs = _lu.remove_duplicates_from_list(
-            self._get_direct_rule_inputs()
-        )
-        rule_input_vars = input_vars + mapping_vars_created
-        missing_rule_inputs = _lu.items_not_in(needed_rule_inputs, rule_input_vars)
-        if len(missing_rule_inputs) > 0:
-            logger.log_error(
-                f"Missing the variables '{', '.join(missing_rule_inputs)}' that "
-                "are required by some rules."
-            )
-            valid = False
+        for rule_name, rule_input in rule_inputs.items():
+            needed_rule_inputs = _lu.remove_duplicates_from_list(rule_input)
+            rule_input_vars = input_vars + list(mappings.values())
+            missing_rule_inputs = _lu.items_not_in(needed_rule_inputs, rule_input_vars)
+            if len(missing_rule_inputs) > 0:
+                logger.log_error(
+                    f"Missing the variables '{', '.join(missing_rule_inputs)}' that "
+                    f"are required by '{rule_name}'."
+                )
+                valid = False
 
         return valid
 
-    def _get_direct_rule_inputs(self) -> List[str]:
+    def _get_direct_rule_inputs(self, rule_names) -> Dict[str, List[str]]:
         """Gets the input variables directly needed by rules from
         input datasets.
 
         Returns:
-            List[str]:
+            Dict[str, List[str]]
         """
-        rule_input_vars = _lu.flatten_list(
-            [rule.input_variable_names for rule in self._rules]
-        )
+        rule_input_vars = [rule.input_variable_names for rule in self._rules]
         rule_output_vars = [rule.output_variable_name for rule in self._rules]
 
-        return _lu.items_not_in(rule_input_vars, rule_output_vars)
+        needed_input_per_rule = {}
+        for index, inputs_per_rule in enumerate(rule_input_vars):
+            needed_input_per_rule[rule_names[index]] = _lu.items_not_in(
+                inputs_per_rule, rule_output_vars
+            )
+
+        return needed_input_per_rule

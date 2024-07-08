@@ -16,6 +16,8 @@ from typing import Dict, Iterable, List, Tuple
 
 import numpy as _np
 import xarray as _xr
+import decoimpact.business.utils.dataset_utils as _du
+import decoimpact.business.utils.list_utils as _lu
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
@@ -63,8 +65,9 @@ class RuleProcessor:
         """
         inputs: List[str] = []
 
-        inputs = [str(key) for key in self._input_dataset]
-
+        inputs = _lu.flatten_list(
+            [_du.list_vars(self._input_dataset), _du.list_coords(self._input_dataset)]
+        )
         tree, success = self._create_rule_sets(inputs, self._rules, [], logger)
         if success:
             self._processing_list = tree

@@ -62,5 +62,11 @@ rules:
         input_variables: [,]
         output_variable: 
 
+  - depth_average_rule:
+        name: 
+        description:
+        input_variable:
+        output_variable: 
+
 output-data:
   filename: 

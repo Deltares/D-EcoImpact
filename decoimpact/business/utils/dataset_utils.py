@@ -100,6 +100,18 @@ def list_vars(dataset: _xr.Dataset) -> list[str]:
     return list((dataset.data_vars or {}).keys())
 
 
+def list_coords(dataset: _xr.Dataset) -> list[str]:
+    """List coordinates in dataset
+
+    Args:
+        dataset (_xr.Dataset): Dataset to list variables from
+
+    Returns:
+        list_variables
+    """
+    return list((dataset.coords or {}).keys())
+
+
 def copy_dataset(dataset: _xr.Dataset) -> _xr.Dataset:
     """Copy dataset to new dataset
 
@@ -211,7 +223,7 @@ def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
 
 def get_dummy_and_dependent_var_list(dataset: _xr.Dataset) -> list:
     """Obtain the list of variables in a dataset.
-    The dummy variable is obtained, from which a the variables are
+    The dummy variable is obtained, from which the variables are
     recursively looked up. The dummy and dependent variables are combined
     in one list.
     This is done to support XUgrid and to prevent invalid topologies.
