@@ -8,6 +8,7 @@
 Tests for string parser utilities
 """
 import pytest
+
 from decoimpact.business.entities.rules.string_parser_utils import (
     read_str_comparison,
     str_range_to_list,
@@ -88,7 +89,6 @@ def test_read_str_comparison_fails_multiple_operators(test_string: str, operator
         exception_raised.args[0]
         == f'Input "{test_string}" is not a valid comparison with operator: {operator}'
     )
-
 
 @pytest.mark.parametrize(
     "test_string, result",
