@@ -8,6 +8,7 @@
 Configuration file for hardcoded delft3d variable names
 """
 
-INTERFACES_NAME = "mesh2d_interface_z"
-BED_LEVEL_NAME = "mesh2d_flowelem_bl"
-WATER_LEVEL_NAME = "mesh2d_s1"
+INTERFACES_Z_SUFFIX = "_interface_z"
+INTERFACES_SIGMA_SUFFIX = "_interface_sigma"
+BED_LEVEL_SUFFIX = "_flowelem_bl"
+WATER_LEVEL_SUFFIX = "_s1"
