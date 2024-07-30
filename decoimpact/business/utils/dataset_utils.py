@@ -285,7 +285,7 @@ def create_composed_dataset(
     """
     merged_dataset = merge_list_of_datasets(input_datasets)
     dummy_variable = get_dummy_variable_in_ugrid(merged_dataset)[0]
-    variables_to_use = extend_to_full_names_based_on_dummy_variable(
+    variables_to_use = extend_to_full_name(
         variables_to_use,
         dummy_variable
     )
@@ -360,7 +360,7 @@ def reduce_dataset_for_writing(
     return dataset
 
 
-def extend_to_full_names_based_on_dummy_variable(
+def extend_to_full_name(
         variables: List[str],
         dummy_variable: str
 ) -> list[str]:
