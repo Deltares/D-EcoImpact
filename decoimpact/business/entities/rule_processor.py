@@ -16,9 +16,9 @@ from typing import Dict, Iterable, List, Tuple
 
 import numpy as _np
 import xarray as _xr
+
 import decoimpact.business.utils.dataset_utils as _du
 import decoimpact.business.utils.list_utils as _lu
-
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.i_cell_based_rule import ICellBasedRule
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
@@ -387,7 +387,7 @@ class RuleProcessor:
         str_dims_broadcasted = ",".join(dims_diff)
         logger.log_info(
             f"""Variable {var_orig.name} will be expanded to the following \
-dimensions: {str_dims_broadcasted} """
+            dimensions: {str_dims_broadcasted} """
         )
 
         # perform the broadcast
