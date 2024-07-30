@@ -103,7 +103,7 @@ class RuleBasedModel(IModel):
         self._output_dataset = _du.create_composed_dataset(
             self._input_datasets, self._make_output_variables_list(), self._mappings
         )
-        print('qq',self._make_output_variables_list())
+
         self._rule_processor = RuleProcessor(self._rules, self._output_dataset)
 
         if not self._rule_processor.initialize(logger):
