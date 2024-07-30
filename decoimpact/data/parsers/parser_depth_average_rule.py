@@ -13,7 +13,6 @@ Classes:
 from re import I
 from typing import Any, Dict, List
 
-from decoimpact.business.utils.dataset_utils import get_dummy_variable_in_ugrid
 from decoimpact.crosscutting.delft3d_specific_data import (
     BED_LEVEL_SUFFIX,
     INTERFACES_Z_SUFFIX,
