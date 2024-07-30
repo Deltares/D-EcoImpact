@@ -14,9 +14,11 @@ Classes:
 from typing import List
 
 import xarray as _xr
+import scipy as _sc
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
+from decoimpact.business.utils.data_array_utils import get_time_dimension_name
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -46,5 +48,26 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
             at all other times the values are set to NaN
         """
         old_dr = _xr.DataArray(value_array)
-        print(self._extreme_type)
+        old_dims = old_dr.dims
+        # print(old_dr.dims)
+        time_dim_name = get_time_dimension_name(value_array, logger)
+        new_dims_list = list(old_dims)
+        new_dims_list.remove(time_dim_name)
+        new_dims = tuple(new_dims_list)
+        # print(time_dim_name, new_dims)
+
+        def process_peaks(arr):
+            # Apply find_peaks
+            arr = arr.copy()
+            peaks, _ = _sc.signal.find_peaks(arr)
+            return peaks
+
+        new_dr = _xr.apply_ufunc(
+            process_peaks,
+            old_dr,
+            input_core_dims=[["time", "mesh2d_nFaces"]],
+            output_core_dims=[["time", "mesh2d_nFaces", "mesh2d_nLayers"]],
+            vectorize=True,
+        )
+        print(self._extreme_type, new_dr)
         return old_dr
