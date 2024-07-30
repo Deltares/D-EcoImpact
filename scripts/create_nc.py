@@ -8,12 +8,12 @@ import xarray as xr
 
 # Create coordinates
 mesh2d_nFaces = 3
-mesh2d_node_x = np.random.rand(mesh2d_nFaces)
-mesh2d_node_y = np.random.rand(mesh2d_nFaces)
-mesh2d_edge_x = np.random.rand(mesh2d_nFaces)
-mesh2d_edge_y = np.random.rand(mesh2d_nFaces)
-mesh2d_face_x = np.random.rand(mesh2d_nFaces)
-mesh2d_face_y = np.random.rand(mesh2d_nFaces)
+mesh2d_node_x = np.random.default_rng(mesh2d_nFaces)
+mesh2d_node_y = np.random.default_rng(mesh2d_nFaces)
+mesh2d_edge_x = np.random.default_rng(mesh2d_nFaces)
+mesh2d_edge_y = np.random.default_rng(mesh2d_nFaces)
+mesh2d_face_x = np.random.default_rng(mesh2d_nFaces)
+mesh2d_face_y = np.random.default_rng(mesh2d_nFaces)
 mesh2d_nLayers = 3
 timesteps = 10
 
