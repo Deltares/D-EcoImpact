@@ -35,7 +35,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         """Calculate depth average of assumed z-layers.
 
         Args:
-            value_array (DataArray): Values to multiply
+            value_array (DataArray): Values to average over depth
 
         Returns:
             DataArray: Averaged values

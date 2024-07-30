@@ -5,30 +5,38 @@
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
-Module for (multiple) DepthAverageRule class
+Module for FilterExtremesRuleData class
 
 Classes:
-    (multiple) DepthAverageRuleData
+    FilterExtremesRuleData
 
 """
 
 from typing import List
-from decoimpact.data.api.i_depth_average_rule_data import IDepthAverageRuleData
+
+from decoimpact.data.api.i_filter_extremes_rule_data import IFilterExtremesRuleData
 from decoimpact.data.entities.rule_data import RuleData
 
 
-class DepthAverageRuleData(IDepthAverageRuleData, RuleData):
-    """Class for storing data related to depth average rule"""
+class FilterExtremesRuleData(IFilterExtremesRuleData, RuleData):
+    """Class for storing data related to filter extremes rule"""
 
     def __init__(
         self,
         name: str,
         input_variables: List[str],
+        extreme_type: str,
     ):
         super().__init__(name)
         self._input_variables = input_variables
+        self._extreme_type = extreme_type
 
     @property
     def input_variables(self) -> List[str]:
         """List with input variables"""
         return self._input_variables
+
+    @property
+    def extreme_type(self) -> str:
+        """Property for the extremes type"""
+        return self._extreme_type

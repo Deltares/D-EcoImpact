@@ -20,6 +20,7 @@ from decoimpact.business.entities.rules.axis_filter_rule import AxisFilterRule
 from decoimpact.business.entities.rules.classification_rule import ClassificationRule
 from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
 from decoimpact.business.entities.rules.depth_average_rule import DepthAverageRule
+from decoimpact.business.entities.rules.filter_extremes_rule import FilterExtremesRule
 from decoimpact.business.entities.rules.formula_rule import FormulaRule
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.layer_filter_rule import LayerFilterRule
@@ -41,6 +42,7 @@ from decoimpact.data.api.i_classification_rule_data import IClassificationRuleDa
 from decoimpact.data.api.i_combine_results_rule_data import ICombineResultsRuleData
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_depth_average_rule_data import IDepthAverageRuleData
+from decoimpact.data.api.i_filter_extremes_rule_data import IFilterExtremesRuleData
 from decoimpact.data.api.i_formula_rule_data import IFormulaRuleData
 from decoimpact.data.api.i_layer_filter_rule_data import ILayerFilterRuleData
 from decoimpact.data.api.i_model_data import IModelData
@@ -107,6 +109,10 @@ class ModelBuilder(IModelBuilder):
             rule = DepthAverageRule(
                 rule_data.name,
                 rule_data.input_variables,
+            )
+        elif isinstance(rule_data, IFilterExtremesRuleData):
+            rule = FilterExtremesRule(
+                rule_data.name, rule_data.input_variables, rule_data.extreme_type
             )
         elif isinstance(rule_data, ILayerFilterRuleData):
             rule = LayerFilterRule(
