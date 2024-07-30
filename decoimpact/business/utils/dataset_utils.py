@@ -11,6 +11,7 @@ from typing import List, Optional
 import xarray as _xr
 
 import decoimpact.business.utils.list_utils as _lu
+from decoimpact.crosscutting.delft3d_specific_data import delftd3_specific_names
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -283,7 +284,11 @@ def create_composed_dataset(
         _xr.Dataset: composed dataset (with selected variables)
     """
     merged_dataset = merge_list_of_datasets(input_datasets)
-
+    dummy_variable = get_dummy_variable_in_ugrid(merged_dataset)[0]
+    variables_to_use = extend_to_full_names_based_on_dummy_variable(
+        variables_to_use,
+        dummy_variable
+    )
     cleaned_dataset = remove_all_variables_except(merged_dataset, variables_to_use)
 
     if mapping is None or len(mapping) == 0:
@@ -353,3 +358,24 @@ def reduce_dataset_for_writing(
 
     dataset = remove_all_variables_except(dataset, save_only_variables)
     return dataset
+
+
+def extend_to_full_names_based_on_dummy_variable(
+        variables: List[str],
+        dummy_variable: str
+) -> list[str]:
+    """Extend suffix names to full variables names by prepending the dummy
+    variable name.
+
+    Args:
+        variables (list[str]): List of variable names
+        dummy_variable (str): name of dummy variable
+
+    Returns:
+        list[str]: list of the extended variable names
+    """
+    for i in range(0, len(variables)):
+        if variables[i] in delftd3_specific_names:
+            variables[i] = dummy_variable + variables[i]
+
+    return variables

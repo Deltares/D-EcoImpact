@@ -12,3 +12,11 @@ INTERFACES_Z_SUFFIX = "_interface_z"
 INTERFACES_SIGMA_SUFFIX = "_interface_sigma"
 BED_LEVEL_SUFFIX = "_flowelem_bl"
 WATER_LEVEL_SUFFIX = "_s1"
+
+
+delftd3_specific_names = [
+    INTERFACES_Z_SUFFIX,
+    INTERFACES_SIGMA_SUFFIX,
+    BED_LEVEL_SUFFIX,
+    WATER_LEVEL_SUFFIX
+    ]

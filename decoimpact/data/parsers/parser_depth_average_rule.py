@@ -42,16 +42,14 @@ class ParserDepthAverageRule(IParserRuleBase):
         Returns:
             RuleBase: Rule based on the provided data
         """
-        #dummy_var = get_dummy_variable_in_ugrid(self.dataset)
-        dummy_var = "mesh2d"
-        print("Q",dummy_var)
         name: str = get_dict_element("name", dictionary)
         input_variable_names: List[str] = [
             get_dict_element("input_variable", dictionary),
-            dummy_var + INTERFACES_Z_SUFFIX,
-            dummy_var + WATER_LEVEL_SUFFIX,
-            dummy_var + BED_LEVEL_SUFFIX,
+            INTERFACES_Z_SUFFIX,
+            WATER_LEVEL_SUFFIX,
+            BED_LEVEL_SUFFIX,
         ]
+
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         description: str = get_dict_element("description", dictionary, False) or ""
 
