@@ -12,7 +12,7 @@ python examples/python_test_of_functions.py
 @echo  * For other D-Eco Impact configuration examples and tests of functionality
 @echo  *     see 'tests_acceptance/input_yaml_files/..' .
 @echo: 
-@echo  * Note that D-Eco Impact is also available as executable and as docker container. 
+@echo  * Note that D-Eco Impact is also available as a executable and as docker container. 
 @echo  *     Contact us for requesting these versions.
-@echo  *     Go to : https://www.deltares.nl/en/software-and-data/products/d-eco-impact 
+@echo  *     Go to: https://www.deltares.nl/en/software-and-data/products/d-eco-impact 
 pause
