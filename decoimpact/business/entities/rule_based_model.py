@@ -223,14 +223,11 @@ class RuleBasedModel(IModel):
         rule_input_vars = [rule.input_variable_names for rule in self._rules]
         rule_output_vars = [rule.output_variable_name for rule in self._rules]
 
-        #rule_input_vars = [list(_du.extend_to_full_name(rule_input_vars[0], "mesh2d"))]
-
         needed_input_per_rule = {}
         for index, inputs_per_rule in enumerate(rule_input_vars):
             needed_input_per_rule[rule_names[index]] = _lu.items_not_in(
                 inputs_per_rule, rule_output_vars
             )
-        #print('kak',needed_input_per_rule)
 
         return needed_input_per_rule
 
