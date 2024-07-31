@@ -10,7 +10,6 @@ Module for ParserDepthAverageRule class
 Classes:
     ParserDepthAverageRule
 """
-from re import I
 from typing import Any, Dict, List
 
 from decoimpact.crosscutting.delft3d_specific_data import (
