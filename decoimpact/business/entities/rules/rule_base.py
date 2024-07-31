@@ -54,7 +54,7 @@ class RuleBase(IRule, ABC):
         return self._input_variable_names
 
     @input_variable_names.setter
-    def input_variable_names(self, input_variable_names: str):
+    def input_variable_names(self, input_variable_names: str) -> List[str]:
         """Name of the input variables"""
         self._input_variable_names = input_variable_names
 
