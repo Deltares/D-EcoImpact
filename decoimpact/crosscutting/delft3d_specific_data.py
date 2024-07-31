@@ -14,7 +14,7 @@ BED_LEVEL_SUFFIX = "_flowelem_bl"
 WATER_LEVEL_SUFFIX = "_s1"
 
 
-delftd3_specific_names = [
+delft3d_specific_names = [
     INTERFACES_Z_SUFFIX,
     INTERFACES_SIGMA_SUFFIX,
     BED_LEVEL_SUFFIX,

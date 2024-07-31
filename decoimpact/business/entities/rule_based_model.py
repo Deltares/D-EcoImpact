@@ -12,9 +12,11 @@ Classes:
 
 """
 
+from re import I
 from typing import Dict, List, Optional
 
 import xarray as _xr
+from regex import W
 
 import decoimpact.business.utils.dataset_utils as _du
 import decoimpact.business.utils.list_utils as _lu
@@ -139,15 +141,17 @@ class RuleBasedModel(IModel):
         """
 
         for dataset in self._input_datasets:
-            var_list = _du.get_dummy_and_dependent_var_list(dataset)
-            dummy_variable = _du.get_dummy_variable_in_ugrid(dataset)
+            [dummy_variable_name, var_list] = _du.get_dummy_and_dependent_var_list(dataset)
+
+        self._extend_names(dummy_variable_name)
 
         mapping_keys = list((self._mappings or {}).keys())
         rule_names = [rule.name for rule in self._rules]
-        all_inputs = self._get_direct_rule_inputs(rule_names, dummy_variable[0])
+        all_inputs = self._get_direct_rule_inputs(rule_names)
         all_input_variables = _lu.flatten_list(list(all_inputs.values()))
 
         all_vars = var_list + mapping_keys + all_input_variables
+
         return _lu.remove_duplicates_from_list(all_vars)
 
     def _validate_mappings(self, mappings: dict[str, str], logger: ILogger) -> bool:
@@ -193,7 +197,7 @@ class RuleBasedModel(IModel):
 
         rule_names = [rule.name for rule in self._rules]
 
-        rule_inputs = self._get_direct_rule_inputs(rule_names, "")
+        rule_inputs = self._get_direct_rule_inputs(rule_names)
 
         # check for missing rule inputs
         for rule_name, rule_input in rule_inputs.items():
@@ -209,11 +213,9 @@ class RuleBasedModel(IModel):
 
         return valid
 
-    def _get_direct_rule_inputs(self, rule_names, dummy_variable) -> Dict[str, List[str]]:
+    def _get_direct_rule_inputs(self, rule_names) -> Dict[str, List[str]]:
         """Gets the input variables directly needed by rules from
         input datasets.
-
-        Extend variable names specific for Delft3D based on dummy variable name.
 
         Returns:
             Dict[str, List[str]]
@@ -221,12 +223,25 @@ class RuleBasedModel(IModel):
         rule_input_vars = [rule.input_variable_names for rule in self._rules]
         rule_output_vars = [rule.output_variable_name for rule in self._rules]
 
-        rule_input_vars = [list(_du.extend_to_full_name(rule_input_vars[0], dummy_variable))]
+        #rule_input_vars = [list(_du.extend_to_full_name(rule_input_vars[0], "mesh2d"))]
 
         needed_input_per_rule = {}
         for index, inputs_per_rule in enumerate(rule_input_vars):
             needed_input_per_rule[rule_names[index]] = _lu.items_not_in(
                 inputs_per_rule, rule_output_vars
             )
+        #print('kak',needed_input_per_rule)
 
         return needed_input_per_rule
+
+    def _extend_names(self, dummy_variable_name: str):
+        """Extends the names of the input variables with the dummy variable prefix
+        when using hardcoded Delftd3D names.
+        """
+        for rule in self._rules:
+            rule.input_variable_names = _du.extend_to_full_name(
+                rule.input_variable_names,
+                dummy_variable_name
+            )
+
+        return

@@ -134,6 +134,7 @@ class RuleProcessor:
             Tuple[List[List[IRule]], bool]: Ordered list of rule-sets
         """
         solvable_rules = self._get_solvable_rules(inputs, unprocessed_rules)
+
         if len(solvable_rules) == 0:
             rules_list = [str(rule.name) for rule in unprocessed_rules]
             rules_text = ", ".join(rules_list)
@@ -168,7 +169,6 @@ class RuleProcessor:
 
         for rule in unprocessed_rules:
             names = rule.input_variable_names
-
             if all(name in inputs for name in names):
                 solvable_rules.append(rule)
 

@@ -11,7 +11,7 @@ from typing import List, Optional
 import xarray as _xr
 
 import decoimpact.business.utils.list_utils as _lu
-from decoimpact.crosscutting.delft3d_specific_data import delftd3_specific_names
+from decoimpact.crosscutting.delft3d_specific_data import delft3d_specific_names
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -241,7 +241,7 @@ def get_dummy_and_dependent_var_list(dataset: _xr.Dataset) -> list:
     var_list = rec_search_dep_vars(dataset, dummy_vars, [], [])
 
     var_list += dummy_vars
-    return _lu.remove_duplicates_from_list(var_list)
+    return [dummy_vars[0], _lu.remove_duplicates_from_list(var_list)]
 
 
 def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> list[str]:
@@ -375,7 +375,7 @@ def extend_to_full_name(
         list[str]: list of the extended variable names
     """
     for i in range(0, len(variables)):
-        if variables[i] in delftd3_specific_names:
+        if variables[i] in delft3d_specific_names:
             variables[i] = dummy_variable + variables[i]
 
     return variables
