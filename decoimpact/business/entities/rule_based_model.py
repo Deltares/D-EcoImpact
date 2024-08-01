@@ -238,5 +238,3 @@ class RuleBasedModel(IModel):
                 rule.input_variable_names,
                 dummy_variable_name
             )
-
-        return
