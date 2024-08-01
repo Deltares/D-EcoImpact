@@ -46,7 +46,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # just used the first value.
         variables = next(iter(value_arrays.values()))
         
-        depths_interfaces = [value_arrays[name] for name in value_arrays if INTERFACES_Z_SUFFIX in name][0]
+        depths_interfaces = self.extract_variable_based_on_suffix(value_arrays, INTERFACES_Z_SUFFIX)
         
         
         dummy_var = "mesh2d"
@@ -112,3 +112,11 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         return relative_values.sum(dim=dim_layer_name) / layer_heights.sum(
             dim=dim_layer_name
         )
+
+    def extract_variable_based_on_suffix(
+            self,
+            value_arrays: Dict[str, _xr.DataArray],
+            suffix: str
+        ):
+        variable = [value_arrays[name] for name in value_arrays if suffix in name][0]
+        return variable
