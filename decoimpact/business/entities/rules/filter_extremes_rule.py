@@ -15,6 +15,7 @@ from typing import List
 
 import xarray as _xr
 import scipy as _sc
+import numpy as _np
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
@@ -48,26 +49,22 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
             at all other times the values are set to NaN
         """
         old_dr = _xr.DataArray(value_array)
-        old_dims = old_dr.dims
-        # print(old_dr.dims)
         time_dim_name = get_time_dimension_name(value_array, logger)
-        new_dims_list = list(old_dims)
-        new_dims_list.remove(time_dim_name)
-        new_dims = tuple(new_dims_list)
-        # print(time_dim_name, new_dims)
+        # TODO: IF NO TIME AVAILABLE NOTIFY USER
+        # TODO: implement extreme_type (peaks or troughs)
 
-        def process_peaks(arr):
-            # Apply find_peaks
-            arr = arr.copy()
-            peaks, _ = _sc.signal.find_peaks(arr)
-            return peaks
-
-        new_dr = _xr.apply_ufunc(
-            process_peaks,
+        results = _xr.apply_ufunc(
+            self._process_peaks,
             old_dr,
-            input_core_dims=[["time", "mesh2d_nFaces"]],
-            output_core_dims=[["time", "mesh2d_nFaces", "mesh2d_nLayers"]],
+            input_core_dims=[[time_dim_name]],
+            output_core_dims=[[time_dim_name]],
             vectorize=True,
         )
-        print(self._extreme_type, new_dr)
-        return old_dr
+        return results
+
+    def _process_peaks(self, arr: _xr.DataArray):
+        peaks, _ = _sc.signal.find_peaks(arr)
+        # TODO: use fill value of array
+        new_arr = _np.full_like(arr, -999)
+        new_arr[peaks] = arr[peaks]
+        return new_arr

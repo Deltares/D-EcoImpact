@@ -22,49 +22,61 @@ x = [
     [-5, 9],
 ]
 
+y = [
+    [1, 0, -1, 0, 1, 2, 1, 0, -3, -4, -2, -1, -3, -5],
+    [0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9],
+]
+
+""" Should give:
+[
+    [NaN, NaN],
+    [NaN, 3],
+    [NaN, NaN],
+    [NaN, 4],
+    [NaN, NaN],
+    [2, 5],
+    [NaN, NaN],
+    [NaN, 6],
+    [NaN, NaN],
+    [NaN, 7],
+    [NaN, NaN],
+    [-1, 8],
+    [NaN, NaN],
+    [NaN, 9],
+]
+"""
 ds = _xr.Dataset(
     {
-        "var_3d": (
-            ["time", "mesh2d_nFaces"],
-            _np.array(x),
+        "testA": (
+            ["mes2d_nFaces", "time", "mesh2d_nLayers"],
+            [_np.array(x), _np.array(x)],
         )
-    }
+    },
+    {
+        "testB": (
+            ["mes2d_nFaces", "mesh2d_nLayers", "time"],
+            [_np.array(y), _np.array(y)],
+        )
+    },
 )
-
-y = _np.array([1, 0, -1, 0, 1, 2, 1, 0, -3, -4, -2, -1, -3, -5])
-
-
-# Find peaks non-xarray way
-peaks, _ = find_peaks(y)
-# print(y, _, peaks)
-# print(y[peaks])
-
-# # Cast waveform to xr.DataArray
-# x = xr.DataArray(x, dims="time")
-
-# # Duplicate data along a new dimension
-# rep = xr.DataArray(range(11), dims="repeat")
-# x = x.broadcast_like(rep).assign_coords(repeat=rep)
 
 
 def process_peaks(arr):
-    print(arr)
     # Apply find_peaks
     peaks, _ = find_peaks(arr, prominence=1)
-    new_arr = _np.full_like(arr, nan)
-
+    new_arr = _np.full_like(arr, -999)
+    new_arr[peaks] = arr[peaks]
     return new_arr
 
 
 # Apply function to array
 results = _xr.apply_ufunc(
     process_peaks,
-    ds,
+    ds.testB,
     input_core_dims=[["time"]],
-    output_core_dims=[["peaks"]],
+    output_core_dims=[["time"]],
     vectorize=True,
 )
 
 
 # # Should show repeats of peak results
-print(results)
