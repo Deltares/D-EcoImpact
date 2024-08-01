@@ -328,9 +328,9 @@ class TestGetDummyVariableInUgrid:
         """Test if you receive the name of the dummy and dependent variables variable
         in a ugrid dataset"""
         # Arrange
-        var_list = ["var1", "var2", "var3", "var4", "var5"]
+        var_list = ["mesh2d", "var2", "var3", "var4", "var5"]
         ds = _xr.Dataset(data_vars=dict.fromkeys(var_list))
-        ds["var1"].attrs = {
+        ds["mesh2d"].attrs = {
             "cf_role": "mesh_topology",
             "test_coordinates": "var2 var3",
             "test_dimension": "var4",
@@ -338,10 +338,11 @@ class TestGetDummyVariableInUgrid:
         }
 
         # Act
-        var_list = utilities.get_dummy_and_dependent_var_list(ds)
+        [dummy_var_name, var_list] = utilities.get_dummy_and_dependent_var_list(ds)
 
         # Assert
-        assert sorted(var_list) == sorted(["var2", "var5", "var3", "var1"])
+        assert sorted(var_list) == sorted(["var2", "var5", "var3", "mesh2d"])
+        assert dummy_var_name == "mesh2d"
 
 
 class TestGetDependentVarsByVarName:
