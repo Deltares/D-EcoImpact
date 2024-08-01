@@ -14,6 +14,7 @@ from typing import Any, Dict, List
 
 from decoimpact.crosscutting.delft3d_specific_data import (
     BED_LEVEL_SUFFIX,
+    INTERFACES_SIGMA_SUFFIX,
     INTERFACES_Z_SUFFIX,
     WATER_LEVEL_SUFFIX,
 )
@@ -43,7 +44,7 @@ class ParserDepthAverageRule(IParserRuleBase):
         name: str = get_dict_element("name", dictionary)
         input_variable_names: List[str] = [
             get_dict_element("input_variable", dictionary),
-            INTERFACES_Z_SUFFIX,
+            INTERFACES_SIGMA_SUFFIX,
             WATER_LEVEL_SUFFIX,
             BED_LEVEL_SUFFIX,
         ]

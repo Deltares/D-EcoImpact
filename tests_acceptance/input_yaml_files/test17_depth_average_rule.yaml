@@ -2,7 +2,7 @@ version: 0.0.0
 
 input-data:
   - dataset:
-      filename: ./tests_acceptance/input_nc_files/test_depth_average_z_rule.nc
+      filename: ./tests_acceptance/input_nc_files/test_depth_average_sigma_rule.nc
 
 rules:
   - depth_average_rule:
