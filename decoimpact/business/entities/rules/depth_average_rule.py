@@ -35,27 +35,20 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         """Calculate depth average of assumed z-layers.
 
         Args:
-            value_array (DataArray): Values to multiply
+            value_array (DataArray): Values to average over the depth
 
         Returns:
-            DataArray: Averaged values
+            DataArray: Depth-averaged values
         """
 
         # The first DataArray in our value_arrays contains the values to be averaged
         # but the name of the key is given by the user, and is unknown here, so
         # just used the first value.
         variables = next(iter(value_arrays.values()))
-        
-        depths_interfaces = self.extract_variable_based_on_suffix(value_arrays, INTERFACES_Z_SUFFIX)
-        
-        
-        dummy_var = "mesh2d"
-        print("Q this needs to come from the data",dummy_var)
 
-        # depths interfaces = borders of the layers in terms of depth
-        #depths_interfaces = value_arrays[:INTERFACES_Z_SUFFIX]
-        water_level_values = value_arrays[dummy_var + WATER_LEVEL_SUFFIX]
-        bed_level_values = value_arrays[dummy_var + BED_LEVEL_SUFFIX]
+        depths_interfaces = self._extract_variable_based_on_suffix(value_arrays, INTERFACES_Z_SUFFIX)
+        water_level_values = self._extract_variable_based_on_suffix(value_arrays, WATER_LEVEL_SUFFIX)
+        bed_level_values = self._extract_variable_based_on_suffix(value_arrays, BED_LEVEL_SUFFIX)
 
         # Get the dimension names for the interfaces and for the layers
         dim_interfaces_name = list(depths_interfaces.dims)[0]
@@ -113,10 +106,19 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
             dim=dim_layer_name
         )
 
-    def extract_variable_based_on_suffix(
+    def _extract_variable_based_on_suffix(
             self,
             value_arrays: Dict[str, _xr.DataArray],
             suffix: str
-        ):
+            ):
+        """Extract the values from the XArray dataset based on the name suffixes by matching the name, irrespective of the dummy name prefix.
+
+        Args:
+            value_array (DataArray): Values
+            suffix (str) : Suffix of the name
+
+        Returns:
+            values: Values based on prefix + suffix name
+        """
         variable = [value_arrays[name] for name in value_arrays if suffix in name][0]
         return variable
