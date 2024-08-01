@@ -374,6 +374,6 @@ def extend_to_full_name(
     Returns:
         list[str]: list of the extended variable names
     """
-    variables = [dummy_variable + var if var in delft3d_specific_names else var 
+    variables = [dummy_variable + var if var in delft3d_specific_names else var
                  for var in variables]
     return variables

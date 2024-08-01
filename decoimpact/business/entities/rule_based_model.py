@@ -139,9 +139,9 @@ class RuleBasedModel(IModel):
         """
 
         for dataset in self._input_datasets:
-            [dummy_variable_name, var_list] = _du.get_dummy_and_dependent_var_list(dataset)
+            [dummy_var_name, var_list] = _du.get_dummy_and_dependent_var_list(dataset)
 
-        self._extend_names(dummy_variable_name)
+        self._extend_names(dummy_var_name)
 
         mapping_keys = list((self._mappings or {}).keys())
         rule_names = [rule.name for rule in self._rules]

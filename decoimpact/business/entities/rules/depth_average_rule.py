@@ -46,9 +46,12 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # just used the first value.
         variables = next(iter(value_arrays.values()))
 
-        depths_interfaces = self._extract_variable_based_on_suffix(value_arrays, INTERFACES_Z_SUFFIX)
-        water_level_values = self._extract_variable_based_on_suffix(value_arrays, WATER_LEVEL_SUFFIX)
-        bed_level_values = self._extract_variable_based_on_suffix(value_arrays, BED_LEVEL_SUFFIX)
+        depths_interfaces = self._extract_variable_based_on_suffix(
+            value_arrays, INTERFACES_Z_SUFFIX)
+        water_level_values = self._extract_variable_based_on_suffix(
+            value_arrays, WATER_LEVEL_SUFFIX)
+        bed_level_values = self._extract_variable_based_on_suffix(
+            value_arrays, BED_LEVEL_SUFFIX)
 
         # Get the dimension names for the interfaces and for the layers
         dim_interfaces_name = list(depths_interfaces.dims)[0]
@@ -111,7 +114,8 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
             value_arrays: Dict[str, _xr.DataArray],
             suffix: str
             ):
-        """Extract the values from the XArray dataset based on the name suffixes by matching the name, irrespective of the dummy name prefix.
+        """Extract the values from the XArray dataset based on the name
+        suffixes by matching the name, irrespective of the dummy name prefix.
 
         Args:
             value_array (DataArray): Values
