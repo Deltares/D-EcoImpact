@@ -18,7 +18,6 @@ from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
 )
 from decoimpact.business.entities.rules.rule_base import RuleBase
-from decoimpact.business.utils.dataset_utils import get_dummy_variable_in_ugrid
 from decoimpact.crosscutting.delft3d_specific_data import (
     BED_LEVEL_SUFFIX,
     INTERFACES_Z_SUFFIX,
@@ -46,13 +45,15 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # but the name of the key is given by the user, and is unknown here, so
         # just used the first value.
         variables = next(iter(value_arrays.values()))
-
-        #dummy_var = get_dummy_variable_in_ugrid(self.dataset)
+        
+        depths_interfaces = [value_arrays[name] for name in value_arrays if INTERFACES_Z_SUFFIX in name][0]
+        
+        
         dummy_var = "mesh2d"
-        print("Q",dummy_var)
+        print("Q this needs to come from the data",dummy_var)
 
         # depths interfaces = borders of the layers in terms of depth
-        depths_interfaces = value_arrays[dummy_var + INTERFACES_Z_SUFFIX]
+        #depths_interfaces = value_arrays[:INTERFACES_Z_SUFFIX]
         water_level_values = value_arrays[dummy_var + WATER_LEVEL_SUFFIX]
         bed_level_values = value_arrays[dummy_var + BED_LEVEL_SUFFIX]
 
