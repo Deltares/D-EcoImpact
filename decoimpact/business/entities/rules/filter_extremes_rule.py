@@ -52,6 +52,11 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         time_dim_name = get_time_dimension_name(value_array, logger)
         # TODO: IF NO TIME AVAILABLE NOTIFY USER
         # TODO: implement extreme_type (peaks or troughs)
+        # TODO: implement convertion of hours etc to width
+        time = old_dr.time.values
+        timestep = (time[-1] - time[0]) / len(time)
+        width_time = _np.timedelta64(14, "D")
+        width = width_time / timestep
 
         results = _xr.apply_ufunc(
             self._process_peaks,
@@ -59,11 +64,12 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
             input_core_dims=[[time_dim_name]],
             output_core_dims=[[time_dim_name]],
             vectorize=True,
+            kwargs={"width": width},
         )
         return results
 
-    def _process_peaks(self, arr: _xr.DataArray):
-        peaks, _ = _sc.signal.find_peaks(arr)
+    def _process_peaks(self, arr: _xr.DataArray, width: float):
+        peaks, _ = _sc.signal.find_peaks(arr, distance=width)
         # TODO: use fill value of array
         new_arr = _np.full_like(arr, -999)
         new_arr[peaks] = arr[peaks]

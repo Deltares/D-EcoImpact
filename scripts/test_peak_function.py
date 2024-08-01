@@ -63,16 +63,18 @@ ds = _xr.Dataset(
 
 def process_peaks(arr):
     # Apply find_peaks
-    peaks, _ = find_peaks(arr, prominence=1)
+    peaks, _ = find_peaks(arr,distance=)
     new_arr = _np.full_like(arr, -999)
     new_arr[peaks] = arr[peaks]
     return new_arr
 
 
+ds = _xr.open_dataset("../data/FM-VZM_0000_map.nc")
+
 # Apply function to array
 results = _xr.apply_ufunc(
     process_peaks,
-    ds.testB,
+    ds.salinity,
     input_core_dims=[["time"]],
     output_core_dims=[["time"]],
     vectorize=True,
