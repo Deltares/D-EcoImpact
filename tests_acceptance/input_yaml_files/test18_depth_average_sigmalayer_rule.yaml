@@ -1,0 +1,27 @@
+version: 0.0.0
+
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/test_depth_average_sigmalayer_rule.nc
+
+rules:
+  - depth_average_rule:
+      name: Test A
+      description: Test A
+      input_variable: var_3d_A
+      output_variable: output_A
+
+  - depth_average_rule:
+      name: Test B
+      description: Test B
+      input_variable: var_3d_B
+      output_variable: output_B
+
+  - depth_average_rule:
+      name: Test C
+      description: Test C
+      input_variable: var_3d_C
+      output_variable: output_C
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/test_depth_average_sigmalayer_rule.nc
