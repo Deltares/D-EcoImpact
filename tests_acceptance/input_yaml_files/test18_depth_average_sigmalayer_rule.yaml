@@ -9,18 +9,21 @@ rules:
       name: Test A
       description: Test A
       input_variable: var_3d_A
+      layer_type: SIGMA
       output_variable: output_A
 
   - depth_average_rule:
       name: Test B
       description: Test B
       input_variable: var_3d_B
+      layer_type: sigma
       output_variable: output_B
 
   - depth_average_rule:
       name: Test C
       description: Test C
       input_variable: var_3d_C
+      layer_type: sigma
       output_variable: output_C
 
 output-data:
