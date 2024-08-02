@@ -112,7 +112,11 @@ class ModelBuilder(IModelBuilder):
             )
         elif isinstance(rule_data, IFilterExtremesRuleData):
             rule = FilterExtremesRule(
-                rule_data.name, rule_data.input_variables, rule_data.extreme_type
+                rule_data.name,
+                rule_data.input_variables,
+                rule_data.extreme_type,
+                rule_data.distance,
+                rule_data.mask,
             )
         elif isinstance(rule_data, ILayerFilterRuleData):
             rule = LayerFilterRule(

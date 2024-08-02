@@ -12,7 +12,7 @@ Classes:
 
 """
 
-from typing import List
+from typing import Any, List
 
 from decoimpact.data.api.i_filter_extremes_rule_data import IFilterExtremesRuleData
 from decoimpact.data.entities.rule_data import RuleData
@@ -26,10 +26,14 @@ class FilterExtremesRuleData(IFilterExtremesRuleData, RuleData):
         name: str,
         input_variables: List[str],
         extreme_type: str,
+        distance: List[Any],
+        mask: bool,
     ):
         super().__init__(name)
         self._input_variables = input_variables
         self._extreme_type = extreme_type
+        self._distance = distance
+        self._mask = mask
 
     @property
     def input_variables(self) -> List[str]:
@@ -40,3 +44,13 @@ class FilterExtremesRuleData(IFilterExtremesRuleData, RuleData):
     def extreme_type(self) -> str:
         """Property for the extremes type"""
         return self._extreme_type
+
+    @property
+    def distance(self) -> List[Any]:
+        """Property for the distance between peaks"""
+        return self._distance
+
+    @property
+    def mask(self) -> bool:
+        """Property for mask"""
+        return self._mask

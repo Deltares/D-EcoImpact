@@ -63,7 +63,7 @@ ds = _xr.Dataset(
 
 def process_peaks(arr):
     # Apply find_peaks
-    peaks, _ = find_peaks(arr,distance=)
+    peaks, _ = find_peaks(arr, prominence=1)
     new_arr = _np.full_like(arr, -999)
     new_arr[peaks] = arr[peaks]
     return new_arr

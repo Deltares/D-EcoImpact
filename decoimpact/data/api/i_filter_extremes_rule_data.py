@@ -11,7 +11,7 @@ Interfaces:
 """
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import Any, List
 
 from decoimpact.data.api.i_rule_data import IRuleData
 
@@ -28,3 +28,13 @@ class IFilterExtremesRuleData(IRuleData, ABC):
     @abstractmethod
     def extreme_type(self) -> str:
         """Type of extremes [peaks or throughs]"""
+
+    @property
+    @abstractmethod
+    def distance(self) -> List[Any]:
+        """Property for the distance between peaks"""
+
+    @property
+    @abstractmethod
+    def mask(self) -> bool:
+        """Property for mask"""

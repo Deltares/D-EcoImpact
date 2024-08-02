@@ -11,7 +11,7 @@ Classes:
     FilterExtremesRule
 """
 
-from typing import List
+from typing import Any, List
 
 import xarray as _xr
 import scipy as _sc
@@ -31,14 +31,29 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         extreme_type: str,
+        distance: List[Any],
+        mask: bool,
     ):
         super().__init__(name, input_variable_names)
         self._extreme_type = extreme_type
+        self._distance = distance
+        self._mask = mask
 
     @property
     def extreme_type(self) -> str:
         """Type of extremes (peaks or troughs)"""
         return self._extreme_type
+
+    @property
+    def distance(self) -> List[any]:
+        """Minimal distance between peaks"""
+        return self._distance
+
+    @property
+    def mask(self) -> bool:
+        """Return either directly the values of the filtered array or a
+        True/False array"""
+        return self._mask
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
         """Retrieve the peak or through values
@@ -56,7 +71,7 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         time = old_dr.time.values
         timestep = (time[-1] - time[0]) / len(time)
         width_time = _np.timedelta64(14, "D")
-        width = width_time / timestep
+        distance = width_time / timestep
 
         results = _xr.apply_ufunc(
             self._process_peaks,
@@ -64,13 +79,20 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
             input_core_dims=[[time_dim_name]],
             output_core_dims=[[time_dim_name]],
             vectorize=True,
-            kwargs={"width": width},
+            kwargs={"distance": distance, "mask": self.mask},
         )
+
+        old_dims = list(old_dr.dims)
+        # TODO: USE OLD_DIMS FOR TRANSPOSE!!!!
+        results = results.transpose("time", "mesh2d_nFaces")
         return results
 
-    def _process_peaks(self, arr: _xr.DataArray, width: float):
-        peaks, _ = _sc.signal.find_peaks(arr, distance=width)
+    def _process_peaks(self, arr: _xr.DataArray, distance: float, mask):
+        peaks, _ = _sc.signal.find_peaks(arr, distance=distance)
+        values = arr[peaks]
+        if mask:
+            values = True
         # TODO: use fill value of array
-        new_arr = _np.full_like(arr, -999)
-        new_arr[peaks] = arr[peaks]
+        new_arr = _np.full_like(arr, _np.NaN)
+        new_arr[peaks] = values
         return new_arr
