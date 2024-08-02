@@ -95,7 +95,7 @@ def test_depth_average_rule(
     logger = Mock(ILogger)
     rule = DepthAverageRule(
         name="test",
-        input_variable_names=["foo"],
+        input_variable_names=["foo", "mesh2d_interface_z"],
     )
 
     # Create dataset
@@ -131,7 +131,7 @@ def test_dimension_error():
     logger = Mock(ILogger)
     rule = DepthAverageRule(
         name="test",
-        input_variable_names=["foo"],
+        input_variable_names=["foo", "mesh2d_interface_z"],
     )
 
     # Create dataset
