@@ -146,7 +146,9 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         has_z_layers = self._check_if_layer_type_is_present("z")
         has_sigma_layers = self._check_if_layer_type_is_present("sigma")
         if has_sigma_layers and has_z_layers:
-            logger.log_error("Both Z and Sigma layers are present. This combination is not supported for depth averaging.")
+            logger.log_error("Both Z and Sigma layers are present. This"
+                             "combination is not supported for depth"
+                             "averaging.")
         if has_sigma_layers:
             return INTERFACES_SIGMA_SUFFIX
         if has_z_layers:
