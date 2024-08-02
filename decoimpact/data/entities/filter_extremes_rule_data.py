@@ -26,13 +26,15 @@ class FilterExtremesRuleData(IFilterExtremesRuleData, RuleData):
         name: str,
         input_variables: List[str],
         extreme_type: str,
-        distance: List[Any],
+        distance: int,
+        time_scale: str,
         mask: bool,
     ):
         super().__init__(name)
         self._input_variables = input_variables
         self._extreme_type = extreme_type
         self._distance = distance
+        self._time_scale = time_scale
         self._mask = mask
 
     @property
@@ -46,9 +48,14 @@ class FilterExtremesRuleData(IFilterExtremesRuleData, RuleData):
         return self._extreme_type
 
     @property
-    def distance(self) -> List[Any]:
+    def distance(self) -> int:
         """Property for the distance between peaks"""
         return self._distance
+
+    @property
+    def time_scale(self) -> str:
+        """Property for the timescale of the distance between peaks"""
+        return self._time_scale
 
     @property
     def mask(self) -> bool:

@@ -42,14 +42,13 @@ class ParserFilterExtremesRule(IParserRuleBase):
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         description: str = get_dict_element("description", dictionary, False) or ""
         extreme_type: str = get_dict_element("extreme_type", dictionary)
-        distance: List[Any] = get_dict_element("distance", dictionary) or [
-            0,
-            "d",
-        ]
+        distance: int = get_dict_element("distance", dictionary) or 0
+        time_scale: str = get_dict_element("time_scale", dictionary) or "D"
+
         # TODO: check if distance is valid [12, 'h']
         mask: bool = get_dict_element("mask", dictionary) or False
         rule_data = FilterExtremesRuleData(
-            name, input_variable_names, extreme_type, distance, mask
+            name, input_variable_names, extreme_type, distance, time_scale, mask
         )
 
         rule_data.output_variable = output_variable_name

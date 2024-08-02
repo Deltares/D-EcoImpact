@@ -31,8 +31,13 @@ class IFilterExtremesRuleData(IRuleData, ABC):
 
     @property
     @abstractmethod
-    def distance(self) -> List[Any]:
+    def distance(self) -> int:
         """Property for the distance between peaks"""
+
+    @property
+    @abstractmethod
+    def time_scale(self) -> str:
+        """Property for the timescale of the distance between peaks"""
 
     @property
     @abstractmethod

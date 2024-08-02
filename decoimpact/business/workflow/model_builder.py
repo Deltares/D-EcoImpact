@@ -116,6 +116,7 @@ class ModelBuilder(IModelBuilder):
                 rule_data.input_variables,
                 rule_data.extreme_type,
                 rule_data.distance,
+                rule_data.time_scale,
                 rule_data.mask,
             )
         elif isinstance(rule_data, ILayerFilterRuleData):

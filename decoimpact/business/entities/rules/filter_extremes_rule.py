@@ -19,8 +19,12 @@ import numpy as _np
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
+from decoimpact.business.entities.rules.time_operation_settings import (
+    TimeOperationSettings,
+)
 from decoimpact.business.utils.data_array_utils import get_time_dimension_name
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.dictionary_utils import get_dict_element
 
 
 class FilterExtremesRule(RuleBase, IArrayBasedRule):
@@ -31,13 +35,23 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         extreme_type: str,
-        distance: List[Any],
+        distance: int,
+        time_scale: str,
         mask: bool,
     ):
         super().__init__(name, input_variable_names)
+        self._settings = TimeOperationSettings(
+            {"second": "s", "hour": "h", "day": "D", "month": "M", "year": "Y"}
+        )
         self._extreme_type = extreme_type
         self._distance = distance
+        self._settings.time_scale = time_scale
         self._mask = mask
+
+    @property
+    def settings(self):
+        """Time operation settings"""
+        return self._settings
 
     @property
     def extreme_type(self) -> str:
@@ -45,7 +59,7 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         return self._extreme_type
 
     @property
-    def distance(self) -> List[any]:
+    def distance(self) -> int:
         """Minimal distance between peaks"""
         return self._distance
 
@@ -55,6 +69,15 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         True/False array"""
         return self._mask
 
+    def validate(self, logger: ILogger) -> bool:
+        """Validates if the rule is valid
+
+        Returns:
+            bool: wether the rule is valid
+        """
+
+        return self.settings.validate(self.name, logger)
+
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
         """Retrieve the peak or through values
         Args:
@@ -63,6 +86,12 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
             DataArray: Filtered DataArray with only the extremes remaining
             at all other times the values are set to NaN
         """
+
+        time_scale = get_dict_element(
+            self.settings.time_scale, self.settings.time_scale_mapping
+        )
+        print("time_scale", time_scale)
+
         old_dr = _xr.DataArray(value_array)
         time_dim_name = get_time_dimension_name(value_array, logger)
         # TODO: IF NO TIME AVAILABLE NOTIFY USER
@@ -70,7 +99,7 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         # TODO: implement convertion of hours etc to width
         time = old_dr.time.values
         timestep = (time[-1] - time[0]) / len(time)
-        width_time = _np.timedelta64(14, "D")
+        width_time = _np.timedelta64(self.distance, time_scale)
         distance = width_time / timestep
 
         results = _xr.apply_ufunc(
@@ -92,7 +121,6 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         values = arr[peaks]
         if mask:
             values = True
-        # TODO: use fill value of array
         new_arr = _np.full_like(arr, _np.NaN)
         new_arr[peaks] = values
         return new_arr
