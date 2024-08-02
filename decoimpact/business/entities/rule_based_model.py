@@ -149,6 +149,7 @@ class RuleBasedModel(IModel):
         all_input_variables = _lu.flatten_list(list(all_inputs.values()))
 
         all_vars = var_list + mapping_keys + all_input_variables
+        print('sssss', all_vars)
 
         return _lu.remove_duplicates_from_list(all_vars)
 
@@ -219,6 +220,7 @@ class RuleBasedModel(IModel):
             Dict[str, List[str]]
         """
         rule_input_vars = [rule.input_variable_names for rule in self._rules]
+        print('check',rule_input_vars)
         rule_output_vars = [rule.output_variable_name for rule in self._rules]
 
         needed_input_per_rule = {}
@@ -226,6 +228,7 @@ class RuleBasedModel(IModel):
             needed_input_per_rule[rule_names[index]] = _lu.items_not_in(
                 inputs_per_rule, rule_output_vars
             )
+        print('check2',needed_input_per_rule)
 
         return needed_input_per_rule
 
@@ -234,6 +237,7 @@ class RuleBasedModel(IModel):
         when using hardcoded Delftd3D names.
         """
         for rule in self._rules:
+            print('rule',rule.input_variable_names)
             rule.input_variable_names = _du.extend_to_full_name(
                 rule.input_variable_names,
                 dummy_variable_name

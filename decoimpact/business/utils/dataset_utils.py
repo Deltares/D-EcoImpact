@@ -6,9 +6,11 @@
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """Library for utility functions regarding an xarray dataset"""
 
+from re import I
 from typing import List, Optional
 
 import xarray as _xr
+from numpy import var
 
 import decoimpact.business.utils.list_utils as _lu
 from decoimpact.crosscutting.delft3d_specific_data import delft3d_specific_names
@@ -78,6 +80,10 @@ def remove_all_variables_except(
     dummy_dependent_var_list = get_dummy_and_dependent_var_list(dataset)
     variables_to_keep += dummy_dependent_var_list
 
+    # correct interface name based on Z or Sigma layers
+    replacement = "_interface_z"
+    variables_to_keep = list(map(lambda x: x.replace('_interface', f'_{replacement}') if isinstance(x, str) and '_interface' in x else x, variables_to_keep))
+    print('llll',variables_to_keep)
     all_variables = list_vars(dataset)
 
     variables_to_remove = [
@@ -374,6 +380,8 @@ def extend_to_full_name(
     Returns:
         list[str]: list of the extended variable names
     """
+    print('test',variables)
     variables = [dummy_variable + var if var in delft3d_specific_names else var
                  for var in variables]
+    print('test',variables)
     return variables

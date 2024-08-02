@@ -8,6 +8,7 @@
 Configuration file for hardcoded delft3d variable names
 """
 
+INTERFACES_GENERIC_SUFFIX = "_interface"
 INTERFACES_Z_SUFFIX = "_interface_z"
 INTERFACES_SIGMA_SUFFIX = "_interface_sigma"
 BED_LEVEL_SUFFIX = "_flowelem_bl"
@@ -15,6 +16,7 @@ WATER_LEVEL_SUFFIX = "_s1"
 
 
 delft3d_specific_names = [
+    INTERFACES_GENERIC_SUFFIX,
     INTERFACES_Z_SUFFIX,
     INTERFACES_SIGMA_SUFFIX,
     BED_LEVEL_SUFFIX,
