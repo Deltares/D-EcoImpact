@@ -75,15 +75,15 @@ def remove_all_variables_except(
     Returns:
         _xr.Dataset: reduced dataset (containing selected variables)
     """
-    dummy_dependent_var_list = get_dummy_and_dependent_var_list(dataset)
-    variables_to_keep += dummy_dependent_var_list
+    dummy_var = get_dummy_variable_in_ugrid(dataset)
+    dependent_var_list = get_dependent_var_list(dataset, dummy_var)
+    variables_to_keep += dummy_var + dependent_var_list
 
     all_variables = list_vars(dataset)
 
     variables_to_remove = [
         item for item in all_variables if item not in list(variables_to_keep)
     ]
-
     cleaned_dataset = remove_variables(dataset, variables_to_remove)
 
     return cleaned_dataset
@@ -222,26 +222,24 @@ def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
     return dummy
 
 
-def get_dummy_and_dependent_var_list(dataset: _xr.Dataset) -> list:
+def get_dependent_var_list(dataset: _xr.Dataset, dummy_vars) -> list:
     """Obtain the list of variables in a dataset.
-    The dummy variable is obtained, from which the variables are
-    recursively looked up. The dummy and dependent variables are combined
-    in one list.
+    The variables are
+    recursively looked up based on the dummy variable.
     This is done to support XUgrid and to prevent invalid topologies.
     This also allows QuickPlot to visualize the results.
 
     Args:
         dataset (_xr.Dataset): Dataset to search for dummy variable
-
+        dummy_vars (list[str]): dummy variables
     Returns:
-        list[str]: dummy and dependent variables
+        list[str]: dependent variables
     """
 
-    dummy_vars = get_dummy_variable_in_ugrid(dataset)
     var_list = rec_search_dep_vars(dataset, dummy_vars, [], [])
 
     var_list += dummy_vars
-    return [dummy_vars[0], _lu.remove_duplicates_from_list(var_list)]
+    return _lu.remove_duplicates_from_list(var_list)
 
 
 def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> list[str]:
