@@ -135,7 +135,8 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
             self,
             logger: ILogger
             ):
-        """Determine whether the model is a sigma or Z layer model based on which variable is present for the interfaces. Give error if both are found.
+        """Determine whether the model is a sigma or Z layer model based on which
+        variable is present for the interfaces. Give error if both are found.
 
         Args:
             value_array (DataArray): Values
