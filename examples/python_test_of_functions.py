@@ -1,5 +1,6 @@
 """Example for building a model in code"""
 
+import os
 import xarray as _xr
 
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
@@ -33,11 +34,12 @@ class ScreenLogger(ILogger):
 logger: ILogger = ScreenLogger()
 
 # read input dataset
-INPUT_PATH = "data/FM-VZM_0000_map.nc"
+script_dir = os.path.dirname(__file__)
+INPUT_PATH = os.path.join(script_dir, "../tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc")
 inputDataset: _xr.Dataset = _xr.open_dataset(INPUT_PATH, mask_and_scale=True)
 
 # create rules
-rule1 = MultiplyRule("multiply rule", ["mesh2d_sa1"], [0.0018066, 1e5])
+rule1 = MultiplyRule("multiply rule", ["salinity_PSU"], [0.0018066, 1e5])
 rule1.output_variable_name = "chloride"
 
 rule2 = LayerFilterRule("layer filter rule", ["chloride"], 22)
@@ -77,4 +79,5 @@ model = RuleBasedModel(
 ModelRunner.run_model(model, logger)
 
 # write output to netcdf
-model.output_dataset.to_netcdf("data_out/test_python_output_file.nc", format="NETCDF4")
+OUTPUT_PATH = os.path.join(script_dir, "test_python_output_file.nc")
+model.output_dataset.to_netcdf(OUTPUT_PATH, format="NETCDF4")
