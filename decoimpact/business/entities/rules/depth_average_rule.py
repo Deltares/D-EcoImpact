@@ -152,8 +152,6 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         if has_z_layers:
             return INTERFACES_Z_SUFFIX
 
-
-
     def _check_if_layer_type_is_present(
             self,
             layer_type: str,
@@ -166,4 +164,5 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         Returns:
             bool
         """
-        return any("interface_" + layer_type in variable for variable in self._input_variable_names)
+        return any("interface_" + layer_type
+                   in variable for variable in self._input_variable_names)
