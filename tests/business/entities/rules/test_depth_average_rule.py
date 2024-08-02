@@ -126,7 +126,8 @@ def test_depth_average_rule(
 
 
 def test_dimension_error():
-    """If the number of interfaces > number of layers + 1. Give an error, no calculation is possible"""
+    """If the number of interfaces > number of layers + 1. Give an error, no
+    calculation is possible"""
     logger = Mock(ILogger)
     rule = DepthAverageRule(
         name="test",
