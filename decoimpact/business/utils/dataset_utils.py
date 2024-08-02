@@ -361,7 +361,7 @@ def reduce_dataset_for_writing(
 def extend_to_full_name(
         variables: List[str],
         dummy_variable: str
-) -> list[str]:
+) -> List[str]:
     """Extend suffix names to full variables names by prepending the dummy
     variable name.
 
@@ -372,6 +372,7 @@ def extend_to_full_name(
     Returns:
         list[str]: list of the extended variable names
     """
+    dummy_variable = dummy_variable[0]
     variables = [dummy_variable + var if var in delft3d_specific_names else var
                  for var in variables]
     return variables
