@@ -81,10 +81,6 @@ def remove_all_variables_except(
     dependent_var_list = get_dependent_var_list(dataset, dummy_var)
     variables_to_keep += dummy_var + dependent_var_list
 
-    # correct interface name based on Z or Sigma layers
-    replacement = "_interface_z"
-    variables_to_keep = list(map(lambda x: x.replace('_interface', f'_{replacement}') if isinstance(x, str) and '_interface' in x else x, variables_to_keep))
-    print('llll',variables_to_keep)
     all_variables = list_vars(dataset)
 
     variables_to_remove = [
@@ -378,9 +374,7 @@ def extend_to_full_name(
     Returns:
         list[str]: list of the extended variable names
     """
-    print('test',variables)
     dummy_variable = dummy_variable[0]
     variables = [dummy_variable + var if var in delft3d_specific_names else var
                  for var in variables]
-    print('test',variables)
     return variables

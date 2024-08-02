@@ -64,13 +64,11 @@ class RuleProcessor:
             bool: A boolean to indicate if all the rules can be processed.
         """
         inputs: List[str] = []
-        print('ini',self._input_dataset)
 
         inputs = _lu.flatten_list(
             [_du.list_vars(self._input_dataset), _du.list_coords(self._input_dataset)]
         )
-        print('ini',inputs)
-        print('ini',self._input_dataset)
+
         tree, success = self._create_rule_sets(inputs, self._rules, [], logger)
         if success:
             self._processing_list = tree
@@ -172,8 +170,6 @@ class RuleProcessor:
 
         for rule in unprocessed_rules:
             names = rule.input_variable_names
-            print('QQQ names',names)
-            print('QQQ inputs',inputs)
             if all(name in inputs for name in names):
                 solvable_rules.append(rule)
 
