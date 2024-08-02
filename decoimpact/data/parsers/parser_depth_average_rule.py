@@ -70,15 +70,13 @@ class ParserDepthAverageRule(IParserRuleBase):
             layer_type (str): z or sigma layers
 
         Returns:
-            interface_suffix: Suffix for z or sigma layers based on Delft3D
+            Suffix for z or sigma layers based on Delft3D
                               defined suffixes
         """
         if layer_type.lower() == 'z':
-            interface_suffix = INTERFACES_Z_SUFFIX
+            return INTERFACES_Z_SUFFIX
         elif layer_type.lower() == 'sigma':
-            interface_suffix = INTERFACES_SIGMA_SUFFIX
+            return INTERFACES_SIGMA_SUFFIX
         else:
-            logger.log_error(f"Layer_type '{layer_type}' is not recognized. Supported "
-                             f"options are '{INTERFACES_Z_SUFFIX}' and "
-                             f"'{INTERFACES_SIGMA_SUFFIX}'.")
-        return interface_suffix
+            raise NotImplementedError(f"Layer_type '{layer_type}' is not recognized. "
+                             f"Supported options are 'z' and 'sigma'.")
