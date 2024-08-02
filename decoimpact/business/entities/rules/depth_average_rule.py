@@ -13,7 +13,6 @@ Classes:
 from typing import Dict
 
 import xarray as _xr
-from regex import I
 
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
