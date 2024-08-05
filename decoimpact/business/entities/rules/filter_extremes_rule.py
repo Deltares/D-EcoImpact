@@ -75,7 +75,6 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         Returns:
             bool: wether the rule is valid
         """
-
         return self.settings.validate(self.name, logger)
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
@@ -92,9 +91,7 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         )
 
         time_dim_name = get_time_dimension_name(value_array, logger)
-
         old_dr = _xr.DataArray(value_array)
-        # TODO: IF NO TIME AVAILABLE NOTIFY USER
         time = old_dr.time.values
         timestep = (time[-1] - time[0]) / len(time)
         width_time = _np.timedelta64(self.distance, time_scale)

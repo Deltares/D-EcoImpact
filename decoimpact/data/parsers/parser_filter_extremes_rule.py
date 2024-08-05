@@ -45,7 +45,6 @@ class ParserFilterExtremesRule(IParserRuleBase):
         distance: int = get_dict_element("distance", dictionary) or 0
         time_scale: str = get_dict_element("time_scale", dictionary) or "D"
 
-        # TODO: check if distance is valid [12, 'h']
         mask: bool = get_dict_element("mask", dictionary) or False
         rule_data = FilterExtremesRuleData(
             name, input_variable_names, extreme_type, distance, time_scale, mask

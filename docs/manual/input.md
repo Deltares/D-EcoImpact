@@ -701,6 +701,37 @@ Below is an example of an input_file for the depth average rule:
       output_variable: average_salinity
 ```
 
+### Filter extremes rule
+
+```
+FORMAT
+- filter_extremes_rule:
+      name: <name_of_rule_in_text>
+      description: <description_of_rule_in_text>
+      input_variable: <one_input_variable_name>
+      output_variable: <one_output_variable_name>
+      extreme_type: troughs or peaks
+      distance: <int_of_time_scale>
+      time_scale: second, hour, day, month or year
+      mask: <boolean>
+```
+
+
+The filter extremes rule allows for a filtering of extreme peaks in a dataset (over time). The input variable can be any dimension, as long as it has a time dimension. If the variable mask = True, the output is a variable with the same shape as the input, but only values where the peaks occur and NaN values where no peak occur. If mask = False the output is a samesized variable with 1 (True) at the peak values and NaN elsewhere. Furthermore the user can add a distance (with timescale) as input to define the minimum distance between two peaks/troughs. This mask can be applied to another layer with the combine rule (operation: multiply).
+
+```
+#EXAMPLE  : Determine the peak waterlevel values
+  - depth_average_rule:
+      name: test filter extremes
+      description: test filter extremes
+      input_variable: water_level
+      output_variable: water_level_mask
+      extreme_type: peaks
+      distance: 12
+      time_scale: hour
+      mask: True
+```
+
 
 ##Including data from another YAML file
 
