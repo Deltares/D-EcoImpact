@@ -50,13 +50,13 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # but the name of the key is given by the user, and is unknown here, so
         # just use the first value.
         variables = next(iter(value_arrays.values()))
-        interface_suffix = self._get_layer_suffix(self._layer_type, logger)
+        interface_suffix = _get_layer_suffix(self._layer_type, logger)
 
-        bed_level_values = self._extract_variable_based_on_suffix(
+        bed_level_values = _extract_variable_based_on_suffix(
             value_arrays, BED_LEVEL_SUFFIX)
-        depths_interfaces = self._extract_variable_based_on_suffix(
+        depths_interfaces = _extract_variable_based_on_suffix(
             value_arrays, interface_suffix)
-        water_level_values = self._extract_variable_based_on_suffix(
+        water_level_values = _extract_variable_based_on_suffix(
             value_arrays, WATER_LEVEL_SUFFIX)
 
         # Get the dimension names for the interfaces and for the layers
@@ -115,41 +115,41 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
             dim=dim_layer_name
         )
 
-    def _extract_variable_based_on_suffix(
-            self,
-            value_arrays: Dict[str, _xr.DataArray],
-            suffix: str
-            ) -> list:
-        """Extract the values from the XArray dataset based on the name
-        suffixes by matching the name, irrespective of the dummy name prefix.
 
-        Args:
-            value_array (DataArray): Values
-            suffix (str) : Suffix of the name
+def _extract_variable_based_on_suffix(
+        value_arrays: Dict[str, _xr.DataArray],
+        suffix: str
+        ) -> list:
+    """Extract the values from the XArray dataset based on the name
+    suffixes by matching the name, irrespective of the dummy name prefix.
 
-        Returns:
-            values (List[str]): Values based on prefix + suffix name
-        """
-        return [value_arrays[name] for name in value_arrays if suffix in name][0]
+    Args:
+        value_array (DataArray): Values
+        suffix (str) : Suffix of the name
 
-    def _get_layer_suffix(
-            self,
-            layer_type: str,
-            logger: ILogger
-            ):
-        """Get the interface suffix depending on whether the model is a sigma or z
-        layer model. Give error if the interface suffix cannot be determined.
+    Returns:
+        values (List[str]): Values based on prefix + suffix name
+    """
+    return [value_arrays[name] for name in value_arrays if suffix in name][0]
 
-        Args:
-            value_array (DataArray): Values
 
-        Returns:
-            layer_type (str): sigma or z
-        """
-        if layer_type.lower() == "sigma":
-            return INTERFACES_SIGMA_SUFFIX
-        elif layer_type.lower() == "z":
-            return INTERFACES_Z_SUFFIX
-        else:
-            logger.log_error(f"Layer type {layer_type} unknown. Interface "
-                             "variable could not be determined.")
+def _get_layer_suffix(
+        layer_type: str,
+        logger: ILogger
+        ):
+    """Get the interface suffix depending on whether the model is a sigma or z
+    layer model. Give error if the interface suffix cannot be determined.
+
+    Args:
+        value_array (DataArray): Values
+
+    Returns:
+        layer_type (str): sigma or z
+    """
+    if layer_type.lower() == "sigma":
+        return INTERFACES_SIGMA_SUFFIX
+    elif layer_type.lower() == "z":
+        return INTERFACES_Z_SUFFIX
+    else:
+        logger.log_error(f"Layer type {layer_type} unknown. Interface "
+                            "variable could not be determined.")
