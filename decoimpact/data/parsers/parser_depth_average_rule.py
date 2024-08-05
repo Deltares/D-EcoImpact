@@ -62,6 +62,7 @@ class ParserDepthAverageRule(IParserRuleBase):
 
         return rule_data
 
+
 def _obtain_interface_suffix(layer_type: str):
     """Obtain the interface variable based on the layer_type specified.
     Give an error if layer_type is not recognised
