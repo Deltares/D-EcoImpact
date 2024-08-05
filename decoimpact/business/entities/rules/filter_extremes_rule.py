@@ -90,7 +90,6 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         time_scale = get_dict_element(
             self.settings.time_scale, self.settings.time_scale_mapping
         )
-        print("time_scale", time_scale)
 
         old_dr = _xr.DataArray(value_array)
         time_dim_name = get_time_dimension_name(value_array, logger)
@@ -108,12 +107,14 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
             input_core_dims=[[time_dim_name]],
             output_core_dims=[[time_dim_name]],
             vectorize=True,
-            kwargs={"distance": distance, "mask": self.mask},
+            kwargs={
+                "distance": distance,
+                "mask": self.mask,
+                "extreme_type": self.extreme_type,
+            },
         )
 
-        old_dims = list(old_dr.dims)
-        # TODO: USE OLD_DIMS FOR TRANSPOSE!!!!
-        results = results.transpose("time", "mesh2d_nFaces")
+        results = results.transpose(*old_dr.dims)
         return results
 
     def _process_peaks(
@@ -126,6 +127,6 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         values = arr[peaks]
         if mask:
             values = True
-        new_arr = _np.full_like(arr, _np.NaN)
+        new_arr = _np.full_like(arr, _np.nan, dtype=float)
         new_arr[peaks] = values
         return new_arr

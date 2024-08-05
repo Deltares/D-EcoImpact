@@ -11,6 +11,7 @@ Tests for RuleBase class
 from typing import List
 from unittest.mock import Mock
 
+import numpy as np
 import pytest
 import xarray as _xr
 
@@ -60,7 +61,7 @@ def test_validation_when_valid():
 
 
 @pytest.mark.parametrize(
-    "data_variable, result_data",
+    "data_variable, result_data, time",
     [
         (
             [
@@ -83,36 +84,55 @@ def test_validation_when_valid():
             ],
             [
                 [
-                    [-999, -999],
-                    [-999, 3],
-                    [-999, -999],
-                    [-999, 4],
-                    [-999, -999],
+                    [np.nan, np.nan],
+                    [np.nan, 3],
+                    [np.nan, np.nan],
+                    [np.nan, 4],
+                    [np.nan, np.nan],
                     [2, 5],
-                    [-999, -999],
-                    [-999, 6],
-                    [-999, -999],
-                    [-999, 7],
-                    [-999, -999],
+                    [np.nan, np.nan],
+                    [np.nan, 6],
+                    [np.nan, np.nan],
+                    [np.nan, 7],
+                    [np.nan, np.nan],
                     [-1, 8],
-                    [-999, -999],
-                    [-999, 9],
+                    [np.nan, np.nan],
+                    [np.nan, np.nan],
                 ]
+            ],
+            [
+                np.datetime64("2005-02-25T01:30"),
+                np.datetime64("2005-02-25T02:30"),
+                np.datetime64("2005-02-25T03:30"),
+                np.datetime64("2005-02-25T04:30"),
+                np.datetime64("2005-02-25T05:30"),
+                np.datetime64("2005-02-25T06:30"),
+                np.datetime64("2005-02-25T07:30"),
+                np.datetime64("2005-02-25T08:30"),
+                np.datetime64("2005-02-25T09:30"),
+                np.datetime64("2005-02-25T10:30"),
+                np.datetime64("2005-02-25T11:30"),
+                np.datetime64("2005-02-25T12:30"),
+                np.datetime64("2005-02-25T13:30"),
+                np.datetime64("2005-02-25T14:30"),
             ],
         )
     ],
 )
-def test_filter_extremes_rule(data_variable: List[float], result_data: List[float]):
+def test_filter_extremes_rule(
+    data_variable: List[float], result_data: List[float], time: List[float]
+):
     """Make sure the calculation of the filter extremes is correct. Including
     differing water and bed levels."""
     logger = Mock(ILogger)
-    rule = FilterExtremesRule("test", ["test_var"], "peaks", 0, "day", False)
+    rule = FilterExtremesRule("test", ["test_var"], "peaks", 1, "hour", False)
     assert isinstance(rule, FilterExtremesRule)
     # Create dataset
     ds = _xr.Dataset(
-        {
-            "test_var": (["dim1", "dim2", "time"], data_variable),
-        }
+        {"test_var": (["dim1", "time", "dim2"], data_variable)},
+        coords={
+            "time": time,
+        },
     )
 
     value_array = ds["test_var"]
@@ -121,7 +141,10 @@ def test_filter_extremes_rule(data_variable: List[float], result_data: List[floa
 
     result_array = _xr.DataArray(
         result_data,
-        dims=["time", "mesh2d_nFaces"],
+        dims=["dim1", "time", "dim2"],
+        coords={
+            "time": time,
+        },
     )
 
     assert (
