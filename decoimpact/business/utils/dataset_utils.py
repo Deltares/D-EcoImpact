@@ -11,6 +11,7 @@ from typing import List, Optional
 import xarray as _xr
 
 import decoimpact.business.utils.list_utils as _lu
+from decoimpact.crosscutting.delft3d_specific_data import delft3d_specific_names
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -74,15 +75,15 @@ def remove_all_variables_except(
     Returns:
         _xr.Dataset: reduced dataset (containing selected variables)
     """
-    dummy_dependent_var_list = get_dummy_and_dependent_var_list(dataset)
-    variables_to_keep += dummy_dependent_var_list
+    dummy_var = get_dummy_variable_in_ugrid(dataset)
+    dependent_var_list = get_dependent_var_list(dataset, dummy_var)
+    variables_to_keep += dummy_var + dependent_var_list
 
     all_variables = list_vars(dataset)
 
     variables_to_remove = [
         item for item in all_variables if item not in list(variables_to_keep)
     ]
-
     cleaned_dataset = remove_variables(dataset, variables_to_remove)
 
     return cleaned_dataset
@@ -221,29 +222,27 @@ def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
     return dummy
 
 
-def get_dummy_and_dependent_var_list(dataset: _xr.Dataset) -> list:
+def get_dependent_var_list(dataset: _xr.Dataset, dummy_vars) -> List:
     """Obtain the list of variables in a dataset.
-    The dummy variable is obtained, from which the variables are
-    recursively looked up. The dummy and dependent variables are combined
-    in one list.
+    The variables are
+    recursively looked up based on the dummy variable.
     This is done to support XUgrid and to prevent invalid topologies.
     This also allows QuickPlot to visualize the results.
 
     Args:
         dataset (_xr.Dataset): Dataset to search for dummy variable
-
+        dummy_vars (List[str]): dummy variables
     Returns:
-        list[str]: dummy and dependent variables
+        List[str]: dependent variables
     """
 
-    dummy_vars = get_dummy_variable_in_ugrid(dataset)
     var_list = rec_search_dep_vars(dataset, dummy_vars, [], [])
 
     var_list += dummy_vars
     return _lu.remove_duplicates_from_list(var_list)
 
 
-def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> list[str]:
+def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> List[str]:
     """Get all the variables that are described in the attributes of the dummy variable,
     associated with the UGrid standard.
 
@@ -283,7 +282,11 @@ def create_composed_dataset(
         _xr.Dataset: composed dataset (with selected variables)
     """
     merged_dataset = merge_list_of_datasets(input_datasets)
-
+    dummy_variable = get_dummy_variable_in_ugrid(merged_dataset)[0]
+    variables_to_use = extend_to_full_name(
+        variables_to_use,
+        dummy_variable
+    )
     cleaned_dataset = remove_all_variables_except(merged_dataset, variables_to_use)
 
     if mapping is None or len(mapping) == 0:
@@ -353,3 +356,23 @@ def reduce_dataset_for_writing(
 
     dataset = remove_all_variables_except(dataset, save_only_variables)
     return dataset
+
+
+def extend_to_full_name(
+        variables: List[str],
+        dummy_variable: List[str]
+) -> List[str]:
+    """Extend suffix names to full variables names by prepending the dummy
+    variable name.
+
+    Args:
+        variables (list[str]): List of variable names
+        dummy_variable (str): name of dummy variable
+
+    Returns:
+        list[str]: list of the extended variable names
+    """
+    dummy_variable = dummy_variable[0]
+    variables = [dummy_variable + var if var in delft3d_specific_names else var
+                 for var in variables]
+    return variables
