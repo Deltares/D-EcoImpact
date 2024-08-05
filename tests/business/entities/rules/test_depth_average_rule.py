@@ -14,7 +14,6 @@ from unittest.mock import Mock
 import numpy as _np
 import pytest
 import xarray as _xr
-from tomlkit import value
 
 from decoimpact.business.entities.rules.depth_average_rule import DepthAverageRule
 from decoimpact.crosscutting.i_logger import ILogger
