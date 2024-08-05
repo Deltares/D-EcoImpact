@@ -6,11 +6,9 @@
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """Library for utility functions regarding an xarray dataset"""
 
-from re import I
 from typing import List, Optional
 
 import xarray as _xr
-from numpy import var
 
 import decoimpact.business.utils.list_utils as _lu
 from decoimpact.crosscutting.delft3d_specific_data import delft3d_specific_names

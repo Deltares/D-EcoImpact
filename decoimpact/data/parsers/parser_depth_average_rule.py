@@ -43,7 +43,7 @@ class ParserDepthAverageRule(IParserRuleBase):
         """
         name: str = get_dict_element("name", dictionary)
         layer_type: str = get_dict_element("layer_type", dictionary)
-        interface_suffix = self._obtain_interface_suffix(layer_type, logger)
+        interface_suffix = _obtain_interface_suffix(layer_type)
 
         input_variable_names: List[str] = [
             get_dict_element("input_variable", dictionary),
@@ -62,20 +62,20 @@ class ParserDepthAverageRule(IParserRuleBase):
 
         return rule_data
 
-    def _obtain_interface_suffix(self, layer_type: str, logger: ILogger):
-        """Obtain the interface variable based on the layer_type specified.
-        Give an error if layer_type is not recognised
+def _obtain_interface_suffix(layer_type: str):
+    """Obtain the interface variable based on the layer_type specified.
+    Give an error if layer_type is not recognised
 
-        Args:
-            layer_type (str): z or sigma layers
+    Args:
+        layer_type (str): z or sigma layers
 
-        Returns:
-            Suffix for z or sigma layers based on Delft3D
-                              defined suffixes
-        """
-        if layer_type.lower() == 'z':
-            return INTERFACES_Z_SUFFIX
-        if layer_type.lower() == 'sigma':
-            return INTERFACES_SIGMA_SUFFIX
-        raise NotImplementedError(f"Layer_type '{layer_type}' is not recognized. "
-                                  f"Supported options are 'z' and 'sigma'.")
+    Returns:
+        Suffix for z or sigma layers based on Delft3D
+                            defined suffixes
+    """
+    if layer_type.lower() == 'z':
+        return INTERFACES_Z_SUFFIX
+    if layer_type.lower() == 'sigma':
+        return INTERFACES_SIGMA_SUFFIX
+    raise NotImplementedError(f"Layer_type '{layer_type}' is not recognized. "
+                                f"Supported options are 'z' and 'sigma'.")
