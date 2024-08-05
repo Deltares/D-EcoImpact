@@ -24,7 +24,7 @@ def test_create_depth_average_rule_with_defaults():
     """Test creating a depth average rule with defaults"""
 
     # Arrange & Act
-    rule = DepthAverageRule("test_rule_name", ["foo", "hello"])
+    rule = DepthAverageRule("test_rule_name", ["foo", "hello"],"z")
 
     # Assert
     assert isinstance(rule, DepthAverageRule)
@@ -32,6 +32,7 @@ def test_create_depth_average_rule_with_defaults():
     assert rule.description == ""
     assert rule.input_variable_names == ["foo", "hello"]
     assert rule.output_variable_name == "output"
+    assert rule._layer_type == "z"
 
 
 def test_no_validate_error_with_correct_rule():
@@ -41,6 +42,7 @@ def test_no_validate_error_with_correct_rule():
     rule = DepthAverageRule(
         "test_rule_name",
         ["foo", "hello"],
+        "z",
     )
 
     # Assert
@@ -96,6 +98,7 @@ def test_depth_average_rule(
     rule = DepthAverageRule(
         name="test",
         input_variable_names=["foo", "mesh2d_interface_z"],
+        layer_type="z",
     )
 
     # Create dataset
@@ -132,6 +135,7 @@ def test_dimension_error():
     rule = DepthAverageRule(
         name="test",
         input_variable_names=["foo", "mesh2d_interface_z"],
+        layer_type="z",
     )
 
     # Create dataset
