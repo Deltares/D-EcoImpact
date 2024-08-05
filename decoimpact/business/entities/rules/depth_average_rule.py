@@ -137,7 +137,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
             layer_type: str,
             logger: ILogger
             ):
-        """Get the interface suffix depending on whether thei odel is a sigma or Z
+        """Get the interface suffix depending on whether the model is a sigma or z
         layer model. Give error if the interface suffix cannot be determined.
 
         Args:
