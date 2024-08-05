@@ -116,8 +116,13 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         results = results.transpose("time", "mesh2d_nFaces")
         return results
 
-    def _process_peaks(self, arr: _xr.DataArray, distance: float, mask):
-        peaks, _ = _sc.signal.find_peaks(arr, distance=distance)
+    def _process_peaks(
+        self, arr: _xr.DataArray, distance: float, mask: bool, extreme_type: str
+    ):
+        factor = 1
+        if extreme_type == "troughs":
+            factor = -1
+        peaks, _ = _sc.signal.find_peaks(factor * arr, distance=distance)
         values = arr[peaks]
         if mask:
             values = True
