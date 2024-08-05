@@ -75,8 +75,7 @@ class ParserDepthAverageRule(IParserRuleBase):
         """
         if layer_type.lower() == 'z':
             return INTERFACES_Z_SUFFIX
-        elif layer_type.lower() == 'sigma':
+        if layer_type.lower() == 'sigma':
             return INTERFACES_SIGMA_SUFFIX
-        else:
-            raise NotImplementedError(f"Layer_type '{layer_type}' is not recognized. "
-                             f"Supported options are 'z' and 'sigma'.")
+        raise NotImplementedError(f"Layer_type '{layer_type}' is not recognized. "
+                                  f"Supported options are 'z' and 'sigma'.")
