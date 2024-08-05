@@ -50,13 +50,12 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # but the name of the key is given by the user, and is unknown here, so
         # just use the first value.
         variables = next(iter(value_arrays.values()))
-        print('qq',self._layer_type)
-        layer_type_suffix = self.determine_layer_type(logger)
+        interface_suffix = self._get_layer_suffix(self._layer_type, logger)
 
         bed_level_values = self._extract_variable_based_on_suffix(
             value_arrays, BED_LEVEL_SUFFIX)
         depths_interfaces = self._extract_variable_based_on_suffix(
-            value_arrays, layer_type_suffix)
+            value_arrays, interface_suffix)
         water_level_values = self._extract_variable_based_on_suffix(
             value_arrays, WATER_LEVEL_SUFFIX)
 
@@ -131,15 +130,15 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         Returns:
             values (List[str]): Values based on prefix + suffix name
         """
-        variable = [value_arrays[name] for name in value_arrays if suffix in name][0]
-        return variable
+        return [value_arrays[name] for name in value_arrays if suffix in name][0]
 
-    def determine_layer_type(
+    def _get_layer_suffix(
             self,
+            layer_type: str,
             logger: ILogger
             ):
-        """Determine whether the model is a sigma or Z layer model based on which
-        variable is present for the interfaces. Give error if both are found.
+        """Get the interface suffix depending on whether thei odel is a sigma or Z
+        layer model. Give error if the interface suffix cannot be determined.
 
         Args:
             value_array (DataArray): Values
@@ -147,28 +146,10 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         Returns:
             layer_type (str): sigma or z
         """
-        has_z_layers = self._check_if_layer_type_is_present("z")
-        has_sigma_layers = self._check_if_layer_type_is_present("sigma")
-        if has_sigma_layers and has_z_layers:
-            logger.log_error("Both Z and Sigma layers are present. This"
-                             "combination is not supported for depth"
-                             "averaging.")
-        if has_sigma_layers:
+        if layer_type.lower() == "sigma":
             return INTERFACES_SIGMA_SUFFIX
-        if has_z_layers:
+        elif layer_type.lower() == "z":
             return INTERFACES_Z_SUFFIX
-
-    def _check_if_layer_type_is_present(
-            self,
-            layer_type: str,
-            ):
-        """Determine whether a layer type is present.
-
-        Args:
-            layer_type (str): sigma or z
-
-        Returns:
-            bool
-        """
-        return any("interface_" + layer_type
-                   in variable for variable in self._input_variable_names)
+        else:
+            logger.log_error(f"Layer type {layer_type} unknown. Interface "
+                             "variable could not be determined.")
