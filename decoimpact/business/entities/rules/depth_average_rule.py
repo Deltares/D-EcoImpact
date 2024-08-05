@@ -119,7 +119,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
 def _extract_variable_based_on_suffix(
         value_arrays: Dict[str, _xr.DataArray],
         suffix: str
-        ) -> list:
+        ) -> List:
     """Extract the values from the XArray dataset based on the name
     suffixes by matching the name, irrespective of the dummy name prefix.
 
