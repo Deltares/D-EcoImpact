@@ -10,7 +10,7 @@ Module for DepthAverageRule class
 Classes:
     DepthAverageRule
 """
-from typing import Dict
+from typing import Dict, List
 
 import xarray as _xr
 
@@ -30,6 +30,10 @@ from decoimpact.crosscutting.i_logger import ILogger
 class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
     """Implementation for the depth average rule"""
 
+    def __init__(self, name: str, input_variable_names: List[str], layer_type: str):
+        super().__init__(name, input_variable_names)
+        self._layer_type = layer_type
+
     def execute(
         self, value_arrays: Dict[str, _xr.DataArray], logger: ILogger
     ) -> _xr.DataArray:
@@ -46,7 +50,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # but the name of the key is given by the user, and is unknown here, so
         # just use the first value.
         variables = next(iter(value_arrays.values()))
-
+        print('qq',self._layer_type)
         layer_type_suffix = self.determine_layer_type(logger)
 
         bed_level_values = self._extract_variable_based_on_suffix(

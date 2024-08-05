@@ -55,7 +55,7 @@ class ParserDepthAverageRule(IParserRuleBase):
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         description: str = get_dict_element("description", dictionary, False) or ""
 
-        rule_data = DepthAverageRuleData(name, input_variable_names)
+        rule_data = DepthAverageRuleData(name, input_variable_names, layer_type)
 
         rule_data.output_variable = output_variable_name
         rule_data.description = description
