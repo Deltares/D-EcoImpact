@@ -91,11 +91,10 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
             self.settings.time_scale, self.settings.time_scale_mapping
         )
 
-        old_dr = _xr.DataArray(value_array)
         time_dim_name = get_time_dimension_name(value_array, logger)
+
+        old_dr = _xr.DataArray(value_array)
         # TODO: IF NO TIME AVAILABLE NOTIFY USER
-        # TODO: implement extreme_type (peaks or troughs)
-        # TODO: implement convertion of hours etc to width
         time = old_dr.time.values
         timestep = (time[-1] - time[0]) / len(time)
         width_time = _np.timedelta64(self.distance, time_scale)
