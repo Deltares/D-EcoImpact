@@ -10,7 +10,7 @@ Module for DepthAverageRule class
 Classes:
     DepthAverageRule
 """
-from typing import Dict
+from typing import Dict, List
 
 import xarray as _xr
 
@@ -113,7 +113,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
             self,
             value_arrays: Dict[str, _xr.DataArray],
             suffix: str
-            ) -> list:
+            ) -> List:
         """Extract the values from the XArray dataset based on the name
         suffixes by matching the name, irrespective of the dummy name prefix.
 
