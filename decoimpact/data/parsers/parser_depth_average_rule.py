@@ -78,4 +78,4 @@ def _obtain_interface_suffix(layer_type: str):
     if layer_type.lower() == 'sigma':
         return INTERFACES_SIGMA_SUFFIX
     raise NotImplementedError(f"Layer_type '{layer_type}' is not recognized. "
-                                f"Supported options are 'z' and 'sigma'.")
+                              f"Supported options are 'z' and 'sigma'.")
