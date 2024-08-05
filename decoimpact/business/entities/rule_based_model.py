@@ -103,6 +103,7 @@ class RuleBasedModel(IModel):
         self._output_dataset = _du.create_composed_dataset(
             self._input_datasets, self._make_output_variables_list(), self._mappings
         )
+
         self._rule_processor = RuleProcessor(self._rules, self._output_dataset)
 
         if not self._rule_processor.initialize(logger):
@@ -138,7 +139,10 @@ class RuleBasedModel(IModel):
         """
 
         for dataset in self._input_datasets:
-            var_list = _du.get_dummy_and_dependent_var_list(dataset)
+            dummy_var_name = _du.get_dummy_variable_in_ugrid(dataset)
+            var_list = _du.get_dependent_var_list(dataset, dummy_var_name)
+
+        self._extend_names(dummy_var_name)
 
         mapping_keys = list((self._mappings or {}).keys())
         rule_names = [rule.name for rule in self._rules]
@@ -146,6 +150,7 @@ class RuleBasedModel(IModel):
         all_input_variables = _lu.flatten_list(list(all_inputs.values()))
 
         all_vars = var_list + mapping_keys + all_input_variables
+
         return _lu.remove_duplicates_from_list(all_vars)
 
     def _validate_mappings(self, mappings: dict[str, str], logger: ILogger) -> bool:
@@ -224,3 +229,13 @@ class RuleBasedModel(IModel):
             )
 
         return needed_input_per_rule
+
+    def _extend_names(self, dummy_variable_name: str):
+        """Extends the names of the input variables with the dummy variable prefix
+        when using hardcoded Delftd3D names.
+        """
+        for rule in self._rules:
+            rule.input_variable_names = _du.extend_to_full_name(
+                rule.input_variable_names,
+                dummy_variable_name
+            )

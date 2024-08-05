@@ -12,16 +12,16 @@ Classes:
 """
 from typing import Any, Dict, List
 
+from decoimpact.crosscutting.delft3d_specific_data import (
+    BED_LEVEL_SUFFIX,
+    INTERFACES_Z_SUFFIX,
+    WATER_LEVEL_SUFFIX,
+)
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.dictionary_utils import get_dict_element
 from decoimpact.data.entities.depth_average_rule_data import DepthAverageRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
-from decoimpact.crosscutting.delft3d_specific_data import (
-    INTERFACES_NAME,
-    BED_LEVEL_NAME,
-    WATER_LEVEL_NAME,
-)
 
 
 class ParserDepthAverageRule(IParserRuleBase):
@@ -43,10 +43,11 @@ class ParserDepthAverageRule(IParserRuleBase):
         name: str = get_dict_element("name", dictionary)
         input_variable_names: List[str] = [
             get_dict_element("input_variable", dictionary),
-            INTERFACES_NAME,
-            WATER_LEVEL_NAME,
-            BED_LEVEL_NAME,
+            INTERFACES_Z_SUFFIX,
+            WATER_LEVEL_SUFFIX,
+            BED_LEVEL_SUFFIX,
         ]
+
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         description: str = get_dict_element("description", dictionary, False) or ""
 
