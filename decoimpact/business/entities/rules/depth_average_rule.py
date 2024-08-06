@@ -151,5 +151,6 @@ def _get_layer_suffix(
         return INTERFACES_SIGMA_SUFFIX
     if layer_type.lower() == "z":
         return INTERFACES_Z_SUFFIX
-    logger.log_error(f"Layer type {layer_type} unknown. Interface "
-                     f"variable could not be determined.")
+    logger.log_error(f"Layer type {layer_type} unknown. Allowed layer "
+                     "type: z or sigma. Interface "
+                     "variable could not be determined.")
