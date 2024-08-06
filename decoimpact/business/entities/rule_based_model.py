@@ -198,10 +198,17 @@ class RuleBasedModel(IModel):
 
         rule_inputs = self._get_direct_rule_inputs(rule_names)
 
+        for dataset in self._input_datasets:
+            dummy_var_name = _du.get_dummy_variable_in_ugrid(dataset)
+
         # check for missing rule inputs
         for rule_name, rule_input in rule_inputs.items():
             needed_rule_inputs = _lu.remove_duplicates_from_list(rule_input)
             rule_input_vars = input_vars + list(mappings.values())
+            needed_rule_inputs = _du.extend_to_full_name(
+                needed_rule_inputs,
+                dummy_var_name
+            )
             missing_rule_inputs = _lu.items_not_in(needed_rule_inputs, rule_input_vars)
             if len(missing_rule_inputs) > 0:
                 logger.log_error(
