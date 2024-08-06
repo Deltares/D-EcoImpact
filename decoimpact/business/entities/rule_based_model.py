@@ -154,7 +154,7 @@ class RuleBasedModel(IModel):
 
         return _lu.remove_duplicates_from_list(all_vars)
 
-    #pylint disable=too-many-locals
+    # pylint: disable=too-many-locals
     def _validate_mappings(self, mappings: dict[str, str], logger: ILogger) -> bool:
         """Checks if the provided mappings are valid.
 
