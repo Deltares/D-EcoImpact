@@ -14,6 +14,8 @@ Classes:
 
 from pathlib import Path
 
+from regex import F
+
 from decoimpact.business.entities.i_model import ModelStatus as _ModelStatus
 from decoimpact.business.utils.version_utils import read_version_number
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
@@ -61,6 +63,7 @@ class Application:
             input_path (Path): path to input file
         """
 
+        print(input_path)
         try:
             # show application version
             self._logger.log_info(f"Application version: {self.APPLICATION_VERSION}")
@@ -87,21 +90,31 @@ class Application:
                 self._logger.log_warning(warning_msg)
 
             # build model
-            model = self._model_builder.build_model(model_data)
+            print(model_data)
 
-            # run model
-            _ModelRunner.run_model(model, self._logger)
-
-            # write output file
-            if model.status == _ModelStatus.FINALIZED:
-                settings = OutputFileSettings(
-                    self.APPLICATION_NAME, self.APPLICATION_VERSION
+            for dataset in model_data.datasets:
+                print(dataset.path)
+                input_files = self._da_layer.retrieve_partitioned_file_names(
+                    dataset.path
                 )
-                settings.variables_to_save = model_data.output_variables
+                for file_name in input_files:
+                    print(file_name)
+                    dataset.path = Path(file_name)
+                    model = self._model_builder.build_model(model_data)
 
-                self._da_layer.write_output_file(
-                    model.output_dataset, model_data.output_path, settings
-                )
+                    # run model
+                    _ModelRunner.run_model(model, self._logger)
+
+                    # write output file
+                    if model.status == _ModelStatus.FINALIZED:
+                        settings = OutputFileSettings(
+                            self.APPLICATION_NAME, self.APPLICATION_VERSION
+                        )
+                        settings.variables_to_save = model_data.output_variables
+
+                        self._da_layer.write_output_file(
+                            model.output_dataset, model_data.output_path, settings
+                        )
 
         except Exception as exc:  # pylint: disable=broad-except
             self._logger.log_error(f"Exiting application after error: {exc}")

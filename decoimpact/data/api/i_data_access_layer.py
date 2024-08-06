@@ -14,6 +14,7 @@ Interfaces:
 
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import List
 
 import xarray as _xr
 
@@ -24,6 +25,19 @@ from decoimpact.data.api.output_file_settings import OutputFileSettings
 
 class IDataAccessLayer(ABC):
     """Interface for the data layer"""
+
+    @abstractmethod
+    def retrieve_partitioned_file_names(self, path: Path) -> List:
+        """
+        Find all files according to the pattern in the path string
+
+        Args:
+            path (str): path to input file (with * for generic part)
+
+        Returns:
+            List: List of strings with all files in folder according to pattern
+
+        """
 
     @abstractmethod
     def read_input_file(self, path: Path) -> IModelData:
