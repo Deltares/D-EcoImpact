@@ -154,3 +154,4 @@ def _get_layer_suffix(
     logger.log_error(f"Layer type {layer_type} unknown. Allowed layer "
                      "type: z or sigma. Interface "
                      "variable could not be determined.")
+    return "_unknown"
