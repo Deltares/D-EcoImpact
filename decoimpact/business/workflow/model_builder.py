@@ -76,7 +76,9 @@ class ModelBuilder(IModelBuilder):
 
         mapping = model_data.datasets[0].mapping
 
-        model: IModel = RuleBasedModel(datasets, rules, mapping, model_data.name)
+        model: IModel = RuleBasedModel(
+            datasets, rules, mapping, model_data.name, model_data.partition
+        )
 
         return model
 

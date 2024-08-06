@@ -36,7 +36,7 @@ class DataAccessLayer(IDataAccessLayer):
     def __init__(self, logger: ILogger):
         self._logger = logger
 
-    def retrieve_partitioned_file_names(self, path: Path) -> List:
+    def retrieve_partitioned_file_names(self, path: Path) -> dict:
         """
         Find all files according to the pattern in the path string
 
@@ -47,7 +47,12 @@ class DataAccessLayer(IDataAccessLayer):
             List: List of strings with all files in folder according to pattern
 
         """
-        return glob.glob(path.absolute().as_posix())
+        name_list = path.parent.glob(path.name)
+        names = {}
+        for name in name_list:
+            part = re.findall(path.name.replace("*", "(.*)"), name.as_posix())
+            names["_".join(part)] = name
+        return names
 
     def read_input_file(self, path: Path) -> IModelData:
         """Reads input file from provided path

@@ -63,7 +63,6 @@ class Application:
             input_path (Path): path to input file
         """
 
-        print(input_path)
         try:
             # show application version
             self._logger.log_info(f"Application version: {self.APPLICATION_VERSION}")
@@ -90,16 +89,21 @@ class Application:
                 self._logger.log_warning(warning_msg)
 
             # build model
-            print(model_data)
-
             for dataset in model_data.datasets:
-                print(dataset.path)
                 input_files = self._da_layer.retrieve_partitioned_file_names(
                     dataset.path
                 )
-                for file_name in input_files:
-                    print(file_name)
-                    dataset.path = Path(file_name)
+                output_path_base = Path(model_data.output_path)
+                for key, file_name in input_files.items():
+                    dataset.path = file_name
+                    if "*" in output_path_base.stem:
+                        output_path = Path(str(output_path_base).replace("*", key))
+                    else:
+                        output_path = Path.joinpath(
+                            output_path_base.parent,
+                            f"{output_path_base.stem}_{key}{output_path_base.suffix}",
+                        )
+                    model_data.partition = key
                     model = self._model_builder.build_model(model_data)
 
                     # run model
@@ -113,7 +117,7 @@ class Application:
                         settings.variables_to_save = model_data.output_variables
 
                         self._da_layer.write_output_file(
-                            model.output_dataset, model_data.output_path, settings
+                            model.output_dataset, output_path, settings
                         )
 
         except Exception as exc:  # pylint: disable=broad-except

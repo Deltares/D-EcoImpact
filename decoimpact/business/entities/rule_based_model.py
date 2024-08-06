@@ -33,6 +33,7 @@ class RuleBasedModel(IModel):
         rules: List[IRule],
         mapping: Optional[dict[str, str]] = None,
         name: str = "Rule-Based model",
+        partition: str = "",
     ) -> None:
 
         self._name = name
@@ -42,6 +43,7 @@ class RuleBasedModel(IModel):
         self._output_dataset: _xr.Dataset
         self._rule_processor: Optional[RuleProcessor]
         self._mappings = mapping
+        self._partition = partition
 
     @property
     def name(self) -> str:
@@ -72,6 +74,16 @@ class RuleBasedModel(IModel):
     def output_dataset(self) -> _xr.Dataset:
         """Output dataset produced by this model"""
         return self._output_dataset
+
+    @property
+    def partition(self) -> str:
+        """partition of the model"""
+        return self._partition
+
+    @partition.setter
+    def partition(self, partition: str):
+        """partition of the model"""
+        self._partition = partition
 
     def validate(self, logger: ILogger) -> bool:
         """Validates the model"""
@@ -236,6 +248,5 @@ class RuleBasedModel(IModel):
         """
         for rule in self._rules:
             rule.input_variable_names = _du.extend_to_full_name(
-                rule.input_variable_names,
-                dummy_variable_name
+                rule.input_variable_names, dummy_variable_name
             )
