@@ -39,7 +39,7 @@ def test_create_filter_extremes_rule_with_defaults():
 def test_validation_when_not_valid():
     """
     Test an incorrect filter extremes rule validates with error
-    time_scale is not in TimeOperartionSettings
+    time_scale is not in TimeOperationSettings
     """
     logger = Mock(ILogger)
     rule = FilterExtremesRule("test_rule_name", ["input_var"], "peaks", 5, "h", True)
@@ -51,7 +51,7 @@ def test_validation_when_not_valid():
 def test_validation_when_valid():
     """
     Test a correct filter extremes rule validates without error
-    time_scale is in TimeOperartionSettings
+    time_scale is in TimeOperationSettings
     """
     logger = Mock(ILogger)
     rule = FilterExtremesRule("test_rule_name", ["input_var"], "peaks", 5, "hour", True)
