@@ -733,10 +733,9 @@ Below an example of an input file to use the filter_extremes_rule.
       time_scale: hour
       mask: True
 ```
-The input above is part of the acceptance test 
-![Example filter extremes rule](../assets/images/3_result_filter_extremes.png "Example on the result of a filter extremes rule in one cell.")
+The input above is part of a simple test to calculate the salinity at the peaks and troughs of the waterlevel. The extreme filter rule is first used to get the locations of the peaks and throughs of the water level (mask = True) and with the combine rule are the values of the salinity at these points calculated. The figure below shows these results, the salinity (blue line) and water level are plotted (orange line). The peaks (purple) and troughs (green) are calculated. This example can be found and reproduced with an iPython notebook (in D-EcoImpact/scripts/test_extreme_filter.ipynb), in this file is also the input_file.yaml included that is used for the calculation.
 
-
+![Example filter extremes rule](../../assets/images/3_result_filter_extremes.png "Example on the result of a filter extremes rule in one cell.")
 
 ##Including data from another YAML file
 
