@@ -41,7 +41,7 @@ class ParserFilterExtremesRule(IParserRuleBase):
         ]
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         description: str = get_dict_element("description", dictionary, False) or ""
-        extreme_type: str = get_dict_element("extreme_type", dictionary)
+        extreme_type: str = get_dict_element("extreme_type", dictionary) or "peaks"
         distance: int = get_dict_element("distance", dictionary) or 0
         time_scale: str = get_dict_element("time_scale", dictionary) or "D"
 

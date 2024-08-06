@@ -79,9 +79,15 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         return self.settings.validate(self.name, logger)
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
-        """Retrieve the peak or through values
+        """
+        Retrieve the extremes
+        extreme_type: Either retrieve the values at the peaks or troughs
+        mask: If False return the values at the peaks, otherwise return a
+        1 at the extreme locations.
+
         Args:
             value_array (DataArray): Values to filter at extremes
+
         Returns:
             DataArray: Filtered DataArray with only the extremes remaining
             at all other times the values are set to NaN
@@ -92,15 +98,14 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         )
 
         time_dim_name = get_time_dimension_name(value_array, logger)
-        old_dr = _xr.DataArray(value_array)
-        time = old_dr.time.values
+        time = value_array.time.values
         timestep = (time[-1] - time[0]) / len(time)
         width_time = _np.timedelta64(self.distance, time_scale)
         distance = width_time / timestep
 
         results = _xr.apply_ufunc(
             self._process_peaks,
-            old_dr,
+            value_array,
             input_core_dims=[[time_dim_name]],
             output_core_dims=[[time_dim_name]],
             vectorize=True,
@@ -111,7 +116,7 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
             },
         )
 
-        results = results.transpose(*old_dr.dims)
+        results = results.transpose(*value_array.dims)
         return results
 
     def _process_peaks(
