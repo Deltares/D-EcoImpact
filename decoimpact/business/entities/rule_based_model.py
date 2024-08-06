@@ -21,13 +21,7 @@ import decoimpact.business.utils.list_utils as _lu
 from decoimpact.business.entities.i_model import IModel, ModelStatus
 from decoimpact.business.entities.rule_processor import RuleProcessor
 from decoimpact.business.entities.rules.i_rule import IRule
-from decoimpact.crosscutting.delft3d_specific_data import (
-    BED_LEVEL_SUFFIX,
-    INTERFACES_SIGMA_SUFFIX,
-    INTERFACES_Z_SUFFIX,
-    WATER_LEVEL_SUFFIX,
-    delft3d_specific_names,
-)
+from decoimpact.crosscutting.delft3d_specific_data import delft3d_specific_names
 from decoimpact.crosscutting.i_logger import ILogger
 
 
