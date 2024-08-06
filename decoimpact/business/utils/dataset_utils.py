@@ -222,7 +222,7 @@ def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
     return dummy
 
 
-def get_dependent_var_list(dataset: _xr.Dataset, dummy_vars) -> list:
+def get_dependent_var_list(dataset: _xr.Dataset, dummy_vars) -> List:
     """Obtain the list of variables in a dataset.
     The variables are
     recursively looked up based on the dummy variable.
@@ -231,9 +231,9 @@ def get_dependent_var_list(dataset: _xr.Dataset, dummy_vars) -> list:
 
     Args:
         dataset (_xr.Dataset): Dataset to search for dummy variable
-        dummy_vars (list[str]): dummy variables
+        dummy_vars (List[str]): dummy variables
     Returns:
-        list[str]: dependent variables
+        List[str]: dependent variables
     """
 
     var_list = rec_search_dep_vars(dataset, dummy_vars, [], [])
@@ -242,7 +242,7 @@ def get_dependent_var_list(dataset: _xr.Dataset, dummy_vars) -> list:
     return _lu.remove_duplicates_from_list(var_list)
 
 
-def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> list[str]:
+def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> List[str]:
     """Get all the variables that are described in the attributes of the dummy variable,
     associated with the UGrid standard.
 
@@ -360,7 +360,7 @@ def reduce_dataset_for_writing(
 
 def extend_to_full_name(
         variables: List[str],
-        dummy_variable: str
+        dummy_variable: List[str]
 ) -> List[str]:
     """Extend suffix names to full variables names by prepending the dummy
     variable name.
