@@ -98,8 +98,6 @@ def test_parse_incorrect_layer_type_to_rule_data_logic():
     exception_raised = exc_info.value
 
     # Assert
-    #expected_message = f"Layer_type {incorrect_layer_type} is not recognized. \       Supported options are 'z' and 'sigma'."
-
     expected_message = f"Layer_type '{incorrect_layer_type}' is not recognized. \
 Supported options are 'z' and 'sigma'."
     assert exception_raised.args[0] == expected_message
