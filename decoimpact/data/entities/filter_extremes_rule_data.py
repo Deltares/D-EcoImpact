@@ -12,7 +12,7 @@ Classes:
 
 """
 
-from typing import Any, List
+from typing import List
 
 from decoimpact.data.api.i_filter_extremes_rule_data import IFilterExtremesRuleData
 from decoimpact.data.entities.rule_data import RuleData

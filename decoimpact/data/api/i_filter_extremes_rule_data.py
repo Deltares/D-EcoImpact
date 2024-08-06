@@ -11,7 +11,7 @@ Interfaces:
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, List
+from typing import List
 
 from decoimpact.data.api.i_rule_data import IRuleData
 

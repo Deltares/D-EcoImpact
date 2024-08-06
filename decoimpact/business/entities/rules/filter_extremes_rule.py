@@ -11,7 +11,7 @@ Classes:
     FilterExtremesRule
 """
 
-from typing import Any, List
+from typing import List
 
 import xarray as _xr
 import scipy as _sc

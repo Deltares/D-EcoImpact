@@ -719,6 +719,8 @@ FORMAT
 
 The filter extremes rule allows for a filtering of extreme peaks in a dataset (over time). The input variable can be any dimension, as long as it has a time dimension. If the variable mask = True, the output is a variable with the same shape as the input, but only values where the peaks occur and NaN values where no peak occur. If mask = False the output is a samesized variable with 1 (True) at the peak values and NaN elsewhere. Furthermore the user can add a distance (with timescale) as input to define the minimum distance between two peaks/troughs. This mask can be applied to another layer with the combine rule (operation: multiply).
 
+Below an example of an input file to use the filter_extremes_rule.
+
 ```
 #EXAMPLE  : Determine the peak waterlevel values
   - depth_average_rule:
@@ -731,6 +733,9 @@ The filter extremes rule allows for a filtering of extreme peaks in a dataset (o
       time_scale: hour
       mask: True
 ```
+The input above is part of the acceptance test 
+![Example filter extremes rule](../assets/images/3_result_filter_extremes.png "Example on the result of a filter extremes rule in one cell.")
+
 
 
 ##Including data from another YAML file
