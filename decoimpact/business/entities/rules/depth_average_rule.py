@@ -34,6 +34,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         super().__init__(name, input_variable_names)
         self._layer_type = layer_type
 
+    # pylint: disable=too-many-arguments
     def execute(
         self, value_arrays: Dict[str, _xr.DataArray], logger: ILogger
     ) -> _xr.DataArray:
