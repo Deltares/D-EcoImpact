@@ -14,7 +14,7 @@ FORMAT
 ```
 
 
-The filter extremes rule allows for a filtering of extremes in a dataset (over time). The input variable can be any dimension, as long as it has a time dimension. If the variable mask = False, the output is a variable with the same shape as the input, but only values where the peaks occur and NaN values where no peak occur. If mask = True the output is a same sized variable with 1 (True) at the peak values and NaN elsewhere. Furthermore the user can add a distance (with timescale) as input to define the minimum distance between two peaks/troughs. This mask can be applied to another layer with the combine rule (operation: multiply).
+The filter extremes rule allows for temporal filtering of extremes in a dataset, i.e. peaks (local maxima) and troughs (local minima). The input variable can be any dimension, as long as it has a time dimension. If the variable mask = False, the output is a variable with the same shape as the input, but only values where the peaks occur and NaN values where no peak occur. If mask = True the output is a same sized variable with 1 (True) at the peak values and NaN elsewhere. Furthermore the user can add a distance (with timescale) as input to define the minimum distance between two peaks/troughs. This mask can be applied to another layer with the combine rule (operation: multiply).
 
 Below an example of an input file to use the filter_extremes_rule.
 
