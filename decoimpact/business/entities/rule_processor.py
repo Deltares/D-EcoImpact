@@ -68,6 +68,7 @@ class RuleProcessor:
         inputs = _lu.flatten_list(
             [_du.list_vars(self._input_dataset), _du.list_coords(self._input_dataset)]
         )
+
         tree, success = self._create_rule_sets(inputs, self._rules, [], logger)
         if success:
             self._processing_list = tree
