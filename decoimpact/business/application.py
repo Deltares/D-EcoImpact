@@ -99,9 +99,11 @@ class Application:
                     if "*" in output_path_base.stem:
                         output_path = Path(str(output_path_base).replace("*", key))
                     else:
+                        partition_part = f"_{key}"
                         output_path = Path.joinpath(
                             output_path_base.parent,
-                            f"{output_path_base.stem}_{key}{output_path_base.suffix}",
+                            f"{output_path_base.stem}{partition_part}"
+                            f"{output_path_base.suffix}",
                         )
                     model_data.partition = key
                     model = self._model_builder.build_model(model_data)

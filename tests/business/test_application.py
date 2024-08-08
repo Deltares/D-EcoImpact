@@ -16,6 +16,7 @@ from decoimpact.business.entities.i_model import IModel
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
+from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 
 
@@ -25,14 +26,19 @@ def test_running_application():
     # Arrange
     logger = Mock(ILogger)
     data_layer = Mock(IDataAccessLayer)
+    dataset = Mock(IDatasetData)
     model: IModel = Mock(IModel)
     model_builder = Mock(IModelBuilder)
     model_data = Mock(IModelData)
 
     model.name = "Test model"
+    model.partition = ""
     model_builder.build_model.return_value = model
     data_layer.read_input_file.return_value = model_data
+    data_layer.retrieve_partitioned_file_names.return_value = {"": "Test.nc"}
     model_data.version = [0, 0, 0]
+    model_data.datasets = [dataset]
+    model_data.output_path = "Result_test.nc"
 
     application = Application(logger, data_layer, model_builder)
     application.APPLICATION_VERSION = "0.0.0"
@@ -49,4 +55,3 @@ def test_running_application():
     model.initialize.assert_called()
     model.execute.assert_called()
     model.finalize.assert_called()
-    # assert
