@@ -9,6 +9,7 @@ Tests for ParserDepthAverageRule class
 """
 
 from typing import Any, List
+
 import pytest
 from mock import Mock
 
@@ -38,6 +39,7 @@ def test_parse_dict_to_rule_data_logic():
         {
             "name": "testname",
             "input_variable": "input",
+            "layer_type": "z",
             "output_variable": "output",
         }
     )
@@ -56,6 +58,7 @@ def test_parse_wrong_dict_to_rule_data_logic():
         {
             "name": "testname",
             "output_variable": "output",
+            "layer_type": "sigma",
         }
     )
     logger = Mock(ILogger)
@@ -70,4 +73,31 @@ def test_parse_wrong_dict_to_rule_data_logic():
 
     # Assert
     expected_message = "Missing element input_variable"
+    assert exception_raised.args[0] == expected_message
+
+def test_parse_incorrect_layer_type_to_rule_data_logic():
+    """Test if an incorrect layer_type not parsed"""
+    # Arrange
+    incorrect_layer_type = "UNKNOWN"
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variable": "input",
+            "layer_type": incorrect_layer_type,
+            "output_variable": "output",
+        }
+    )
+    logger = Mock(ILogger)
+
+    # Act
+    data = ParserDepthAverageRule()
+
+    with pytest.raises(NotImplementedError) as exc_info:
+        data.parse_dict(contents, logger)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    expected_message = f"Layer_type '{incorrect_layer_type}' is not recognized. \
+Supported options are 'z' and 'sigma'."
     assert exception_raised.args[0] == expected_message

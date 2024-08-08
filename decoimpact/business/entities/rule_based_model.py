@@ -21,6 +21,7 @@ import decoimpact.business.utils.list_utils as _lu
 from decoimpact.business.entities.i_model import IModel, ModelStatus
 from decoimpact.business.entities.rule_processor import RuleProcessor
 from decoimpact.business.entities.rules.i_rule import IRule
+from decoimpact.crosscutting.delft3d_specific_data import delft3d_specific_names
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -165,6 +166,7 @@ class RuleBasedModel(IModel):
 
         return _lu.remove_duplicates_from_list(all_vars)
 
+    # pylint: disable=too-many-locals
     def _validate_mappings(self, mappings: dict[str, str], logger: ILogger) -> bool:
         """Checks if the provided mappings are valid.
 
@@ -181,6 +183,7 @@ class RuleBasedModel(IModel):
                 for ds in self._input_datasets
             ]
         )
+        self._check_keys_with_suffixes(mappings, delft3d_specific_names)
 
         valid = True
 
@@ -210,10 +213,17 @@ class RuleBasedModel(IModel):
 
         rule_inputs = self._get_direct_rule_inputs(rule_names)
 
+        for dataset in self._input_datasets:
+            dummy_var_name = _du.get_dummy_variable_in_ugrid(dataset)
+
         # check for missing rule inputs
         for rule_name, rule_input in rule_inputs.items():
             needed_rule_inputs = _lu.remove_duplicates_from_list(rule_input)
             rule_input_vars = input_vars + list(mappings.values())
+            needed_rule_inputs = _du.extend_to_full_name(
+                needed_rule_inputs,
+                dummy_var_name
+            )
             missing_rule_inputs = _lu.items_not_in(needed_rule_inputs, rule_input_vars)
             if len(missing_rule_inputs) > 0:
                 logger.log_error(
@@ -250,3 +260,19 @@ class RuleBasedModel(IModel):
             rule.input_variable_names = _du.extend_to_full_name(
                 rule.input_variable_names, dummy_variable_name
             )
+
+    def _check_keys_with_suffixes(self, dictionary, suffixes):
+        """
+        Checks if any key in the dictionary ends with provided suffixes.
+        Raise eror if that occurs.
+
+        Args:
+            dictionary (dict)   : The dictionary to check.
+            suffixes (List[str]): List of suffixes to check against.
+
+        """
+        for key in dictionary:
+            if any(key.endswith(suffix) for suffix in suffixes):
+                raise ValueError(f"Remapping variables ending with"
+                                 f" {delft3d_specific_names} is not"
+                                 f" allowed.")
