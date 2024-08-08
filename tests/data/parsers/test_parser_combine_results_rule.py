@@ -13,7 +13,7 @@ from typing import Any
 import pytest
 from mock import Mock
 
-from decoimpact.business.entities.rules.multi_array_operation_type import (
+from decoimpact.business.entities.rules.options.multi_array_operation_type import (
     MultiArrayOperationType,
 )
 from decoimpact.crosscutting.i_logger import ILogger
