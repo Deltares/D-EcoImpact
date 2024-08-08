@@ -17,6 +17,9 @@ from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.dictionary_utils import get_dict_element
 from decoimpact.data.entities.filter_extremes_rule_data import FilterExtremesRuleData
 from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
+from decoimpact.business.entities.rules.options.options_filter_extreme_rule import (
+    ExtremeTypeOptions,
+)
 
 
 class ParserFilterExtremesRule(IParserRuleBase):
@@ -42,6 +45,7 @@ class ParserFilterExtremesRule(IParserRuleBase):
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         description: str = get_dict_element("description", dictionary, False) or ""
         extreme_type: str = get_dict_element("extreme_type", dictionary) or "peaks"
+        self._validate_extreme_type(extreme_type)
         distance: int = get_dict_element("distance", dictionary) or 0
         time_scale: str = get_dict_element("time_scale", dictionary) or "D"
 
@@ -54,3 +58,18 @@ class ParserFilterExtremesRule(IParserRuleBase):
         rule_data.description = description
 
         return rule_data
+
+    def _validate_extreme_type(self, extreme_type: Any):
+        """
+        Validates if the extreme type is well formed (a string)
+        and has the correct values
+        """
+        if not isinstance(extreme_type, str):
+            message = f"""Extreme_type must be a string, \
+                received: {extreme_type}"""
+            raise ValueError(message)
+        if extreme_type.upper() not in dir(ExtremeTypeOptions):
+            message = (
+                f"""Extreme_type must be one of: [{', '.join(ExtremeTypeOptions)}]"""
+            )
+            raise ValueError(message)

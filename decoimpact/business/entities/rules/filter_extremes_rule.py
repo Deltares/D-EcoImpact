@@ -18,6 +18,9 @@ import scipy as _sc
 import numpy as _np
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
+from decoimpact.business.entities.rules.options.options_filter_extreme_rule import (
+    ExtremeTypeOptions,
+)
 from decoimpact.business.entities.rules.rule_base import RuleBase
 from decoimpact.business.entities.rules.time_operation_settings import (
     TimeOperationSettings,
@@ -35,7 +38,7 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         self,
         name: str,
         input_variable_names: List[str],
-        extreme_type: str,
+        extreme_type: ExtremeTypeOptions,
         distance: int,
         time_scale: str,
         mask: bool,
@@ -44,7 +47,7 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         self._settings = TimeOperationSettings(
             {"second": "s", "hour": "h", "day": "D", "month": "M", "year": "Y"}
         )
-        self._extreme_type = extreme_type
+        self._extreme_type: ExtremeTypeOptions = extreme_type
         self._distance = distance
         self._settings.time_scale = time_scale
         self._mask = mask
@@ -55,7 +58,7 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         return self._settings
 
     @property
-    def extreme_type(self) -> str:
+    def extreme_type(self) -> ExtremeTypeOptions:
         """Type of extremes (peaks or troughs)"""
         return self._extreme_type
 

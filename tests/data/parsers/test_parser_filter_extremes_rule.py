@@ -79,3 +79,47 @@ def test_parse_wrong_dict_to_rule_data_logic():
     # Assert
     expected_message = "Missing element distance"
     assert exception_raised.args[0] == expected_message
+
+
+@pytest.mark.parametrize(
+    "extreme_type, expected_message",
+    [
+        ("peaks", ""),
+        ("troughs", ""),
+        ("test", "Extreme_type must be one of: [peaks, troughs]"),
+        (
+            1,
+            "Extreme_type must be a string, \
+                received: 1",
+        ),
+    ],
+)
+def test_validate_extreme_type(extreme_type: str, expected_message: str):
+    """Test if a correct dictionary is parsed into a RuleData object"""
+    # Arrange
+    contents = dict(
+        {
+            "name": "testname",
+            "input_variable": "input",
+            "output_variable": "output",
+            "distance": 1,
+            "time_scale": "hour",
+            "mask": True,
+            "extreme_type": extreme_type,
+        }
+    )
+    logger = Mock(ILogger)
+    # Act
+    data = ParserFilterExtremesRule()
+    # Act
+
+    if not expected_message:
+        parsed_dict = data.parse_dict(contents, logger)
+        assert isinstance(parsed_dict, IRuleData)
+    else:
+        with pytest.raises(ValueError) as exc_info:
+            data.parse_dict(contents, logger=Mock(ILogger))
+        exception_raised = exc_info.value
+
+        # Assert
+        assert exception_raised.args[0] == expected_message
