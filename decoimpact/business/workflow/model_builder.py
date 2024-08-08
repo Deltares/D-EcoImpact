@@ -109,6 +109,7 @@ class ModelBuilder(IModelBuilder):
             rule = DepthAverageRule(
                 rule_data.name,
                 rule_data.input_variables,
+                rule_data.layer_type,
             )
         elif isinstance(rule_data, IFilterExtremesRuleData):
             rule = FilterExtremesRule(

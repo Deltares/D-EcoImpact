@@ -19,6 +19,8 @@ output-data:
 
 In the input data the variables that are present in the input data provided through “filename” are selected for use. It is possible to filter the input data by providing a start date or end date (format: "dd-mm-yyyy"); this is optional. The variables that are used can be selected under “variable_mapping”. Here you are also able to rename variables as the name used for storage is often cryptic. 
 
+Note: remapping the variables 'mesh2d_interface_z', 'mesh2d_interface_sigma', 'mesh2d_flowelem_bl and 'mesh2d_s1' is currently not supported to enable depth-averaging. This will be remedied in a future version. For now a work-around is to use a multiply rule with a multiplication factor of 1. This will in effect create a new variable, to which the remapped name can be assigned as output.
+
 At output data the location where the output file needs to be written can be provided through “filename”. In this output file only variables that have been used from the input data and variables that have been created in the model are stored. It is possible to reduce the file size with the optional parameter "save_only_variables", which can take the name of one or several variables.
 The model needs at least one rule under “rules” to execute.
 

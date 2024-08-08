@@ -72,6 +72,7 @@ def test_validation_of_rule_based_model():
     logger = Mock(ILogger)
 
     dataset["test"] = _xr.DataArray([32, 94, 9])
+    dataset["test"].attrs = {"cf_role": "mesh_topology"}
 
     rule.input_variable_names = ["input"]
     rule.output_variable_name = "output"

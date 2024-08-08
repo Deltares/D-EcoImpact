@@ -14,7 +14,6 @@ from unittest.mock import Mock
 import numpy as _np
 import pytest
 import xarray as _xr
-from tomlkit import value
 
 from decoimpact.business.entities.rules.depth_average_rule import DepthAverageRule
 from decoimpact.crosscutting.i_logger import ILogger
@@ -24,7 +23,7 @@ def test_create_depth_average_rule_with_defaults():
     """Test creating a depth average rule with defaults"""
 
     # Arrange & Act
-    rule = DepthAverageRule("test_rule_name", ["foo", "hello"])
+    rule = DepthAverageRule("test_rule_name", ["foo", "hello"],"z")
 
     # Assert
     assert isinstance(rule, DepthAverageRule)
@@ -32,6 +31,7 @@ def test_create_depth_average_rule_with_defaults():
     assert rule.description == ""
     assert rule.input_variable_names == ["foo", "hello"]
     assert rule.output_variable_name == "output"
+    assert rule._layer_type == "z"
 
 
 def test_no_validate_error_with_correct_rule():
@@ -41,6 +41,7 @@ def test_no_validate_error_with_correct_rule():
     rule = DepthAverageRule(
         "test_rule_name",
         ["foo", "hello"],
+        "z",
     )
 
     # Assert
@@ -95,7 +96,8 @@ def test_depth_average_rule(
     logger = Mock(ILogger)
     rule = DepthAverageRule(
         name="test",
-        input_variable_names=["foo"],
+        input_variable_names=["foo", "mesh2d_interface_z"],
+        layer_type="z",
     )
 
     # Create dataset
@@ -126,11 +128,13 @@ def test_depth_average_rule(
 
 
 def test_dimension_error():
-    """If the number of interfaces > number of layers + 1. Give an error, no calculation is possible"""
+    """If the number of interfaces > number of layers + 1. Give an error, no
+    calculation is possible"""
     logger = Mock(ILogger)
     rule = DepthAverageRule(
         name="test",
-        input_variable_names=["foo"],
+        input_variable_names=["foo", "mesh2d_interface_z"],
+        layer_type="z",
     )
 
     # Create dataset
