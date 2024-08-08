@@ -58,14 +58,15 @@ def test_process_input(input_filename):
     ), f"Script {main_script_path} failed for {input_filename}\n{stderr}"
 
     # Load the generated and reference NetCDF files using xarray
-    generated_nc = _xr.open_dataset(
-        output_nc_files_path / input_filename.replace(".yaml", ".nc")
-    )
-    reference_nc = _xr.open_dataset(
-        reference_files_path / input_filename.replace(".yaml", ".nc")
-    )
+    nc_filename = input_filename.replace(".yaml", ".nc")
+    reference_filename = Path(output_nc_files_path, nc_filename)
+    filenames_list = reference_filename.parent.glob(reference_filename.name)
 
-    # Compare the datasets if they have matching variables and coordinates
-    assert generated_nc.equals(
-        reference_nc
-    ), f"Generated output does not match reference for {input_filename}"
+    for filename in filenames_list:
+        generated_nc = _xr.open_dataset(filename)
+        reference_nc = _xr.open_dataset(reference_files_path / filename.name)
+
+        # Compare the datasets if they have matching variables and coordinates
+        assert generated_nc.equals(
+            reference_nc
+        ), f"Generated output does not match reference for {input_filename}"
