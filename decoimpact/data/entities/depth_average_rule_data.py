@@ -5,10 +5,10 @@
 # A copy of the GNU Affero General Public License can be found at
 # https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md
 """
-Module for (multiple) ClassificationRule class
+Module for (multiple) DepthAverageRule class
 
 Classes:
-    (multiple) ClassificationRuleData
+    (multiple) DepthAverageRuleData
 
 """
 

@@ -16,7 +16,7 @@ import pytest
 import xarray as _xr
 
 from decoimpact.business.entities.rules.combine_results_rule import CombineResultsRule
-from decoimpact.business.entities.rules.multi_array_operation_type import (
+from decoimpact.business.entities.rules.options.multi_array_operation_type import (
     MultiArrayOperationType,
 )
 from decoimpact.crosscutting.i_logger import ILogger

@@ -1,4 +1,4 @@
-version: 0.5.7
+version: 0.5.8
 
 input-data:
   - dataset:
@@ -67,6 +67,16 @@ rules:
         description:
         input_variable:
         output_variable: 
+
+  - filter_extremes_rule:
+      name:
+      description:
+      input_variable:
+      output_variable:
+      extreme_type:
+      distance:
+      time_scale:
+      mask: True
 
 output-data:
   filename: 
