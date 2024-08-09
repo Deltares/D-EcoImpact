@@ -49,8 +49,11 @@ class DataAccessLayer(IDataAccessLayer):
         name_list = path.parent.glob(path.name)
         names = {}
         for name in name_list:
-            part = re.findall(path.name.replace("*", "(.*)"), name.as_posix())
-            names["_".join(part)] = name
+            if "*" in path.name:
+                part = re.findall(path.name.replace("*", "(.*)"), name.as_posix())
+                names["_".join(part)] = name
+            else:
+                names[""] = name
         return names
 
     def read_input_file(self, path: Path) -> IModelData:
