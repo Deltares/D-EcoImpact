@@ -10,10 +10,10 @@ Module for ExtremeTypeOptions Class
 Classes:
     ExtremeTypeOptions
 """
-from enum import StrEnum, auto
+from enum import auto, Enum
 
 
-class ExtremeTypeOptions(StrEnum):
+class ExtremeTypeOptions(str, Enum):
     """Classify the extreme type options."""
 
     PEAKS = auto()
