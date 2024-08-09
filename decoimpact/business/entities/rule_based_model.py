@@ -28,6 +28,7 @@ from decoimpact.crosscutting.i_logger import ILogger
 class RuleBasedModel(IModel):
     """Model class for models based on rules"""
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         input_datasets: List[_xr.Dataset],
@@ -37,6 +38,7 @@ class RuleBasedModel(IModel):
         partition: str = "",
     ) -> None:
 
+        # pylint: disable=too-many-instance-attributes
         self._name = name
         self._status = ModelStatus.CREATED
         self._rules = rules
@@ -221,8 +223,7 @@ class RuleBasedModel(IModel):
             needed_rule_inputs = _lu.remove_duplicates_from_list(rule_input)
             rule_input_vars = input_vars + list(mappings.values())
             needed_rule_inputs = _du.extend_to_full_name(
-                needed_rule_inputs,
-                dummy_var_name
+                needed_rule_inputs, dummy_var_name
             )
             missing_rule_inputs = _lu.items_not_in(needed_rule_inputs, rule_input_vars)
             if len(missing_rule_inputs) > 0:
@@ -273,6 +274,8 @@ class RuleBasedModel(IModel):
         """
         for key in dictionary:
             if any(key.endswith(suffix) for suffix in suffixes):
-                raise ValueError(f"Remapping variables ending with"
-                                 f" {delft3d_specific_names} is not"
-                                 f" allowed.")
+                raise ValueError(
+                    f"Remapping variables ending with"
+                    f" {delft3d_specific_names} is not"
+                    f" allowed."
+                )

@@ -14,8 +14,6 @@ Classes:
 
 from pathlib import Path
 
-from regex import F
-
 from decoimpact.business.entities.i_model import ModelStatus as _ModelStatus
 from decoimpact.business.utils.version_utils import read_version_number
 from decoimpact.business.workflow.i_model_builder import IModelBuilder
@@ -73,20 +71,16 @@ class Application:
             self._logger.log_info(f"Input file version: {str_input_version}")
 
             # check version:
-            error_msg = (
-                f"Application version {self.APPLICATION_VERSION} is older"
-                " than version from input file {str_input_version}"
-            )
-            warning_msg = (
+            message = (
                 f"Application version {self.APPLICATION_VERSION} is older"
                 " than version from input file {str_input_version}"
             )
             # major version (app) should be equal or larger then input version --> error
             if self.APPLICATION_VERSION_PARTS[0] < model_data.version[0]:
-                self._logger.log_error(error_msg)
+                self._logger.log_error(message)
             # minor version (app) should be equal or larger then input version --> warn
             elif self.APPLICATION_VERSION_PARTS[1] < model_data.version[1]:
-                self._logger.log_warning(warning_msg)
+                self._logger.log_warning(message)
 
             # build model
             for dataset in model_data.datasets:
