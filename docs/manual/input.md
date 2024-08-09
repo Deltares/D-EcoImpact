@@ -107,6 +107,7 @@ The output of the following functionalities has been shown for a section of the 
 {% include-markdown "./rules/rolling_statistics_rule.md" %}
 {% include-markdown "./rules/axis_filter_rule.md" %}
 {% include-markdown "./rules/depth_average_rule.md" %}
+{% include-markdown "./rules/filter_extremes_rule.md" %}
 
 ## Including data from another YAML file
 

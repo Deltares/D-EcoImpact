@@ -12,7 +12,7 @@ Classes:
 """
 from typing import Any, Dict
 
-from decoimpact.business.entities.rules.multi_array_operation_type import (
+from decoimpact.business.entities.rules.options.multi_array_operation_type import (
     MultiArrayOperationType,
 )
 from decoimpact.crosscutting.i_logger import ILogger
@@ -54,7 +54,7 @@ class ParserCombineResultsRule(IParserRuleBase):
 
         return rule_data
 
-    def _validate_operation_type(self, operation_type: str):
+    def _validate_operation_type(self, operation_type: Any):
         """
         Validates if the operation type is well formed (a string)
         and if it has been implemented."""

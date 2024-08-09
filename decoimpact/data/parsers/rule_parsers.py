@@ -16,6 +16,7 @@ from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.data.parsers.parser_axis_filter_rule import ParserAxisFilterRule
 from decoimpact.data.parsers.parser_classification_rule import ParserClassificationRule
 from decoimpact.data.parsers.parser_combine_results_rule import ParserCombineResultsRule
+from decoimpact.data.parsers.parser_filter_extremes_rule import ParserFilterExtremesRule
 from decoimpact.data.parsers.parser_formula_rule import ParserFormulaRule
 from decoimpact.data.parsers.parser_layer_filter_rule import ParserLayerFilterRule
 from decoimpact.data.parsers.parser_multiply_rule import ParserMultiplyRule
@@ -43,3 +44,4 @@ def rule_parsers() -> Iterator[IParserRuleBase]:
     yield ParserClassificationRule()
     yield ParserAxisFilterRule()
     yield ParserDepthAverageRule()
+    yield ParserFilterExtremesRule()

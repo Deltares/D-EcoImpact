@@ -68,5 +68,15 @@ rules:
         input_variable:
         output_variable: 
 
+  - filter_extremes_rule:
+      name:
+      description:
+      input_variable:
+      output_variable:
+      extreme_type:
+      distance:
+      time_scale:
+      mask: True
+
 output-data:
   filename: 

@@ -19,7 +19,7 @@ import xarray as _xr
 from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
 )
-from decoimpact.business.entities.rules.multi_array_operation_type import (
+from decoimpact.business.entities.rules.options.multi_array_operation_type import (
     MultiArrayOperationType,
 )
 from decoimpact.business.entities.rules.rule_base import RuleBase

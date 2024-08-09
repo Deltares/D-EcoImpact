@@ -1,0 +1,70 @@
+version: 0.0.0
+
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/delft3dfmflow_output_example_DWSM-FM_200m_0004_map.nc
+      variable_mapping:
+        mesh2d_sa1: "salinity"
+
+rules:
+  - filter_extremes_rule:
+      name: Test filter extremes rule
+      description: Testing..
+      input_variable: mesh2d_s1
+      output_variable: water_level_peaks_mask
+      extreme_type: peaks
+      distance: 11
+      time_scale: hour
+      mask: True
+
+  - filter_extremes_rule:
+      name: Test filter extremes rule
+      description: Testing..
+      input_variable: mesh2d_s1
+      output_variable: water_level_peaks
+      extreme_type: peaks
+      distance: 11
+      time_scale: hour
+      mask: False
+
+  - filter_extremes_rule:
+      name: Test filter extremes rule
+      description: Testing..
+      input_variable: mesh2d_s1
+      output_variable: water_level_troughs
+      extreme_type: troughs
+      distance: 11
+      time_scale: hour
+      mask: False
+
+  - filter_extremes_rule:
+      name: Test filter extremes rule
+      description: Testing..
+      input_variable: mesh2d_s1
+      output_variable: water_level_troughs_mask
+      extreme_type: troughs
+      distance: 11
+      time_scale: hour
+      mask: True
+
+  - layer_filter_rule:
+      name: Get 8th layer of salinity
+      description: get 8th layer of model
+      layer_number: 8
+      input_variable: salinity
+      output_variable: salinity_8
+
+  - combine_results_rule:
+      name: test combining
+      operation: multiply
+      input_variables: ["water_level_peaks_mask", "salinity_8"]
+      output_variable: salinity_peaks
+
+  - combine_results_rule:
+      name: test combining
+      operation: multiply
+      input_variables: ["water_level_troughs_mask", "salinity_8"]
+      output_variable: salinity_troughs
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/test19_filter_extremes.nc

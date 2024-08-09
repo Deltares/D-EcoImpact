@@ -54,11 +54,14 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         interface_suffix = _get_layer_suffix(self._layer_type, logger)
 
         bed_level_values = _extract_variable_based_on_suffix(
-            value_arrays, BED_LEVEL_SUFFIX)
+            value_arrays, BED_LEVEL_SUFFIX
+        )
         depths_interfaces = _extract_variable_based_on_suffix(
-            value_arrays, interface_suffix)
+            value_arrays, interface_suffix
+        )
         water_level_values = _extract_variable_based_on_suffix(
-            value_arrays, WATER_LEVEL_SUFFIX)
+            value_arrays, WATER_LEVEL_SUFFIX
+        )
 
         # Get the dimension names for the interfaces and for the layers
         dim_interfaces_name = list(depths_interfaces.dims)[0]
@@ -118,9 +121,8 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
 
 
 def _extract_variable_based_on_suffix(
-        value_arrays: Dict[str, _xr.DataArray],
-        suffix: str
-        ) -> List:
+    value_arrays: Dict[str, _xr.DataArray], suffix: str
+) -> List:
     """Extract the values from the XArray dataset based on the name
     suffixes by matching the name, irrespective of the dummy name prefix.
 
@@ -134,10 +136,7 @@ def _extract_variable_based_on_suffix(
     return [value_arrays[name] for name in value_arrays if suffix in name][0]
 
 
-def _get_layer_suffix(
-        layer_type: str,
-        logger: ILogger
-        ):
+def _get_layer_suffix(layer_type: str, logger: ILogger):
     """Get the interface suffix depending on whether the model is a sigma or z
     layer model. Give error if the interface suffix cannot be determined.
 
@@ -151,7 +150,9 @@ def _get_layer_suffix(
         return INTERFACES_SIGMA_SUFFIX
     if layer_type.lower() == "z":
         return INTERFACES_Z_SUFFIX
-    logger.log_error(f"Layer type {layer_type} unknown. Allowed layer "
-                     "type: z or sigma. Interface "
-                     "variable could not be determined.")
+    logger.log_error(
+        f"Layer type {layer_type} unknown. Allowed layer "
+        "type: z or sigma. Interface "
+        "variable could not be determined."
+    )
     return "_unknown"
