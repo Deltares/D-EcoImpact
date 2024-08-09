@@ -71,11 +71,12 @@ def test_process_input(input_filename):
     with open(str(input_file_path), "r") as f:
         data = yaml.load(f, Loader=SafeLoaderIgnoreUnknown)
     output_filename = Path(data["output-data"]["filename"])
-
+    print(f"output_filenam: {output_filename}")
     if "*" in output_filename.name:
         outputname = output_filename.name
     else:
         outputname = output_filename.stem + "*"
+    print(f"outputname: {outputname}")
 
     filenames_list = list(output_filename.parent.glob(outputname))
     assert len(filenames_list) > 0, f"No output files generated for {input_filename}"
