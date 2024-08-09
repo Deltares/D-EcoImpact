@@ -14,7 +14,7 @@ Classes:
 from typing import List
 
 import xarray as _xr
-import scipy as _sc
+from scipy import signal
 import numpy as _np
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
@@ -128,7 +128,7 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
         factor = 1
         if extreme_type == "troughs":
             factor = -1
-        peaks, _ = _sc.signal.find_peaks(factor * arr, distance=distance)
+        peaks, _ = signal.find_peaks(factor * arr, distance=distance)
         values = arr[peaks]
         if mask:
             values = True
