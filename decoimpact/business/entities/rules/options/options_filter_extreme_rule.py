@@ -10,11 +10,11 @@ Module for ExtremeTypeOptions Class
 Classes:
     ExtremeTypeOptions
 """
-from enum import auto, Enum
+from enum import Enum
 
 
 class ExtremeTypeOptions(str, Enum):
     """Classify the extreme type options."""
 
-    PEAKS = auto()
-    TROUGHS = auto()
+    PEAKS = "peaks"
+    TROUGHS = "troughs"
