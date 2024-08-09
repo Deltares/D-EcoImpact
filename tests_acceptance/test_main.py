@@ -15,6 +15,16 @@ from pathlib import Path
 
 import pytest
 import xarray as _xr
+import yaml
+import yaml_include
+
+
+class SafeLoaderIgnoreUnknown(yaml.SafeLoader):
+    def ignore_unknown(self, node):
+        return None
+
+
+SafeLoaderIgnoreUnknown.add_constructor(None, SafeLoaderIgnoreUnknown.ignore_unknown)
 
 parent_path = Path(__file__).parent
 
@@ -58,14 +68,24 @@ def test_process_input(input_filename):
     ), f"Script {main_script_path} failed for {input_filename}\n{stderr}"
 
     # Load the generated and reference NetCDF files using xarray
-    generated_nc = _xr.open_dataset(
-        output_nc_files_path / input_filename.replace(".yaml", ".nc")
-    )
-    reference_nc = _xr.open_dataset(
-        reference_files_path / input_filename.replace(".yaml", ".nc")
-    )
+    with open(str(input_file_path), "r") as f:
+        data = yaml.load(f, Loader=SafeLoaderIgnoreUnknown)
+    output_filename = Path(data["output-data"]["filename"])
+    print(f"output_filenam: {output_filename}")
+    if "*" in output_filename.name:
+        outputname = output_filename.name
+    else:
+        outputname = output_filename.stem + "*"
+    print(f"outputname: {outputname}")
 
-    # Compare the datasets if they have matching variables and coordinates
-    assert generated_nc.equals(
-        reference_nc
-    ), f"Generated output does not match reference for {input_filename}"
+    filenames_list = list(output_filename.parent.glob(outputname))
+    assert len(filenames_list) > 0, f"No output files generated for {input_filename}"
+
+    for filename in filenames_list:
+        generated_nc = _xr.open_dataset(filename)
+        reference_nc = _xr.open_dataset(reference_files_path / filename.name)
+
+        # Compare the datasets if they have matching variables and coordinates
+        assert generated_nc.equals(
+            reference_nc
+        ), f"Generated output does not match reference for {input_filename}"

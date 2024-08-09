@@ -40,3 +40,7 @@ class IDatasetData(ABC):
     @abstractmethod
     def mapping(self) -> dict[str, str]:
         """Variable name mapping (source to target)"""
+
+    @path.setter
+    def path(self, path: Path):
+        """path of the model"""

@@ -79,6 +79,7 @@ def test_create_rule_based_model():
         time_aggregation_rule,
         formula_rule_data,
     ]
+    model_data.partition = ""
 
     da_layer.read_input_dataset.return_value = dataset
     model_builder = ModelBuilder(da_layer, logger)

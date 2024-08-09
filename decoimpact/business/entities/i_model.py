@@ -67,6 +67,14 @@ class IModel(ABC):
     def output_dataset(self) -> _xr.Dataset:
         """Output dataset produced by this model"""
 
+    @property
+    def partition(self) -> str:
+        """partition of the model"""
+
+    @partition.setter
+    def partition(self, partition: str):
+        """partition of the model"""
+
     @abstractmethod
     def validate(self, logger: ILogger) -> bool:
         """Validates the model"""

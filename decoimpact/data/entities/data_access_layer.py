@@ -35,6 +35,27 @@ class DataAccessLayer(IDataAccessLayer):
     def __init__(self, logger: ILogger):
         self._logger = logger
 
+    def retrieve_partitioned_file_names(self, path: Path) -> dict:
+        """
+        Find all files according to the pattern in the path string
+
+        Args:
+            path (str): path to input file (with * for generic part)
+
+        Returns:
+            List: List of strings with all files in folder according to pattern
+
+        """
+        name_list = path.parent.glob(path.name)
+        names = {}
+        for name in name_list:
+            if "*" in path.name:
+                part = re.findall(path.name.replace("*", "(.*)"), name.as_posix())
+                names["_".join(part)] = name
+            else:
+                names[""] = name
+        return names
+
     def read_input_file(self, path: Path) -> IModelData:
         """Reads input file from provided path
 
