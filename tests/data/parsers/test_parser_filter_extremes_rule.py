@@ -87,7 +87,7 @@ def test_parse_wrong_dict_to_rule_data_logic():
         ("peaks", ""),
         ("troughs", ""),
         ("test", "Extreme_type must be one of: [peaks, troughs]"),
-        (1, "The inputfield test_var must be of type str, " "but is of type int"),
+        (1, "The inputfield extreme_type must be of type str, " "but is of type int"),
     ],
 )
 def test_validate_extreme_type(extreme_type: str, expected_message: str):
