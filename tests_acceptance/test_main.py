@@ -71,19 +71,16 @@ def test_process_input(input_filename):
     with open(str(input_file_path), "r") as f:
         data = yaml.load(f, Loader=SafeLoaderIgnoreUnknown)
     output_filename = Path(data["output-data"]["filename"])
-    print(f"output_filenam: {output_filename}")
     if "*" in output_filename.name:
         outputname = output_filename.name
     else:
         outputname = output_filename.stem + "*"
-    print(f"outputname: {outputname}")
 
-    filenames_list = list(output_filename.parent.glob(outputname))
+    filenames_list = list(reference_files_path.glob(outputname))
     assert len(filenames_list) > 0, f"No output files generated for {input_filename}"
-
     for filename in filenames_list:
-        generated_nc = _xr.open_dataset(filename)
-        reference_nc = _xr.open_dataset(reference_files_path / filename.name)
+        generated_nc = _xr.open_dataset(output_filename.parent / filename.name)
+        reference_nc = _xr.open_dataset(filename)
 
         # Compare the datasets if they have matching variables and coordinates
         assert generated_nc.equals(

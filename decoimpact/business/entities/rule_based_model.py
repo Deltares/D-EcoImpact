@@ -29,6 +29,7 @@ class RuleBasedModel(IModel):
     """Model class for models based on rules"""
 
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         input_datasets: List[_xr.Dataset],
@@ -38,7 +39,6 @@ class RuleBasedModel(IModel):
         partition: str = "",
     ) -> None:
 
-        # pylint: disable=too-many-instance-attributes
         self._name = name
         self._status = ModelStatus.CREATED
         self._rules = rules
