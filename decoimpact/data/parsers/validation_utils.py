@@ -121,6 +121,6 @@ def validate_type(variable: Any, name: str, expected_type: Any):
     """
     if not isinstance(variable, expected_type):
         raise ValueError(
-            f"The inputfield {name} must be of type {expected_type}, "
-            f"but is a {type(variable)}"
+            f"The inputfield {name} must be of type {expected_type.__name__}, "
+            f"but is a {type(variable).__name__}"
         )
