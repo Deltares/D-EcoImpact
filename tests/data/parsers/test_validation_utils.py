@@ -233,6 +233,6 @@ def test_validate_type_incorrect_input():
 
     # Assert
     assert (
-        exception_raised.args[0]
-        == "The inputfield test_var must be of type int, but is a str"
+        exception_raised.args[0] == "The inputfield test_var must be of type int, "
+        "but is a str"
     )
