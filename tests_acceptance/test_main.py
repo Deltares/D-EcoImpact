@@ -24,7 +24,7 @@ class SafeLoaderIgnoreUnknown(yaml.SafeLoader):
 
 
 SafeLoaderIgnoreUnknown.add_constructor(
-    "!include", SafeLoaderIgnoreUnknown.ignore_unknown
+    None, SafeLoaderIgnoreUnknown.ignore_unknown  # type: ignore
 )
 
 parent_path = Path(__file__).parent
