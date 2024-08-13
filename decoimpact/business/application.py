@@ -84,23 +84,11 @@ class Application:
 
             # build model
             for dataset in model_data.datasets:
-                input_files = self._da_layer.retrieve_partitioned_file_names(
-                    dataset.path
-                )
+                input_files = self._da_layer.retrieve_file_names(dataset.path)
                 output_path_base = Path(model_data.output_path)
                 for key, file_name in input_files.items():
                     dataset.path = file_name
-                    if "*" in output_path_base.stem:
-                        output_path = Path(str(output_path_base).replace("*", key))
-                    else:
-                        partition_part = ""
-                        if key:
-                            partition_part = f"_{key}"
-                        output_path = Path.joinpath(
-                            output_path_base.parent,
-                            f"{output_path_base.stem}{partition_part}"
-                            f"{output_path_base.suffix}",
-                        )
+                    output_path = self._generate_output_path(output_path_base, key)
 
                     model_data.partition = key
                     model = self._model_builder.build_model(model_data)
@@ -121,3 +109,16 @@ class Application:
 
         except Exception as exc:  # pylint: disable=broad-except
             self._logger.log_error(f"Exiting application after error: {exc}")
+
+    def _generate_output_path(self, output_path_base, key):
+        if "*" in output_path_base.stem:
+            output_path = Path(str(output_path_base).replace("*", key))
+        else:
+            partition_part = ""
+            if key:
+                partition_part = f"_{key}"
+            output_path = Path.joinpath(
+                output_path_base.parent,
+                f"{output_path_base.stem}{partition_part}" f"{output_path_base.suffix}",
+            )
+        return output_path

@@ -35,9 +35,12 @@ class DataAccessLayer(IDataAccessLayer):
     def __init__(self, logger: ILogger):
         self._logger = logger
 
-    def retrieve_partitioned_file_names(self, path: Path) -> dict:
+    def retrieve_file_names(self, path: Path) -> dict:
         """
         Find all files according to the pattern in the path string
+        If the user gives one filename, one file is returned. The user
+        can give in a * in the filename and all files that correspond to
+        that pattern will be retrieved.
 
         Args:
             path (str): path to input file (with * for generic part)

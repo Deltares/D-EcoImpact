@@ -35,7 +35,7 @@ def test_running_application():
     model.partition = ""
     model_builder.build_model.return_value = model
     data_layer.read_input_file.return_value = model_data
-    data_layer.retrieve_partitioned_file_names.return_value = {"": "Test.nc"}
+    data_layer.retrieve_file_names.return_value = {"": "Test.nc"}
     model_data.version = [0, 0, 0]
     model_data.datasets = [dataset]
     model_data.output_path = "Result_test.nc"

@@ -16,7 +16,6 @@ from pathlib import Path
 import pytest
 import xarray as _xr
 import yaml
-import yaml_include
 
 
 class SafeLoaderIgnoreUnknown(yaml.SafeLoader):
@@ -24,7 +23,9 @@ class SafeLoaderIgnoreUnknown(yaml.SafeLoader):
         return None
 
 
-SafeLoaderIgnoreUnknown.add_constructor(None, SafeLoaderIgnoreUnknown.ignore_unknown)
+SafeLoaderIgnoreUnknown.add_constructor(
+    "!include", SafeLoaderIgnoreUnknown.ignore_unknown
+)
 
 parent_path = Path(__file__).parent
 

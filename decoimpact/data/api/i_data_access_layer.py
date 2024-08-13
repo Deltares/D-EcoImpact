@@ -26,7 +26,7 @@ class IDataAccessLayer(ABC):
     """Interface for the data layer"""
 
     @abstractmethod
-    def retrieve_partitioned_file_names(self, path: Path) -> dict:
+    def retrieve_file_names(self, path: Path) -> dict:
         """
         Find all files according to the pattern in the path string
 
