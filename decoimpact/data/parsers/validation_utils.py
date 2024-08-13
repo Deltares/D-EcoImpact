@@ -23,7 +23,7 @@ def validate_all_instances_number(data: List, name: str):
         ValueError: Raise an error to define which value is incorrect
     """
     if not all(isinstance(m, (int, float)) for m in data):
-        message = f"{name} should be a list of int or floats, " f"received: {data}"
+        message = f"{name} should be a list of int or floats, received: {data}"
         position_error = "".join(
             [
                 f"ERROR in position {index} is type {type(m)}. "
@@ -109,7 +109,8 @@ def validate_table_with_input(table, input_variable_names):
 
 
 def validate_type(variable: Any, name: str, expected_type: Any):
-    """_summary_
+    """Validation function to check if the variable is of the
+    expected type. Otherwise give a ValueError
 
     Args:
         variable (Any): the variable to check
