@@ -142,6 +142,10 @@ class DataAccessLayer(IDataAccessLayer):
         self._logger.log_info(f"Writing model output data to {path}")
 
         if not Path.exists(path.parent):
+            # try to make intermediate folders
+            Path(path.parent).mkdir(parents=True, exist_ok=True)
+
+        if not Path.exists(path.parent):
             message = f"""The path {path.parent} is not found. \
                           Make sure the output file location is valid."""
             raise FileExistsError(message)
