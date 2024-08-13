@@ -101,7 +101,7 @@ def test_dataset_data_write_output_file_should_write_file():
 
     # Arrange
     logger = Mock(ILogger)
-    path = Path(str(get_test_data_path()) + "abc" + "/results.nc")
+    path = Path(str(get_test_data_path()) + "abc/def/ghi" + "/results.nc")
     da_layer = DataAccessLayer(logger)
     data = [1]
     time = pd.date_range("2020-01-01", periods=1)
