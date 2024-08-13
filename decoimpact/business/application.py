@@ -119,6 +119,6 @@ class Application:
                 partition_part = f"_{key}"
             output_path = Path.joinpath(
                 output_path_base.parent,
-                f"{output_path_base.stem}{partition_part}" f"{output_path_base.suffix}",
+                f"{output_path_base.stem}{partition_part}{output_path_base.suffix}",
             )
         return output_path
