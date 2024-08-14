@@ -16,6 +16,7 @@ from decoimpact.data.parsers.validation_utils import (
     validate_all_instances_number,
     validate_start_before_end,
     validate_table_with_input,
+    validate_type,
     validate_type_date,
 )
 
@@ -201,4 +202,37 @@ def test_validate_table_with_input_incorrect_output():
     # Assert
     assert (
         exception_raised.args[0] == "Define an output column with the header 'output'."
+    )
+
+
+def test_validate_type():
+    """Test validation of expected type"""
+
+    # Arrange
+    variable = 10
+    name = "test_var"
+    expected_type = int
+
+    # Act
+    assert validate_type(variable, name, expected_type) is None
+
+
+def test_validate_type_incorrect_input():
+    """Test validation of expected type"""
+
+    # Arrange
+    variable = "ten"
+    name = "test_var"
+    expected_type = int
+
+    # Act
+    with pytest.raises(ValueError) as exc_info:
+        validate_type(variable, name, expected_type)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    assert (
+        exception_raised.args[0] == "The inputfield test_var must be of type int, "
+        "but is of type str"
     )

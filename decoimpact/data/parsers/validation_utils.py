@@ -9,7 +9,7 @@ Module for Validation functions
 """
 
 from datetime import datetime
-from typing import List
+from typing import Any, List
 
 
 def validate_all_instances_number(data: List, name: str):
@@ -23,10 +23,7 @@ def validate_all_instances_number(data: List, name: str):
         ValueError: Raise an error to define which value is incorrect
     """
     if not all(isinstance(m, (int, float)) for m in data):
-        message = (
-            f"{name} should be a list of int or floats, "
-            f"received: {data}"
-        )
+        message = f"{name} should be a list of int or floats, received: {data}"
         position_error = "".join(
             [
                 f"ERROR in position {index} is type {type(m)}. "
@@ -50,7 +47,7 @@ def validate_type_date(data: List[str], name: str):
         a date in the proper format.
     """
 
-    for (index, date_string) in enumerate(data):
+    for index, date_string in enumerate(data):
         try:
             datetime.strptime(date_string, r"%d-%m")
         except TypeError as exc:
@@ -76,7 +73,7 @@ def validate_start_before_end(start_list: List[str], end_list: List[str]):
         end_list (List[str]): list of dates
     """
 
-    for (index, (start, end)) in enumerate(zip(start_list, end_list)):
+    for index, (start, end) in enumerate(zip(start_list, end_list)):
         start_str = datetime.strptime(start, r"%d-%m")
         end_str = datetime.strptime(end, r"%d-%m").replace()
 
@@ -109,3 +106,22 @@ def validate_table_with_input(table, input_variable_names):
         )
     if difference[0] != "output":
         raise ValueError("Define an output column with the header 'output'.")
+
+
+def validate_type(variable: Any, name: str, expected_type: Any):
+    """Validation function to check if the variable is of the
+    expected type. Otherwise give a ValueError
+
+    Args:
+        variable (Any): the variable to check
+        name (str): the name of the variable
+        type (str): the type the variable should have
+
+    Raises:
+        ValueError: If type is not what is should be, raise error
+    """
+    if not isinstance(variable, expected_type):
+        raise ValueError(
+            f"The inputfield {name} must be of type {expected_type.__name__}, "
+            f"but is of type {type(variable).__name__}"
+        )

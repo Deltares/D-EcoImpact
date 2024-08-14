@@ -20,6 +20,7 @@ from decoimpact.data.parsers.i_parser_rule_base import IParserRuleBase
 from decoimpact.business.entities.rules.options.options_filter_extreme_rule import (
     ExtremeTypeOptions,
 )
+from decoimpact.data.parsers.validation_utils import validate_type
 
 
 class ParserFilterExtremesRule(IParserRuleBase):
@@ -44,12 +45,21 @@ class ParserFilterExtremesRule(IParserRuleBase):
         ]
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         description: str = get_dict_element("description", dictionary, False) or ""
-        extreme_type: str = get_dict_element("extreme_type", dictionary)
-        self._validate_extreme_type(extreme_type)
+
+        extreme_type_name = "extreme_type"
+        extreme_type: str = get_dict_element(extreme_type_name, dictionary)
+        self._validate_extreme_type(extreme_type, extreme_type_name)
+
+        distance_name = "distance"
         distance: int = get_dict_element("distance", dictionary) or 0
+        validate_type(distance, distance_name, int)
+
         time_scale: str = get_dict_element("time_scale", dictionary) or "D"
 
+        mask_name = "mask"
         mask: bool = get_dict_element("mask", dictionary) or False
+        validate_type(mask, mask_name, bool)
+
         rule_data = FilterExtremesRuleData(
             name, input_variable_names, extreme_type, distance, time_scale, mask
         )
@@ -59,15 +69,12 @@ class ParserFilterExtremesRule(IParserRuleBase):
 
         return rule_data
 
-    def _validate_extreme_type(self, extreme_type: Any):
+    def _validate_extreme_type(self, extreme_type: Any, name: str):
         """
         Validates if the extreme type is well formed (a string)
         and has the correct values
         """
-        if not isinstance(extreme_type, str):
-            message = f"""Extreme_type must be a string, \
-                received: {extreme_type}"""
-            raise ValueError(message)
+        validate_type(extreme_type, name, str)
         if extreme_type.upper() not in dir(ExtremeTypeOptions):
             message = (
                 f"""Extreme_type must be one of: [{', '.join(ExtremeTypeOptions)}]"""
