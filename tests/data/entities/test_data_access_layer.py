@@ -101,7 +101,7 @@ def test_dataset_data_write_output_file_should_write_file():
 
     # Arrange
     logger = Mock(ILogger)
-    path = Path(str(get_test_data_path()) + "/results.nc")
+    path = Path(str(get_test_data_path()) + "abc/def/ghi" + "/results.nc")
     da_layer = DataAccessLayer(logger)
     data = [1]
     time = pd.date_range("2020-01-01", periods=1)
@@ -115,30 +115,6 @@ def test_dataset_data_write_output_file_should_write_file():
 
     # Assert
     assert path.is_file()
-
-
-def test_dataset_data_write_output_file_should_check_if_path_exists():
-    """When calling write_output_file the provided path
-    needs to be checked if it exists"""
-
-    # Arrange
-    logger = Mock(ILogger)
-    path = Path("./non_existing_dir/results.nc")
-    da_layer = DataAccessLayer(logger)
-    dataset = Mock(_xr.Dataset)
-    application_version = "0.0.0"
-    application_name = "D-EcoImpact"
-
-    # Act
-    with pytest.raises(FileExistsError) as exc_info:
-        settings = OutputFileSettings(application_name, application_version)
-        da_layer.write_output_file(dataset, path, settings)
-
-    exception_raised = exc_info.value
-
-    # Assert
-    exc = exception_raised.args[0]
-    assert exc.endswith("Make sure the output file location is valid.")
 
 
 def test_dataset_data_write_output_file_should_check_if_extension_is_correct():
