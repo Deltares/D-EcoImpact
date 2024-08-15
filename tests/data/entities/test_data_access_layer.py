@@ -279,9 +279,9 @@ def test_data_access_layer_apply_time_filter():
     assert max_date_result == end_date_expected
 
 
-def test_retrieve_file_names_should_check_if_path_exists():
-    """When calling retrieve_file_names the provided path
-    needs to be checked if it exists"""
+def test_retrieve_file_names_should_raise_exception_if_path_not_found():
+    """When calling retrieve_file_names, the provided path
+    needs to be checked to exist and an exception raised if it doesn't."""
 
     # Arrange
     logger = Mock(ILogger)
@@ -300,9 +300,11 @@ def test_retrieve_file_names_should_check_if_path_exists():
     assert exc.endswith("Make sure the input file location is valid.")
 
 
-def test_retrieve_file_names_should_give_list_with_filenames():
-    """When calling retrieve_file_names the provided path name
-    including aould point to an existing file"""
+def test_retrieve_file_names_gives_dict_with_single_empty_key_if_single_file_found():
+    """When calling retrieve_file_names and the provided path contains no
+    asteriskt and points to a unique existing file, then it should return
+    a dictionary with one registry and one single empty key to that
+    existing file."""
     # Arrange
     logger = Mock(ILogger)
 
@@ -318,9 +320,11 @@ def test_retrieve_file_names_should_give_list_with_filenames():
     assert names == {"": filepath}
 
 
-def test_retrieve_file_names_should_give_list_with_filenames_with_asterisk():
-    """When calling retrieve_file_names the provided path name
-    including a asterisk should point to a list of existing files"""
+def test_retrieve_file_names_gives_dict_with_multiple_keys_if_path_contains_asterisk():
+    """When calling retrieve_file_names with a path name
+    including an asterisk, the result should be a dictionary 
+    with multiple entries, each key being the distinctive part
+     of the file name, and the respective value the entire file name."""
 
     # Arrange
     logger = Mock(ILogger)
