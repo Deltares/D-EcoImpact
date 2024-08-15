@@ -49,7 +49,13 @@ class DataAccessLayer(IDataAccessLayer):
             List: List of strings with all files in folder according to pattern
 
         """
-        name_list = path.parent.glob(path.name)
+        name_list = list(path.parent.glob(path.name))
+        # check if there is at least 1 file found.
+        if len(name_list) == 0:
+            message = f"""No files found for inputfilename {path.name}. \
+                          Make sure the input file location is valid."""
+            raise FileExistsError(message)
+
         names = {}
         for name in name_list:
             if "*" in path.name:
@@ -111,12 +117,6 @@ class DataAccessLayer(IDataAccessLayer):
         ds_end_date = dataset_data.end_date
         if ds_end_date != "None":
             filter_end_date = datetime.strptime(ds_end_date, date_format)
-
-        # check path
-        if not Path.exists(dataset_data.path):
-            message = f"""The file {dataset_data.path} is not found. \
-                          Make sure the input file location is valid."""
-            raise FileExistsError(message)
 
         if dataset_data.path.suffix != ".nc":
             message = f"""The file {dataset_data.path} is not supported. \

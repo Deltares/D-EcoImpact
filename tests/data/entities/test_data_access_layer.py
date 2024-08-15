@@ -190,32 +190,6 @@ def test_dataset_data_get_input_dataset_should_read_file():
     assert isinstance(dataset, _xr.Dataset)
 
 
-def test_dataset_data_get_input_dataset_should_check_if_path_exists():
-    """When calling get_input_dataset the provided path
-    needs to be checked if it exists"""
-
-    # Arrange
-    logger = Mock(ILogger)
-    data_dict = {
-        "filename": "non_existing_file.nc",
-        "outputfilename": "output.txt",
-        "variable_mapping": {"test": "test_new"},
-    }
-    data = DatasetData(data_dict)
-
-    # Act
-    da_layer = DataAccessLayer(logger)
-
-    with pytest.raises(FileExistsError) as exc_info:
-        da_layer.read_input_dataset(data)
-
-    exception_raised = exc_info.value
-
-    # Assert
-    exc = exception_raised.args[0]
-    assert exc.endswith("Make sure the input file location is valid.")
-
-
 def test_dataset_data_get_input_dataset_should_check_if_extension_is_correct():
     """When calling get_input_dataset the provided path
     needs to be checked if it exists"""
@@ -303,3 +277,66 @@ def test_data_access_layer_apply_time_filter():
     # test if result is time filtered for both start and end date
     assert min_date_result == start_date_expected
     assert max_date_result == end_date_expected
+
+
+def test_retrieve_file_names_should_check_if_path_exists():
+    """When calling retrieve_file_names the provided path
+    needs to be checked if it exists"""
+
+    # Arrange
+    logger = Mock(ILogger)
+    filename = Path("non_existing_file.nc")
+
+    # Act
+    da_layer = DataAccessLayer(logger)
+
+    with pytest.raises(FileExistsError) as exc_info:
+        da_layer.retrieve_file_names(filename)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    exc = exception_raised.args[0]
+    assert exc.endswith("Make sure the input file location is valid.")
+
+
+def test_retrieve_file_names_should_give_list_with_filenames():
+    """When calling retrieve_file_names the provided path name
+    including aould point to an existing file"""
+    # Arrange
+    logger = Mock(ILogger)
+
+    filename = __file__
+    filepath = Path(filename)
+
+    # Act
+    da_layer = DataAccessLayer(logger)
+
+    names = da_layer.retrieve_file_names(filepath)
+
+    # Assert
+    assert names == {"": filepath}
+
+
+def test_retrieve_file_names_should_give_list_with_filenames_with_asterisk():
+    """When calling retrieve_file_names the provided path name
+    including a asterisk should point to a list of existing files"""
+
+    # Arrange
+    logger = Mock(ILogger)
+
+    filename = Path(__file__)
+    filepath = Path.joinpath(
+        filename.parent, "test_data_access_layer_data", "FlowFM_*.nc"
+    )
+
+    # Act
+    da_layer = DataAccessLayer(logger)
+
+    names = da_layer.retrieve_file_names(filepath)
+
+    # Assert
+    assert names == {
+        "net_incorrect": Path.joinpath(filepath.parent, "FlowFM_net_incorrect.nc"),
+        "net": Path.joinpath(filepath.parent, "FlowFM_net.nc"),
+    }
