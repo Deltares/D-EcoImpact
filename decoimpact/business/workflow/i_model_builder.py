@@ -22,7 +22,7 @@ from decoimpact.data.api.i_model_data import IModelData
 class IModelBuilder(ABC):
     """Factory for creating models"""
 
-    @ abstractmethod
+    @abstractmethod
     def build_model(self, model_data: IModelData) -> IModel:
         """Creates an model based on model data
 

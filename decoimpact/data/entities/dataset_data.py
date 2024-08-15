@@ -55,6 +55,11 @@ class DatasetData(IDatasetData):
         """Variable name mapping (source to target)"""
         return self._mapping
 
+    @path.setter
+    def path(self, path: Path):
+        """path of the model"""
+        self._path = path
+
     def _get_mapping(self, dataset: dict[str, Any]):
         """Get mapping specified in input file
 

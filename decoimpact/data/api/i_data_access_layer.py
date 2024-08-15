@@ -26,6 +26,19 @@ class IDataAccessLayer(ABC):
     """Interface for the data layer"""
 
     @abstractmethod
+    def retrieve_file_names(self, path: Path) -> dict:
+        """
+        Find all files according to the pattern in the path string
+
+        Args:
+            path (str): path to input file (with * for generic part)
+
+        Returns:
+            List: List of strings with all files in folder according to pattern
+
+        """
+
+    @abstractmethod
     def read_input_file(self, path: Path) -> IModelData:
         """Reads input file from provided path
 

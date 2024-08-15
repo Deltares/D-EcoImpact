@@ -28,12 +28,15 @@ from decoimpact.crosscutting.i_logger import ILogger
 class RuleBasedModel(IModel):
     """Model class for models based on rules"""
 
+    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         input_datasets: List[_xr.Dataset],
         rules: List[IRule],
         mapping: Optional[dict[str, str]] = None,
         name: str = "Rule-Based model",
+        partition: str = "",
     ) -> None:
 
         self._name = name
@@ -43,6 +46,7 @@ class RuleBasedModel(IModel):
         self._output_dataset: _xr.Dataset
         self._rule_processor: Optional[RuleProcessor]
         self._mappings = mapping
+        self._partition = partition
 
     @property
     def name(self) -> str:
@@ -73,6 +77,16 @@ class RuleBasedModel(IModel):
     def output_dataset(self) -> _xr.Dataset:
         """Output dataset produced by this model"""
         return self._output_dataset
+
+    @property
+    def partition(self) -> str:
+        """partition of the model"""
+        return self._partition
+
+    @partition.setter
+    def partition(self, partition: str):
+        """partition of the model"""
+        self._partition = partition
 
     def validate(self, logger: ILogger) -> bool:
         """Validates the model"""
@@ -209,8 +223,7 @@ class RuleBasedModel(IModel):
             needed_rule_inputs = _lu.remove_duplicates_from_list(rule_input)
             rule_input_vars = input_vars + list(mappings.values())
             needed_rule_inputs = _du.extend_to_full_name(
-                needed_rule_inputs,
-                dummy_var_name
+                needed_rule_inputs, dummy_var_name
             )
             missing_rule_inputs = _lu.items_not_in(needed_rule_inputs, rule_input_vars)
             if len(missing_rule_inputs) > 0:
@@ -246,8 +259,7 @@ class RuleBasedModel(IModel):
         """
         for rule in self._rules:
             rule.input_variable_names = _du.extend_to_full_name(
-                rule.input_variable_names,
-                dummy_variable_name
+                rule.input_variable_names, dummy_variable_name
             )
 
     def _check_keys_with_suffixes(self, dictionary, suffixes):
@@ -262,6 +274,8 @@ class RuleBasedModel(IModel):
         """
         for key in dictionary:
             if any(key.endswith(suffix) for suffix in suffixes):
-                raise ValueError(f"Remapping variables ending with"
-                                 f" {delft3d_specific_names} is not"
-                                 f" allowed.")
+                raise ValueError(
+                    f"Remapping variables ending with"
+                    f" {delft3d_specific_names} is not"
+                    f" allowed."
+                )

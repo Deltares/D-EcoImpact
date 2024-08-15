@@ -166,32 +166,6 @@ def test_dataset_data_get_input_dataset_should_read_file():
     assert isinstance(dataset, _xr.Dataset)
 
 
-def test_dataset_data_get_input_dataset_should_check_if_path_exists():
-    """When calling get_input_dataset the provided path
-    needs to be checked if it exists"""
-
-    # Arrange
-    logger = Mock(ILogger)
-    data_dict = {
-        "filename": "non_existing_file.nc",
-        "outputfilename": "output.txt",
-        "variable_mapping": {"test": "test_new"},
-    }
-    data = DatasetData(data_dict)
-
-    # Act
-    da_layer = DataAccessLayer(logger)
-
-    with pytest.raises(FileExistsError) as exc_info:
-        da_layer.read_input_dataset(data)
-
-    exception_raised = exc_info.value
-
-    # Assert
-    exc = exception_raised.args[0]
-    assert exc.endswith("Make sure the input file location is valid.")
-
-
 def test_dataset_data_get_input_dataset_should_check_if_extension_is_correct():
     """When calling get_input_dataset the provided path
     needs to be checked if it exists"""
@@ -279,3 +253,70 @@ def test_data_access_layer_apply_time_filter():
     # test if result is time filtered for both start and end date
     assert min_date_result == start_date_expected
     assert max_date_result == end_date_expected
+
+
+def test_retrieve_file_names_should_raise_exception_if_path_not_found():
+    """When calling retrieve_file_names, the provided path
+    needs to be checked to exist and an exception raised if it doesn't."""
+
+    # Arrange
+    logger = Mock(ILogger)
+    filename = Path("non_existing_file.nc")
+
+    # Act
+    da_layer = DataAccessLayer(logger)
+
+    with pytest.raises(FileExistsError) as exc_info:
+        da_layer.retrieve_file_names(filename)
+
+    exception_raised = exc_info.value
+
+    # Assert
+    exc = exception_raised.args[0]
+    assert exc.endswith("Make sure the input file location is valid.")
+
+
+def test_retrieve_file_names_gives_dict_with_single_empty_key_if_single_file_found():
+    """When calling retrieve_file_names and the provided path contains no
+    asteriskt and points to a unique existing file, then it should return
+    a dictionary with one registry and one single empty key to that
+    existing file."""
+    # Arrange
+    logger = Mock(ILogger)
+
+    filename = __file__
+    filepath = Path(filename)
+
+    # Act
+    da_layer = DataAccessLayer(logger)
+
+    names = da_layer.retrieve_file_names(filepath)
+
+    # Assert
+    assert names == {"": filepath}
+
+
+def test_retrieve_file_names_gives_dict_with_multiple_keys_if_path_contains_asterisk():
+    """When calling retrieve_file_names with a path name
+    including an asterisk, the result should be a dictionary 
+    with multiple entries, each key being the distinctive part
+     of the file name, and the respective value the entire file name."""
+
+    # Arrange
+    logger = Mock(ILogger)
+
+    filename = Path(__file__)
+    filepath = Path.joinpath(
+        filename.parent, "test_data_access_layer_data", "FlowFM_*.nc"
+    )
+
+    # Act
+    da_layer = DataAccessLayer(logger)
+
+    names = da_layer.retrieve_file_names(filepath)
+
+    # Assert
+    assert names == {
+        "net_incorrect": Path.joinpath(filepath.parent, "FlowFM_net_incorrect.nc"),
+        "net": Path.joinpath(filepath.parent, "FlowFM_net.nc"),
+    }

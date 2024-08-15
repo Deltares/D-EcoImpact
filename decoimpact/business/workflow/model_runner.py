@@ -49,7 +49,12 @@ class ModelRunner:
         )
 
         if success:
-            logger.log_info(f'Model "{model.name}" has successfully finished running')
+            part_str = ""
+            if model.partition:
+                part_str = f" (Partition: {model.partition})"
+            logger.log_info(
+                f'Model "{model.name}{part_str}" has successfully finished running'
+            )
 
         return success
 
@@ -62,20 +67,24 @@ class ModelRunner:
         post_status: ModelStatus,
     ) -> bool:
 
-        log.log_info(f'Model "{model.name}" -> {str(pre_status)}')
+        part_str = ""
+        if model.partition:
+            part_str = f" (Partition: {model.partition})"
+
+        log.log_info(f'Model "{model.name}{part_str}" -> {str(pre_status)}')
         model.status = pre_status
 
         success = ModelRunner._change_state_core(action, log)
 
         if success:
             model.status = post_status
-            message = f'Model "{model.name}" -> {str(post_status)}'
+            message = f'Model "{model.name}{part_str}" -> {str(post_status)}'
             log.log_info(message)
             return True
 
         model.status = ModelStatus.FAILED
         message = (
-            f'Model "{model.name}" transition from '
+            f'Model "{model.name}{part_str}" transition from '
             f"{str(pre_status)} to {str(post_status)} has failed."
         )
 

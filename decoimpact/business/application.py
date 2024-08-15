@@ -71,37 +71,54 @@ class Application:
             self._logger.log_info(f"Input file version: {str_input_version}")
 
             # check version:
-            error_msg = (
-                f"Application version {self.APPLICATION_VERSION} is older"
-                " than version from input file {str_input_version}"
-            )
-            warning_msg = (
+            message = (
                 f"Application version {self.APPLICATION_VERSION} is older"
                 " than version from input file {str_input_version}"
             )
             # major version (app) should be equal or larger then input version --> error
             if self.APPLICATION_VERSION_PARTS[0] < model_data.version[0]:
-                self._logger.log_error(error_msg)
+                self._logger.log_error(message)
             # minor version (app) should be equal or larger then input version --> warn
             elif self.APPLICATION_VERSION_PARTS[1] < model_data.version[1]:
-                self._logger.log_warning(warning_msg)
+                self._logger.log_warning(message)
 
             # build model
-            model = self._model_builder.build_model(model_data)
+            for dataset in model_data.datasets:
+                input_files = self._da_layer.retrieve_file_names(dataset.path)
+                output_path_base = Path(model_data.output_path)
+                for key, file_name in input_files.items():
+                    dataset.path = file_name
+                    output_path = self._generate_output_path(output_path_base, key)
 
-            # run model
-            _ModelRunner.run_model(model, self._logger)
+                    model_data.partition = key
+                    model = self._model_builder.build_model(model_data)
 
-            # write output file
-            if model.status == _ModelStatus.FINALIZED:
-                settings = OutputFileSettings(
-                    self.APPLICATION_NAME, self.APPLICATION_VERSION
-                )
-                settings.variables_to_save = model_data.output_variables
+                    # run model
+                    _ModelRunner.run_model(model, self._logger)
 
-                self._da_layer.write_output_file(
-                    model.output_dataset, model_data.output_path, settings
-                )
+                    # write output file
+                    if model.status == _ModelStatus.FINALIZED:
+                        settings = OutputFileSettings(
+                            self.APPLICATION_NAME, self.APPLICATION_VERSION
+                        )
+                        settings.variables_to_save = model_data.output_variables
+
+                        self._da_layer.write_output_file(
+                            model.output_dataset, output_path, settings
+                        )
 
         except Exception as exc:  # pylint: disable=broad-except
             self._logger.log_error(f"Exiting application after error: {exc}")
+
+    def _generate_output_path(self, output_path_base, key):
+        if "*" in output_path_base.stem:
+            output_path = Path(str(output_path_base).replace("*", key))
+        else:
+            partition_part = ""
+            if key:
+                partition_part = f"_{key}"
+            output_path = Path.joinpath(
+                output_path_base.parent,
+                f"{output_path_base.stem}{partition_part}{output_path_base.suffix}",
+            )
+        return output_path

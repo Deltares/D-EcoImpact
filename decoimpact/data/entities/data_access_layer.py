@@ -35,6 +35,36 @@ class DataAccessLayer(IDataAccessLayer):
     def __init__(self, logger: ILogger):
         self._logger = logger
 
+    def retrieve_file_names(self, path: Path) -> dict:
+        """
+        Find all files according to the pattern in the path string
+        If the user gives one filename, one file is returned. The user
+        can give in a * in the filename and all files that correspond to
+        that pattern will be retrieved.
+
+        Args:
+            path (str): path to input file (with * for generic part)
+
+        Returns:
+            List: List of strings with all files in folder according to pattern
+
+        """
+        name_list = list(path.parent.glob(path.name))
+        # check if there is at least 1 file found.
+        if len(name_list) == 0:
+            message = f"""No files found for inputfilename {path.name}. \
+                          Make sure the input file location is valid."""
+            raise FileExistsError(message)
+
+        names = {}
+        for name in name_list:
+            if "*" in path.name:
+                part = re.findall(path.name.replace("*", "(.*)"), name.as_posix())
+                names["_".join(part)] = name
+            else:
+                names[""] = name
+        return names
+
     def read_input_file(self, path: Path) -> IModelData:
         """Reads input file from provided path
 
@@ -87,12 +117,6 @@ class DataAccessLayer(IDataAccessLayer):
         ds_end_date = dataset_data.end_date
         if ds_end_date != "None":
             filter_end_date = datetime.strptime(ds_end_date, date_format)
-
-        # check path
-        if not Path.exists(dataset_data.path):
-            message = f"""The file {dataset_data.path} is not found. \
-                          Make sure the input file location is valid."""
-            raise FileExistsError(message)
 
         if dataset_data.path.suffix != ".nc":
             message = f"""The file {dataset_data.path} is not supported. \
