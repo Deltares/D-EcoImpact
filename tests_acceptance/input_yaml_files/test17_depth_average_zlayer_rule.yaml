@@ -11,7 +11,7 @@ rules:
       input_variable: var_3d_A
       bed_level_variable: mesh2d_flowelem_bl
       water_level_variable: mesh2d_s1
-      interface_variable: mesh2d_interface_z
+      interfaces_variable: mesh2d_interface_z
       output_variable: output_A
 
   - depth_average_rule:
@@ -20,7 +20,7 @@ rules:
       input_variable: var_3d_B
       bed_level_variable: mesh2d_flowelem_bl
       water_level_variable: mesh2d_s1
-      interface_variable: mesh2d_interface_z
+      interfaces_variable: mesh2d_interface_z
       output_variable: output_B
 
   - depth_average_rule:
@@ -29,7 +29,7 @@ rules:
       input_variable: var_3d_C
       bed_level_variable: mesh2d_flowelem_bl
       water_level_variable: mesh2d_s1
-      interface_variable: mesh2d_interface_z
+      interfaces_variable: mesh2d_interface_z
       output_variable: output_C
 
 output-data:

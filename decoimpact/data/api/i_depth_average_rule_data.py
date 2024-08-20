@@ -39,5 +39,5 @@ class IDepthAverageRuleData(IRuleData, ABC):
 
     @property
     @abstractmethod
-    def interface_variable(self) -> str:
+    def interfaces_variable(self) -> str:
         """Variable indicating the interfaces (z or sigma)"""

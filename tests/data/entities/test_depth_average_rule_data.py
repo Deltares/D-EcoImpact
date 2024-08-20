@@ -31,4 +31,4 @@ def test_depth_average_rule_data_creation_logic():
     assert data.input_variables == "input1"
     assert data.bed_level_variable == "bedlevel"
     assert data.water_level_variable == "waterlevel"
-    assert data.interface_variable == "interfaces_z"
+    assert data.interfaces_variable == "interfaces_z"
