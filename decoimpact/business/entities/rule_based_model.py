@@ -21,7 +21,6 @@ import decoimpact.business.utils.list_utils as _lu
 from decoimpact.business.entities.i_model import IModel, ModelStatus
 from decoimpact.business.entities.rule_processor import RuleProcessor
 from decoimpact.business.entities.rules.i_rule import IRule
-from decoimpact.crosscutting.delft3d_specific_data import delft3d_specific_names
 from decoimpact.crosscutting.i_logger import ILogger
 
 
@@ -185,7 +184,6 @@ class RuleBasedModel(IModel):
                 for ds in self._input_datasets
             ]
         )
-        self._check_keys_with_suffixes(mappings, delft3d_specific_names)
 
         valid = True
 
@@ -261,21 +259,3 @@ class RuleBasedModel(IModel):
             rule.input_variable_names = _du.extend_to_full_name(
                 rule.input_variable_names, dummy_variable_name
             )
-
-    def _check_keys_with_suffixes(self, dictionary, suffixes):
-        """
-        Checks if any key in the dictionary ends with provided suffixes.
-        Raise eror if that occurs.
-
-        Args:
-            dictionary (dict)   : The dictionary to check.
-            suffixes (List[str]): List of suffixes to check against.
-
-        """
-        for key in dictionary:
-            if any(key.endswith(suffix) for suffix in suffixes):
-                raise ValueError(
-                    f"Remapping variables ending with"
-                    f" {delft3d_specific_names} is not"
-                    f" allowed."
-                )

@@ -18,12 +18,6 @@ from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
 )
 from decoimpact.business.entities.rules.rule_base import RuleBase
-from decoimpact.crosscutting.delft3d_specific_data import (
-    BED_LEVEL_SUFFIX,
-    INTERFACES_SIGMA_SUFFIX,
-    INTERFACES_Z_SUFFIX,
-    WATER_LEVEL_SUFFIX,
-)
 from decoimpact.crosscutting.i_logger import ILogger
 
 
