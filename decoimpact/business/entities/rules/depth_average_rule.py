@@ -28,12 +28,12 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         self,
         name: str,
         input_variable_names: List[str],
-        bottom_level_variable: str,
+        bed_level_variable: str,
         water_level_variable: str,
         interface_variable: str
     ):
         super().__init__(name, input_variable_names)
-        self._bottom_level_variable = bottom_level_variable
+        self._bed_level_variable = bed_level_variable
         self._water_level_variable = water_level_variable
         self._interface_variable = interface_variable
 
@@ -55,7 +55,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # just use the first value.
         variables = next(iter(value_arrays.values()))
 
-        bed_level_values = value_arrays[self._bottom_level_variable]
+        bed_level_values = value_arrays[self._bed_level_variable]
         water_level_values = value_arrays[self._water_level_variable]
         depths_interfaces = value_arrays[self._interface_variable]
 

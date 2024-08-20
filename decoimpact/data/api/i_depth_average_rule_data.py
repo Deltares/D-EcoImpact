@@ -29,7 +29,7 @@ class IDepthAverageRuleData(IRuleData, ABC):
 
     @property
     @abstractmethod
-    def bottom_level_variable(self) -> str:
+    def bed_level_variable(self) -> str:
         """Variable indicating the bottom level"""
 
     @property

@@ -9,7 +9,7 @@ rules:
       name: Test A
       description: Test A
       input_variable: var_3d_A
-      bottom_level_variable: mesh2d_flowelem_bl
+      bed_level_variable: mesh2d_flowelem_bl
       water_level_variable: mesh2d_s1
       interface_variable: mesh2d_interface_z
       output_variable: output_A
@@ -18,7 +18,7 @@ rules:
       name: Test B
       description: Test B
       input_variable: var_3d_B
-      bottom_level_variable: mesh2d_flowelem_bl
+      bed_level_variable: mesh2d_flowelem_bl
       water_level_variable: mesh2d_s1
       interface_variable: mesh2d_interface_z
       output_variable: output_B
@@ -27,7 +27,7 @@ rules:
       name: Test C
       description: Test C
       input_variable: var_3d_C
-      bottom_level_variable: mesh2d_flowelem_bl
+      bed_level_variable: mesh2d_flowelem_bl
       water_level_variable: mesh2d_s1
       interface_variable: mesh2d_interface_z
       output_variable: output_C
