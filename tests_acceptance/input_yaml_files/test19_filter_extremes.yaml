@@ -5,12 +5,13 @@ input-data:
       filename: ./tests_acceptance/input_nc_files/delft3dfmflow_output_example_DWSM-FM_200m_0004_map.nc
       variable_mapping:
         mesh2d_sa1: "salinity"
+        water_level: "water_level"
 
 rules:
   - filter_extremes_rule:
       name: Test filter extremes rule
       description: Testing..
-      input_variable: mesh2d_s1
+      input_variable: water_level
       output_variable: water_level_peaks_mask
       extreme_type: peaks
       distance: 11
@@ -20,7 +21,7 @@ rules:
   - filter_extremes_rule:
       name: Test filter extremes rule
       description: Testing..
-      input_variable: mesh2d_s1
+      input_variable: water_level
       output_variable: water_level_peaks
       extreme_type: peaks
       distance: 11
@@ -30,7 +31,7 @@ rules:
   - filter_extremes_rule:
       name: Test filter extremes rule
       description: Testing..
-      input_variable: mesh2d_s1
+      input_variable: water_level
       output_variable: water_level_troughs
       extreme_type: troughs
       distance: 11
@@ -40,7 +41,7 @@ rules:
   - filter_extremes_rule:
       name: Test filter extremes rule
       description: Testing..
-      input_variable: mesh2d_s1
+      input_variable: water_level
       output_variable: water_level_troughs_mask
       extreme_type: troughs
       distance: 11
