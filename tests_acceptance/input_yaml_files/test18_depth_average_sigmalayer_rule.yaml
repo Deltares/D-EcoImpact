@@ -4,9 +4,9 @@ input-data:
   - dataset:
       filename: ./tests_acceptance/input_nc_files/test_depth_average_sigmalayer_rule.nc
       variable_mapping:
-        bed_level: "mesh2d_flowelem_bl"
-        water_level: "mesh2d_s1"
-        interfaces: "mesh2d_interface_sigma"
+        mesh2d_flowelem_bl: "bed_level"
+        mesh2d_s1: "water_level"
+        mesh2d_interface_sigma: "interfaces"
 
 rules:
   - depth_average_rule:
