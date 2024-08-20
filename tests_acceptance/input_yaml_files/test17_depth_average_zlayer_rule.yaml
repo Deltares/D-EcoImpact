@@ -5,7 +5,7 @@ input-data:
       filename: ./tests_acceptance/input_nc_files/test_depth_average_zlayer_rule.nc
       variable_mapping:
         bed_level: "mesh2d_flowelem_bl"
-        water_level: "water_level"
+        water_level: "mesh2d_s1"
         interfaces: "mesh2d_interface_z"
 
 rules:
