@@ -25,11 +25,15 @@ class DepthAverageRuleData(IDepthAverageRuleData, RuleData):
         self,
         name: str,
         input_variables: List[str],
-        layer_type: str,
+        bottom_level_variable: str,
+        water_level_variable: str,
+        interface_variable: str,
     ):
         super().__init__(name)
         self._input_variables = input_variables
-        self._layer_type = layer_type
+        self._bottom_level_variable = bottom_level_variable
+        self._water_level_variable = water_level_variable
+        self._interface_variable = interface_variable
 
     @property
     def input_variables(self) -> List[str]:
@@ -37,6 +41,16 @@ class DepthAverageRuleData(IDepthAverageRuleData, RuleData):
         return self._input_variables
 
     @property
-    def layer_type(self) -> str:
-        """Layer type of the model (z or sigma)"""
-        return self._layer_type
+    def bottom_level_variable(self) -> str:
+        """Variable indicating the bottom level"""
+        return self._bottom_level_variable
+
+    @property
+    def water_level_variable(self) -> str:
+        """Variable indicating the water level"""
+        return self._water_level_variable
+
+    @property
+    def interface_variable(self) -> str:
+        """Variable indicating the interface definition (z or sigma)"""
+        return self._interface_variable

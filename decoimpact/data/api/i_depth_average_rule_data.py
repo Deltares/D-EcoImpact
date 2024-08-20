@@ -29,5 +29,15 @@ class IDepthAverageRuleData(IRuleData, ABC):
 
     @property
     @abstractmethod
-    def layer_type(self) -> str:
-        """Layer type of the model (z or sigma)"""
+    def bottom_level_variable(self) -> str:
+        """Variable indicating the bottom level"""
+
+    @property
+    @abstractmethod
+    def water_level_variable(self) -> str:
+        """Variable indicating the water level"""
+
+    @property
+    @abstractmethod
+    def interface_variable(self) -> str:
+        """Variable indicating the interfaces (z or sigma)"""
