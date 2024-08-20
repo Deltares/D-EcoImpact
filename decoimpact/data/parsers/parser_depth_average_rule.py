@@ -36,12 +36,15 @@ class ParserDepthAverageRule(IParserRuleBase):
             RuleBase: Rule based on the provided data
         """
         name: str = get_dict_element("name", dictionary)
-        water_level_variable = get_dict_element("water_level_variable", dictionary)
         bottom_level_variable = get_dict_element("bottom_level_variable", dictionary)
+        water_level_variable = get_dict_element("water_level_variable", dictionary)
         interface_variable = get_dict_element("interface_variable", dictionary)
 
         input_variable_names: List[str] = [
-            get_dict_element("input_variable", dictionary)
+            get_dict_element("input_variable", dictionary),
+            bottom_level_variable,
+            water_level_variable,
+            interface_variable
         ]
 
         output_variable_name: str = get_dict_element("output_variable", dictionary)

@@ -156,8 +156,6 @@ class RuleBasedModel(IModel):
             dummy_var_name = _du.get_dummy_variable_in_ugrid(dataset)
             var_list = _du.get_dependent_var_list(dataset, dummy_var_name)
 
-        self._extend_names(dummy_var_name)
-
         mapping_keys = list((self._mappings or {}).keys())
         rule_names = [rule.name for rule in self._rules]
         all_inputs = self._get_direct_rule_inputs(rule_names)
@@ -220,9 +218,6 @@ class RuleBasedModel(IModel):
         for rule_name, rule_input in rule_inputs.items():
             needed_rule_inputs = _lu.remove_duplicates_from_list(rule_input)
             rule_input_vars = input_vars + list(mappings.values())
-            needed_rule_inputs = _du.extend_to_full_name(
-                needed_rule_inputs, dummy_var_name
-            )
             missing_rule_inputs = _lu.items_not_in(needed_rule_inputs, rule_input_vars)
             if len(missing_rule_inputs) > 0:
                 logger.log_error(
@@ -250,12 +245,3 @@ class RuleBasedModel(IModel):
             )
 
         return needed_input_per_rule
-
-    def _extend_names(self, dummy_variable_name: str):
-        """Extends the names of the input variables with the dummy variable prefix
-        when using hardcoded Delftd3D names.
-        """
-        for rule in self._rules:
-            rule.input_variable_names = _du.extend_to_full_name(
-                rule.input_variable_names, dummy_variable_name
-            )
