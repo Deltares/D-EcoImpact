@@ -18,14 +18,11 @@ def test_depth_average_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    geometry = list(("bedlevel", "waterlevel", "interfacez_z"))
     data = DepthAverageRuleData("test_name",
                                 "input1",
-                                geometry
                                 )
 
     # Assert
 
     assert isinstance(data, IRuleData)
     assert data.input_variables == "input1"
-    assert data.geometry_variables == geometry
