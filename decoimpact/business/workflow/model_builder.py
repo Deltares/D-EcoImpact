@@ -111,9 +111,6 @@ class ModelBuilder(IModelBuilder):
             rule = DepthAverageRule(
                 rule_data.name,
                 rule_data.input_variables,
-                rule_data.bed_level_variable,
-                rule_data.water_level_variable,
-                rule_data.interfaces_variable,
             )
         elif isinstance(rule_data, IFilterExtremesRuleData):
             rule = FilterExtremesRule(

@@ -28,14 +28,8 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         self,
         name: str,
         input_variable_names: List[str],
-        bed_level_variable: str,
-        water_level_variable: str,
-        interfaces_variable: str
     ):
         super().__init__(name, input_variable_names)
-        self._bed_level_variable = bed_level_variable
-        self._water_level_variable = water_level_variable
-        self._interfaces_variable = interfaces_variable
 
     # pylint: disable=too-many-locals
     def execute(
@@ -53,11 +47,12 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # The first DataArray in our value_arrays contains the values to be averaged
         # but the name of the key is given by the user, and is unknown here, so
         # just use the first value.
-        variables = next(iter(value_arrays.values()))
+        iterator_input_values = iter(value_arrays.values())
 
-        bed_level_values = value_arrays[self._bed_level_variable]
-        water_level_values = value_arrays[self._water_level_variable]
-        depths_interfaces = value_arrays[self._interfaces_variable]
+        variables = next(iterator_input_values)
+        bed_level_values = next(iterator_input_values)
+        water_level_values = next(iterator_input_values)
+        depths_interfaces = next(iterator_input_values)
 
         # Get the dimension names for the interfaces and for the layers
         dim_interfaces_name = list(depths_interfaces.dims)[0]

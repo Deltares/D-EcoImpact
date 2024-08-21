@@ -25,32 +25,11 @@ class DepthAverageRuleData(IDepthAverageRuleData, RuleData):
         self,
         name: str,
         input_variables: List[str],
-        bed_level_variable: str,
-        water_level_variable: str,
-        interfaces_variable: str,
     ):
         super().__init__(name)
         self._input_variables = input_variables
-        self._bed_level_variable = bed_level_variable
-        self._water_level_variable = water_level_variable
-        self._interfaces_variable = interfaces_variable
 
     @property
     def input_variables(self) -> List[str]:
         """List with input variables"""
         return self._input_variables
-
-    @property
-    def bed_level_variable(self) -> str:
-        """Variable indicating the bottom level"""
-        return self._bed_level_variable
-
-    @property
-    def water_level_variable(self) -> str:
-        """Variable indicating the water level"""
-        return self._water_level_variable
-
-    @property
-    def interfaces_variable(self) -> str:
-        """Variable indicating the interface definition (z or sigma)"""
-        return self._interfaces_variable

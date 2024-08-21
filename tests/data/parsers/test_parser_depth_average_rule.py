@@ -39,9 +39,7 @@ def test_parse_dict_to_rule_data_logic():
         {
             "name": "testname",
             "input_variable": "input",
-            "bed_level_variable": "bedlevel",
-            "water_level_variable": "waterlevel",
-            "interfaces_variable": "interfaces_z",
+            "geometry_variables": list(("bedlevel", "waterlevel", "interfaces_z")),
             "output_variable": "output",
         }
     )

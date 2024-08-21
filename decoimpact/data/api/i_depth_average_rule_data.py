@@ -25,19 +25,5 @@ class IDepthAverageRuleData(IRuleData, ABC):
     @property
     @abstractmethod
     def input_variables(self) -> List[str]:
-        """List with input variable name and standard depth name"""
-
-    @property
-    @abstractmethod
-    def bed_level_variable(self) -> str:
-        """Variable indicating the bottom level"""
-
-    @property
-    @abstractmethod
-    def water_level_variable(self) -> str:
-        """Variable indicating the water level"""
-
-    @property
-    @abstractmethod
-    def interfaces_variable(self) -> str:
-        """Variable indicating the interfaces (z or sigma)"""
+        """List with input variable name, bed level name,
+        water level name and interface name (z or sigma)"""
