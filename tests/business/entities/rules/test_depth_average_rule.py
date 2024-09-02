@@ -169,6 +169,6 @@ def test_dimension_error():
 
     rule.execute(value_arrays, logger)
     logger.log_error.assert_called_with(
-        "The number of interfaces should be number of layers + 1. Number of"
+        "The number of interfaces should be number of layers + 1. Number of "
         "interfaces = 5. Number of layers = 2."
     )

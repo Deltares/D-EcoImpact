@@ -67,7 +67,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # Otherwise give an error to the user
         if interfaces_len != layer_len + 1:
             logger.log_error(
-                f"The number of interfaces should be number of layers + 1. Number of"
+                f"The number of interfaces should be number of layers + 1. Number of "
                 f"interfaces = {interfaces_len}. Number of layers = {layer_len}."
             )
             return variables
