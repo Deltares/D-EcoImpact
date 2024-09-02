@@ -45,14 +45,14 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         """
 
         # The first DataArray in our value_arrays contains the values to be averaged
-        # but the name of the key is given by the user, and is unknown here, so
-        # just use the first value.
-        iterator_input_values = iter(value_arrays.values())
+        # but the name of the key is given by the user, and is unknown here, so use
+        # the ordering defined in the parser.
+        values_list = list(value_arrays.values())
 
-        variables = next(iterator_input_values)
-        bed_level_values = next(iterator_input_values)
-        water_level_values = next(iterator_input_values)
-        depths_interfaces = next(iterator_input_values)
+        variables = values_list[0]
+        bed_level_values  = values_list[1]
+        water_level_values = values_list[2]
+        depths_interfaces  = values_list[3]
 
         # Get the dimension names for the interfaces and for the layers
         dim_interfaces_name = list(depths_interfaces.dims)[0]
