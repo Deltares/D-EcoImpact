@@ -50,9 +50,9 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         values_list = list(value_arrays.values())
 
         variables = values_list[0]
-        bed_level_values  = values_list[1]
+        bed_level_values = values_list[1]
         water_level_values = values_list[2]
-        depths_interfaces  = values_list[3]
+        depths_interfaces = values_list[3]
 
         # Get the dimension names for the interfaces and for the layers
         dim_interfaces_name = list(depths_interfaces.dims)[0]
