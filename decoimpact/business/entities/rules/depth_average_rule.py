@@ -24,13 +24,6 @@ from decoimpact.crosscutting.i_logger import ILogger
 class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
     """Implementation for the depth average rule"""
 
-    def __init__(
-        self,
-        name: str,
-        input_variable_names: List[str],
-    ):
-        super().__init__(name, input_variable_names)
-
     # pylint: disable=too-many-locals
     def execute(
         self, value_arrays: Dict[str, _xr.DataArray], logger: ILogger
