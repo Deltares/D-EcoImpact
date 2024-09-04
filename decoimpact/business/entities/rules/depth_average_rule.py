@@ -42,7 +42,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         # the ordering defined in the parser.
         values_list = list(value_arrays.values())
 
-        variables = values_list[0]
+        variable = values_list[0]
         bed_level_values = values_list[1]
         water_level_values = values_list[2]
         depths_interfaces = values_list[3]
@@ -52,9 +52,9 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         interfaces_len = depths_interfaces[dim_interfaces_name].size
 
         dim_layer_name = [
-            d for d in variables.dims if d not in water_level_values.dims
+            d for d in variable.dims if d not in water_level_values.dims
         ][0]
-        layer_len = variables[dim_layer_name].size
+        layer_len = variable[dim_layer_name].size
 
         # interface dimension should always be one larger than layer dimension
         # Otherwise give an error to the user
@@ -63,7 +63,7 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
                 f"The number of interfaces should be number of layers + 1. Number of "
                 f"interfaces = {interfaces_len}. Number of layers = {layer_len}."
             )
-            return variables
+            return variable
 
         # Deal with open layer system at water level and bed level
         depths_interfaces.values[depths_interfaces.values.argmin()] = -100000
@@ -92,11 +92,11 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         layer_heights = corrected_depth_bed.diff(dim=dim_interfaces_name)
         layer_heights = layer_heights.rename({dim_interfaces_name: dim_layer_name})
 
-        # Use the NaN filtering of the variables to set the correct depth per column
-        layer_heights = layer_heights.where(variables.notnull())
+        # Use the NaN filtering of the variable to set the correct depth per column
+        layer_heights = layer_heights.where(variable.notnull())
 
         # Calculate depth average using relative value
-        relative_values = variables * layer_heights
+        relative_values = variable * layer_heights
 
         # Calculate average
         return relative_values.sum(dim=dim_layer_name) / layer_heights.sum(
