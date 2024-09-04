@@ -19,4 +19,4 @@ rules:
       output_variable: salinity_policy
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test8d_stepwise_classification_waterlevel_lower_range.nc
+  filename: ./tests_acceptance/output_nc_files/08d_stepwise_classification_waterlevel_lower_range.nc

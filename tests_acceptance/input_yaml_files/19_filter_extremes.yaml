@@ -67,4 +67,4 @@ rules:
       output_variable: salinity_troughs
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test19_filter_extremes.nc
+  filename: ./tests_acceptance/output_nc_files/19_filter_extremes.nc

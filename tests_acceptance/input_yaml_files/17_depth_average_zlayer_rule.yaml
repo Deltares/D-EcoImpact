@@ -27,4 +27,4 @@ rules:
       output_variable: output_C
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test17_depth_average_zlayer_rule.nc
+  filename: ./tests_acceptance/output_nc_files/17_depth_average_zlayer_rule.nc

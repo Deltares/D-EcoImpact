@@ -34,4 +34,4 @@ rules:
       output_variable: MAX_water_level
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test7b_time_aggregation_month.nc
+  filename: ./tests_acceptance/output_nc_files/07b_time_aggregation_month.nc

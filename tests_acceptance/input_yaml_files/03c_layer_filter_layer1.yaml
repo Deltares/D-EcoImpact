@@ -16,4 +16,4 @@ rules:
       output_variable: salinity_top_layer
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test3c_layer_filter_layer1.nc
+  filename: ./tests_acceptance/output_nc_files/03c_layer_filter_layer1.nc

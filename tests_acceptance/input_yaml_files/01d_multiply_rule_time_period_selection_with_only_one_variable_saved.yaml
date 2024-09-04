@@ -40,5 +40,5 @@ rules:
       output_variable: AVG_chloride_gp 
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test1d_multiply_rule_time_period_selection_with_only_one_variable_saved.nc
+  filename: ./tests_acceptance/output_nc_files/01d_multiply_rule_time_period_selection_with_only_one_variable_saved.nc
   save_only_variables: AVG_chloride_gp

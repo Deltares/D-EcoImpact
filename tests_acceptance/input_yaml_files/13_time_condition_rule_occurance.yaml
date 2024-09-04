@@ -55,4 +55,4 @@ rules:
       output_variable: Visualisation_number_of_dry_fall_periods
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test13_time_condition_rule_occurance.nc
+  filename: ./tests_acceptance/output_nc_files/13_time_condition_rule_occurance.nc

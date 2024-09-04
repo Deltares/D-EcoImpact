@@ -24,4 +24,4 @@ rules:
       output_variable: dry_fall
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test10_formula_based_comparison.nc
+  filename: ./tests_acceptance/output_nc_files/10_formula_based_comparison.nc

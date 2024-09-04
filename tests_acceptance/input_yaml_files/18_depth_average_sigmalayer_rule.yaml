@@ -27,4 +27,4 @@ rules:
       output_variable: output_C
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test18_depth_average_sigmalayer_rule.nc
+  filename: ./tests_acceptance/output_nc_files/18_depth_average_sigmalayer_rule.nc

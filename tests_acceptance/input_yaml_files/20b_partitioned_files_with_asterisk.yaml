@@ -14,4 +14,4 @@ rules:
 
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test20b_parti*tioned_files_with_asterisk.nc
+  filename: ./tests_acceptance/output_nc_files/20b_parti*tioned_files_with_asterisk.nc

@@ -24,4 +24,4 @@ rules:
       output_variable: HSI_Pnodosus_water_depth
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test9_response_curve_waterlevel.nc
+  filename: ./tests_acceptance/output_nc_files/09_response_curve_waterlevel.nc

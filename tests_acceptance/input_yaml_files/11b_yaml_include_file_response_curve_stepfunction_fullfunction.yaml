@@ -14,4 +14,4 @@ rules:
   - response_curve_rule: !include tables/input_IRM2.yaml
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test11b_yaml_include_file_response_curve_stepfunction_fullfunction.nc
+  filename: ./tests_acceptance/output_nc_files/11b_yaml_include_file_response_curve_stepfunction_fullfunction.nc

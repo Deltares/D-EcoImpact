@@ -85,4 +85,4 @@ rules:
       output_variable: Visualisation_max_duration_of_dry_periods
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test13b_time_condition_rule_duration.nc
+  filename: ./tests_acceptance/output_nc_files/13b_time_condition_rule_duration.nc

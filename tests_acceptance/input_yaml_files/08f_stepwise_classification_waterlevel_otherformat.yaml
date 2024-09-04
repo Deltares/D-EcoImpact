@@ -24,4 +24,4 @@ rules:
       output_variable: water_level_policy
 
 output-data:
-  filename: ./tests_acceptance/output_nc_files/test8f_stepwise_classification_waterlevel_otherformat.nc
+  filename: ./tests_acceptance/output_nc_files/08f_stepwise_classification_waterlevel_otherformat.nc
