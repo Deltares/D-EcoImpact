@@ -6,7 +6,9 @@ FORMAT
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
       input_variable: <one_input_variable_name>
-      layer_type: <layer_type_used_in_dataset>
+      bed_level_variable: <variable_indicating_bed_level>
+      water_level_variable: <variable_indicating_water_level>
+      interfaces_variable: <variable_indicating_interfaces>
       output_variable: <one_output_variable_name>
 ```
 
@@ -97,6 +99,8 @@ Below is an example of an input_file for the depth average rule:
       name: test depth average
       description: Test depth average
       input_variable: salinity
-      layer_type : sigma
+      bed_level_variable: mesh2d_flowelem_bl
+      water_level_variable: mesh2d_s1
+      interfaces_variable: mesh2d_interfaces_sigma
       output_variable: average_salinity
 ```
