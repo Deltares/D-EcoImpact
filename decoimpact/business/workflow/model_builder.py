@@ -24,10 +24,10 @@ from decoimpact.business.entities.rules.filter_extremes_rule import FilterExtrem
 from decoimpact.business.entities.rules.formula_rule import FormulaRule
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.business.entities.rules.layer_filter_rule import LayerFilterRule
+from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
 from decoimpact.business.entities.rules.options.multi_array_operation_type import (
     MultiArrayOperationType,
 )
-from decoimpact.business.entities.rules.multiply_rule import MultiplyRule
 from decoimpact.business.entities.rules.response_curve_rule import ResponseCurveRule
 from decoimpact.business.entities.rules.rolling_statistics_rule import (
     RollingStatisticsRule,
@@ -111,7 +111,6 @@ class ModelBuilder(IModelBuilder):
             rule = DepthAverageRule(
                 rule_data.name,
                 rule_data.input_variables,
-                rule_data.layer_type,
             )
         elif isinstance(rule_data, IFilterExtremesRuleData):
             rule = FilterExtremesRule(

@@ -3,27 +3,37 @@ version: 0.0.0
 input-data:
   - dataset:
       filename: ./tests_acceptance/input_nc_files/test_depth_average_zlayer_rule.nc
+      variable_mapping:
+        mesh2d_flowelem_bl: "bed_level"
+        mesh2d_s1: "water_level"
+        mesh2d_interface_z: "interfaces"
 
 rules:
   - depth_average_rule:
       name: Test A
       description: Test A
       input_variable: var_3d_A
-      layer_type: Z
+      bed_level_variable: bed_level
+      water_level_variable: water_level
+      interfaces_variable: interfaces
       output_variable: output_A
 
   - depth_average_rule:
       name: Test B
       description: Test B
       input_variable: var_3d_B
-      layer_type: z
+      bed_level_variable: bed_level
+      water_level_variable: water_level
+      interfaces_variable: interfaces
       output_variable: output_B
 
   - depth_average_rule:
       name: Test C
       description: Test C
       input_variable: var_3d_C
-      layer_type: z
+      bed_level_variable: bed_level
+      water_level_variable: water_level
+      interfaces_variable: interfaces
       output_variable: output_C
 
 output-data:

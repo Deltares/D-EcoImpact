@@ -23,7 +23,9 @@ def test_create_depth_average_rule_with_defaults():
     """Test creating a depth average rule with defaults"""
 
     # Arrange & Act
-    rule = DepthAverageRule("test_rule_name", ["foo", "hello"],"z")
+    rule = DepthAverageRule("test_rule_name",
+                            ["foo", "hello"],
+                            )
 
     # Assert
     assert isinstance(rule, DepthAverageRule)
@@ -31,7 +33,6 @@ def test_create_depth_average_rule_with_defaults():
     assert rule.description == ""
     assert rule.input_variable_names == ["foo", "hello"]
     assert rule.output_variable_name == "output"
-    assert rule._layer_type == "z"
 
 
 def test_no_validate_error_with_correct_rule():
@@ -41,7 +42,6 @@ def test_no_validate_error_with_correct_rule():
     rule = DepthAverageRule(
         "test_rule_name",
         ["foo", "hello"],
-        "z",
     )
 
     # Assert
@@ -49,20 +49,20 @@ def test_no_validate_error_with_correct_rule():
 
 
 @pytest.mark.parametrize(
-    "data_variable, mesh2d_interface_z, mesh2d_flowelem_bl, mesh2d_s1, result_data",
+    "data_variable, mesh2d_flowelem_bl, mesh2d_s1, mesh2d_interface_z, result_data",
     [
         [
             _np.array([[[20, 40], [91, 92]]]),
-            _np.array([0, -1, -2]),
             _np.array([-2, -2]),
             _np.array([[0, 0]]),
+            _np.array([0, -1, -2]),
             _np.array([[30.0, 91.5]]),
         ],
         [
             _np.tile(_np.arange(4, 0, -1), (2, 4, 1)),
-            _np.array([-10, -6, -3, -1, 0]),
             _np.array([-10, -5, -10, -5]),
             _np.array([[0, 0, -1.5, -1.5], [0, -6, 5, -5]]),
+            _np.array([-10, -6, -3, -1, 0]),
             _np.array(
                 [[3.0, 2.2, 3.29411765, 2.57142857], [3.0, _np.nan, 2.33333, _np.nan]]
             ),
@@ -70,11 +70,11 @@ def test_no_validate_error_with_correct_rule():
         # Added this next test as to match the example in documentation
         [
             _np.tile(_np.arange(4, 0, -1), (2, 6, 1)),
-            _np.array([-8.5, -6.5, -5, -2, 0]),
             _np.array([-7.8, -7.3, -5.2, -9.5, -7, -1.6]),
             _np.array(
                 [[-1.4, -1.6, -3, -1.4, -1.6, -1.6], [0, -1.6, -3, 3, -1.6, -1.6]]
             ),
+            _np.array([-8.5, -6.5, -5, -2, 0]),
             _np.array(
                 [
                     [2.546875, 2.473684, 2.090909, 2.851852, 2.388889, _np.nan],
@@ -96,25 +96,27 @@ def test_depth_average_rule(
     logger = Mock(ILogger)
     rule = DepthAverageRule(
         name="test",
-        input_variable_names=["foo", "mesh2d_interface_z"],
-        layer_type="z",
+        input_variable_names=["foo",
+                              "mesh2d_flowelem_bl",
+                              "mesh2d_s1",
+                              "mesh2d_interface_z"],
     )
 
     # Create dataset
     ds = _xr.Dataset(
         {
             "var_3d": (["time", "mesh2d_nFaces", "mesh2d_nLayers"], data_variable),
-            "mesh2d_interface_z": (["mesh2d_nInterfaces"], mesh2d_interface_z),
             "mesh2d_flowelem_bl": (["mesh2d_nFaces"], mesh2d_flowelem_bl),
             "mesh2d_s1": (["time", "mesh2d_nFaces"], mesh2d_s1),
+            "mesh2d_interface_z": (["mesh2d_nInterfaces"], mesh2d_interface_z),
         }
     )
 
     value_arrays = {
         "var_3d": ds["var_3d"],
-        "mesh2d_interface_z": ds["mesh2d_interface_z"],
         "mesh2d_flowelem_bl": ds["mesh2d_flowelem_bl"],
         "mesh2d_s1": ds["mesh2d_s1"],
+        "mesh2d_interface_z": ds["mesh2d_interface_z"],
     }
 
     depth_average = rule.execute(value_arrays, logger)
@@ -133,8 +135,10 @@ def test_dimension_error():
     logger = Mock(ILogger)
     rule = DepthAverageRule(
         name="test",
-        input_variable_names=["foo", "mesh2d_interface_z"],
-        layer_type="z",
+        input_variable_names=["foo",
+                              "mesh2d_flowelem_bl",
+                              "mesh2d_s1",
+                              "mesh2d_interface_z"],
     )
 
     # Create dataset
@@ -158,13 +162,13 @@ def test_dimension_error():
 
     value_arrays = {
         "var_3d": ds["var_3d"],
-        "mesh2d_interface_z": ds["mesh2d_interface_z"],
         "mesh2d_flowelem_bl": ds["mesh2d_flowelem_bl"],
         "mesh2d_s1": ds["mesh2d_s1"],
+        "mesh2d_interface_z": ds["mesh2d_interface_z"],
     }
 
     rule.execute(value_arrays, logger)
     logger.log_error.assert_called_with(
-        "The number of interfaces should be number of layers + 1. Number of"
+        "The number of interfaces should be number of layers + 1. Number of "
         "interfaces = 5. Number of layers = 2."
     )

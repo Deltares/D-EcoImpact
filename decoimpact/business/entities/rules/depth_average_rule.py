@@ -10,7 +10,7 @@ Module for DepthAverageRule class
 Classes:
     DepthAverageRule
 """
-from typing import Dict, List
+from typing import Dict
 
 import xarray as _xr
 
@@ -18,21 +18,11 @@ from decoimpact.business.entities.rules.i_multi_array_based_rule import (
     IMultiArrayBasedRule,
 )
 from decoimpact.business.entities.rules.rule_base import RuleBase
-from decoimpact.crosscutting.delft3d_specific_data import (
-    BED_LEVEL_SUFFIX,
-    INTERFACES_SIGMA_SUFFIX,
-    INTERFACES_Z_SUFFIX,
-    WATER_LEVEL_SUFFIX,
-)
 from decoimpact.crosscutting.i_logger import ILogger
 
 
 class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
     """Implementation for the depth average rule"""
-
-    def __init__(self, name: str, input_variable_names: List[str], layer_type: str):
-        super().__init__(name, input_variable_names)
-        self._layer_type = layer_type
 
     # pylint: disable=too-many-locals
     def execute(
@@ -48,38 +38,32 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         """
 
         # The first DataArray in our value_arrays contains the values to be averaged
-        # but the name of the key is given by the user, and is unknown here, so
-        # just use the first value.
-        variables = next(iter(value_arrays.values()))
-        interface_suffix = _get_layer_suffix(self._layer_type, logger)
+        # but the name of the key is given by the user, and is unknown here, so use
+        # the ordering defined in the parser.
+        values_list = list(value_arrays.values())
 
-        bed_level_values = _extract_variable_based_on_suffix(
-            value_arrays, BED_LEVEL_SUFFIX
-        )
-        depths_interfaces = _extract_variable_based_on_suffix(
-            value_arrays, interface_suffix
-        )
-        water_level_values = _extract_variable_based_on_suffix(
-            value_arrays, WATER_LEVEL_SUFFIX
-        )
+        variable = values_list[0]
+        bed_level_values = values_list[1]
+        water_level_values = values_list[2]
+        depths_interfaces = values_list[3]
 
         # Get the dimension names for the interfaces and for the layers
         dim_interfaces_name = list(depths_interfaces.dims)[0]
         interfaces_len = depths_interfaces[dim_interfaces_name].size
 
         dim_layer_name = [
-            d for d in variables.dims if d not in water_level_values.dims
+            d for d in variable.dims if d not in water_level_values.dims
         ][0]
-        layer_len = variables[dim_layer_name].size
+        layer_len = variable[dim_layer_name].size
 
         # interface dimension should always be one larger than layer dimension
         # Otherwise give an error to the user
         if interfaces_len != layer_len + 1:
             logger.log_error(
-                f"The number of interfaces should be number of layers + 1. Number of"
+                f"The number of interfaces should be number of layers + 1. Number of "
                 f"interfaces = {interfaces_len}. Number of layers = {layer_len}."
             )
-            return variables
+            return variable
 
         # Deal with open layer system at water level and bed level
         depths_interfaces.values[depths_interfaces.values.argmin()] = -100000
@@ -108,51 +92,13 @@ class DepthAverageRule(RuleBase, IMultiArrayBasedRule):
         layer_heights = corrected_depth_bed.diff(dim=dim_interfaces_name)
         layer_heights = layer_heights.rename({dim_interfaces_name: dim_layer_name})
 
-        # Use the NaN filtering of the variables to set the correct depth per column
-        layer_heights = layer_heights.where(variables.notnull())
+        # Use the NaN filtering of the variable to set the correct depth per column
+        layer_heights = layer_heights.where(variable.notnull())
 
         # Calculate depth average using relative value
-        relative_values = variables * layer_heights
+        relative_values = variable * layer_heights
 
         # Calculate average
         return relative_values.sum(dim=dim_layer_name) / layer_heights.sum(
             dim=dim_layer_name
         )
-
-
-def _extract_variable_based_on_suffix(
-    value_arrays: Dict[str, _xr.DataArray], suffix: str
-) -> List:
-    """Extract the values from the XArray dataset based on the name
-    suffixes by matching the name, irrespective of the dummy name prefix.
-
-    Args:
-        value_array (DataArray): Values
-        suffix (str) : Suffix of the name
-
-    Returns:
-        values (List[str]): Values based on prefix + suffix name
-    """
-    return [value_arrays[name] for name in value_arrays if suffix in name][0]
-
-
-def _get_layer_suffix(layer_type: str, logger: ILogger):
-    """Get the interface suffix depending on whether the model is a sigma or z
-    layer model. Give error if the interface suffix cannot be determined.
-
-    Args:
-        value_array (DataArray): Values
-
-    Returns:
-        layer_type (str): sigma or z
-    """
-    if layer_type.lower() == "sigma":
-        return INTERFACES_SIGMA_SUFFIX
-    if layer_type.lower() == "z":
-        return INTERFACES_Z_SUFFIX
-    logger.log_error(
-        f"Layer type {layer_type} unknown. Allowed layer "
-        "type: z or sigma. Interface "
-        "variable could not be determined."
-    )
-    return "_unknown"
