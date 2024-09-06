@@ -18,10 +18,11 @@ def test_depth_average_rule_data_creation_logic():
     to correctly initialize itself during creation"""
 
     # Act
-    data = DepthAverageRuleData("test_name", "input1", "z")
+    data = DepthAverageRuleData("test_name",
+                                "input1",
+                                )
 
     # Assert
 
     assert isinstance(data, IRuleData)
     assert data.input_variables == "input1"
-    assert data.layer_type == "z"

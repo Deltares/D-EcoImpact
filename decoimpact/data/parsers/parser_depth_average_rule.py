@@ -12,12 +12,6 @@ Classes:
 """
 from typing import Any, Dict, List
 
-from decoimpact.crosscutting.delft3d_specific_data import (
-    BED_LEVEL_SUFFIX,
-    INTERFACES_SIGMA_SUFFIX,
-    INTERFACES_Z_SUFFIX,
-    WATER_LEVEL_SUFFIX,
-)
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.dictionary_utils import get_dict_element
@@ -42,41 +36,26 @@ class ParserDepthAverageRule(IParserRuleBase):
             RuleBase: Rule based on the provided data
         """
         name: str = get_dict_element("name", dictionary)
-        layer_type: str = get_dict_element("layer_type", dictionary)
-        interface_suffix = _obtain_interface_suffix(layer_type)
+        bed_level_variable = get_dict_element("bed_level_variable", dictionary)
+        water_level_variable = get_dict_element("water_level_variable", dictionary)
+        interfaces_variable = get_dict_element("interfaces_variable", dictionary)
 
         input_variable_names: List[str] = [
             get_dict_element("input_variable", dictionary),
-            interface_suffix,
-            WATER_LEVEL_SUFFIX,
-            BED_LEVEL_SUFFIX,
+            bed_level_variable,
+            water_level_variable,
+            interfaces_variable,
         ]
 
         output_variable_name: str = get_dict_element("output_variable", dictionary)
         description: str = get_dict_element("description", dictionary, False) or ""
 
-        rule_data = DepthAverageRuleData(name, input_variable_names, layer_type)
+        rule_data = DepthAverageRuleData(
+            name,
+            input_variable_names,
+        )
 
         rule_data.output_variable = output_variable_name
         rule_data.description = description
 
         return rule_data
-
-
-def _obtain_interface_suffix(layer_type: str):
-    """Obtain the interface variable based on the layer_type specified.
-    Give an error if layer_type is not recognised
-
-    Args:
-        layer_type (str): z or sigma layers
-
-    Returns:
-        Suffix for z or sigma layers based on Delft3D
-                            defined suffixes
-    """
-    if layer_type.lower() == 'z':
-        return INTERFACES_Z_SUFFIX
-    if layer_type.lower() == 'sigma':
-        return INTERFACES_SIGMA_SUFFIX
-    raise NotImplementedError(f"Layer_type '{layer_type}' is not recognized. "
-                              f"Supported options are 'z' and 'sigma'.")

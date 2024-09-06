@@ -25,18 +25,11 @@ class DepthAverageRuleData(IDepthAverageRuleData, RuleData):
         self,
         name: str,
         input_variables: List[str],
-        layer_type: str,
     ):
         super().__init__(name)
         self._input_variables = input_variables
-        self._layer_type = layer_type
 
     @property
     def input_variables(self) -> List[str]:
         """List with input variables"""
         return self._input_variables
-
-    @property
-    def layer_type(self) -> str:
-        """Layer type of the model (z or sigma)"""
-        return self._layer_type
