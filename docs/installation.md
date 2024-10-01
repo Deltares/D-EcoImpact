@@ -11,11 +11,11 @@ Conda is a package and environment manager that can be used to install the poetr
 
 ## Installation of D-Eco Impact with conda (use Miniforge or Miniconda)
 
-Note: when using miniconda, make sure to update the defaults channel to conda-forge!
+Note: when using miniconda, make sure to update the defaults channel to conda-forge ([instructions for changing the channel](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-channels.html))!
 
 1.	Open a commandline tool (eg. cmd or powershell):
   ```sh
-  $ conda create -y -c conda-forge --name <env_name> python=3.11
+  $ conda create -y -c pip --name <env_name> python=3.11
   ```
 
 2.	Activate the newly created environment
@@ -48,7 +48,7 @@ Execute the following command:
   ```
   poetry install
   ```
-NB. If errors occur while installing the libraries, this might have to do with your administrative rights. Either start the cmd promt “As administrator” or discuss this with your IT support.
+NB. If errors occur while installing the libraries, this might have to do with your administrative rights. Either start the cmd prompt “As administrator” or discuss this with your IT support.
 
 6.	Now D-Eco Impact is ready to use. You can test this by executing one of the input yaml files.
 To execute use the following in the command prompt while your environment is active:

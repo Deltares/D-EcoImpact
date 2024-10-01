@@ -71,7 +71,7 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 #### conda:
 
 
-<span style="color:orange">**⚠ WARNING: Due to licencing of Anaconda, it is recommended to use an alternative like [Miniforge](https://github.com/conda-forge/miniforge). This still uses the package manager conda and therefore the same commands can still be used. The same goes for [Miniconda](https://docs.anaconda.com/miniconda/) but you need to change the defaults channel to conda-forge!**
+<span style="color:orange">**⚠ WARNING: Due to licencing of Anaconda, it is recommended to use an alternative like [Miniforge](https://github.com/conda-forge/miniforge). This still uses the package manager conda and therefore the same commands can still be used. The same goes for [Miniconda](https://docs.anaconda.com/miniconda/) but you need to change the defaults channel to conda-forge ([instructions for changing the channel](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-channels.html))!**
 </span>
 
 - Create `conda` environment
