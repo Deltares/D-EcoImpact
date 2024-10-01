@@ -2,70 +2,70 @@ version: 0.5.13
 
 input-data:
   - dataset:
-      filename: 
-      start_date: 
-      end_date: 
+      filename:
+      start_date:
+      end_date:
       variable_mapping:
 
 rules:
   - multiply_rule:
-      name: 
-      description: 
+      name:
+      description:
       multipliers: []
-      input_variable: 
-      output_variable: 
+      input_variable:
+      output_variable:
 
   - layer_filter_rule:
-      name: 
-      description: 
-      layer_number: 
-      input_variable: 
-      output_variable: 
-      
+      name:
+      description:
+      layer_number:
+      input_variable:
+      output_variable:
+
   - time_aggregation_rule:
-      name: 
-      description: 
-      operation: 
-      time_scale: 
-      input_variable: 
-      output_variable: 
+      name:
+      description:
+      operation:
+      time_scale:
+      input_variable:
+      output_variable:
 
     - step_function_rule:
-      name: 
-      description: 
+      name:
+      description:
       limit_response_table:
             - [ limit, response]
             - [,]
-      input_variable:       
-      output_variable: 
+      input_variable:
+      output_variable:
 
   - response_curve_rule:
-      name: 
-      description: 
+      name:
+      description:
       response_table:
           - [  input,  output ]
           - [,]
-      input_variable:        
-      output_variable: 
+      input_variable:
+      output_variable:
 
   - combine_results_rule:
-        name: 
-        description:      
-        operation: 
+        name:
+        description:
+        operation:
         input_variables: [,]
-        output_variable: 
- 
+        output_variable:
+
   - formula_rule:
-      name: 
+      name:
       description:
       formula:
       input_variables: [,]
       output_variable:
 
   - rolling_statistics_rule:
-      name: 
-      description: 
-      operation: 
+      name:
+      description:
+      operation:
       time_scale :
       period:
       input_variable:
@@ -79,26 +79,25 @@ rules:
             - [,]
             - [,]
       input_variables: []
-      output_variable: 
+      output_variable:
 
   - axis_filter_rule:
       name:
       description:
       axis_name:
-      layer_number: 
+      layer_number:
       input_variable:
-      output_variable: 
+      output_variable:
 
   - depth_average_rule:
-        name: 
+        name:
         description:
         input_variable:
-        output_variable: 
+        output_variable:
 
   - filter_extremes_rule:
       name:
       description:
-      input_variable:
       output_variable:
       extreme_type:
       distance:
@@ -106,4 +105,4 @@ rules:
       mask: True
 
 output-data:
-  filename: 
+  filename:
