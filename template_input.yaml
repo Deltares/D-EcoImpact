@@ -54,13 +54,40 @@ rules:
         operation: 
         input_variables: [,]
         output_variable: 
+ 
+  - formula_rule:
+      name: 
+      description:
+      formula:
+      input_variables: [,]
+      output_variable:
 
-  - combine_results_rule:
-        name: 
-        description:     
-        formula: 
-        input_variables: [,]
-        output_variable: 
+  - rolling_statistics_rule:
+      name: 
+      description: 
+      operation: 
+      time_scale :
+      period:
+      input_variable:
+      output_variable:
+
+  - classification_rule:
+      name:
+      description:
+      criteria_table:
+            - [ "output",]
+            - [,]
+            - [,]
+      input_variables: []
+      output_variable: 
+
+  - axis_filter_rule:
+      name:
+      description:
+      axis_name:
+      layer_number: 
+      input_variable:
+      output_variable: 
 
   - depth_average_rule:
         name: 
