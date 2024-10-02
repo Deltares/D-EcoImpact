@@ -1,0 +1,37 @@
+version: 0.0.0
+
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
+      variable_mapping:
+        salinity_PSU: "salinity"
+        water_level_mNAP: "water_level"
+        water_depth_mNAP: "water_depth"
+
+rules:
+  - time_aggregation_rule:
+      name: test name
+      description: Get average water level
+      operation: AVERAGE
+      input_variable: water_level
+      time_scale: year
+      output_variable: AVG_water_level
+
+  - time_aggregation_rule:
+      name: test name
+      description: Get minimum water level
+      operation: MIN
+      input_variable: water_level
+      time_scale: year
+      output_variable: MIN_water_level
+
+  - time_aggregation_rule:
+      name: test name
+      description: Get minimum water level
+      operation: MAX
+      input_variable: water_level
+      time_scale: year
+      output_variable: MAX_water_level
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/07_time_aggregation_year.nc

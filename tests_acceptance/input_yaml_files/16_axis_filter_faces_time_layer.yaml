@@ -1,0 +1,38 @@
+version: 0.0.0
+
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
+      variable_mapping:
+        salinity_PSU: "IN_salinity_PSU"
+        # water_level_mNAP : "IN_water_level_mNAP"
+        # water_depth_mNAP   : "IN_water_depth_mNAP"
+        # flow_velocity_ms   : "IN_flow_velocity_ms"
+
+rules:
+  - axis_filter_rule:
+      name: Filter face of channel entrance
+      description: Filter face of channel entrance
+      axis_name: mesh2d_nFaces
+      layer_number: 13
+      input_variable: IN_salinity_PSU
+      output_variable: salinity_PSU_channel_entrance
+
+  - axis_filter_rule:
+      name: Filter to top layer
+      description: Filter to top layer
+      axis_name: mesh2d_nLayers
+      layer_number: 22
+      input_variable: salinity_PSU_channel_entrance
+      output_variable: salinity_PSU_top_layer
+
+  - axis_filter_rule:
+      name: Filter to 30th timestep
+      description: Filter to 30th timestep
+      axis_name: time
+      layer_number: 30
+      input_variable: salinity_PSU_top_layer
+      output_variable: salinity_PSU_time_30
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/16_axis_filter_faces_time_layer.nc
