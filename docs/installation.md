@@ -2,18 +2,20 @@
 D-Eco Impact is a command line operated model. To use D-Eco Impact (currently) an installation of Python and the used libraries is required. This is best achieved by installing D-Eco Impact in a virtual environment.
 
 
-## Anaconda, miniConda or Visual Studio Code
-Anaconda (elaborate functionality) and minicoda (minimum functionality) are environment managers often used in combination with Python. You can find the installation for either here:
+## Conda or Visual Studio Code
+Conda is a package and environment manager that can be used to install the poetry package and other packages needed to run D-Eco Impact. 
 
-- [Anaconda](https://docs.anaconda.com/anaconda/install/windows/)
-- [miniConda](https://docs.conda.io/en/main/miniconda.html)
+- [Miniforge](https://github.com/conda-forge/miniforge)
+- [Miniconda](https://docs.conda.io/en/main/miniconda.html)
 - [Visual Studio code](https://code.visualstudio.com/download)
 
-## Installation of D-Eco Impact with Anaconda or miniConda
+## Installation of D-Eco Impact with conda (use Miniforge or Miniconda)
 
-1.	Open your commandline (cmd) or conda prompt, and execute:
+Note: when using miniconda, make sure to update the defaults channel to conda-forge ([instructions for changing the channel](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-channels.html))!
+
+1.	Open a commandline tool (eg. cmd or powershell):
   ```sh
-  $ conda create -y -c conda-forge --name <env_name> python=3.11
+  $ conda create -y -c pip --name <env_name> python=3.11
   ```
 
 2.	Activate the newly created environment
@@ -46,7 +48,7 @@ Execute the following command:
   ```
   poetry install
   ```
-NB. If errors occur while installing the libraries, this might have to do with your administrative rights. Either start the cmd or conda promt “As administrator” or discuss this with your IT support.
+NB. If errors occur while installing the libraries, this might have to do with your administrative rights. Either start the cmd prompt “As administrator” or discuss this with your IT support.
 
 6.	Now D-Eco Impact is ready to use. You can test this by executing one of the input yaml files.
 To execute use the following in the command prompt while your environment is active:

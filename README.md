@@ -55,17 +55,6 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 >
 > The name can not contain any spaces or special characters.
 
-#### Anaconda or Miniconda:
-
-- Create `conda` environment
-  ```sh
-  $ conda create -y -c pip --name <env_name> python=3.11
-  ```
-- Activate `conda` environment
-  ```sh
-  $ conda activate <env_name>
-  ```
-
 ### venv:
 
 - Create `venv` virtual environment
@@ -77,6 +66,21 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 - Activate `venv` environment
   ```
   $ .\env\Scripts\activate
+  ```
+
+#### conda:
+
+
+<span style="color:orange">**⚠ WARNING: Due to licencing of Anaconda, it is recommended to use an alternative like [Miniforge](https://github.com/conda-forge/miniforge). This still uses the package manager conda and therefore the same commands can still be used. The same goes for [Miniconda](https://docs.anaconda.com/miniconda/) but you need to change the defaults channel to conda-forge ([instructions for changing the channel](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-channels.html))!**
+</span>
+
+- Create `conda` environment
+  ```sh
+  $ conda create -y -c pip --name <env_name> python=3.11
+  ```
+- Activate `conda` environment
+  ```sh
+  $ conda activate <env_name>
   ```
 
 (see
