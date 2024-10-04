@@ -1,0 +1,19 @@
+version: 0.0.0
+
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
+      variable_mapping:
+        water_level_mNAP: "water_level"
+        bathymetry_mNAP: "bathymetry"
+
+rules:
+  - formula_rule:
+      name: Get water_depth by calculation
+      description: Get water_depth by calculation
+      formula: bathymetry + water_level
+      input_variables:  [water_level, bathymetry]
+      output_variable: water_depth_calc
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/10d_formula_based_timeaxes_calculation.nc

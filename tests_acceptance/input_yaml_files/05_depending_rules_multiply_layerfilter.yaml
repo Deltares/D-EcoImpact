@@ -1,0 +1,56 @@
+version: 0.0.0
+
+input-data:
+  - dataset:
+      filename: ./tests_acceptance/input_nc_files/small_subset_FM-VZM_0000_map.nc
+      variable_mapping:
+        salinity_PSU: salinity
+        water_level_mNAP: water_level
+
+rules:
+  - multiply_rule:
+      name: Convert Salinity to chloride
+      description: Converts salinity to chloride
+      multipliers: [0.0018066, 1e5]
+      input_variable: salinity
+      output_variable: chloride
+
+  - layer_filter_rule:
+      name: Get top layer of chloride
+      description: get first layer of model
+      layer_number: 22
+      input_variable: chloride
+      output_variable: chloride_top_layer
+
+  - step_function_rule:
+      name: Chloride policy check
+      description: Get boundaries chloride
+      limit_response_table:
+        [
+          [limit, response],
+          [-999.0, 0.00],
+          [0.0, 1.00],
+          [450.0, 0.00],
+          [999.0, 0.00],
+        ]
+      output_variable: chloride_policy
+      input_variable: chloride_top_layer
+
+  - step_function_rule:
+      name: Water level minimum policy check
+      description: Get boundaries chloride
+      limit_response_table:
+        [[limit, response], [-999.0, 0.00], [-0.10, 1.00], [999.0, 1.00]]
+      output_variable: waterlevel_min_policy
+      input_variable: water_level
+
+  - step_function_rule:
+      name: Water level max policy check
+      description: Get boundaries chloride
+      limit_response_table:
+        [[limit, response], [-999.0, 1.00], [0.15, 1.00], [999.0, 0.00]]
+      output_variable: waterlevel_max_policy
+      input_variable: water_level
+
+output-data:
+  filename: ./tests_acceptance/output_nc_files/05_depending_rules_multiply_layerfilter.nc
