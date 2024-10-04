@@ -5,11 +5,10 @@ FORMAT
 - axis_filter_rule:
       name: <name_of_rule_in_text>
       description: <description_of_rule_in_text>
-      layer_number: <integer_nr_of_layer>
-	  axis_name: <name_of_axis_applied>
+      axis_name: <name_of_axis_applied>
       layer_number: <integer_nr_of_layer_in_axis_applied>
       input_variable: <one_3D_input_variable_name>
-      output_variable: <one_output_variable_name>
+      output_variable: <one_output_variable_name> 
 ```
 
 The axis filter rule is close to the layer_filter_rule, however it allows for filtering on any axis present in the data. This allows for the selection of a specific time step, spatial cell or other data axis value.
