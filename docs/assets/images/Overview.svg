@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100cm" height="70cm" viewBox="0 0 1692 1226">
+<title></title>
+<desc>Created with Enterprise Architect (Build: 1625) 2</desc>
+
+<g style="fill:#FFFFFF;fill-opacity:1.00;">
+	 <rect x="0" y="0" width="1692" height="1226" shape-rendering="auto"/>
+</g><g style="stroke-width:1;stroke-linecap:square;stroke-linejoin:miter; fill:#000000;fill-opacity:0.00; stroke:#000000; stroke-opacity:1.00">
+  <path d="M 6 6 L 6 1220 L 1686 1220 L 1686 6 L 6 6" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#FDFAF7;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="89" y="177" width="279" height="132" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="186.00" y="196.00" textLength="84" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 186.00 196.00)">business::Application</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 89 204 L 367 204" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="94.00" y="218.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 94.00 218.00)">+ </text>
+	<text x="111.00" y="218.00" textLength="200" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 111.00 218.00)">APPLICATION_VERSION: var = read_version_nu...</text>
+	<text x="94.00" y="231.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 94.00 231.00)">+ </text>
+	<text x="111.00" y="231.00" textLength="172" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 111.00 231.00)">APPLICATION_NAME: var = &quot;D-EcoImpact&quot;</text>
+	<text x="94.00" y="244.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 94.00 244.00)">+ </text>
+	<text x="111.00" y="244.00" textLength="220" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 111.00 244.00)">APPLICATION_VERSION_PARTS: var = list(map(int, A...</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 89 251 L 367 251" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="94.00" y="265.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 94.00 265.00)">+ </text>
+	<text x="111.00" y="265.00" textLength="210" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 111.00 265.00)">__init__(, ILogger, IDataAccessLayer, IModelBuilder)</text>
+	<text x="94.00" y="278.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 94.00 278.00)">+ </text>
+	<text x="111.00" y="278.00" textLength="42" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 111.00 278.00)">run(, Path)</text>
+	<text x="94.00" y="291.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 94.00 291.00)">+ </text>
+	<text x="111.00" y="291.00" textLength="111" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 111.00 291.00)">_generate_output_path(, , )</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#F1ECFA;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="565" y="566" width="160" height="203" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="706.00" y="579.00" textLength="16" style="font-family:Calibri; font-weight:0; font-style:italic; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 706.00 579.00)">ABC</text>
+	<text x="622.00" y="595.00" textLength="45" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 622.00 595.00)">«interface»</text>
+	<text x="613.00" y="608.00" textLength="64" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 613.00 608.00)">entities::IModel</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 565 617 L 724 617" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="570.00" y="631.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 570.00 631.00)">+ </text>
+	<text x="587.00" y="631.00" textLength="44" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 587.00 631.00)">name(): str</text>
+	<text x="570.00" y="644.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 570.00 644.00)">+ </text>
+	<text x="587.00" y="644.00" textLength="86" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 587.00 644.00)">status(): ModelStatus</text>
+	<text x="570.00" y="657.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 570.00 657.00)">+ </text>
+	<text x="587.00" y="657.00" textLength="86" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 587.00 657.00)">status(, ModelStatus)</text>
+	<text x="570.00" y="670.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 570.00 670.00)">+ </text>
+	<text x="587.00" y="670.00" textLength="135" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 587.00 670.00)">input_datasets(): List[_xr.Dataset]</text>
+	<text x="570.00" y="683.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 570.00 683.00)">+ </text>
+	<text x="587.00" y="683.00" textLength="118" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 587.00 683.00)">output_dataset(): _xr.Dataset</text>
+	<text x="570.00" y="696.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 570.00 696.00)">+ </text>
+	<text x="587.00" y="696.00" textLength="54" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 587.00 696.00)">partition(): str</text>
+	<text x="570.00" y="709.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 570.00 709.00)">+ </text>
+	<text x="587.00" y="709.00" textLength="54" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 587.00 709.00)">partition(, str)</text>
+	<text x="570.00" y="722.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 570.00 722.00)">+ </text>
+	<text x="587.00" y="722.00" textLength="95" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 587.00 722.00)">validate(, ILogger): bool</text>
+	<text x="570.00" y="735.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 570.00 735.00)">+ </text>
+	<text x="587.00" y="735.00" textLength="99" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 587.00 735.00)">initialize(, ILogger): None</text>
+	<text x="570.00" y="748.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 570.00 748.00)">+ </text>
+	<text x="587.00" y="748.00" textLength="98" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 587.00 748.00)">execute(, ILogger): None</text>
+	<text x="570.00" y="761.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 570.00 761.00)">+ </text>
+	<text x="587.00" y="761.00" textLength="95" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 587.00 761.00)">finalize(, ILogger): None</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#FDFAF7;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="826" y="538" width="323" height="244" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="935.00" y="557.00" textLength="104" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 935.00 557.00)">entities::RuleBasedModel</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 826 565 L 1148 565" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="831.00" y="579.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 579.00)">+ </text>
+	<text x="848.00" y="579.00" textLength="298" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 579.00)">__init__(, List[_xr.Dataset], List[IRule], Optional[dict[str, str]], str, str): None</text>
+	<text x="831.00" y="592.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 592.00)">+ </text>
+	<text x="848.00" y="592.00" textLength="44" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 592.00)">name(): str</text>
+	<text x="831.00" y="605.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 605.00)">+ </text>
+	<text x="848.00" y="605.00" textLength="86" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 605.00)">status(): ModelStatus</text>
+	<text x="831.00" y="618.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 618.00)">+ </text>
+	<text x="848.00" y="618.00" textLength="86" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 618.00)">status(, ModelStatus)</text>
+	<text x="831.00" y="631.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 631.00)">+ </text>
+	<text x="848.00" y="631.00" textLength="69" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 631.00)">rules(): List[IRule]</text>
+	<text x="831.00" y="644.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 644.00)">+ </text>
+	<text x="848.00" y="644.00" textLength="135" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 644.00)">input_datasets(): List[_xr.Dataset]</text>
+	<text x="831.00" y="657.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 657.00)">+ </text>
+	<text x="848.00" y="657.00" textLength="118" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 657.00)">output_dataset(): _xr.Dataset</text>
+	<text x="831.00" y="670.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 670.00)">+ </text>
+	<text x="848.00" y="670.00" textLength="54" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 670.00)">partition(): str</text>
+	<text x="831.00" y="683.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 683.00)">+ </text>
+	<text x="848.00" y="683.00" textLength="54" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 683.00)">partition(, str)</text>
+	<text x="831.00" y="696.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 696.00)">+ </text>
+	<text x="848.00" y="696.00" textLength="95" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 696.00)">validate(, ILogger): bool</text>
+	<text x="831.00" y="709.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 709.00)">+ </text>
+	<text x="848.00" y="709.00" textLength="99" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 709.00)">initialize(, ILogger): None</text>
+	<text x="831.00" y="722.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 722.00)">+ </text>
+	<text x="848.00" y="722.00" textLength="98" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 722.00)">execute(, ILogger): None</text>
+	<text x="831.00" y="735.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 735.00)">+ </text>
+	<text x="848.00" y="735.00" textLength="95" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 735.00)">finalize(, ILogger): None</text>
+	<text x="831.00" y="748.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 748.00)">+ </text>
+	<text x="848.00" y="748.00" textLength="138" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 748.00)">_make_output_variables_list(): list</text>
+	<text x="831.00" y="761.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 761.00)">+ </text>
+	<text x="848.00" y="761.00" textLength="194" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 761.00)">_validate_mappings(, dict[str, str], ILogger): bool</text>
+	<text x="831.00" y="774.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 831.00 774.00)">+ </text>
+	<text x="848.00" y="774.00" textLength="175" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 848.00 774.00)">_get_direct_rule_inputs(, ): Dict[str, List[str]]</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#E8FDE3;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="579" y="802" width="131" height="202" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="684.00" y="815.00" textLength="23" style="font-family:Calibri; font-weight:0; font-style:italic; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 684.00 815.00)">Enum</text>
+	<text x="614.00" y="831.00" textLength="61" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 614.00 831.00)">«enumeration»</text>
+	<text x="601.00" y="844.00" textLength="86" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 601.00 844.00)">entities::ModelStatus</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 579 852 L 709 852" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="631.00" y="866.00" textLength="26" style="font-family:Calibri; font-weight:0; font-style:italic; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 631.00 866.00)">literals</text>
+	<text x="584.00" y="879.00" textLength="2" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 879.00)"> </text>
+	<text x="601.00" y="879.00" textLength="70" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 601.00 879.00)">CREATED = auto()</text>
+	<text x="584.00" y="892.00" textLength="2" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 892.00)"> </text>
+	<text x="601.00" y="892.00" textLength="86" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 601.00 892.00)">INITIALIZING = auto()</text>
+	<text x="584.00" y="905.00" textLength="2" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 905.00)"> </text>
+	<text x="601.00" y="905.00" textLength="82" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 601.00 905.00)">INITIALIZED = auto()</text>
+	<text x="584.00" y="918.00" textLength="2" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 918.00)"> </text>
+	<text x="601.00" y="918.00" textLength="79" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 601.00 918.00)">EXECUTING = auto()</text>
+	<text x="584.00" y="931.00" textLength="2" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 931.00)"> </text>
+	<text x="601.00" y="931.00" textLength="75" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 601.00 931.00)">EXECUTED = auto()</text>
+	<text x="584.00" y="944.00" textLength="2" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 944.00)"> </text>
+	<text x="601.00" y="944.00" textLength="80" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 601.00 944.00)">FINALIZING = auto()</text>
+	<text x="584.00" y="957.00" textLength="2" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 957.00)"> </text>
+	<text x="601.00" y="957.00" textLength="76" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 601.00 957.00)">FINALIZED = auto()</text>
+	<text x="584.00" y="970.00" textLength="2" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 970.00)"> </text>
+	<text x="601.00" y="970.00" textLength="62" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 601.00 970.00)">FAILED = auto()</text>
+	<text x="584.00" y="983.00" textLength="2" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 983.00)"> </text>
+	<text x="601.00" y="983.00" textLength="84" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 601.00 983.00)">VALIDATING = auto()</text>
+	<text x="584.00" y="996.00" textLength="2" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 996.00)"> </text>
+	<text x="601.00" y="996.00" textLength="80" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#66413F;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 601.00 996.00)">VALIDATED = auto()</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#FDFAF7;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="1241" y="550" width="401" height="218" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="1395.00" y="569.00" textLength="93" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1395.00 569.00)">entities::RuleProcessor</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 1241 577 L 1641 577" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="1246.00" y="591.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 591.00)">+ </text>
+	<text x="1263.00" y="591.00" textLength="159" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 591.00)">__init__(, List[IRule], _xr.Dataset): None</text>
+	<text x="1246.00" y="604.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 604.00)">+ </text>
+	<text x="1263.00" y="604.00" textLength="95" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 604.00)">initialize(, ILogger): bool</text>
+	<text x="1246.00" y="617.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 617.00)">+ </text>
+	<text x="1263.00" y="617.00" textLength="197" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 617.00)">process_rules(, _xr.Dataset, ILogger): _xr.Dataset</text>
+	<text x="1246.00" y="630.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 630.00)">+ </text>
+	<text x="1263.00" y="630.00" textLength="366" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 630.00)">_create_rule_sets(, List[str], List[IRule], List[List[IRule]], ILogger): Tuple[List[List[IRule]], bool]</text>
+	<text x="1246.00" y="643.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 643.00)">+ </text>
+	<text x="1263.00" y="643.00" textLength="208" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 643.00)">_get_solvable_rules(, List[str], List[IRule]): List[IRule]</text>
+	<text x="1246.00" y="656.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 656.00)">+ </text>
+	<text x="1263.00" y="656.00" textLength="234" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 656.00)">_execute_rule(, IRule, _xr.Dataset, ILogger): _xr.DataArray</text>
+	<text x="1246.00" y="669.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 669.00)">+ </text>
+	<text x="1263.00" y="669.00" textLength="244" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 669.00)">_set_output_attributes(, IRule, _xr.DataArray, _xr.DataArray)</text>
+	<text x="1246.00" y="682.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 682.00)">+ </text>
+	<text x="1263.00" y="682.00" textLength="263" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 682.00)">_copy_definition_attributes(, _xr.DataArray, _xr.DataArray): None</text>
+	<text x="1246.00" y="695.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 695.00)">+ </text>
+	<text x="1263.00" y="695.00" textLength="294" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 695.00)">_process_by_cell(, ICellBasedRule, _xr.DataArray, ILogger): _xr.DataArray</text>
+	<text x="1246.00" y="708.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 708.00)">+ </text>
+	<text x="1263.00" y="708.00" textLength="376" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 708.00)">_process_by_multi_cell(, IMultiCellBasedRule, Dict[str, _xr.DataArray], ILogger): _xr.DataArray</text>
+	<text x="1246.00" y="721.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 721.00)">+ </text>
+	<text x="1263.00" y="721.00" textLength="327" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 721.00)">_get_rule_input_variables(, IRule, _xr.Dataset): Iterable[Tuple[str, _xr.DataArray]]</text>
+	<text x="1246.00" y="734.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 734.00)">+ </text>
+	<text x="1263.00" y="734.00" textLength="231" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 734.00)">_get_variable_by_name(, str, _xr.Dataset): _xr.DataArray</text>
+	<text x="1246.00" y="747.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 747.00)">+ </text>
+	<text x="1263.00" y="747.00" textLength="285" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 747.00)">_check_variable_dimensions(, List[_xr.DataArray], IMultiCellBasedRule)</text>
+	<text x="1246.00" y="760.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1246.00 760.00)">+ </text>
+	<text x="1263.00" y="760.00" textLength="297" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1263.00 760.00)">_expand_dimensions_of_variable(, _xr.DataArray, _xr.DataArray, ILogger)</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#F1ECFA;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="960" y="1104" width="219" height="70" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="1160.00" y="1117.00" textLength="16" style="font-family:Calibri; font-weight:0; font-style:italic; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1160.00 1117.00)">ABC</text>
+	<text x="1047.00" y="1133.00" textLength="45" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1047.00 1133.00)">«interface»</text>
+	<text x="1021.00" y="1146.00" textLength="96" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1021.00 1146.00)">rules::IArrayBasedRule</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 960 1155 L 1178 1155" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="965.00" y="1169.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 965.00 1169.00)">+ </text>
+	<text x="982.00" y="1169.00" textLength="194" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 982.00 1169.00)">execute(, _xr.DataArray, ILogger): _xr.DataArray</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#F1ECFA;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="541" y="1104" width="143" height="70" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="665.00" y="1117.00" textLength="16" style="font-family:Calibri; font-weight:0; font-style:italic; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 665.00 1117.00)">ABC</text>
+	<text x="590.00" y="1133.00" textLength="45" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 590.00 1133.00)">«interface»</text>
+	<text x="569.00" y="1146.00" textLength="86" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 569.00 1146.00)">rules::ICellBasedRule</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 541 1155 L 683 1155" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="546.00" y="1169.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 546.00 1169.00)">+ </text>
+	<text x="563.00" y="1169.00" textLength="118" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 563.00 1169.00)">execute(, float, ILogger): float</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#F1ECFA;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="1201" y="1104" width="255" height="70" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="1437.00" y="1117.00" textLength="16" style="font-family:Calibri; font-weight:0; font-style:italic; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1437.00 1117.00)">ABC</text>
+	<text x="1306.00" y="1133.00" textLength="45" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1306.00 1133.00)">«interface»</text>
+	<text x="1270.00" y="1146.00" textLength="117" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1270.00 1146.00)">rules::IMultiArrayBasedRule</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 1201 1155 L 1455 1155" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="1206.00" y="1169.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1206.00 1169.00)">+ </text>
+	<text x="1223.00" y="1169.00" textLength="230" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1223.00 1169.00)">execute(, Dict[str, _xr.DataArray], ILogger): _xr.DataArray</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#F1ECFA;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="743" y="1104" width="179" height="70" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="903.00" y="1117.00" textLength="16" style="font-family:Calibri; font-weight:0; font-style:italic; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 903.00 1117.00)">ABC</text>
+	<text x="810.00" y="1133.00" textLength="45" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 810.00 1133.00)">«interface»</text>
+	<text x="779.00" y="1146.00" textLength="107" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 779.00 1146.00)">rules::IMultiCellBasedRule</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 743 1155 L 921 1155" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="748.00" y="1169.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 748.00 1169.00)">+ </text>
+	<text x="765.00" y="1169.00" textLength="154" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 765.00 1169.00)">execute(, Dict[str, float], ILogger): float</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#F1ECFA;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="911" y="854" width="154" height="125" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="1046.00" y="867.00" textLength="16" style="font-family:Calibri; font-weight:0; font-style:italic; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1046.00 867.00)">ABC</text>
+	<text x="965.00" y="883.00" textLength="45" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 965.00 883.00)">«interface»</text>
+	<text x="964.00" y="896.00" textLength="47" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 964.00 896.00)">rules::IRule</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 911 905 L 1064 905" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="916.00" y="919.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 916.00 919.00)">+ </text>
+	<text x="933.00" y="919.00" textLength="44" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 933.00 919.00)">name(): str</text>
+	<text x="916.00" y="932.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 916.00 932.00)">+ </text>
+	<text x="933.00" y="932.00" textLength="64" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 933.00 932.00)">description(): str</text>
+	<text x="916.00" y="945.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 916.00 945.00)">+ </text>
+	<text x="933.00" y="945.00" textLength="129" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 933.00 945.00)">input_variable_names(): List[str]</text>
+	<text x="916.00" y="958.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 916.00 958.00)">+ </text>
+	<text x="933.00" y="958.00" textLength="112" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 933.00 958.00)">output_variable_name(): str</text>
+	<text x="916.00" y="971.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 916.00 971.00)">+ </text>
+	<text x="933.00" y="971.00" textLength="95" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 933.00 971.00)">validate(, ILogger): bool</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#F1ECFA;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="562" y="368" width="167" height="70" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="710.00" y="381.00" textLength="16" style="font-family:Calibri; font-weight:0; font-style:italic; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 710.00 381.00)">ABC</text>
+	<text x="623.00" y="397.00" textLength="45" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 623.00 397.00)">«interface»</text>
+	<text x="594.00" y="410.00" textLength="102" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 594.00 410.00)">workflow::IModelBuilder</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 562 419 L 728 419" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="567.00" y="433.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 567.00 433.00)">+ </text>
+	<text x="584.00" y="433.00" textLength="142" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 433.00)">build_model(, IModelData): IModel</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#FDFAF7;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="35" y="512" width="387" height="70" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="178.00" y="531.00" textLength="100" style="font-family:Calibri; font-weight:700; font-style:italic; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 178.00 531.00)">workflow::ModelRunner</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 35 539 L 421 539" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="40.00" y="553.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 40.00 553.00)">+ </text>
+	<text x="57.00" y="553.00" textLength="135" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 57.00 553.00)">run_model(IModel, ILogger): bool</text>
+	<text x="40.00" y="566.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 40.00 566.00)">+ </text>
+	<text x="57.00" y="566.00" textLength="362" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 57.00 566.00)">_change_state(Callable[[ILogger], Any], IModel, ILogger, ModelStatus, ModelStatus): bool</text>
+	<text x="40.00" y="579.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 40.00 579.00)">+ </text>
+	<text x="57.00" y="579.00" textLength="238" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 57.00 579.00)">_change_state_core(Callable[[ILogger], Any], ILogger): bool</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#FDFAF7;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="861" y="353" width="205" height="101" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="914.00" y="372.00" textLength="99" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 914.00 372.00)">workflow::ModelBuilder</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 861 380 L 1065 380" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="866.00" y="394.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 866.00 394.00)">+ </text>
+	<text x="883.00" y="394.00" textLength="175" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 883.00 394.00)">__init__(, IDataAccessLayer, ILogger): None</text>
+	<text x="866.00" y="407.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 866.00 407.00)">+ </text>
+	<text x="883.00" y="407.00" textLength="142" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 883.00 407.00)">build_model(, IModelData): IModel</text>
+	<text x="866.00" y="420.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 866.00 420.00)">+ </text>
+	<text x="883.00" y="420.00" textLength="180" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 883.00 420.00)">_create_rules(List[IRuleData]): Iterable[IRule]</text>
+	<text x="866.00" y="433.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 866.00 433.00)">+ </text>
+	<text x="883.00" y="433.00" textLength="162" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 883.00 433.00)">_set_default_fields(IRuleData, RuleBase)</text>
+	<text x="866.00" y="446.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 866.00 446.00)">+ </text>
+	<text x="883.00" y="446.00" textLength="120" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 883.00 446.00)">_create_rule(IRuleData): IRule</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#F1ECFA;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="562" y="40" width="121" height="112" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="664.00" y="53.00" textLength="16" style="font-family:Calibri; font-weight:0; font-style:italic; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 664.00 53.00)">ABC</text>
+	<text x="600.00" y="69.00" textLength="45" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 600.00 69.00)">«interface»</text>
+	<text x="580.00" y="82.00" textLength="85" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 580.00 82.00)">crosscutting::ILogger</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 562 91 L 682 91" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="567.00" y="105.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 567.00 105.00)">+ </text>
+	<text x="584.00" y="105.00" textLength="83" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 105.00)">log_error(, str): None</text>
+	<text x="567.00" y="118.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 567.00 118.00)">+ </text>
+	<text x="584.00" y="118.00" textLength="96" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 118.00)">log_warning(, str): None</text>
+	<text x="567.00" y="131.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 567.00 131.00)">+ </text>
+	<text x="584.00" y="131.00" textLength="79" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 131.00)">log_info(, str): None</text>
+	<text x="567.00" y="144.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 567.00 144.00)">+ </text>
+	<text x="584.00" y="144.00" textLength="89" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 144.00)">log_debug(, str): None</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#F1ECFA;fill-opacity:1.00; stroke:#9A8484; stroke-opacity:1.00">
+ <rect x="562" y="197" width="278" height="112" rx="0.00" shape-rendering="auto"  />
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="821.00" y="210.00" textLength="16" style="font-family:Calibri; font-weight:0; font-style:italic; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 821.00 210.00)">ABC</text>
+	<text x="678.00" y="226.00" textLength="45" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 678.00 226.00)">«interface»</text>
+	<text x="656.00" y="239.00" textLength="90" style="font-family:Calibri; font-weight:700; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 656.00 239.00)">api::IDataAccessLayer</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#9A8484; stroke-opacity:1.00">
+  <path d="M 562 248 L 839 248" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="567.00" y="262.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 567.00 262.00)">+ </text>
+	<text x="584.00" y="262.00" textLength="128" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 262.00)">retrieve_file_names(, Path): dict</text>
+	<text x="567.00" y="275.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 567.00 275.00)">+ </text>
+	<text x="584.00" y="275.00" textLength="142" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 275.00)">read_input_file(, Path): IModelData</text>
+	<text x="567.00" y="288.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 567.00 288.00)">+ </text>
+	<text x="584.00" y="288.00" textLength="193" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 288.00)">read_input_dataset(, IDatasetData): _xr.Dataset</text>
+	<text x="567.00" y="301.00" textLength="7" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 567.00 301.00)">+ </text>
+	<text x="584.00" y="301.00" textLength="253" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#455633;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 584.00 301.00)">write_output_file(, _xr.Dataset, Path, OutputFileSettings): None</text>
+</g>
+<g style="stroke-width:1;stroke-linecap:square;stroke-linejoin:round; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00" stroke-dasharray="6,3">
+  <path d="M 228 512 L 228 309 M 228 512" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00">
+  <path d="M 223 497 L 228 512 L 233 497" shape-rendering="auto"/>
+  <path d="M 826 663 L 725 665" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#FAF1EC;fill-opacity:1.00; stroke:#69738C; stroke-opacity:1.00">
+  <polygon points="741 659 741 671 725 665" shape-rendering="auto"   style="fill-rule:evenodd;"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00">
+  <path d="M 644 802 L 644 769" shape-rendering="auto"/>
+  <path d="M 1241 659 L 1149 659" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#69738C;fill-opacity:1.00; stroke:#69738C; stroke-opacity:1.00">
+  <polygon points="1159 654 1149 659 1159 664 1169 659" shape-rendering="auto"   style="fill-rule:evenodd;"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00">
+  <path d="M 1063 1104 L 1021 979" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#FAF1EC;fill-opacity:1.00; stroke:#69738C; stroke-opacity:1.00">
+  <polygon points="1032 992 1020 996 1021 979" shape-rendering="auto"   style="fill-rule:evenodd;"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00">
+  <path d="M 671 1104 L 911 961" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#FAF1EC;fill-opacity:1.00; stroke:#69738C; stroke-opacity:1.00">
+  <polygon points="900 974 894 964 911 961" shape-rendering="auto"   style="fill-rule:evenodd;"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00">
+  <path d="M 1274 1104 L 1065 966" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#FAF1EC;fill-opacity:1.00; stroke:#69738C; stroke-opacity:1.00">
+  <polygon points="1082 970 1075 980 1065 966" shape-rendering="auto"   style="fill-rule:evenodd;"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00">
+  <path d="M 856 1104 L 943 979" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#FAF1EC;fill-opacity:1.00; stroke:#69738C; stroke-opacity:1.00">
+  <polygon points="939 996 929 989 943 979" shape-rendering="auto"   style="fill-rule:evenodd;"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00">
+  <path d="M 987 854 L 987 782" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#69738C;fill-opacity:1.00; stroke:#69738C; stroke-opacity:1.00">
+  <polygon points="992 792 987 782 982 792 987 802" shape-rendering="auto"   style="fill-rule:evenodd;"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00">
+  <path d="M 562 371 L 368 296" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#69738C;fill-opacity:1.00; stroke:#69738C; stroke-opacity:1.00">
+  <polygon points="379 295 368 296 376 304 387 303" shape-rendering="auto"   style="fill-rule:evenodd;"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:square;stroke-linejoin:round; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00" stroke-dasharray="6,3">
+  <path d="M 645 566 L 645 438 M 645 566" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00">
+  <path d="M 640 551 L 645 566 L 650 551" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:square;stroke-linejoin:round; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00" stroke-dasharray="6,3">
+  <path d="M 228 659 L 228 582 M 565 665 L 228 659 M 565 665" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00">
+  <path d="M 550 670 L 565 665 L 550 660" shape-rendering="auto"/>
+  <path d="M 861 403 L 729 403" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#FAF1EC;fill-opacity:1.00; stroke:#69738C; stroke-opacity:1.00">
+  <polygon points="745 397 745 409 729 403" shape-rendering="auto"   style="fill-rule:evenodd;"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00">
+  <path d="M 562 118 L 368 190" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#69738C;fill-opacity:1.00; stroke:#69738C; stroke-opacity:1.00">
+  <polygon points="376 182 368 190 379 191 387 183" shape-rendering="auto"   style="fill-rule:evenodd;"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#000000;fill-opacity:0.00; stroke:#69738C; stroke-opacity:1.00">
+  <path d="M 562 250 L 368 245" shape-rendering="auto"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#69738C;fill-opacity:1.00; stroke:#69738C; stroke-opacity:1.00">
+  <polygon points="378 240 368 245 378 250 388 246" shape-rendering="auto"   style="fill-rule:evenodd;"/>
+</g>
+<g style="stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00">
+	<text x="344.00" y="665.00" textLength="24" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 344.00 665.00)">«use»</text>
+	<text x="955.00" y="797.00" textLength="24" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 955.00 797.00)">+rules</text>
+	<text x="999.00" y="797.00" textLength="16" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 999.00 797.00)">1..*</text>
+	<text x="1152.00" y="674.00" textLength="5" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 1152.00 674.00)">1</text>
+	<text x="371.00" y="260.00" textLength="5" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 371.00 260.00)">1</text>
+	<text x="217.00" y="423.00" textLength="23" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 217.00 423.00)">«call»</text>
+	<text x="619.00" y="515.00" textLength="52" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 619.00 515.00)">«instantiate»</text>
+	<text x="371.00" y="205.00" textLength="5" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 371.00 205.00)">1</text>
+	<text x="371.00" y="311.00" textLength="5" style="font-family:Calibri; font-weight:0; font-style:normal; font-size:10px; fill:#595959;fill-opacity:1.00; stroke:#000000; stroke-opacity:0.00 stroke-width:0; white-space: pre;" xml:space="preserve" transform="rotate(-0.00 371.00 311.00)">1</text>
+</g>
+</svg>

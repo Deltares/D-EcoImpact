@@ -1,6 +1,7 @@
 # Application overview
 
-The application is build up using three components: logger, data-access layer and model builder (see Main.py).  
+The application is setup using a layered architecture (see [Link](architecture.md))  
+To create the application you will need to create these three components: logger, data-access layer and model builder (see Main.py).  
 
 ```python
     # configure logger and data-access layer
@@ -42,3 +43,7 @@ The `ModelRunner` continues by calling the `execute` method on the `RuleBasedMod
 This method loops over all the specified rules and executes the rules based on there type. So for example, with the `ICellBasedRule` the `RuleBasedProcessor` will loop over all the cells and call the `ICellBasedRule` execute method for every cell.
 
 When the model execute has successfully finished with the execute step, the `finalize` method will be called on the model to clean up all resources.
+
+## Class diagram
+
+![Overview class diagram](../assets/images/Overview.svg)

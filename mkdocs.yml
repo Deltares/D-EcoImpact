@@ -68,13 +68,15 @@ extra_css:
 nav:
   - Home: "index.md"
   - Installation: "installation.md"
-  - Development: "development.md"
   - User manual:
       - Visualization: "manual/visualization.md"
       - Input files: "manual/input.md"
   - Examples:
       - Volkerak zoommeer: "examples/volkerak.md"
       - Meuse: "examples/maas.md"
+  - Development:
+      - Architecture: "api/application_overview.md"
+      - Development process: "development.md"
   - API reference:
       - Business:
           - "Application.py": "api/business/application.md"
