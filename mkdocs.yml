@@ -76,7 +76,7 @@ nav:
       - Meuse: "examples/maas.md"
   - Development:
       - Architecture: "api/application_overview.md"
-      - Development process: "development.md"
+      - Development workflow: "development.md"
   - API reference:
       - Business:
           - "Application.py": "api/business/application.md"
