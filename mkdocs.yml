@@ -26,6 +26,7 @@ theme:
 plugins:
   - search
   - include-markdown
+  - mkdocs-autoapi
   - mkdocstrings:
       default_handler: python
       handlers:
@@ -40,8 +41,6 @@ plugins:
           selection:
             inherited_members: false
   - print-site
-  - autoapi:
-      packages: decoimpact
 
 markdown_extensions:
   - attr_list
