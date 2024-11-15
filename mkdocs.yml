@@ -40,6 +40,8 @@ plugins:
           selection:
             inherited_members: false
   - print-site
+  - autoapi:
+      packages: decoimpact
 
 markdown_extensions:
   - attr_list
@@ -75,9 +77,7 @@ nav:
   - Examples:
       - Volkerak zoommeer: "examples/volkerak.md"
       - Meuse: "examples/maas.md"
-  - API reference:
-      - Business:
-          - "Application.py": "api/business/application.md"
+  - API reference: "api.md"
   - Print: "print_page"
 
 copyright: |
