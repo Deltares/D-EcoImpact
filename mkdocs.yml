@@ -49,7 +49,7 @@ markdown_extensions:
 
 repo_url: https://github.com/Deltares/D-EcoImpact
 repo_name: Deltares/D-EcoImpact
-edit_uri: edit/main/docs/
+edit_uri: ""
 
 extra:
   version:
