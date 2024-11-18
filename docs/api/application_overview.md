@@ -40,7 +40,7 @@ The `RuleBasedModel` delegates the validation of the set of rules that it is com
 After the model is successfully validated, the initialize of the model is called. In case of the `RuleBasedModel`, this creates an instance of the `RuleProcessor` and initializes it.  
 
 The `ModelRunner` continues by calling the `execute` method on the `RuleBasedModel` that in turn calls `process_rules` on the `RuleBasedProcessor`.  
-This method loops over all the specified rules and executes the rules based on there type. So for example, with the `ICellBasedRule` the `RuleBasedProcessor` will loop over all the cells and call the `ICellBasedRule` execute method for every cell.
+This method loops over all the specified rules and executes the rules based on their type. So for example, with the `ICellBasedRule` the `RuleBasedProcessor` will loop over all the cells and call the `ICellBasedRule` execute method for every cell.
 
 When the model execute has successfully finished with the execute step, the `finalize` method will be called on the model to clean up all resources.
 
