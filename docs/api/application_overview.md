@@ -1,6 +1,7 @@
 # Application overview
 
 The application is setup using a layered architecture (see [link](architecture.md)).
+
 To create the application you will need to create these three components: logger, data-access layer and model builder (see [main.py](https://github.com/Deltares/D-EcoImpact/blob/main/main.py)).
 
 ```python
