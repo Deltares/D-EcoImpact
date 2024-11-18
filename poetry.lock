@@ -949,6 +949,22 @@ python = ["mkdocstrings-python (>=0.5.2)"]
 python-legacy = ["mkdocstrings-python-legacy (>=0.2.1)"]
 
 [[package]]
+name = "mkdocstrings-python-legacy"
+version = "0.2.4"
+description = "A legacy Python handler for mkdocstrings."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "mkdocstrings_python_legacy-0.2.4-py3-none-any.whl", hash = "sha256:e2a05d9355500d8f596a0bfc2a5728af91300432def90bc605ed484b0052efa0"},
+    {file = "mkdocstrings_python_legacy-0.2.4.tar.gz", hash = "sha256:36d160ac7af5a3cec764eeb66522f42a116088a41289e04372592b91e14abbbc"},
+]
+
+[package.dependencies]
+mkdocs-autorefs = ">=1.1"
+mkdocstrings = ">=0.19"
+pytkdocs = ">=0.14"
+
+[[package]]
 name = "mock"
 version = "5.1.0"
 description = "Rolling backport of unittest.mock for all Pythons"
@@ -1419,6 +1435,20 @@ files = [
 
 [package.dependencies]
 six = ">=1.5"
+
+[[package]]
+name = "pytkdocs"
+version = "0.16.2"
+description = "Load Python objects documentation."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pytkdocs-0.16.2-py3-none-any.whl", hash = "sha256:36450316d004f6399402d044f122f28f88ff4a069899d10de3d28ad6b4ba5799"},
+    {file = "pytkdocs-0.16.2.tar.gz", hash = "sha256:e75538a34932996b8803fbad4e4f6851fc0e9fd9aea86fc6602d6582c12098f3"},
+]
+
+[package.extras]
+numpy-style = ["docstring_parser (>=0.7)"]
 
 [[package]]
 name = "pytz"
@@ -2013,4 +2043,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9, <3.13"
-content-hash = "3836d710642d1c987ed09e68126c45e2e0226eebee880cedf4204372d216340d"
+content-hash = "46df280a4abe12d7df8b07e38042137c559bc39f50998c01ef6a355a09f15f94"
