@@ -80,8 +80,8 @@ def test_process_input(input_filename):
     filenames_list = list(reference_files_path.glob(outputname))
     assert len(filenames_list) > 0, f"No output files generated for {input_filename}"
     for filename in filenames_list:
-        generated_nc = _xr.open_dataset(output_filename.parent / filename.name)
-        reference_nc = _xr.open_dataset(filename)
+        generated_nc = _xr.open_dataset(output_filename.parent / filename.name, engine="netcdf4")
+        reference_nc = _xr.open_dataset(filename, engine="netcdf4")
 
         # Compare the datasets if they have matching variables and coordinates
         assert generated_nc.equals(
