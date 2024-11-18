@@ -28,7 +28,6 @@ plugins:
   - include-markdown
   - mkdocs-autoapi
   - mkdocstrings:
-      default_handler: python
       handlers:
         python:
           rendering:
@@ -40,6 +39,7 @@ plugins:
             group_by_category: false
           selection:
             inherited_members: false
+          paths: ./decoimpact
   - print-site
 
 markdown_extensions:
@@ -76,7 +76,6 @@ nav:
   - Examples:
       - Volkerak zoommeer: "examples/volkerak.md"
       - Meuse: "examples/maas.md"
-  - API reference: "api.md"
   - Print: "print_page"
 
 copyright: |
