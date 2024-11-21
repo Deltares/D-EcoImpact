@@ -1,3 +1,0 @@
-# Application
-
-::: decoimpact.business.application
