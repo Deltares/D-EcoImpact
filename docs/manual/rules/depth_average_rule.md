@@ -18,7 +18,7 @@ Note: combined z-sigma layers are currently not supported.
 
 An explanation of how the depth rule works is shown in the example below.
 
-![Example depth average rule](../assets/images/3_depth_average.png "An example of a simplified grid with Z-layers. This model has 6 faces, 4 layers and 2 timesteps.")
+![Example depth average rule](../../assets/images/3_depth_average.png "An example of a simplified grid with Z-layers. This model has 6 faces, 4 layers and 2 timesteps.")
 
 The image shows a simplified model with the following dimensions:
 - mesh2d_nFaces = 6 (number of faces)
