@@ -26,7 +26,9 @@ theme:
 plugins:
   - search
   - include-markdown
-  - mkdocs-autoapi
+  - mkdocs-autoapi:
+      autoapi_ignore:
+         - "**/__pycache__"
   - mkdocstrings:
       handlers:
         python:
