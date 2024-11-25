@@ -26,8 +26,10 @@ theme:
 plugins:
   - search
   - include-markdown
+  - mkdocs-autoapi:
+      autoapi_ignore:
+         - "**/__pycache__"
   - mkdocstrings:
-      default_handler: python
       handlers:
         python:
           rendering:
@@ -39,6 +41,7 @@ plugins:
             group_by_category: false
           selection:
             inherited_members: false
+          paths: ./decoimpact
   - print-site
 
 markdown_extensions:
@@ -48,7 +51,7 @@ markdown_extensions:
 
 repo_url: https://github.com/Deltares/D-EcoImpact
 repo_name: Deltares/D-EcoImpact
-edit_uri: edit/main/docs/
+edit_uri: ""
 
 extra:
   version:
@@ -77,10 +80,7 @@ nav:
   - Development:
       - Architecture: "api/application_overview.md"
       - Development workflow: "development.md"
-  - API reference:
-      - Business:
-          - "Application.py": "api/business/application.md"
   - Print: "print_page"
 
 copyright: |
-  Copyright &copy; 2023 <a href="https://www.deltares.nl/en/"  target="_blank" rel="noopener">Deltares</a>
+  Copyright &copy; 2024 <a href="https://www.deltares.nl/en/"  target="_blank" rel="noopener">Deltares</a>
