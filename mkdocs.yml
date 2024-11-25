@@ -80,9 +80,6 @@ nav:
   - Development:
       - Architecture: "api/application_overview.md"
       - Development workflow: "development.md"
-  - API reference:
-      - Business:
-          - "Application.py": "api/business/application.md"
   - Print: "print_page"
 
 copyright: |
