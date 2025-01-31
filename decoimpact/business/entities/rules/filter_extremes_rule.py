@@ -33,6 +33,7 @@ from decoimpact.data.dictionary_utils import get_dict_element
 class FilterExtremesRule(RuleBase, IArrayBasedRule):
     """Implementation for the filter extremes rule"""
 
+    # pylint: disable=too-many-arguments
     # pylint: disable=too-many-positional-arguments
     def __init__(
         self,
