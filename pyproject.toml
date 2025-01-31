@@ -6,7 +6,7 @@ authors = ["Deltares"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9, 3.13"     # max 3.13 because of pyinstaller
+python = ">=3.9, <3.13"    # max 3.13 because of pyinstaller
 numpy = ">=1.26"
 xarray = ">=2024.6.0"
 scipy = ">=1.13.0"
