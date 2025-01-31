@@ -6,17 +6,17 @@ authors = ["Deltares"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9, <3.13"    # max 3.13 because of pyinstaller
-numpy = "^1.26"
-xarray = "^2024.6.0"
-scipy = "^1.13.0"
-netcdf4 = "^1.7"
-restrictedpython = "^7.0"
-pyyaml-include = "^2.1"
-importlib = "^1.0.4"
-pyyaml = "^6.0.2"
-yaml-include = "^1.0.0"
-mkdocs-autoapi = "^0.3.2"
+python = ">=3.9, <=3.13"   # max 3.13 because of pyinstaller
+numpy = ">=1.26"
+xarray = ">=2024.6.0"
+scipy = ">=1.13.0"
+netcdf4 = ">=1.7"
+restrictedpython = ">=7.0"
+pyyaml-include = ">=2.1"
+importlib = ">=1.0.4"
+pyyaml = ">=6.0.2"
+yaml-include = ">=1.0.0"
+mkdocs-autoapi = ">=0.3.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
