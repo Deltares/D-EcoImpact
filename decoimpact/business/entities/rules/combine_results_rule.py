@@ -90,7 +90,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
 
     def _create_operations(self) -> dict[MultiArrayOperationType, Callable]:
         return {
-            MultiArrayOperationType.MULTIPLY: lambda npa: _np.product(npa, axis=0),
+            MultiArrayOperationType.MULTIPLY: lambda npa: _np.prod(npa, axis=0),
             MultiArrayOperationType.MIN: lambda npa: _np.min(npa, axis=0),
             MultiArrayOperationType.MAX: lambda npa: _np.max(npa, axis=0),
             MultiArrayOperationType.AVERAGE: lambda npa: _np.average(npa, axis=0),
