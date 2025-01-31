@@ -27,7 +27,7 @@ from decoimpact.crosscutting.i_logger import ILogger
 class RuleBasedModel(IModel):
     """Model class for models based on rules"""
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-positional-arguments
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
