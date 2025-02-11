@@ -181,6 +181,7 @@ docker login command with your GitHub username and a Personal Access Token (PAT)
 echo "YOUR_PERSONAL_ACCESS_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
 ```
 
+For pushing new images make sure that your token that has enough permissions and has  authorization for the Deltares orginization (sso).
 
 
 ## How to Cite
