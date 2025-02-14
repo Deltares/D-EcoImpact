@@ -123,7 +123,9 @@ class RollingStatisticsRule(RuleBase, IArrayBasedRule):
         elif time_scale == "D":
             operation_time_delta = _dt.timedelta(days=self._period)
         else:
-            logger.log_error(f"Invalid time scale provided : '{time_scale}'.")
+            error_message = f"Invalid time scale provided : '{time_scale}'."
+            logger.log_error(error_message)
+            raise ValueError(error_message)
 
         time_delta_ms = _np.array([operation_time_delta], dtype="timedelta64[ms]")[0]
         last_timestamp = values.time.isel(time=-1).values
