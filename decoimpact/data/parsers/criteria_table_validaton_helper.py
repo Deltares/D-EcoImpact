@@ -172,16 +172,14 @@ def _divide_table_in_unique_chunks(
                 conditions[key] = unique_c
 
             # Send the remaining filtered parameters back into the function
-            for message in _divide_table_in_unique_chunks(
+            yield from _divide_table_in_unique_chunks(
                 new_crit_table, logger, conditions
-            ):
-                yield message
+            )
 
     else:
         # If there is only one variable, check on all conditions for coverage
         name, criteria = list(criteria_table.items())[0]
-        for message in _check_variable_conditions(name, criteria, conditions, unique):
-            yield message
+        yield from _check_variable_conditions(name, criteria, conditions, unique)
 
 
 def _check_variable_conditions(
@@ -201,8 +199,7 @@ def _check_variable_conditions(
         criteria = _np.unique(criteria)
 
     # WHen there is only one parameter left in the given table ()
-    for message in _validate_criteria_on_overlap_and_gaps(name, criteria, cond_str):
-        yield message
+    yield from _validate_criteria_on_overlap_and_gaps(name, criteria, cond_str)
 
 
 def _convert_to_range(val: Any) -> _Range:
@@ -264,10 +261,7 @@ def _validate_criteria_on_overlap_and_gaps(
 
     # Check if there are multiple larger or larger and equal comparison values are
     # present, this will cause overlap
-    for message in _check_for_multiple_inf_values(
-        name, pre_warn, sorted_range_criteria
-    ):
-        yield message
+    yield from _check_for_multiple_inf_values(name, pre_warn, sorted_range_criteria)
 
     if len(sorted_range_criteria) > 0 and (
         sorted_range_criteria[0].start != float("-inf")
@@ -279,8 +273,7 @@ def _validate_criteria_on_overlap_and_gaps(
             "Gap",
         )
 
-    for message in _check_ranges(name, pre_warn, sorted_range_criteria):
-        yield message
+    yield from _check_ranges(name, pre_warn, sorted_range_criteria)
 
     # Create the final check over the not_covered_values and the covered_numbers
     # Send warning with the combined messages

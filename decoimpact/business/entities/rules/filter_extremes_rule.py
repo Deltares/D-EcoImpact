@@ -13,9 +13,9 @@ Classes:
 
 from typing import List
 
+import numpy as _np
 import xarray as _xr
 from scipy import signal
-import numpy as _np
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.options.options_filter_extreme_rule import (
@@ -34,6 +34,7 @@ class FilterExtremesRule(RuleBase, IArrayBasedRule):
     """Implementation for the filter extremes rule"""
 
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-positional-arguments
     def __init__(
         self,
         name: str,

@@ -38,7 +38,7 @@ data_variable_A[6:, :, 2] = np.array([1, 1, 2])
 data_variable_B[:, :, 0] = np.array([11, 11, 11])
 data_variable_B[:, :, 1] = np.array([14, 14, 14])
 data_variable_B[:, :, 2] = np.array([19, 19, 19])
-data_variable_B[:, 1, 2] = np.array([np.NaN])
+data_variable_B[:, 1, 2] = np.array([np.nan])
 
 data_variable_C[:, :, 0] = np.array([11, 11, 11])
 data_variable_C[:, :, 1] = np.array([14, 14, 14])

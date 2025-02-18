@@ -22,6 +22,7 @@ class FilterExtremesRuleData(IFilterExtremesRuleData, RuleData):
     """Class for storing data related to filter extremes rule"""
 
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-positional-arguments
     def __init__(
         self,
         name: str,

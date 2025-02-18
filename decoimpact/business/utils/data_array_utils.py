@@ -26,7 +26,9 @@ def get_time_dimension_name(variable: _xr.DataArray, logger: ILogger) -> str:
 
     for dim in variable.dims:
         dim_values = variable[dim]
-        if dim_values.dtype.name == "datetime64[ns]":
+
+        # check if the dimension type is a datetime type
+        if dim_values.dtype.name.startswith("datetime64"):
             return str(dim)
 
     message = f"No time dimension found for {variable.name}"

@@ -13,14 +13,14 @@ Classes:
 """
 
 
-from decoimpact.crosscutting.logging_logger import LoggingLogger
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.crosscutting.logging_logger import LoggingLogger
 
 
 class LoggerFactory:
     """Factory for creating loggers"""
 
-    @ staticmethod
+    @staticmethod
     def create_logger() -> ILogger:
         """Creates a logger
 
