@@ -26,6 +26,10 @@ from decoimpact.crosscutting.i_logger import ILogger
 # disabled pylint warning about use of exec.
 # pylint: disable=W0122
 
+#Import safe modules
+import math
+import numpy
+
 
 class FormulaRule(RuleBase, IMultiCellBasedRule):
     """Implementation for the Formula rule"""
@@ -91,13 +95,20 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
                 "numpy",
             )
         )
-
+        
+        self._safe_modules_dict = {
+            #MPW: Not yet familiar on how to make this dynamic. Maybe self._safe_modules should be a dict
+            #f'"{module}"': module for module in self._safe_modules
+            "math": math,
+            "numpy": numpy, 
+        }
+ 
         # Global data available in restricted code
-        self._global_variables = (
-            {  # MDK: THIS NEEDS TO CHANGE TO A MORE GENERAL APPROACH
+        self._global_variables = {
+            # MDK: THIS NEEDS TO CHANGE TO A MORE GENERAL APPROACH
                 "__builtins__": {**_safe_builtins, "__import__": self._safe_import},
-            }
-        )
+                **self._safe_modules_dict}
+    
         self._byte_code = None
 
     def _safe_import(self, name, *args, **kwargs):
