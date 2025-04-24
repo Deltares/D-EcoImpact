@@ -66,7 +66,15 @@ class IModel(ABC):
     @abstractmethod
     def output_dataset(self) -> _xr.Dataset:
         """Output dataset produced by this model"""
-
+    
+    @property
+    def datastructure(self) -> str:
+        """Input datastructure for the model"""
+    
+    @datastructure.setter
+    def datastructure(self, datastructure: str):
+        """Input datastructure for the model"""
+        
     @property
     def partition(self) -> str:
         """partition of the model"""

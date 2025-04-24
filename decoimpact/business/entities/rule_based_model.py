@@ -36,6 +36,7 @@ class RuleBasedModel(IModel):
         rules: List[IRule],
         mapping: Optional[dict[str, str]] = None,
         name: str = "Rule-Based model",
+        datastructure: str = "",
         partition: str = "",
     ) -> None:
 
@@ -46,6 +47,7 @@ class RuleBasedModel(IModel):
         self._output_dataset: _xr.Dataset
         self._rule_processor: Optional[RuleProcessor]
         self._mappings = mapping
+        self._datastructure = datastructure
         self._partition = partition
 
     @property
@@ -77,6 +79,16 @@ class RuleBasedModel(IModel):
     def output_dataset(self) -> _xr.Dataset:
         """Output dataset produced by this model"""
         return self._output_dataset
+
+    @property
+    def datastructure(self) -> str:
+        """Input datastructure for the model"""
+        return self._datastructure
+    
+    @datastructure.setter
+    def datastructure(self, datastructure: str):
+        """Input datastructure for the model"""
+        self._datastructure = datastructure
 
     @property
     def partition(self) -> str:
@@ -119,7 +131,7 @@ class RuleBasedModel(IModel):
             self._input_datasets, self._make_output_variables_list(), self._mappings
         )
 
-        self._rule_processor = RuleProcessor(self._rules, self._output_dataset)
+        self._rule_processor = RuleProcessor(self._rules, self._datastructure, self._output_dataset)
 
         if not self._rule_processor.initialize(logger):
             logger.log_error("Initialization failed.")
@@ -154,7 +166,8 @@ class RuleBasedModel(IModel):
         """
 
         for dataset in self._input_datasets:
-            dummy_var_name = _du.get_dummy_variable_in_ugrid(dataset)
+            dummy_var_name = _du.get_dummy_variable_in_structure(dataset)
+            self._datastructure = _du.get_datastructure_from_dummy(dataset, dummy_var_name)
             var_list = _du.get_dependent_var_list(dataset, dummy_var_name)
 
         mapping_keys = list((self._mappings or {}).keys())

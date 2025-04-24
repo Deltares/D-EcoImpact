@@ -74,7 +74,7 @@ def remove_all_variables_except(
     Returns:
         _xr.Dataset: reduced dataset (containing selected variables)
     """
-    dummy_var = get_dummy_variable_in_ugrid(dataset)
+    dummy_var = get_dummy_variable_in_structure(dataset)
     dependent_var_list = get_dependent_var_list(dataset, dummy_var)
     variables_to_keep += dummy_var + dependent_var_list
 
@@ -197,8 +197,8 @@ def merge_list_of_datasets(list_datasets: list[_xr.Dataset]) -> _xr.Dataset:
     return output_dataset
 
 
-def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
-    """Get the name of the variable that serves as the dummy variable in the UGrid.
+def get_dummy_variable_in_structure(dataset: _xr.Dataset) -> list:
+    """Get the name of the variable that serves as the dummy variable in the UGrid.or the geometry file
 
     Args:
         dataset (_xr.Dataset): Dataset to search for dummy variable
@@ -209,17 +209,43 @@ def get_dummy_variable_in_ugrid(dataset: _xr.Dataset) -> list:
     dummy = [
         name
         for name in dataset.data_vars
-        if ("cf_role", "mesh_topology") in dataset[name].attrs.items()
+        if (("cf_role", "mesh_topology") in dataset[name].attrs.items()) or
+            (("geometry_type","polygon") in dataset[name].attrs.items())
     ]
 
     if len(dummy) == 0:
         raise ValueError(
             "No dummy variable defined and therefore input dataset does "
-            "not comply with UGrid convention."
+            "not comply with UGrid convention or CF polygon convention."
         )
 
     return dummy
 
+def get_datastructure_from_dummy(dataset: _xr.Dataset, dummy_vars) -> str:
+    """Derive the structure from the provided attributes based on the first dummy variable.
+    The variables are
+    recursively looked up based on the dummy variable.
+    This is done to support XUgrid and to prevent invalid topologies.
+    This also allows QuickPlot to visualize the results.
+
+    Args:
+        dataset (_xr.Dataset): Dataset to search for dummy variable
+        dummy_vars (List[str]): dummy variables
+    Returns:
+        str: description of structure
+    """
+    
+    first_dummy = dummy_vars[0]  
+    if (("cf_role", "mesh_topology") in dataset[first_dummy].attrs.items()):
+        datastructure = "mesh"
+    elif(("geometry_type", "polygon") in dataset[first_dummy].attrs.items()):
+        datastructure = "geometry"
+    else:
+        raise ValueError(
+            "Datastructure provided by attributes in dummy variable is not defined and therefore input dataset does "
+            "not comply with UGrid convention or CF polygon convention."
+        )
+    return datastructure
 
 def get_dependent_var_list(dataset: _xr.Dataset, dummy_vars) -> List:
     """Obtain the list of variables in a dataset.
@@ -238,12 +264,13 @@ def get_dependent_var_list(dataset: _xr.Dataset, dummy_vars) -> List:
     var_list = rec_search_dep_vars(dataset, dummy_vars, [], [])
 
     var_list += dummy_vars
+
     return _lu.remove_duplicates_from_list(var_list)
 
 
 def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> List[str]:
     """Get all the variables that are described in the attributes of the dummy variable,
-    associated with the UGrid standard.
+    associated with the UGrid standard or CF geometry standard.
 
     Args:
         dataset (_xr.Dataset): Dataset to get dependent variables from
@@ -253,7 +280,7 @@ def get_dependent_vars_by_var_name(dataset: _xr.Dataset, var_name: str) -> List[
         list[str]: list of the dependent variables to copy
     """
 
-    vars_to_check = ["_coordinates", "_connectivity", "bounds"]
+    vars_to_check = ["_coordinates", "_connectivity", "bounds", "interior_ring", "grid_mapping"]
 
     attrs_list = []
 
@@ -322,7 +349,6 @@ def rec_search_dep_vars(
                         + rec_search_dep_vars(dataset, dep_var, dep_vars, checked_vars)
                     )
                 )
-
     return dep_vars
 
 

@@ -35,7 +35,7 @@ from decoimpact.data.dictionary_utils import get_dict_element
 class RuleProcessor:
     """Model class for processing models based on rules"""
 
-    def __init__(self, rules: List[IRule], dataset: _xr.Dataset) -> None:
+    def __init__(self, rules: List[IRule], datastructure: str, dataset: _xr.Dataset) -> None:
         """Creates instance of a rule processor using the provided
         rules and input datasets
 
@@ -50,6 +50,7 @@ class RuleProcessor:
             raise ValueError("No datasets defined.")
 
         self._rules = rules
+        self._datastructure = datastructure
         self._input_dataset = dataset
         self._processing_list: List[List[IRule]] = []
 
@@ -226,7 +227,14 @@ class RuleProcessor:
     def _copy_definition_attributes(
         self, source_array: _xr.DataArray, target_array: _xr.DataArray
     ) -> None:
-        attributes_to_copy = ["location", "mesh"]
+        if(self._datastructure == "mesh"):
+            attributes_to_copy = ["location", "mesh"]
+        elif(self._datastructure == "geometry"):
+            attributes_to_copy = ["grid_mapping"]
+        else:
+            raise NotImplementedError(
+                f"Data structure {self._datastructure} is not implemented."
+            )
 
         for attribute_name in attributes_to_copy:
             target_array.attrs[attribute_name] = get_dict_element(
