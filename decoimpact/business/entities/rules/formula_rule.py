@@ -89,23 +89,14 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
         return float(local_variables[self.formula_output_name])
 
     def _setup_environment(self):
-        self._safe_modules = frozenset(
-            (
-                "math",
-                "numpy",
-            )
-        )
-        
+        # use standard libraries that are considered safe
         self._safe_modules_dict = {
-            #MPW: Not yet familiar on how to make this dynamic. Maybe self._safe_modules should be a dict
-            #f'"{module}"': module for module in self._safe_modules
             "math": math,
             "numpy": numpy, 
         }
  
         # Global data available in restricted code
         self._global_variables = {
-            # MDK: THIS NEEDS TO CHANGE TO A MORE GENERAL APPROACH
                 "__builtins__": {**_safe_builtins, "__import__": self._safe_import},
                 **self._safe_modules_dict}
     
@@ -113,6 +104,6 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
 
     def _safe_import(self, name, *args, **kwargs):
         # Redefine import, to only import from safe modules
-        if name not in self._safe_modules:
+        if name not in self._safe_modules_dict.keys():
             raise _ArgumentError(None, f"Importing {name!r} is not allowed!")
         return __import__(name, *args, **kwargs)
