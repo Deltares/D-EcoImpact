@@ -11,9 +11,12 @@ Classes:
     Formula Rule
 """
 
+# Import safe modules
+import math
 from argparse import ArgumentError as _ArgumentError
 from typing import Dict, List
 
+import numpy
 from RestrictedPython import compile_restricted as _compile_restricted
 from RestrictedPython import safe_builtins as _safe_builtins
 
@@ -25,10 +28,6 @@ from decoimpact.crosscutting.i_logger import ILogger
 
 # disabled pylint warning about use of exec.
 # pylint: disable=W0122
-
-#Import safe modules
-import math
-import numpy
 
 
 class FormulaRule(RuleBase, IMultiCellBasedRule):
@@ -92,14 +91,15 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
         # use standard libraries that are considered safe
         self._safe_modules_dict = {
             "math": math,
-            "numpy": numpy, 
+            "numpy": numpy,
         }
- 
+
         # Global data available in restricted code
         self._global_variables = {
-                "__builtins__": {**_safe_builtins, "__import__": self._safe_import},
-                **self._safe_modules_dict}
-    
+            "__builtins__": {**_safe_builtins, "__import__": self._safe_import},
+            **self._safe_modules_dict,
+        }
+
         self._byte_code = None
 
     def _safe_import(self, name, *args, **kwargs):
