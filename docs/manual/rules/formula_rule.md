@@ -69,3 +69,5 @@ When a formula results in a boolean, it will be converted to a float result. Mea
 
 For more information on these operators click [here](https://www.w3schools.com/python/python_operators.asp).
 
+It is also possible to use functions of the libraries math and numpy. These are accessible by calling their full module names inside the formula, for instance:
+"numpy.where(water_depth > 1.0)" or "math.ceil(water_level)".
