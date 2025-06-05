@@ -68,8 +68,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         settings = self._settings
         if settings.operation_type is TimeOperationType.COUNT_PERIODS:
             # Check if all values in a COUNT_PERIODS value array are either 0 or 1
-            compare_values = (value_array == 0) | (value_array == 1) | (
-                            value_array.isnull())
+            compare_values = (value_array == 0) | (value_array == 1)
             check_values = _xr.where(compare_values, True, False)
             if False in check_values:
                 raise ValueError(
