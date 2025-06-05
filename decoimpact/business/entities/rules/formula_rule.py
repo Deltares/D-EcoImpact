@@ -104,6 +104,6 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
 
     def _safe_import(self, name, *args, **kwargs):
         # Redefine import, to only import from safe modules
-        if name not in self._safe_modules_dict.keys():
+        if name not in self._safe_modules_dict:
             raise _ArgumentError(None, f"Importing {name!r} is not allowed!")
         return __import__(name, *args, **kwargs)
