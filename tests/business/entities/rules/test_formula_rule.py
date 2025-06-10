@@ -67,6 +67,36 @@ def test_execute_multiplying_value_arrays():
     assert math.isclose(result_value, 6.0, abs_tol=1e-9)
 
 
+def test_execute_numpy_value_arrays():
+    """Test formula on value_arrays of a RuleBase"""
+
+    # Arrange
+    logger = Mock(ILogger)
+    rule = FormulaRule("test", ["val1"], "val1 * numpy.size(numpy.array([1, 3]))")
+    values = {"val1": 1.0}
+
+    # Act
+    result_value = rule.execute(values, logger)
+
+    # Assert
+    assert math.isclose(result_value, 2.0, abs_tol=1e-9)
+
+
+def test_execute_math_value_arrays():
+    """Test formula on value_arrays of a RuleBase"""
+
+    # Arrange
+    logger = Mock(ILogger)
+    rule = FormulaRule("test", ["val1"], "val1 * math.isqrt(9)")
+    values = {"val1": 2.0}
+
+    # Act
+    result_value = rule.execute(values, logger)
+
+    # Assert
+    assert math.isclose(result_value, 6.0, abs_tol=1e-9)
+
+
 @pytest.mark.parametrize(
     "input_value1, input_value2, expected_output_value",
     [(0.5, 10, 0.0), (11, 1.5, 1.0)],
