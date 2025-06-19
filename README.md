@@ -8,7 +8,7 @@ A Python based kernel to perform spatial (environmental) impact assessment. Base
 The dependencies of the D-EcoImpact are declared, managed and installed with [Poetry](https://python-poetry.org/).
 
 ## Copyright
-Copyright &copy; 2022-2023 Stichting Deltares
+Copyright &copy; 2022-2025 Stichting Deltares
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU Affero General Public License version 3.0 as
