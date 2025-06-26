@@ -105,7 +105,7 @@ def test_dataset_data_write_output_file_should_write_file():
     da_layer = DataAccessLayer(logger)
     data = [1]
     time = pd.date_range("2020-01-01", periods=1)
-    dataset = _xr.Dataset(data_vars=dict(data=(["time"], data)), coords=dict(time=time))
+    dataset = _xr.Dataset(data_vars={"data": (["time"], data)}, coords={"time": time})
     application_version = "0.0.0"
     application_name = "D-EcoImpact"
 

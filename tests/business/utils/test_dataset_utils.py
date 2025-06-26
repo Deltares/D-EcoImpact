@@ -349,7 +349,7 @@ class TestGetDummyVariableInUgrid:
         in a ugrid dataset"""
         # Arrange
         var_list = ["mesh2d", "var2", "var3", "var4", "var5"]
-        ds = _xr.Dataset(data_vars={k: None for k in var_list})
+        ds = _xr.Dataset(data_vars=dict.fromkeys(var_list, None))
         ds["mesh2d"].attrs = {
             "cf_role": "mesh_topology",
             "test_coordinates": "var2 var3",
@@ -371,7 +371,7 @@ class TestGetDependentVarsByVarName:
         """Test if you receive the name of the dummy variable in a ugrid dataset"""
         # Arrange
         var_list = ["var1", "var2", "var3", "var4", "var5"]
-        ds = _xr.Dataset(data_vars={k: None for k in var_list})
+        ds = _xr.Dataset(data_vars=dict.fromkeys(var_list, None))
         ds["var1"].attrs = {
             "cf_role": "mesh_topology",
             "test_coordinates": "var2 var3",
@@ -389,7 +389,7 @@ class TestGetDependentVarsByVarName:
         """Test if you receive nothing if there is no dependent variables in a ugrid dataset"""
         # Arrange
         var_list = ["var1", "var2", "var3", "var4", "var5"]
-        ds = _xr.Dataset(data_vars={k: None for k in var_list})
+        ds = _xr.Dataset(data_vars=dict.fromkeys(var_list, None))
 
         # Act
         dummy_variable = utilities.get_dependent_vars_by_var_name(ds, "var1")
