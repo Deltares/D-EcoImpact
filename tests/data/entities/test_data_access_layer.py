@@ -298,7 +298,7 @@ def test_retrieve_file_names_gives_dict_with_single_empty_key_if_single_file_fou
 
 def test_retrieve_file_names_gives_dict_with_multiple_keys_if_path_contains_asterisk():
     """When calling retrieve_file_names with a path name
-    including an asterisk, the result should be a dictionary 
+    including an asterisk, the result should be a dictionary
     with multiple entries, each key being the distinctive part
      of the file name, and the respective value the entire file name."""
 

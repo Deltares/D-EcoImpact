@@ -35,16 +35,14 @@ def test_parser_depth_average_rule_creation_logic():
 def test_parse_dict_to_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "bed_level_variable": "bedlevel",
-            "water_level_variable": "waterlevel",
-            "interfaces_variable": "interfaces",
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "bed_level_variable": "bedlevel",
+        "water_level_variable": "waterlevel",
+        "interfaces_variable": "interfaces",
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
     # Act
     data = ParserDepthAverageRule()
@@ -56,15 +54,13 @@ def test_parse_dict_to_rule_data_logic():
 def test_parse_wrong_dict_to_rule_data_logic():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "output_variable": "output",
-            "bed_level_variable": "bedlevel",
-            "water_level_variable": "waterlevel",
-            "interfaces_variable": "interfaces_z",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "output_variable": "output",
+        "bed_level_variable": "bedlevel",
+        "water_level_variable": "waterlevel",
+        "interfaces_variable": "interfaces_z",
+    }
     logger = Mock(ILogger)
 
     # Act

@@ -59,9 +59,11 @@ class TestRemoveVariables:
         variable2 = "variable2"
         variable3 = "variable3"
         dataset = _xr.Dataset(
-            data_vars=dict(
-                variable1=variable1, variable2=variable2, variable3=variable3
-            )
+            data_vars={
+                "variable1": variable1,
+                "variable2": variable2,
+                "variable3": variable3,
+            }
         )
         variable_to_be_removed = [variable2]
 
@@ -83,12 +85,12 @@ class TestRemoveVariables:
         variable3 = "variable3"
         variable4 = "variable4"
         dataset = _xr.Dataset(
-            data_vars=dict(
-                variable1=variable1,
-                variable2=variable2,
-                variable3=variable3,
-                variable4=variable4,
-            )
+            data_vars={
+                "variable1": variable1,
+                "variable2": variable2,
+                "variable3": variable3,
+                "variable4": variable4,
+            }
         )
         dataset["variable2"].attrs = {"cf_role": "mesh_topology"}
         variable_to_keep = [variable2]
@@ -112,12 +114,12 @@ class TestRemoveVariables:
         variable3 = "variable3"
         variable4 = "variable4"
         dataset = _xr.Dataset(
-            data_vars=dict(
-                variable1=variable1,
-                variable2=variable2,
-                variable3=variable3,
-                variable4=variable4,
-            )
+            data_vars={
+                "variable1": variable1,
+                "variable2": variable2,
+                "variable3": variable3,
+                "variable4": variable4,
+            }
         )
         dataset["variable2"].attrs = {"cf_role": "mesh_topology"}
         logger = Mock(ILogger)
@@ -143,12 +145,12 @@ class TestRemoveVariables:
         variable3 = "variable3"
         variable4 = "variable4"
         dataset = _xr.Dataset(
-            data_vars=dict(
-                variable1=variable1,
-                variable2=variable2,
-                variable3=variable3,
-                variable4=variable4,
-            )
+            data_vars={
+                "variable1": variable1,
+                "variable2": variable2,
+                "variable3": variable3,
+                "variable4": variable4,
+            }
         )
         dataset["variable2"].attrs = {"cf_role": "mesh_topology"}
         variables_to_keep = [variable2, variable4]
@@ -192,7 +194,11 @@ def test_list_variables_in_dataset():
     variable2 = "variable2"
     variable3 = "variable3"
     dataset = _xr.Dataset(
-        data_vars=dict(variable1=variable1, variable2=variable2, variable3=variable3)
+        data_vars={
+            "variable1": variable1,
+            "variable2": variable2,
+            "variable3": variable3,
+        }
     )
 
     # Act
@@ -227,7 +233,11 @@ def test_rename_variable_returns_dataset_without_old_variable_and_with_new_varia
     variable3 = "variable3"
     new_name = "new_name"
     dataset1 = _xr.Dataset(
-        data_vars=dict(variable1=variable1, variable2=variable2, variable3=variable3)
+        data_vars={
+            "variable1": variable1,
+            "variable2": variable2,
+            "variable3": variable3,
+        }
     )
     # Act
     dataset2 = utilities.rename_variable(dataset1, "variable1", new_name)
@@ -245,11 +255,15 @@ class TestMergeDatasets:
         # Arrange
         variable1 = "variable1"
         variable2 = "variable2"
-        dataset1 = _xr.Dataset(data_vars=dict(variable1=variable1, variable2=variable2))
+        dataset1 = _xr.Dataset(
+            data_vars={"variable1": variable1, "variable2": variable2}
+        )
 
         variable3 = "variable3"
         variable4 = "variable4"
-        dataset2 = _xr.Dataset(data_vars=dict(variable3=variable3, variable4=variable4))
+        dataset2 = _xr.Dataset(
+            data_vars={"variable3": variable3, "variable4": variable4}
+        )
 
         # Act
         merged_dataset = utilities.merge_datasets(dataset1, dataset2)
@@ -267,15 +281,21 @@ class TestMergeDatasets:
         # Arrange
         variable1 = "variable1"
         variable2 = "variable2"
-        dataset1 = _xr.Dataset(data_vars=dict(variable1=variable1, variable2=variable2))
+        dataset1 = _xr.Dataset(
+            data_vars={"variable1": variable1, "variable2": variable2}
+        )
 
         variable3 = "variable3"
         variable4 = "variable4"
-        dataset2 = _xr.Dataset(data_vars=dict(variable3=variable3, variable4=variable4))
+        dataset2 = _xr.Dataset(
+            data_vars={"variable3": variable3, "variable4": variable4}
+        )
 
         variable5 = "variable5"
         variable6 = "variable6"
-        dataset3 = _xr.Dataset(data_vars=dict(variable5=variable5, variable6=variable6))
+        dataset3 = _xr.Dataset(
+            data_vars={"variable5": variable5, "variable6": variable6}
+        )
 
         list_datasets = [dataset1, dataset2, dataset3]
         # Act
@@ -297,7 +317,7 @@ class TestGetDummyVariableInUgrid:
         # Arrange
         variable1 = "variable1"
         variable2 = "variable2"
-        ds = _xr.Dataset(data_vars=dict(variable1=variable1, variable2=variable2))
+        ds = _xr.Dataset(data_vars={"variable1": variable1, "variable2": variable2})
         ds["variable1"].attrs = {"cf_role": "mesh_topology"}
 
         # Act
@@ -311,7 +331,7 @@ class TestGetDummyVariableInUgrid:
         # Arrange
         variable1 = "variable1"
         variable2 = "variable2"
-        ds = _xr.Dataset(data_vars=dict(variable1=variable1, variable2=variable2))
+        ds = _xr.Dataset(data_vars={"variable1": variable1, "variable2": variable2})
 
         # Act
         with pytest.raises(ValueError) as error:
@@ -329,7 +349,7 @@ class TestGetDummyVariableInUgrid:
         in a ugrid dataset"""
         # Arrange
         var_list = ["mesh2d", "var2", "var3", "var4", "var5"]
-        ds = _xr.Dataset(data_vars=dict.fromkeys(var_list))
+        ds = _xr.Dataset(data_vars={k: None for k in var_list})
         ds["mesh2d"].attrs = {
             "cf_role": "mesh_topology",
             "test_coordinates": "var2 var3",
@@ -351,7 +371,7 @@ class TestGetDependentVarsByVarName:
         """Test if you receive the name of the dummy variable in a ugrid dataset"""
         # Arrange
         var_list = ["var1", "var2", "var3", "var4", "var5"]
-        ds = _xr.Dataset(data_vars=dict.fromkeys(var_list))
+        ds = _xr.Dataset(data_vars={k: None for k in var_list})
         ds["var1"].attrs = {
             "cf_role": "mesh_topology",
             "test_coordinates": "var2 var3",
@@ -369,7 +389,7 @@ class TestGetDependentVarsByVarName:
         """Test if you receive nothing if there is no dependent variables in a ugrid dataset"""
         # Arrange
         var_list = ["var1", "var2", "var3", "var4", "var5"]
-        ds = _xr.Dataset(data_vars=dict.fromkeys(var_list))
+        ds = _xr.Dataset(data_vars={k: None for k in var_list})
 
         # Act
         dummy_variable = utilities.get_dependent_vars_by_var_name(ds, "var1")

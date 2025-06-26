@@ -28,7 +28,7 @@ class TimeOperationSettings:
             raise ValueError("The time_scale_mapping does not contain any values")
 
         self._time_scale_mapping = time_scale_mapping
-        self._time_scale = next(i for i in time_scale_mapping.keys())
+        self._time_scale = next(iter(time_scale_mapping.keys()))
         self._operation_type = TimeOperationType.AVERAGE
         self._percentile_value = 0.0
 
