@@ -8,10 +8,8 @@ WORKDIR /decoimpact
 COPY . .
 
 # Update the package source list, update system packages
-RUN apt-get update && apt-get upgrade -y
-
-# install poetry (/usr/local/bin/poetry)
-RUN pip install poetry
+RUN apt-get update && apt-get upgrade -y \
+    && pip install poetry
 
 # Install Poetry dependencies without creating poetry environment
 ## Packages are installed in "/usr/local/lib/python/site-packages/" when the environment is not created,
