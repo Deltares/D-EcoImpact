@@ -33,20 +33,18 @@ def test_parser_classification_rule_creation_logic():
 def test_parse_dict_to_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": ["mesh2d_sa1", "mesh2d_waterdepth"],
-            "description": "test",
-            "criteria_table": [
-                ["output", "mesh2d_waterdepth", "mesh2d_sa1"],
-                [100, 0, 30],
-                [300, 0, 0.5],
-                [400, 0, "0.3:0.6"],
-            ],
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": ["mesh2d_sa1", "mesh2d_waterdepth"],
+        "description": "test",
+        "criteria_table": [
+            ["output", "mesh2d_waterdepth", "mesh2d_sa1"],
+            [100, 0, 30],
+            [300, 0, 0.5],
+            [400, 0, "0.3:0.6"],
+        ],
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
     # Act
     data = ParserClassificationRule()
@@ -148,35 +146,33 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
 ):
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": [
-                "varA",
-                "varB",
-                "varC",
-                "varD",
-                "varE",
-                "varF",
-                "varF2",
-                "varF3",
-                "varG",
-                "varH",
-                "varH2",
-                "varI",
-                "varJ",
-                "varK",
-                "varL",
-                "varM",
-                "varN",
-                "varO",
-                "varO1",
-            ],
-            "description": "test",
-            "criteria_table": criteria_table,
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": [
+            "varA",
+            "varB",
+            "varC",
+            "varD",
+            "varE",
+            "varF",
+            "varF2",
+            "varF3",
+            "varG",
+            "varH",
+            "varH2",
+            "varI",
+            "varJ",
+            "varK",
+            "varL",
+            "varM",
+            "varN",
+            "varO",
+            "varO1",
+        ],
+        "description": "test",
+        "criteria_table": criteria_table,
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
     # Act
     data = ParserClassificationRule()
@@ -255,23 +251,21 @@ def test_feedback_for_criteria_with_gaps_and_overlap(
 def test_feedback_for_criteria_multiple_parameters(criteria_table, calls):
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": [
-                "varA",
-                "varB",
-                "varC",
-                "varD",
-                "MIN_water_depth_mNAP",
-                "MAX_flow_velocity",
-                "MAX_chloride",
-            ],
-            "description": "test",
-            "criteria_table": criteria_table,
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": [
+            "varA",
+            "varB",
+            "varC",
+            "varD",
+            "MIN_water_depth_mNAP",
+            "MAX_flow_velocity",
+            "MAX_chloride",
+        ],
+        "description": "test",
+        "criteria_table": criteria_table,
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
     # Act
     data = ParserClassificationRule()
@@ -283,19 +277,17 @@ def test_feedback_for_criteria_multiple_parameters(criteria_table, calls):
 def test_feedback_for_criteria_multiple_parameters_more_10_warnings():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": ["varA", "varB", "varC", "varD"],
-            "description": "test",
-            "criteria_table": [
-                ["output", "varA", "varB", "varC", "varD"],
-                [1, "<0", "<0", "0:10", "5"],
-                [3, "0", ">=0", "0:10", "5"],
-            ],
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": ["varA", "varB", "varC", "varD"],
+        "description": "test",
+        "criteria_table": [
+            ["output", "varA", "varB", "varC", "varD"],
+            [1, "<0", "<0", "0:10", "5"],
+            [3, "0", ">=0", "0:10", "5"],
+        ],
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
     # Act
     data = ParserClassificationRule()

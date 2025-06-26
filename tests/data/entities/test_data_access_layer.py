@@ -105,7 +105,7 @@ def test_dataset_data_write_output_file_should_write_file():
     da_layer = DataAccessLayer(logger)
     data = [1]
     time = pd.date_range("2020-01-01", periods=1)
-    dataset = _xr.Dataset(data_vars=dict(data=(["time"], data)), coords=dict(time=time))
+    dataset = _xr.Dataset(data_vars={"data": (["time"], data)}, coords={"time": time})
     application_version = "0.0.0"
     application_name = "D-EcoImpact"
 
@@ -298,7 +298,7 @@ def test_retrieve_file_names_gives_dict_with_single_empty_key_if_single_file_fou
 
 def test_retrieve_file_names_gives_dict_with_multiple_keys_if_path_contains_asterisk():
     """When calling retrieve_file_names with a path name
-    including an asterisk, the result should be a dictionary 
+    including an asterisk, the result should be a dictionary
     with multiple entries, each key being the distinctive part
      of the file name, and the respective value the entire file name."""
 

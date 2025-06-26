@@ -33,16 +33,14 @@ def test_parser_axis_filter_rule_creation_logic():
 def test_parse_dict_to__axis_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "description": "description",
-            "input_variable": "input",
-            "layer_number": 3,
-            "axis_name": "axis_name",
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "description": "description",
+        "input_variable": "input",
+        "layer_number": 3,
+        "axis_name": "axis_name",
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -56,15 +54,13 @@ def test_parse_dict_to__axis_rule_data_logic():
 def test_parse_wrong_dict_to_axis_rule_data_logic():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "description": "description",
-            "layer_number": 3,
-            "input_variable": "input",
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "description": "description",
+        "layer_number": 3,
+        "input_variable": "input",
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -83,16 +79,14 @@ def test_parse_wrong_dict_to_axis_rule_data_logic():
 def test_parse_axis_name_type():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "description": "description",
-            "input_variable": "input",
-            "layer_number": 3,
-            "axis_name": 3,
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "description": "description",
+        "input_variable": "input",
+        "layer_number": 3,
+        "axis_name": 3,
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
 
     # Act

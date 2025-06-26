@@ -38,15 +38,13 @@ def test_parser_combine_results_rule_creation_logic():
 def test_parse_dict_to_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": ["foo", "bar"],
-            "operation": "Multiply",
-            "output_variable": "test_output_name",
-            "description": "test description",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": ["foo", "bar"],
+        "operation": "Multiply",
+        "output_variable": "test_output_name",
+        "description": "test description",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -66,14 +64,12 @@ def test_parse_dict_to_rule_data_logic():
 def test_parse_dict_without_description():
     """Test if description is set to empty string when not passed"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": ["foo", "bar"],
-            "operation": "Multiply",
-            "output_variable": "test_output_name",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": ["foo", "bar"],
+        "operation": "Multiply",
+        "output_variable": "test_output_name",
+    }
 
     # Act
     parser = ParserCombineResultsRule()
@@ -86,13 +82,11 @@ def test_parse_dict_without_description():
 def test_parse_wrong_dict_to_rule_data_logic():
     """Test if the operation type is included or not"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": ["foo", "bar"],
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": ["foo", "bar"],
+        "output_variable": "output",
+    }
 
     # Act
     data = ParserCombineResultsRule()
@@ -114,14 +108,12 @@ def test_parse_wrong_dict_to_rule_data_logic():
 def test_error_if_parse_operation_type_not_given_by_string(invalid_operation: Any):
     """Test error if the operation is not a number"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": "input",
-            "operation": invalid_operation,
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": "input",
+        "operation": invalid_operation,
+        "output_variable": "output",
+    }
     rule = ParserCombineResultsRule()
 
     # Act
@@ -138,14 +130,12 @@ def test_error_if_parse_operation_type_not_given_by_string(invalid_operation: An
 def test_error_if_parse_unknown_operation_type():
     """Test error if the operation type is unknown"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": "input",
-            "operation": "unkown",
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": "input",
+        "operation": "unkown",
+        "output_variable": "output",
+    }
     possible_operations = [
         "\n" + operation_name
         for operation_name in dir(MultiArrayOperationType)

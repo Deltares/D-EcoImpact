@@ -137,8 +137,6 @@ def test_all_operations_combine_results_rule(
         "var2_name": _xr.DataArray([4, 5, 6]),
         "var3_name": _xr.DataArray([15, 12, 24]),
     }
-    # raw_data = [[20, 7, 3], [4, 5, 6], [15, 12, 24]]
-    # xarray_data = [_xr.DataArray(arr) for arr in raw_data]
 
     # Act
     rule = CombineResultsRule(

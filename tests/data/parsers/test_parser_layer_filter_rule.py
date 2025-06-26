@@ -33,15 +33,13 @@ def test_parser_layer_filter_rule_creation_logic():
 def test_parse_dict_to_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "description": "description",
-            "input_variable": "input",
-            "layer_number": 3,
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "description": "description",
+        "input_variable": "input",
+        "layer_number": 3,
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -55,14 +53,12 @@ def test_parse_dict_to_rule_data_logic():
 def test_parse_wrong_dict_to_rule_data_logic():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "description": "description",
-            "input_variable": "input",
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "description": "description",
+        "input_variable": "input",
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -81,15 +77,13 @@ def test_parse_wrong_dict_to_rule_data_logic():
 def test_parse_layer_number_type():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "description": "description",
-            "input_variable": "input",
-            "layer_number": "3",
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "description": "description",
+        "input_variable": "input",
+        "layer_number": "3",
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
 
     # Act

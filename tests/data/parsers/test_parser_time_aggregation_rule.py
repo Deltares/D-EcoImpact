@@ -36,15 +36,13 @@ def test_parser_time_aggregation_rule_creation_logic():
 def test_parse_dict_to_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "operation": "MIN",
-            "output_variable": "output",
-            "time_scale": "year",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "operation": "MIN",
+        "output_variable": "output",
+        "time_scale": "year",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -58,14 +56,12 @@ def test_parse_dict_to_rule_data_logic():
 def test_parse_wrong_dict_to_rule_data_logic():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "output_variable": "output",
-            "time_scale": "year",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "output_variable": "output",
+        "time_scale": "year",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -84,15 +80,13 @@ def test_parse_wrong_dict_to_rule_data_logic():
 def test_parse_operation_type():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "operation": "Minimum",
-            "output_variable": "output",
-            "time_scale": "year",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "operation": "Minimum",
+        "output_variable": "output",
+        "time_scale": "year",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -113,15 +107,13 @@ def test_parse_operation_type():
 def test_parse_operation_percentile_has_parameter():
     """Test if operation percentile is parsed correctly"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "operation": "PERCENTILE",
-            "output_variable": "output",
-            "time_scale": "year",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "operation": "PERCENTILE",
+        "output_variable": "output",
+        "time_scale": "year",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -141,15 +133,13 @@ def test_parse_operation_percentile_has_parameter():
 def test_parse_operation_percentile_valid_parameter():
     """Test if operation percentile is parsed correctly"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "operation": "PERCENTILE(999)",
-            "output_variable": "output",
-            "time_scale": "year",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "operation": "PERCENTILE(999)",
+        "output_variable": "output",
+        "time_scale": "year",
+    }
     logger = Mock(ILogger)
 
     # Act

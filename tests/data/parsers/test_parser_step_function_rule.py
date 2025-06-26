@@ -19,19 +19,17 @@ from decoimpact.data.parsers.parser_step_function_rule import ParserStepFunction
 
 
 def _get_example_step_function_dict():
-    return dict(
-        {
-            "name": "Apply chloride policy",
-            "description": "this rules indicates whether the chloride policy should be applied (1.0) or not (0.0) depending on the chloride concentration.",
-            "limit_response_table": [
-                ["limit", "response"],
-                [1.0, 1.0],
-                [450, 0.0],
-            ],
-            "input_variable": "chloride_top_layer",
-            "output_variable": "response_chloride_top_layer",
-        }
-    )
+    return {
+        "name": "Apply chloride policy",
+        "description": "this rules indicates whether the chloride policy should be applied (1.0) or not (0.0) depending on the chloride concentration.",
+        "limit_response_table": [
+            ["limit", "response"],
+            [1.0, 1.0],
+            [450, 0.0],
+        ],
+        "input_variable": "chloride_top_layer",
+        "output_variable": "response_chloride_top_layer",
+    }
 
 
 def test_parser_step_function_rule_correct_input():
@@ -39,21 +37,19 @@ def test_parser_step_function_rule_correct_input():
     to correctly initialize itself during creation"""
 
     # Arrange
-    new_dict = dict(
-        {
-            "name": "Test name",
-            "description": "Test description",
-            "limit_response_table": [
-                ["limit", "response"],
-                [0.0, 10.0],
-                [1.0, 20.0],
-                [2.0, 30.0],
-                [10.0, 40.0],
-            ],
-            "input_variable": "test input variable name",
-            "output_variable": "test output variable name",
-        }
-    )
+    new_dict = {
+        "name": "Test name",
+        "description": "Test description",
+        "limit_response_table": [
+            ["limit", "response"],
+            [0.0, 10.0],
+            [1.0, 20.0],
+            [2.0, 30.0],
+            [10.0, 40.0],
+        ],
+        "input_variable": "test input variable name",
+        "output_variable": "test output variable name",
+    }
     parser = ParserStepFunctionRule()
     logger = Mock(ILogger)
 
@@ -100,28 +96,26 @@ def test_parser_does_not_change_ordered__limits():
     """If the limits are sorted, the ParserStepFunctionRule
     should not modify the order."""
     # Arrange
-    rule_dict = dict(
-        {
-            "name": "Test name",
-            "description": "Test description",
-            "limit_response_table": [
-                ["limit", "response"],
-                [0.0, 0.0],
-                [1.0, 10.0],
-                [2.0, 20.0],
-                [3.0, 30.0],
-                [4.0, 40.0],
-                [5.0, 50.0],
-                [6.0, 60.0],
-                [7.0, 70.0],
-                [8.0, 80.0],
-                [9.0, 90.0],
-                [10.0, 100.0],
-            ],
-            "input_variable": "test input variable name",
-            "output_variable": "test output variable name",
-        }
-    )
+    rule_dict = {
+        "name": "Test name",
+        "description": "Test description",
+        "limit_response_table": [
+            ["limit", "response"],
+            [0.0, 0.0],
+            [1.0, 10.0],
+            [2.0, 20.0],
+            [3.0, 30.0],
+            [4.0, 40.0],
+            [5.0, 50.0],
+            [6.0, 60.0],
+            [7.0, 70.0],
+            [8.0, 80.0],
+            [9.0, 90.0],
+            [10.0, 100.0],
+        ],
+        "input_variable": "test input variable name",
+        "output_variable": "test output variable name",
+    }
     parser = ParserStepFunctionRule()
     logger = Mock(ILogger)
 
@@ -137,28 +131,26 @@ def test_parser_sorts_unordered_limits():
     limits in an increasing order. The respective responses
     should also be sorted accordingly."""
     # Arrange
-    rule_dict = dict(
-        {
-            "name": "Test name",
-            "description": "Test description",
-            "limit_response_table": [
-                ["limit", "response"],
-                [0.0, 0.0],
-                [1.0, 10.0],
-                [2.0, 20.0],
-                [3.0, 30.0],
-                [4.0, 40.0],
-                [5.0, 50.0],
-                [6.0, 60.0],
-                [7.0, 70.0],
-                [8.0, 80.0],
-                [9.0, 90.0],
-                [10.0, 100.0],
-            ],
-            "input_variable": "test input variable name",
-            "output_variable": "test output variable name",
-        }
-    )
+    rule_dict = {
+        "name": "Test name",
+        "description": "Test description",
+        "limit_response_table": [
+            ["limit", "response"],
+            [0.0, 0.0],
+            [1.0, 10.0],
+            [2.0, 20.0],
+            [3.0, 30.0],
+            [4.0, 40.0],
+            [5.0, 50.0],
+            [6.0, 60.0],
+            [7.0, 70.0],
+            [8.0, 80.0],
+            [9.0, 90.0],
+            [10.0, 100.0],
+        ],
+        "input_variable": "test input variable name",
+        "output_variable": "test output variable name",
+    }
     parser = ParserStepFunctionRule()
     logger = Mock(ILogger)
     expected_log_message = "Limits were not ordered. They have been sorted increasingly, and their respective responses accordingly too."
@@ -182,8 +174,8 @@ def test_parser_sorts_unordered_limits():
     # Assert
     assert isinstance(original_step_function_data, StepFunctionRuleData)
     assert isinstance(shuffled_step_function_data, StepFunctionRuleData)
-    assert not original_step_function_data.limits == shuffled_limits
-    assert not original_step_function_data.responses == shuffled_responses
+    assert original_step_function_data.limits != shuffled_limits
+    assert original_step_function_data.responses != shuffled_responses
     assert original_step_function_data.limits == shuffled_step_function_data.limits
     assert (
         original_step_function_data.responses == shuffled_step_function_data.responses
