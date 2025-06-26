@@ -182,8 +182,8 @@ def test_parser_sorts_unordered_limits():
     # Assert
     assert isinstance(original_step_function_data, StepFunctionRuleData)
     assert isinstance(shuffled_step_function_data, StepFunctionRuleData)
-    assert not original_step_function_data.limits == shuffled_limits
-    assert not original_step_function_data.responses == shuffled_responses
+    assert original_step_function_data.limits != shuffled_limits
+    assert original_step_function_data.responses != shuffled_responses
     assert original_step_function_data.limits == shuffled_step_function_data.limits
     assert (
         original_step_function_data.responses == shuffled_step_function_data.responses

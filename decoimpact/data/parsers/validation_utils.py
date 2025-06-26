@@ -77,7 +77,7 @@ def validate_start_before_end(start_list: List[str], end_list: List[str]):
         start_str = datetime.strptime(start, r"%d-%m")
         end_str = datetime.strptime(end, r"%d-%m").replace()
 
-        if not start_str < end_str:
+        if start_str >= end_str:
             message = (
                 f"All start dates should be before the end dates. "
                 f"ERROR in position {index} where start: "

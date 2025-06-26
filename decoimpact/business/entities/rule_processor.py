@@ -251,7 +251,6 @@ class RuleProcessor:
         result_variable = _np.zeros_like(np_array)
 
         # define variables to count value exceedings (for some rules): min and max
-        warning_counter = [0, 0]
         warning_counter_total = [0, 0]
 
         # execute rule and gather warnings for exceeded values (for some rules)
