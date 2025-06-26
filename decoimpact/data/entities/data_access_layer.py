@@ -213,19 +213,29 @@ class DataAccessLayer(IDataAccessLayer):
 
         loader = _yaml.FullLoader
         loader.add_constructor("!include", self.yaml_include_constructor)
+
         # Add support for scientific notation (example 1e5=100000)
+        # Define the YAML float tag and regex pattern for scientific notation
+        float_decimal = r"[-+]?(?:\d[\d_]*)\.[0-9_]*(?:[eE][-+]?\d+)?"
+        float_exponent = r"[-+]?(?:\d[\d_]*)(?:[eE][-+]?\d+)"
+        float_leading_dot = r"\.[\d_]+(?:[eE][-+]\d+)?"
+        float_time = r"[-+]?\d[\d_]*(?::[0-5]?\d)+\.[\d_]*"
+        float_inf = r"[-+]?\.(?:inf|Inf|INF)"
+        float_nan = r"\.(?:nan|NaN|NAN)"
+
+        float_regex_pattern = rf"""^(?:
+            {float_decimal}
+            |{float_exponent}
+            |{float_leading_dot}
+            |{float_time}
+            |{float_inf}
+            |{float_nan})$"""
+
+        float_regex = re.compile(float_regex_pattern, re.X)
+
         loader.add_implicit_resolver(
             "tag:yaml.org,2002:float",
-            re.compile(
-                r"""^(?:
-            [-+]?(?:\d[\d_]*)\.[0-9_]*(?:[eE][-+]?\d+)?
-            |[-+]?(?:\d[\d_]*)(?:[eE][-+]?\d+)
-            |\.[\d_]+(?:[eE][-+]\d+)?
-            |[-+]?\d[\d_]*(?::[0-5]?\d)+\.[\d_]*
-            |[-+]?\.(?:inf|Inf|INF)
-            |\.(?:nan|NaN|NAN))$""",
-                re.X,
-            ),
+            float_regex,
             list("-+0123456789."),
         )
 
