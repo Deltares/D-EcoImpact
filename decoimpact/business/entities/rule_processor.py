@@ -251,7 +251,6 @@ class RuleProcessor:
         result_variable = _np.zeros_like(np_array)
 
         # define variables to count value exceedings (for some rules): min and max
-        warning_counter = [0, 0]
         warning_counter_total = [0, 0]
 
         # execute rule and gather warnings for exceeded values (for some rules)
@@ -384,7 +383,7 @@ class RuleProcessor:
         # Let the user know which variables will be broadcast to all dimensions
         dims_orig = var_orig.dims
         dims_result = ref_var.dims
-        dims_diff = list(str(x) for x in dims_result if x not in dims_orig)
+        dims_diff = [str(x) for x in dims_result if x not in dims_orig]
         str_dims_broadcasted = ",".join(dims_diff)
         logger.log_info(
             f"""Variable {var_orig.name} will be expanded to the following \

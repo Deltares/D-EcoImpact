@@ -35,15 +35,13 @@ def test_parser_formula_rule_creation_logic():
 def test_parse_dict_to_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": ["foo", "bar"],
-            "formula": "foo - bar",
-            "output_variable": "test_output_name",
-            "description": "test description",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": ["foo", "bar"],
+        "formula": "foo - bar",
+        "output_variable": "test_output_name",
+        "description": "test description",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -63,14 +61,12 @@ def test_parse_dict_to_rule_data_logic():
 def test_parse_dict_without_description():
     """Test if description is set to empty string when not passed"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": ["foo", "bar"],
-            "formula": "foo * bar",
-            "output_variable": "test_output_name",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": ["foo", "bar"],
+        "formula": "foo * bar",
+        "output_variable": "test_output_name",
+    }
 
     # Act
     parser = ParserFormulaRule()
@@ -83,13 +79,11 @@ def test_parse_dict_without_description():
 def test_parse_wrong_dict_to_rule_data_logic():
     """Test if the formula is included or not"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": ["foo", "bar"],
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": ["foo", "bar"],
+        "output_variable": "output",
+    }
 
     # Act
     data = ParserFormulaRule()
@@ -108,14 +102,12 @@ def test_error_if_parse_formula_not_given_by_string():
     """Test error if the formula is not a string"""
     # Arrange
     formula = 2
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variables": "input",
-            "formula": formula,
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variables": "input",
+        "formula": formula,
+        "output_variable": "output",
+    }
     rule = ParserFormulaRule()
 
     # Act

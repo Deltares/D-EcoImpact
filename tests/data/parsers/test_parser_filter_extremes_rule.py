@@ -9,6 +9,7 @@ Tests for ParserFilterExtremesRule class
 """
 
 from typing import Any, List
+
 import pytest
 from mock import Mock
 
@@ -34,17 +35,15 @@ def test_parser_filter_extremes_rule_creation_logic():
 def test_parse_dict_to_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "output_variable": "output",
-            "distance": 1,
-            "time_scale": "hour",
-            "mask": True,
-            "extreme_type": "peaks",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "output_variable": "output",
+        "distance": 1,
+        "time_scale": "hour",
+        "mask": True,
+        "extreme_type": "peaks",
+    }
     logger = Mock(ILogger)
     # Act
     data = ParserFilterExtremesRule()
@@ -56,16 +55,14 @@ def test_parse_dict_to_rule_data_logic():
 def test_parse_wrong_dict_to_rule_data_logic():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "output_variable": "output",
-            "time_scale": "hour",
-            "mask": True,
-            "extreme_type": "peaks",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "output_variable": "output",
+        "time_scale": "hour",
+        "mask": True,
+        "extreme_type": "peaks",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -93,17 +90,15 @@ def test_parse_wrong_dict_to_rule_data_logic():
 def test_validate_extreme_type(extreme_type: str, expected_message: str):
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "output_variable": "output",
-            "distance": 1,
-            "time_scale": "hour",
-            "mask": True,
-            "extreme_type": extreme_type,
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "output_variable": "output",
+        "distance": 1,
+        "time_scale": "hour",
+        "mask": True,
+        "extreme_type": extreme_type,
+    }
     logger = Mock(ILogger)
     # Act
     data = ParserFilterExtremesRule()

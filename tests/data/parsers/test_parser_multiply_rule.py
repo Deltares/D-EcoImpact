@@ -9,6 +9,7 @@ Tests for ParserMultiplyRule class
 """
 
 from typing import Any, List
+
 import pytest
 from mock import Mock
 
@@ -34,14 +35,12 @@ def test_parser_multiply_rule_creation_logic():
 def test_parse_dict_to_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "multipliers": [0.0, 1.0],
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "multipliers": [0.0, 1.0],
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
     # Act
     data = ParserMultiplyRule()
@@ -53,13 +52,11 @@ def test_parse_dict_to_rule_data_logic():
 def test_parse_wrong_dict_to_rule_data_logic():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -78,14 +75,12 @@ def test_parse_wrong_dict_to_rule_data_logic():
 def test_parse_multipliers_type():
     """Test if an incorrect dictionary is not parsed"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "multipliers": ["a", "b", 2],
-            "output_variable": "output",
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "multipliers": ["a", "b", 2],
+        "output_variable": "output",
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -108,20 +103,18 @@ def test_parse_multipliers_type():
 def test_multiply_parser_with_multipliers_table_correct():
     """Test when multipliers table is available"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "output_variable": "output",
-            "multipliers_table": [
-                ["start_date", "end_date", "multipliers"],
-                ["01-01", "15-07", [1, 100]],
-                ["16-07", "31-12", [0]],
-                ["16-7", "31-12", [1]],
-                ["1-11", "31-12", [0]],
-            ],
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "output_variable": "output",
+        "multipliers_table": [
+            ["start_date", "end_date", "multipliers"],
+            ["01-01", "15-07", [1, 100]],
+            ["16-07", "31-12", [0]],
+            ["16-7", "31-12", [1]],
+            ["1-11", "31-12", [0]],
+        ],
+    }
     logger = Mock(ILogger)
 
     # Act
@@ -159,14 +152,12 @@ def test_multiply_parser_with_multipliers_incorrect_headers(
 ):
     """Test when multipliers table is available"""
     # Arrange
-    contents = dict(
-        {
-            "name": "testname",
-            "input_variable": "input",
-            "output_variable": "output",
-            "multipliers_table": multipliers_table,
-        }
-    )
+    contents = {
+        "name": "testname",
+        "input_variable": "input",
+        "output_variable": "output",
+        "multipliers_table": multipliers_table,
+    }
     logger = Mock(ILogger)
 
     # Act

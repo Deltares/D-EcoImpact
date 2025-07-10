@@ -48,7 +48,7 @@ class FormulaRule(RuleBase, IMultiCellBasedRule):
                 filename="<inline code>",
                 mode="exec",
             )
-            local_variables = {name: 1.0 for name in self.input_variable_names}
+            local_variables = dict.fromkeys(self.input_variable_names, 1.0)
             exec(byte_code, self._global_variables, local_variables)
 
         except (SyntaxError, NameError) as exception:

@@ -17,38 +17,36 @@ from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.entities.model_data_builder import ModelDataBuilder
 
-contents: dict[str, Any] = dict(
-    {
-        "input-data": [
-            {"dataset": {"filename": "test", "variable_mapping": {"foo": "bar"}}}
-        ],
-        "rules": [
-            {
-                "multiply_rule": {
-                    "name": "testrule",
-                    "description": "test_mr_description",
-                    "multipliers": [1, 2.0],
-                    "input_variable": "testin",
-                    "output_variable": "testout",
-                }
-            },
-            {
-                "step_function_rule": {
-                    "name": "test_name_step_function_rule",
-                    "description": "test_sfr_description",
-                    "limit_response_table": [
-                        ["limit", "response"],
-                        [1, 10],
-                        [2.0, 20],
-                    ],
-                    "input_variable": "test_in_sfr",
-                    "output_variable": "test_out_sfr",
-                }
-            },
-        ],
-        "output-data": {"filename": "test"},
-    }
-)
+contents: dict[str, Any] = {
+    "input-data": [
+        {"dataset": {"filename": "test", "variable_mapping": {"foo": "bar"}}}
+    ],
+    "rules": [
+        {
+            "multiply_rule": {
+                "name": "testrule",
+                "description": "test_mr_description",
+                "multipliers": [1, 2.0],
+                "input_variable": "testin",
+                "output_variable": "testout",
+            }
+        },
+        {
+            "step_function_rule": {
+                "name": "test_name_step_function_rule",
+                "description": "test_sfr_description",
+                "limit_response_table": [
+                    ["limit", "response"],
+                    [1, 10],
+                    [2.0, 20],
+                ],
+                "input_variable": "test_in_sfr",
+                "output_variable": "test_out_sfr",
+            }
+        },
+    ],
+    "output-data": {"filename": "test"},
+}
 
 
 def test_model_data_builder_parse_dict_to_model_data():
