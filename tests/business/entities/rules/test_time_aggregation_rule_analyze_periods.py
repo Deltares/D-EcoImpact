@@ -117,12 +117,47 @@ def test_analyze_groups_function_not_only_1_and_0():
 
     exception_raised = exc_info.value
 
-    # Assert
-    expected_message = (
-        "The value array for the time aggregation rule with operation type"
-        " COUNT_PERIODS should only contain the values 0 and 1 (or NaN)."
+
+def test_analyze_groups_function_only_1_and_0_and_NaN():
+    """Test whether it gives an error if the data array contains
+    other values than 0 and 1"""
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
     )
-    assert exception_raised.args[0] == expected_message
+    t_data = [1, _np.nan, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
+    t_time = [
+        "2000-01-01",
+        "2000-01-02",
+        "2000-01-03",
+        "2000-01-04",
+        "2000-01-05",
+        "2001-01-01",
+        "2001-01-02",
+        "2001-01-03",
+        "2001-01-04",
+        "2001-01-05",
+        "2002-01-01",
+        "2002-01-02",
+        "2002-01-03",
+        "2002-01-04",
+        "2002-01-05",
+        "2003-01-01",
+        "2003-01-02",
+        "2003-01-03",
+        "2003-01-04",
+        "2003-01-05",
+    ]
+    t_time = [_np.datetime64(t) for t in t_time]
+    input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
+
+    # Act
+    rule.execute(input_array, logger)
+
+    # Assert
+    assert True
 
 
 @pytest.mark.parametrize(

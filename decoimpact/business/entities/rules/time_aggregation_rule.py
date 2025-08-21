@@ -69,7 +69,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         if settings.operation_type is TimeOperationType.COUNT_PERIODS:
             # Check if all values in a COUNT_PERIODS value array are either 0 or 1 or NaN
             compare_values = (
-                (value_array == 0) | (value_array == 1) | (value_array == _np.nan)
+                (value_array == 0) | (value_array == 1) | _np.isnan(value_array)
             )
             check_values = _xr.where(compare_values, True, False)
             if False in check_values:
