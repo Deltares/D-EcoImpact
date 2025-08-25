@@ -117,6 +117,13 @@ def test_analyze_groups_function_not_only_1_and_0():
 
     exception_raised = exc_info.value
 
+    # Assert
+    expected_message = (
+        "The value array for the time aggregation rule with operation type"
+        " COUNT_PERIODS should only contain the values 0 and 1 (or NaN)."
+    )
+    assert exception_raised.args[0] == expected_message
+
 
 def test_analyze_groups_function_only_1_and_0_and_NaN():
     """Test whether it gives an error if the data array contains
