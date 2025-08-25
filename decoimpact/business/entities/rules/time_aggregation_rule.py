@@ -230,6 +230,10 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         if no_axis == 1:
             # remove NaN values from the array (these are to be ignored)
             elem = elem[~_np.isnan(elem)]
+            if len(elem) == 0:
+                # return _np.zeros_like(elem)
+                # elem = _np.zeros_like(elem)
+                return 0
             if self.settings.operation_type is TimeOperationType.COUNT_PERIODS:
                 group_result = self.count_groups(elem)
             elif self.settings.operation_type is TimeOperationType.MAX_DURATION_PERIODS:
