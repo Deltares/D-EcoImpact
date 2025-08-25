@@ -10,7 +10,7 @@ FORMAT
       output_variable: <one_output_variable_name>
 ```
 
-The combine results rule combines the output of two or more variables to one output variable. The way this data is combined depends on the operation chosen. This could be used for adding mutual exclusive results (e.g., habitat suitability based on flow velocity and water depth) or asses difference between results (e.g., waterlevel and bathymetry to get the water depth).The rule operates one or multiple  3D variables or 2D variables, independent of the time axes, as long as these all have the same dimensions and returns a single 3D or 2D result, either with time axis, depending on input.
+The combine results rule combines the output of two or more variables to one output variable. The way this data is combined depends on the operation chosen. This could be used for adding mutual exclusive results (e.g., habitat suitability based on flow velocity and water depth) or assessing difference between results (e.g., waterlevel and bathymetry to get the water depth).The rule operates one or multiple  3D variables or 2D variables, independent of the time axes, as long as these all have the same dimensions and returns a single 3D or 2D result, either with time axis, depending on input.
 
 Operations available: Add, Subtract, Multiply, Average, Median, Min and Max
 
