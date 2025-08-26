@@ -101,7 +101,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
             ),
         }
 
-    def _check_dimensions(self, np_arrays: List[_np.array]) -> bool:
+    def _check_dimensions(self, np_arrays: List[_np.ndarray]) -> bool:
         """Brief check if all the arrays to be combined have the
            same size/dimension/length
         Args:
