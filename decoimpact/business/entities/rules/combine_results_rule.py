@@ -34,6 +34,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: MultiArrayOperationType,
+        ignore_nan: bool = False,
     ):
         super().__init__(name, input_variable_names)
         self._operation_type: MultiArrayOperationType = operation_type

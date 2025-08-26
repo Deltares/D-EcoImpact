@@ -150,6 +150,76 @@ def test_all_operations_combine_results_rule(
     _xr.testing.assert_equal(obtained_result, _xr.DataArray(expected_result))
 
 
+@pytest.mark.parametrize(
+    "operation, expected_result",
+    [
+        (MultiArrayOperationType.MIN, [_np.nan, 5, 3]),
+        (MultiArrayOperationType.MAX, [_np.nan, 12, 24]),
+        (MultiArrayOperationType.MULTIPLY, [_np.nan, 420, 432]),
+        (MultiArrayOperationType.AVERAGE, [_np.nan, 8, 11]),
+        (MultiArrayOperationType.MEDIAN, [_np.nan, 7, 6]),
+        (MultiArrayOperationType.ADD, [_np.nan, 24, 33]),
+        (MultiArrayOperationType.SUBTRACT, [_np.nan, -10, -27]),
+    ],
+)
+def test_all_operations_incl_nan(
+    operation: MultiArrayOperationType, expected_result: List[float]
+):
+    """Test the outcome of each operand for the combine results rule"""
+    # Arrange
+    logger = Mock(ILogger)
+    dict_vars = {
+        "var1_name": _xr.DataArray([20, 7, 3]),
+        "var2_name": _xr.DataArray([4, 5, 6]),
+        "var3_name": _xr.DataArray([_np.nan, 12, 24]),
+    }
+
+    # Act
+    rule = CombineResultsRule(
+        "test_name",
+        ["var1_name", "var2_name", "var3_name"],
+        operation,
+    )
+    obtained_result = rule.execute(dict_vars, logger)
+
+    # Assert
+    _xr.testing.assert_equal(obtained_result, _xr.DataArray(expected_result))
+
+
+@pytest.mark.parametrize(
+    "operation, expected_result",
+    [
+        (MultiArrayOperationType.MIN, [4, 5, 3]),
+        (MultiArrayOperationType.MAX, [20, 12, 24]),
+        (MultiArrayOperationType.MULTIPLY, [_np.nan, 420, 432]),
+        (MultiArrayOperationType.AVERAGE, [12, 8, 11]),
+        (MultiArrayOperationType.MEDIAN, [20, 7, 6]),
+        (MultiArrayOperationType.ADD, [24, 24, 33]),
+        (MultiArrayOperationType.SUBTRACT, [16, -10, -27]),
+    ],
+)
+def test_all_operations_ignore_nan(
+    operation: MultiArrayOperationType, expected_result: List[float]
+):
+    """Test the outcome of each operand for the combine results rule"""
+    # Arrange
+    logger = Mock(ILogger)
+    dict_vars = {
+        "var1_name": _xr.DataArray([20, 7, 3]),
+        "var2_name": _xr.DataArray([4, 5, 6]),
+        "var3_name": _xr.DataArray([_np.nan, 12, 24]),
+    }
+
+    # Act
+    rule = CombineResultsRule(
+        "test_name", ["var1_name", "var2_name", "var3_name"], operation, ignore_nan=True
+    )
+    obtained_result = rule.execute(dict_vars, logger)
+
+    # Assert
+    _xr.testing.assert_equal(obtained_result, _xr.DataArray(expected_result))
+
+
 def test_dims_present_in_result():
     """Test that the dims metadata of the result is equal to the one of the first xarray used."""
     # Arrange
