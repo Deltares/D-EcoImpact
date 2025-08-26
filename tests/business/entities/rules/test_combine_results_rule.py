@@ -193,7 +193,7 @@ def test_all_operations_incl_nan(
         (MultiArrayOperationType.MAX, [20, 12, 24]),
         (MultiArrayOperationType.MULTIPLY, [_np.nan, 420, 432]),
         (MultiArrayOperationType.AVERAGE, [12, 8, 11]),
-        (MultiArrayOperationType.MEDIAN, [20, 7, 6]),
+        (MultiArrayOperationType.MEDIAN, [12, 7, 6]),
         (MultiArrayOperationType.ADD, [24, 24, 33]),
         (MultiArrayOperationType.SUBTRACT, [16, -10, -27]),
     ],

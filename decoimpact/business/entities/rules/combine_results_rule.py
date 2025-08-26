@@ -38,12 +38,17 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
     ):
         super().__init__(name, input_variable_names)
         self._operation_type: MultiArrayOperationType = operation_type
+        self._ignore_nan = ignore_nan
         self._operations = self._create_operations()
 
     @property
     def operation_type(self) -> MultiArrayOperationType:
         """Name of the rule"""
         return self._operation_type
+
+    @property
+    def ignore_nan(self) -> bool:
+        return self._ignore_nan
 
     def validate(self, logger: ILogger) -> bool:
         if self._operation_type not in self._operations:
@@ -90,17 +95,30 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         return result_variable
 
     def _create_operations(self) -> dict[MultiArrayOperationType, Callable]:
-        return {
-            MultiArrayOperationType.MULTIPLY: lambda npa: _np.prod(npa, axis=0),
-            MultiArrayOperationType.MIN: lambda npa: _np.min(npa, axis=0),
-            MultiArrayOperationType.MAX: lambda npa: _np.max(npa, axis=0),
-            MultiArrayOperationType.AVERAGE: lambda npa: _np.average(npa, axis=0),
-            MultiArrayOperationType.MEDIAN: lambda npa: _np.median(npa, axis=0),
-            MultiArrayOperationType.ADD: lambda npa: _np.sum(npa, axis=0),
-            MultiArrayOperationType.SUBTRACT: lambda npa: _np.subtract(
-                npa[0], _np.sum(npa[1:], axis=0)
-            ),
-        }
+        if self.ignore_nan:
+            return {
+                MultiArrayOperationType.MULTIPLY: lambda npa: _np.prod(npa, axis=0),
+                MultiArrayOperationType.MIN: lambda npa: _np.nanmin(npa, axis=0),
+                MultiArrayOperationType.MAX: lambda npa: _np.nanmax(npa, axis=0),
+                MultiArrayOperationType.AVERAGE: lambda npa: _np.nanmean(npa, axis=0),
+                MultiArrayOperationType.MEDIAN: lambda npa: _np.nanmedian(npa, axis=0),
+                MultiArrayOperationType.ADD: lambda npa: _np.nansum(npa, axis=0),
+                MultiArrayOperationType.SUBTRACT: lambda npa: _np.subtract(
+                    npa[0], _np.nansum(npa[1:], axis=0)
+                ),
+            }
+        else:
+            return {
+                MultiArrayOperationType.MULTIPLY: lambda npa: _np.prod(npa, axis=0),
+                MultiArrayOperationType.MIN: lambda npa: _np.min(npa, axis=0),
+                MultiArrayOperationType.MAX: lambda npa: _np.max(npa, axis=0),
+                MultiArrayOperationType.AVERAGE: lambda npa: _np.average(npa, axis=0),
+                MultiArrayOperationType.MEDIAN: lambda npa: _np.median(npa, axis=0),
+                MultiArrayOperationType.ADD: lambda npa: _np.sum(npa, axis=0),
+                MultiArrayOperationType.SUBTRACT: lambda npa: _np.subtract(
+                    npa[0], _np.sum(npa[1:], axis=0)
+                ),
+            }
 
     def _check_dimensions(self, np_arrays: List[_np.ndarray]) -> bool:
         """Brief check if all the arrays to be combined have the
