@@ -48,6 +48,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
 
     @property
     def ignore_nan(self) -> bool:
+        """Indicates if NaN values should be ignored in the calculations"""
         return self._ignore_nan
 
     def validate(self, logger: ILogger) -> bool:
