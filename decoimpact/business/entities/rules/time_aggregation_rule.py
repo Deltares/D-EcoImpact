@@ -163,7 +163,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             elem (Array): the data array in N-dimensions
 
         Returns:
-            List: list with the counted periods*
+            List: list with the counted periods
         """
         # in case of an example array with 5 values [1,1,0,1,0]:
         # subtract last 4 values from the first 4 values: [1,0,1,0] - [1,1,0,1]:
@@ -231,8 +231,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             # remove NaN values from the array (these are to be ignored)
             elem = elem[~_np.isnan(elem)]
             if len(elem) == 0:
-                # return _np.zeros_like(elem)
-                # elem = _np.zeros_like(elem)
                 return 0
             if self.settings.operation_type is TimeOperationType.COUNT_PERIODS:
                 group_result = self.count_groups(elem)
