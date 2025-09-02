@@ -159,6 +159,7 @@ class ModelBuilder(IModelBuilder):
                 rule_data.name,
                 rule_data.input_variable_names,
                 MultiArrayOperationType[rule_data.operation_type],
+                rule_data.ignore_nan
             )
         elif isinstance(rule_data, IResponseCurveRuleData):
             rule = ResponseCurveRule(

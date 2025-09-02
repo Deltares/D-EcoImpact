@@ -99,7 +99,7 @@ def test_execute_error_combine_results_rule_different_shapes():
 
     # Arrange & Act
     rule = CombineResultsRule(
-        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY
+        "test", ["foo_data", "hello_data"], MultiArrayOperationType.MULTIPLY, False
     )
     value_array = {
         "foo_data": _xr.DataArray([[1, 2], [3, 4]]),
