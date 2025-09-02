@@ -50,7 +50,8 @@ class ParserCombineResultsRule(IParserRuleBase):
 
         ignore_nan = get_dict_element("ignore_nan", dictionary, False)
 
-        rule_data = CombineResultsRuleData(name, input_variable_names, operation_type, ignore_nan)
+        rule_data = CombineResultsRuleData(name, input_variable_names,
+                                           operation_type, ignore_nan)
         rule_data.output_variable = output_variable_name
         rule_data.description = description
 
