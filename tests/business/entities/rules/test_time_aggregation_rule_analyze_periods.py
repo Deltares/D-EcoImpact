@@ -125,7 +125,7 @@ def test_analyze_groups_function_not_only_1_and_0():
     assert exception_raised.args[0] == expected_message
 
 
-def test_analyze_groups_function_only_1_and_0_and_NaN():
+def test_analyze_groups_function_only_1_and_0_and_nan():
     """Test whether it gives an error if the data array contains
     other values than 0 and 1"""
     logger = Mock(ILogger)
