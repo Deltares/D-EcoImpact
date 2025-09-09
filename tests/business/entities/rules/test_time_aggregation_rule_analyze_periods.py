@@ -164,7 +164,7 @@ def test_analyze_groups_function_only_1_and_0_and_NaN():
     rule.execute(input_array, logger)
 
     # Assert
-    assert True
+    assert rule.validate(logger)
 
 
 @pytest.mark.parametrize(
