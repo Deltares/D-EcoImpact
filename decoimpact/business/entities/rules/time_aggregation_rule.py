@@ -67,19 +67,22 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         """
         settings = self._settings
         if settings.operation_type is TimeOperationType.COUNT_PERIODS:
-            # Check if all values in a COUNT_PERIODS value array are either 0 or 1
-            compare_values = (value_array == 0) | (value_array == 1)
+            # Check if all values in a COUNT_PERIODS value array
+            #  are either 0 or 1 or NaN
+            compare_values = (
+                (value_array == 0) | (value_array == 1) | _np.isnan(value_array)
+            )
             check_values = _xr.where(compare_values, True, False)
             if False in check_values:
                 raise ValueError(
                     "The value array for the time aggregation rule with operation type"
-                    " COUNT_PERIODS should only contain the values 0 and 1."
+                    " COUNT_PERIODS should only contain the values 0 and 1 (or NaN)."
                 )
 
         dim_name = get_dict_element(settings.time_scale, settings.time_scale_mapping)
 
         time_dim_name = get_time_dimension_name(value_array, logger)
-        aggregated_values = value_array.resample({time_dim_name: dim_name})
+        aggregated_values = value_array.resample({time_dim_name: dim_name}, skipna=True)
 
         result = self._perform_operation(aggregated_values)
         # create a new aggregated time dimension based on original time dimension
@@ -164,7 +167,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         """
         # in case of an example array with 5 values [1,1,0,1,0]:
         # subtract last 4 values from the first 4 values: [1,0,1,0] - [1,1,0,1]:
-        # (the result of this example differences: [0,-1,1,0])
+        # (the result of this example differences: [0,-1,1,-1])
         differences = _np.diff(elem)
         # First add the first element of the array to the difference array (as this
         # could also indicate a beginning of a group or not and the diff is calculated
@@ -208,6 +211,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             array: array with the analyzed periods, with the same dimensions as elem
         """
+        # Determine the number of axes in the array
         no_axis = len(_np.shape(elem))
 
         # The reduce function that calls this analyze_groups function should be reduces
@@ -224,6 +228,10 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         #  in case of 1 dimension:
         if no_axis == 1:
+            # remove NaN values from the array (these are to be ignored)
+            elem = elem[~_np.isnan(elem)]
+            if len(elem) == 0:
+                return 0
             if self.settings.operation_type is TimeOperationType.COUNT_PERIODS:
                 group_result = self.count_groups(elem)
             elif self.settings.operation_type is TimeOperationType.MAX_DURATION_PERIODS:

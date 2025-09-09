@@ -120,9 +120,51 @@ def test_analyze_groups_function_not_only_1_and_0():
     # Assert
     expected_message = (
         "The value array for the time aggregation rule with operation type"
-        " COUNT_PERIODS should only contain the values 0 and 1."
+        " COUNT_PERIODS should only contain the values 0 and 1 (or NaN)."
     )
     assert exception_raised.args[0] == expected_message
+
+
+def test_analyze_groups_function_only_1_and_0_and_nan():
+    """Test whether it gives an error if the data array contains
+    other values than 0 and 1"""
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.COUNT_PERIODS,
+    )
+    t_data = [1, _np.nan, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
+    t_time = [
+        "2000-01-01",
+        "2000-01-02",
+        "2000-01-03",
+        "2000-01-04",
+        "2000-01-05",
+        "2001-01-01",
+        "2001-01-02",
+        "2001-01-03",
+        "2001-01-04",
+        "2001-01-05",
+        "2002-01-01",
+        "2002-01-02",
+        "2002-01-03",
+        "2002-01-04",
+        "2002-01-05",
+        "2003-01-01",
+        "2003-01-02",
+        "2003-01-03",
+        "2003-01-04",
+        "2003-01-05",
+    ]
+    t_time = [_np.datetime64(t) for t in t_time]
+    input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
+
+    # Act
+    rule.execute(input_array, logger)
+
+    # Assert
+    assert rule.validate(logger)
 
 
 @pytest.mark.parametrize(
@@ -148,6 +190,166 @@ def test_analyze_groups_function(operation_type, expected_result_data):
         operation_type=TimeOperationType[operation_type],
     )
     t_data = [0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
+    t_time = [
+        "2000-01-01",
+        "2000-01-02",
+        "2000-01-03",
+        "2000-01-04",
+        "2000-01-05",
+        "2001-01-01",
+        "2001-01-02",
+        "2001-01-03",
+        "2001-01-04",
+        "2001-01-05",
+        "2002-01-01",
+        "2002-01-02",
+        "2002-01-03",
+        "2002-01-04",
+        "2002-01-05",
+        "2003-01-01",
+        "2003-01-02",
+        "2003-01-03",
+        "2003-01-04",
+        "2003-01-05",
+    ]
+    t_time = [_np.datetime64(t) for t in t_time]
+    input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
+    result = input_array.resample(time="YE").reduce(rule.analyze_groups)
+
+    # expected results
+    expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
+    expected_result_time = [_np.datetime64(t) for t in expected_result_time]
+    expected_result = _xr.DataArray(
+        expected_result_data, coords=[expected_result_time], dims=["time"]
+    )
+
+    assert _xr.testing.assert_equal(expected_result, result) is None
+
+
+@pytest.mark.parametrize(
+    "operation_type, expected_result_data",
+    [
+        ("COUNT_PERIODS", [2, 2, 2, 2]),
+        ("MAX_DURATION_PERIODS", [1, 1, 2, 2]),
+        ("AVG_DURATION_PERIODS", [1, 1, 1.5, 1.5]),
+    ],
+)
+def test_analyze_groups_function_with_nan(operation_type, expected_result_data):
+    """Test the count_groups to count groups for several examples including NaN values.
+
+    This function is being used when 'count_periods' is given
+      as aggregation in the TimeAggregationRule.
+    The result should be aggregated per year.
+    The count_periods should result in a number of the groups with value 1.
+    This test should show that the count_periods accounts for begin and end of the year.
+    """
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType[operation_type],
+    )
+    t_data = [
+        0,
+        1,
+        0,
+        1,
+        _np.nan,
+        1,
+        0,
+        1,
+        _np.nan,
+        0,
+        1,
+        0,
+        1,
+        1,
+        _np.nan,
+        _np.nan,
+        1,
+        1,
+        0,
+        1,
+    ]
+    t_time = [
+        "2000-01-01",
+        "2000-01-02",
+        "2000-01-03",
+        "2000-01-04",
+        "2000-01-05",
+        "2001-01-01",
+        "2001-01-02",
+        "2001-01-03",
+        "2001-01-04",
+        "2001-01-05",
+        "2002-01-01",
+        "2002-01-02",
+        "2002-01-03",
+        "2002-01-04",
+        "2002-01-05",
+        "2003-01-01",
+        "2003-01-02",
+        "2003-01-03",
+        "2003-01-04",
+        "2003-01-05",
+    ]
+    t_time = [_np.datetime64(t) for t in t_time]
+    input_array = _xr.DataArray(t_data, coords=[t_time], dims=["time"])
+    result = input_array.resample(time="YE").reduce(rule.analyze_groups)
+
+    # expected results
+    expected_result_time = ["2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31"]
+    expected_result_time = [_np.datetime64(t) for t in expected_result_time]
+    expected_result = _xr.DataArray(
+        expected_result_data, coords=[expected_result_time], dims=["time"]
+    )
+
+    assert _xr.testing.assert_equal(expected_result, result) is None
+
+
+@pytest.mark.parametrize(
+    "operation_type, expected_result_data",
+    [
+        ("COUNT_PERIODS", [0, 0, 0, 0]),
+        ("MAX_DURATION_PERIODS", [0, 0, 0, 0]),
+        ("AVG_DURATION_PERIODS", [0, 0, 0, 0]),
+    ],
+)
+def test_analyze_groups_function_only_nan(operation_type, expected_result_data):
+    """Test the count_groups to count groups for several examples including NaN values.
+
+    This function is being used when 'count_periods' is given
+      as aggregation in the TimeAggregationRule.
+    The result should be aggregated per year.
+    The count_periods should result in a number of the groups with value 1.
+    This test should show that the count_periods accounts for begin and end of the year.
+    """
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType[operation_type],
+    )
+    t_data = [
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+        _np.nan,
+    ]
     t_time = [
         "2000-01-01",
         "2000-01-02",

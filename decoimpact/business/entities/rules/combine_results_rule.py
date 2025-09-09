@@ -34,15 +34,22 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: MultiArrayOperationType,
+        ignore_nan: bool = False,
     ):
         super().__init__(name, input_variable_names)
         self._operation_type: MultiArrayOperationType = operation_type
+        self._ignore_nan = ignore_nan
         self._operations = self._create_operations()
 
     @property
     def operation_type(self) -> MultiArrayOperationType:
         """Name of the rule"""
         return self._operation_type
+
+    @property
+    def ignore_nan(self) -> bool:
+        """Indicates if NaN values should be ignored in the calculations"""
+        return self._ignore_nan
 
     def validate(self, logger: ILogger) -> bool:
         if self._operation_type not in self._operations:
@@ -89,6 +96,19 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
         return result_variable
 
     def _create_operations(self) -> dict[MultiArrayOperationType, Callable]:
+        if self.ignore_nan:
+            return {
+                MultiArrayOperationType.MULTIPLY: lambda npa: _np.prod(npa, axis=0),
+                MultiArrayOperationType.MIN: lambda npa: _np.nanmin(npa, axis=0),
+                MultiArrayOperationType.MAX: lambda npa: _np.nanmax(npa, axis=0),
+                MultiArrayOperationType.AVERAGE: lambda npa: _np.nanmean(npa, axis=0),
+                MultiArrayOperationType.MEDIAN: lambda npa: _np.nanmedian(npa, axis=0),
+                MultiArrayOperationType.ADD: lambda npa: _np.nansum(npa, axis=0),
+                MultiArrayOperationType.SUBTRACT: lambda npa: _np.subtract(
+                    npa[0], _np.nansum(npa[1:], axis=0)
+                ),
+            }
+        # and if ignore_nan is False:
         return {
             MultiArrayOperationType.MULTIPLY: lambda npa: _np.prod(npa, axis=0),
             MultiArrayOperationType.MIN: lambda npa: _np.min(npa, axis=0),
@@ -101,7 +121,7 @@ class CombineResultsRule(RuleBase, IMultiArrayBasedRule):
             ),
         }
 
-    def _check_dimensions(self, np_arrays: List[_np.array]) -> bool:
+    def _check_dimensions(self, np_arrays: List[_np.ndarray]) -> bool:
         """Brief check if all the arrays to be combined have the
            same size/dimension/length
         Args:

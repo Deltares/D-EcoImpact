@@ -30,3 +30,8 @@ class ICombineResultsRuleData(IRuleData, ABC):
     @abstractmethod
     def operation_type(self) -> str:
         """Property for the operation_type"""
+
+    @property
+    @abstractmethod
+    def ignore_nan(self) -> bool:
+        """Property for the ignore_nan flag"""
