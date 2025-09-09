@@ -1,0 +1,7580 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../data_array_utils/">
+      
+      
+        <link rel="next" href="../list_utils/">
+      
+      
+      <link rel="icon" href="../../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>dataset_utils - D-EcoImpact documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../../css/print-site.css">
+    
+      <link rel="stylesheet" href="../../../../../css/print-site-material.css">
+    
+      <link rel="stylesheet" href="../../../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#decoimpact.business.utils.dataset_utils" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../../.." title="D-EcoImpact documentation" class="md-header__button md-logo" aria-label="D-EcoImpact documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            D-EcoImpact documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              dataset_utils
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Deltares/D-EcoImpact" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Deltares/D-EcoImpact
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../../manual/visualization/" class="md-tabs__link">
+          
+  
+  
+  User manual
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../../examples/volkerak/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../../api/application_overview/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../print_page" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Print
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../application/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../../.." title="D-EcoImpact documentation" class="md-nav__button md-logo" aria-label="D-EcoImpact documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    D-EcoImpact documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Deltares/D-EcoImpact" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Deltares/D-EcoImpact
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    User manual
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            User manual
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../manual/visualization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Visualization
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../manual/input/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Input files
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../examples/volkerak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Volkerak zoommeer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../examples/maas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Meuse
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Development
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../api/application_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Development workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../print_page" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Print
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    decoimpact
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            decoimpact
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7_1_1" id="__nav_7_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    business
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_1_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            business
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    application
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1_1_2" id="__nav_7_1_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    entities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_7_1_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            entities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/i_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rule_based_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    rule_based_model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rule_processor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    rule_processor
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1_1_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1_1_2_4" id="__nav_7_1_1_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    rules
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_7_1_1_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1_1_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            rules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/axis_filter_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    axis_filter_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/classification_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    classification_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/combine_results_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    combine_results_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/depth_average_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    depth_average_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/filter_extremes_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    filter_extremes_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/formula_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    formula_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/i_array_based_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_array_based_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/i_cell_based_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_cell_based_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/i_multi_array_based_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_multi_array_based_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/i_multi_cell_based_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_multi_cell_based_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/i_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/layer_filter_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    layer_filter_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/multiply_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    multiply_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1_1_2_4_14" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1_1_2_4_14" id="__nav_7_1_1_2_4_14_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    options
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_7_1_1_2_4_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1_1_2_4_14">
+            <span class="md-nav__icon md-icon"></span>
+            options
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/options/multi_array_operation_type/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    multi_array_operation_type
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/options/options_filter_extreme_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    options_filter_extreme_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/response_curve_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    response_curve_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/rolling_statistics_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    rolling_statistics_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/rule_base/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    rule_base
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/step_function_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    step_function_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/string_parser_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    string_parser_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/time_aggregation_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    time_aggregation_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../entities/rules/time_operation_settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    time_operation_settings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1_1_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7_1_1_3" id="__nav_7_1_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    utils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_7_1_1_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7_1_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            utils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../command_line_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    command_line_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data_array_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    data_array_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    dataset_utils
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    dataset_utils
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils" class="md-nav__link">
+    <span class="md-ellipsis">
+      decoimpact.business.utils.dataset_utils
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.add_variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_variable()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.copy_dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      copy_dataset()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.create_composed_dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_composed_dataset()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.get_dependent_var_list" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_dependent_var_list()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.get_dependent_vars_by_var_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_dependent_vars_by_var_name()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.get_dummy_variable_in_ugrid" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_dummy_variable_in_ugrid()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.list_coords" class="md-nav__link">
+    <span class="md-ellipsis">
+      list_coords()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.list_vars" class="md-nav__link">
+    <span class="md-ellipsis">
+      list_vars()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.merge_datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      merge_datasets()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.merge_list_of_datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      merge_list_of_datasets()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.rec_search_dep_vars" class="md-nav__link">
+    <span class="md-ellipsis">
+      rec_search_dep_vars()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.reduce_dataset_for_writing" class="md-nav__link">
+    <span class="md-ellipsis">
+      reduce_dataset_for_writing()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.remove_all_variables_except" class="md-nav__link">
+    <span class="md-ellipsis">
+      remove_all_variables_except()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.remove_variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      remove_variables()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.rename_variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      rename_variable()
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../list_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    list_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    version_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1_1_4" id="__nav_7_1_1_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    workflow
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_7_1_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            workflow
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/i_model_builder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_model_builder
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/model_builder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    model_builder
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/model_runner/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    model_runner
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1_2" id="__nav_7_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    crosscutting
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            crosscutting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../crosscutting/i_logger/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_logger
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../crosscutting/logger_factory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    logger_factory
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../crosscutting/logging_logger/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    logging_logger
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1_3" id="__nav_7_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    data
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            data
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1_3_1" id="__nav_7_1_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    api
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_7_1_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            api
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_axis_filter_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_axis_filter_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_classification_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_classification_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_combine_results_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_combine_results_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_data_access_layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_data_access_layer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_dataset/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_dataset
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_depth_average_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_depth_average_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_filter_extremes_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_filter_extremes_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_formula_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_formula_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_layer_filter_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_layer_filter_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_model_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_model_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_multiply_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_multiply_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_response_curve_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_response_curve_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_rolling_statistics_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_rolling_statistics_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_step_function_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_step_function_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/i_time_aggregation_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_time_aggregation_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/output_file_settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    output_file_settings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/api/time_operation_type/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    time_operation_type
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/dictionary_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    dictionary_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1_3_3" id="__nav_7_1_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    entities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_7_1_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            entities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/axis_filter_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    axis_filter_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/classification_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    classification_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/combine_results_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    combine_results_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/data_access_layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    data_access_layer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/dataset_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    dataset_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/depth_average_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    depth_average_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/filter_extremes_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    filter_extremes_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/formula_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    formula_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/layer_filter_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    layer_filter_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/model_data_builder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    model_data_builder
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/multiply_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    multiply_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/response_curve_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    response_curve_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/rolling_statistics_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    rolling_statistics_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/step_function_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    step_function_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/time_aggregation_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    time_aggregation_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/time_operation_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    time_operation_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/entities/yaml_model_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    yaml_model_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1_3_4" id="__nav_7_1_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    parsers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_7_1_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            parsers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/criteria_table_validaton_helper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    criteria_table_validaton_helper
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/i_parser_rule_base/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    i_parser_rule_base
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/parser_axis_filter_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    parser_axis_filter_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/parser_classification_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    parser_classification_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/parser_combine_results_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    parser_combine_results_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/parser_depth_average_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    parser_depth_average_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/parser_filter_extremes_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    parser_filter_extremes_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/parser_formula_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    parser_formula_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/parser_layer_filter_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    parser_layer_filter_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/parser_multiply_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    parser_multiply_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/parser_response_curve_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    parser_response_curve_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/parser_rolling_statistics_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    parser_rolling_statistics_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/parser_step_function_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    parser_step_function_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/parser_time_aggregation_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    parser_time_aggregation_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/rule_parsers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    rule_parsers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/time_operation_parsing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    time_operation_parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../data/parsers/validation_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    validation_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../examples/python_test_of_functions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    python_test_of_functions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    main
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pyinstaller/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    pyinstaller
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    scripts
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
+            <span class="md-nav__icon md-icon"></span>
+            scripts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../scripts/create_nc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    create_nc
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6" id="__nav_7_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    tests
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6">
+            <span class="md-nav__icon md-icon"></span>
+            tests
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_6_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6_1" id="__nav_7_6_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    business
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            business
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_6_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6_1_1" id="__nav_7_6_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    entities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_7_6_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            entities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_6_1_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6_1_1_1" id="__nav_7_6_1_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    rules
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_7_6_1_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6_1_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            rules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_axis_filter_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_axis_filter_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_classification_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_classification_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_combine_results_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_combine_results_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_depth_average_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_depth_average_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_filter_extremes_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_filter_extremes_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_formula_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_formula_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_layer_filter_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_layer_filter_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_multiply_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_multiply_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_response_curve_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_response_curve_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_rolling_statistics_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_rolling_statistics_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_rule_base/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_rule_base
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_step_function_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_step_function_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_string_parser_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_string_parser_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_time_aggregation_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_time_aggregation_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/rules/test_time_aggregation_rule_analyze_periods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_time_aggregation_rule_analyze_periods
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/test_rule_based_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_rule_based_model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/entities/test_rule_processor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_rule_processor
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/test_application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_application
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_6_1_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6_1_3" id="__nav_7_6_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    utils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_7_6_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            utils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/utils/test_dataset_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_dataset_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/utils/test_list_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_list_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/utils/test_version_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_version_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_6_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6_1_4" id="__nav_7_6_1_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    workflow
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_7_6_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            workflow
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/workflow/test_model_builder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_model_builder
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/business/workflow/test_model_runner/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_model_runner
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6_2" id="__nav_7_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    crosscutting
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            crosscutting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/crosscutting/test_logger_factory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_logger_factory
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/crosscutting/test_logging_logger/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_logging_logger
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6_3" id="__nav_7_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    data
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            data
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_6_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6_3_1" id="__nav_7_6_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    entities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_7_6_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            entities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_axis_filter_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_axis_filter_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_classification_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_classification_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_combine_results_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_combine_results_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_data_access_layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_data_access_layer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_dataset_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_dataset_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_depth_average_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_depth_average_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_filter_extremes_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_filter_extremes_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_formula_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_formula_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_layer_filter_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_layer_filter_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_model_data_builder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_model_data_builder
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_multiply_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_multiply_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_response_curve_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_response_curve_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_rolling_statistics_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_rolling_statistics_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_step_function_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_step_function_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_time_aggregation_rule_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_time_aggregation_rule_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/entities/test_yaml_model_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_yaml_model_data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_6_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6_3_2" id="__nav_7_6_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    parsers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_7_6_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            parsers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_parser_axis_filter_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_parser_axis_filter_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_parser_classification_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_parser_classification_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_parser_combine_results_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_parser_combine_results_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_parser_depth_average_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_parser_depth_average_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_parser_filter_extremes_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_parser_filter_extremes_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_parser_formula_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_parser_formula_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_parser_layer_filter_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_parser_layer_filter_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_parser_multiply_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_parser_multiply_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_parser_response_curve_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_parser_response_curve_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_parser_rolling_statistics_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_parser_rolling_statistics_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_parser_step_function_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_parser_step_function_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_parser_time_aggregation_rule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_parser_time_aggregation_rule
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/parsers/test_validation_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_validation_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/data/test_dictionary_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_dictionary_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests/testing_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    testing_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_7" id="__nav_7_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    tests_acceptance
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_7">
+            <span class="md-nav__icon md-icon"></span>
+            tests_acceptance
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tests_acceptance/test_main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    test_main
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils" class="md-nav__link">
+    <span class="md-ellipsis">
+      decoimpact.business.utils.dataset_utils
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.add_variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_variable()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.copy_dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      copy_dataset()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.create_composed_dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_composed_dataset()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.get_dependent_var_list" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_dependent_var_list()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.get_dependent_vars_by_var_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_dependent_vars_by_var_name()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.get_dummy_variable_in_ugrid" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_dummy_variable_in_ugrid()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.list_coords" class="md-nav__link">
+    <span class="md-ellipsis">
+      list_coords()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.list_vars" class="md-nav__link">
+    <span class="md-ellipsis">
+      list_vars()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.merge_datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      merge_datasets()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.merge_list_of_datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      merge_list_of_datasets()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.rec_search_dep_vars" class="md-nav__link">
+    <span class="md-ellipsis">
+      rec_search_dep_vars()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.reduce_dataset_for_writing" class="md-nav__link">
+    <span class="md-ellipsis">
+      reduce_dataset_for_writing()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.remove_all_variables_except" class="md-nav__link">
+    <span class="md-ellipsis">
+      remove_all_variables_except()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.remove_variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      remove_variables()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decoimpact.business.utils.dataset_utils.rename_variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      rename_variable()
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>dataset_utils</h1>
+
+<div class="doc doc-object doc-module">
+
+<a id="decoimpact.business.utils.dataset_utils"></a>
+    <div class="doc doc-contents first">
+
+      <p>Library for utility functions regarding an xarray dataset</p>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.add_variable" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_variable</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">variable</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Add variable to dataset.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>Dataset to add to</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>variable</code></td>
+        <td><code>_xr.DataArray</code></td>
+        <td><p>Variable containing new data</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>variable_name</code></td>
+        <td><code>str</code></td>
+        <td><p>Name of new variable</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Exceptions:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>ValueError</code></td>
+        <td><p>When variable can not be added</p></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>_xr.Dataset</code></td>
+      <td><p>original dataset</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_variable</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">variable</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add variable to dataset.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (_xr.Dataset): Dataset to add to</span>
+<span class="sd">        variable (_xr.DataArray): Variable containing new data</span>
+<span class="sd">        variable_name (str): Name of new variable</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: When variable can not be added</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _xr.Dataset: original dataset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">_xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ERROR: Cannot add variable to dataset&quot;</span><span class="p">)</span>
+
+    <span class="n">dataset</span><span class="p">[</span><span class="n">variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">variable</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="n">variable</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dataset</span><span class="p">[</span><span class="n">variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">variable</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="n">variable</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ERROR: Cannot add variable to dataset&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="k">return</span> <span class="n">dataset</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.copy_dataset" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">copy_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Copy dataset to new dataset</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>Dataset to remove variable from</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>variable</code></td>
+        <td><code>str</code></td>
+        <td><p>Variable to remove</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Exceptions:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>ValueError</code></td>
+        <td><p>When variable can not be removed</p></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>_xr.Dataset</code></td>
+      <td><p>Original dataset</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">copy_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy dataset to new dataset</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (_xr.Dataset): Dataset to remove variable from</span>
+<span class="sd">        variable (str): Variable to remove</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: When variable can not be removed</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _xr.Dataset: Original dataset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">output_dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ERROR: Cannot copy dataset.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">return</span> <span class="n">output_dataset</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.create_composed_dataset" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">create_composed_dataset</span><span class="p">(</span><span class="n">input_datasets</span><span class="p">,</span> <span class="n">variables_to_use</span><span class="p">,</span> <span class="n">mapping</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Creates a dataset based on the provided input datasets and
+the selected variables.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>input_datasets</code></td>
+        <td><code>List[_xr.Dataset]</code></td>
+        <td><p>inputs to copy the data from</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>variables_to_use</code></td>
+        <td><code>List[str]</code></td>
+        <td><p>selected variables to copy</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>mapping</code></td>
+        <td><code>dict[str, str]</code></td>
+        <td><p>mapping for variables to rename after copying</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>_xr.Dataset</code></td>
+      <td><p>composed dataset (with selected variables)</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_composed_dataset</span><span class="p">(</span>
+    <span class="n">input_datasets</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">],</span>
+    <span class="n">variables_to_use</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">mapping</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a dataset based on the provided input datasets and</span>
+<span class="sd">    the selected variables.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_datasets (List[_xr.Dataset]): inputs to copy the data from</span>
+<span class="sd">        variables_to_use (List[str]): selected variables to copy</span>
+<span class="sd">        mapping (dict[str, str]): mapping for variables to rename after copying</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _xr.Dataset: composed dataset (with selected variables)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">merged_dataset</span> <span class="o">=</span> <span class="n">merge_list_of_datasets</span><span class="p">(</span><span class="n">input_datasets</span><span class="p">)</span>
+    <span class="n">cleaned_dataset</span> <span class="o">=</span> <span class="n">remove_all_variables_except</span><span class="p">(</span><span class="n">merged_dataset</span><span class="p">,</span> <span class="n">variables_to_use</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mapping</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cleaned_dataset</span>
+
+    <span class="k">return</span> <span class="n">cleaned_dataset</span><span class="o">.</span><span class="n">rename_vars</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.get_dependent_var_list" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_dependent_var_list</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">dummy_vars</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Obtain the list of variables in a dataset.
+The variables are
+recursively looked up based on the dummy variable.
+This is done to support XUgrid and to prevent invalid topologies.
+This also allows QuickPlot to visualize the results.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>Dataset to search for dummy variable</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>dummy_vars</code></td>
+        <td><code>List[str]</code></td>
+        <td><p>dummy variables</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>List[str]</code></td>
+      <td><p>dependent variables</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_dependent_var_list</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">dummy_vars</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtain the list of variables in a dataset.</span>
+<span class="sd">    The variables are</span>
+<span class="sd">    recursively looked up based on the dummy variable.</span>
+<span class="sd">    This is done to support XUgrid and to prevent invalid topologies.</span>
+<span class="sd">    This also allows QuickPlot to visualize the results.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (_xr.Dataset): Dataset to search for dummy variable</span>
+<span class="sd">        dummy_vars (List[str]): dummy variables</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        List[str]: dependent variables</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">var_list</span> <span class="o">=</span> <span class="n">rec_search_dep_vars</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">dummy_vars</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
+
+    <span class="n">var_list</span> <span class="o">+=</span> <span class="n">dummy_vars</span>
+    <span class="k">return</span> <span class="n">_lu</span><span class="o">.</span><span class="n">remove_duplicates_from_list</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.get_dependent_vars_by_var_name" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_dependent_vars_by_var_name</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">var_name</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Get all the variables that are described in the attributes of the dummy variable,
+associated with the UGrid standard.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>Dataset to get dependent variables from</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>var_name</code></td>
+        <td><code>str</code></td>
+        <td><p>the name of the dummy variable</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>list[str]</code></td>
+      <td><p>list of the dependent variables to copy</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_dependent_vars_by_var_name</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">var_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all the variables that are described in the attributes of the dummy variable,</span>
+<span class="sd">    associated with the UGrid standard.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (_xr.Dataset): Dataset to get dependent variables from</span>
+<span class="sd">        var_name (str): the name of the dummy variable</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[str]: list of the dependent variables to copy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">vars_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_coordinates&quot;</span><span class="p">,</span> <span class="s2">&quot;_connectivity&quot;</span><span class="p">,</span> <span class="s2">&quot;bounds&quot;</span><span class="p">]</span>
+
+    <span class="n">attrs_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">attrs</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
+    <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">attr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">var_check</span><span class="p">)</span> <span class="k">for</span> <span class="n">var_check</span> <span class="ow">in</span> <span class="n">vars_to_check</span><span class="p">):</span>
+            <span class="n">attrs_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">attrs_list</span> <span class="o">+</span> <span class="n">attr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">attrs_list</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.get_dummy_variable_in_ugrid" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_dummy_variable_in_ugrid</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Get the name of the variable that serves as the dummy variable in the UGrid.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>Dataset to search for dummy variable</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>name of the dummy variable</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_dummy_variable_in_ugrid</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the name of the variable that serves as the dummy variable in the UGrid.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (_xr.Dataset): Dataset to search for dummy variable</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: name of the dummy variable</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dummy</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">name</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">data_vars</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;cf_role&quot;</span><span class="p">,</span> <span class="s2">&quot;mesh_topology&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dummy</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;No dummy variable defined and therefore input dataset does &quot;</span>
+            <span class="s2">&quot;not comply with UGrid convention.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dummy</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.list_coords" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">list_coords</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>List coordinates in dataset</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>Dataset to list variables from</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>list[str]</code></td>
+      <td><p>list_variables</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">list_coords</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List coordinates in dataset</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (_xr.Dataset): Dataset to list variables from</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list_variables</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">((</span><span class="n">dataset</span><span class="o">.</span><span class="n">coords</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.list_vars" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">list_vars</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>List variables in dataset</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>Dataset to list variables from</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>list[str]</code></td>
+      <td><p>list_variables</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">list_vars</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List variables in dataset</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (_xr.Dataset): Dataset to list variables from</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list_variables</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">((</span><span class="n">dataset</span><span class="o">.</span><span class="n">data_vars</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.merge_datasets" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">merge_datasets</span><span class="p">(</span><span class="n">dataset1</span><span class="p">,</span> <span class="n">dataset2</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Merge two datasets into one dataset.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset1</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>Dataset 1 to merge</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>dataset2</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>Dataset 2 to merge</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Exceptions:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>ValueError</code></td>
+        <td><p>When datasets cannot be merged</p></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>_xr.Dataset</code></td>
+      <td><p>Original dataset</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">merge_datasets</span><span class="p">(</span><span class="n">dataset1</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">dataset2</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge two datasets into one dataset.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset1 (_xr.Dataset): Dataset 1 to merge</span>
+<span class="sd">        dataset2 (_xr.Dataset): Dataset 2 to merge</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: When datasets cannot be merged</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _xr.Dataset: Original dataset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">output_dataset</span> <span class="o">=</span> <span class="n">dataset1</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">dataset2</span><span class="p">,</span> <span class="n">compat</span><span class="o">=</span><span class="s2">&quot;identical&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR: Cannot merge </span><span class="si">{</span><span class="n">dataset1</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">dataset2</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">return</span> <span class="n">output_dataset</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.merge_list_of_datasets" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">merge_list_of_datasets</span><span class="p">(</span><span class="n">list_datasets</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Merge list of datasets into 1 dataset</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>list_datasets</code></td>
+        <td><code>list</code></td>
+        <td><p>list of datasets to merge</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Exceptions:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>ValueError</code></td>
+        <td><p>When datasets cannot be merged</p></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>_xr.Dataset</code></td>
+      <td><p>Original dataset</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">merge_list_of_datasets</span><span class="p">(</span><span class="n">list_datasets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge list of datasets into 1 dataset</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        list_datasets (list): list of datasets to merge</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: When datasets cannot be merged</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _xr.Dataset: Original dataset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">output_dataset</span> <span class="o">=</span> <span class="n">_xr</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">list_datasets</span><span class="p">,</span> <span class="n">compat</span><span class="o">=</span><span class="s2">&quot;identical&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR: Cannot merge </span><span class="si">{</span><span class="n">list_datasets</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">return</span> <span class="n">output_dataset</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.rec_search_dep_vars" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">rec_search_dep_vars</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">var_list</span><span class="p">,</span> <span class="n">dep_vars</span><span class="p">,</span> <span class="n">checked_vars</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Recursive function to loop over all variables defined in the
+attribute of the dummy variable to find which are dependent and
+also the variables that are then again dependent on those variables etc.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>the dataset to check</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>var_list</code></td>
+        <td><code>List[str]</code></td>
+        <td><p>a list of dummy variable names to start the check</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>dep_vars</code></td>
+        <td><code>List[str]</code></td>
+        <td><p>a list of dependent variables found</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>checked_vars</code></td>
+        <td><code>List[str]</code></td>
+        <td><p>a list of variables that have already been
+checked in this function (it's a check so the function does not endlessly
+keep searching in the variables)</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>list[str]</code></td>
+      <td><p>list of names of dependent variables</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rec_search_dep_vars</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
+    <span class="n">var_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">dep_vars</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">checked_vars</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Recursive function to loop over all variables defined in the</span>
+<span class="sd">    attribute of the dummy variable to find which are dependent and</span>
+<span class="sd">    also the variables that are then again dependent on those variables etc.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (_xr.Dataset): the dataset to check</span>
+<span class="sd">        var_list (List[str]): a list of dummy variable names to start the check</span>
+<span class="sd">        dep_vars (List[str]): a list of dependent variables found</span>
+<span class="sd">        checked_vars (List[str]): a list of variables that have already been</span>
+<span class="sd">            checked in this function (it&#39;s a check so the function does not endlessly</span>
+<span class="sd">            keep searching in the variables)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[str]: list of names of dependent variables</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">var_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">checked_vars</span><span class="p">:</span>
+            <span class="n">dep_var</span> <span class="o">=</span> <span class="n">get_dependent_vars_by_var_name</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">var_name</span><span class="p">)</span>
+            <span class="n">checked_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dep_var</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">dep_vars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">dep_var</span> <span class="o">+</span> <span class="n">dep_vars</span><span class="p">))</span>
+                <span class="n">dep_vars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                    <span class="nb">set</span><span class="p">(</span>
+                        <span class="n">dep_vars</span>
+                        <span class="o">+</span> <span class="n">rec_search_dep_vars</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">dep_var</span><span class="p">,</span> <span class="n">dep_vars</span><span class="p">,</span> <span class="n">checked_vars</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dep_vars</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.reduce_dataset_for_writing" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">reduce_dataset_for_writing</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">save_only_variables</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Reduce dataset before writing by only saving selected variables</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><code>DataSet</code></td>
+        <td><p>dataset</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>save_only_variables</code></td>
+        <td><code>List[str]</code></td>
+        <td><p>optional list of variables to be saved. If</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Exceptions:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>OSError</code></td>
+        <td><p>If save_only_variables do not exist in dataset</p></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td><p>dataset</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reduce_dataset_for_writing</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">save_only_variables</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">logger</span><span class="p">:</span> <span class="n">ILogger</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reduce dataset before writing by only saving selected variables</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (DataSet): dataset</span>
+<span class="sd">        save_only_variables (List[str]): optional list of variables to be saved. If</span>
+<span class="sd">        empty, all variables are saved</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        OSError: If save_only_variables do not exist in dataset</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dataset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">save_only_variables</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;ERROR: variable </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2"> is not present in dataset&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">remove_all_variables_except</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">save_only_variables</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dataset</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.remove_all_variables_except" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">remove_all_variables_except</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">variables_to_keep</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Remove all variables from dataset except provided list of variables.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>Dataset to remove variables from</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>variables_to_keep</code></td>
+        <td><code>List[str]</code></td>
+        <td><p>selected variables to keep</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>_xr.Dataset</code></td>
+      <td><p>reduced dataset (containing selected variables)</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_all_variables_except</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">variables_to_keep</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove all variables from dataset except provided list of variables.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (_xr.Dataset): Dataset to remove variables from</span>
+<span class="sd">        variables_to_keep (List[str]): selected variables to keep</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _xr.Dataset: reduced dataset (containing selected variables)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dummy_var</span> <span class="o">=</span> <span class="n">get_dummy_variable_in_ugrid</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+    <span class="n">dependent_var_list</span> <span class="o">=</span> <span class="n">get_dependent_var_list</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">dummy_var</span><span class="p">)</span>
+    <span class="n">variables_to_keep</span> <span class="o">+=</span> <span class="n">dummy_var</span> <span class="o">+</span> <span class="n">dependent_var_list</span>
+
+    <span class="n">all_variables</span> <span class="o">=</span> <span class="n">list_vars</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+
+    <span class="n">variables_to_remove</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">all_variables</span> <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">variables_to_keep</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">cleaned_dataset</span> <span class="o">=</span> <span class="n">remove_variables</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">variables_to_remove</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cleaned_dataset</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.remove_variables" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">remove_variables</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Remove variable from dataset</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>Dataset to remove variable from</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>variables</code></td>
+        <td><code>str/list</code></td>
+        <td><p>Variable(s) to remove</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Exceptions:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>ValueError</code></td>
+        <td><p>When variable can not be removed</p></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>_xr.Dataset</code></td>
+      <td><p>Original dataset</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_variables</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove variable from dataset</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (_xr.Dataset): Dataset to remove variable from</span>
+<span class="sd">        variables (str/list): Variable(s) to remove</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: When variable can not be removed</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _xr.Dataset: Original dataset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR: Cannot remove </span><span class="si">{</span><span class="n">variables</span><span class="si">}</span><span class="s2"> from dataset.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">return</span> <span class="n">dataset</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="decoimpact.business.utils.dataset_utils.rename_variable" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">rename_variable</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">variable_old</span><span class="p">,</span> <span class="n">variable_new</span><span class="p">)</span></code>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Rename variable in dataset</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>dataset</code></td>
+        <td><code>_xr.Dataset</code></td>
+        <td><p>Dataset to remove variable from</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>variable_old</code></td>
+        <td><code>str</code></td>
+        <td><p>Variable to rename, old name</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>variable_new</code></td>
+        <td><code>str</code></td>
+        <td><p>Variable to rename, new name</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Exceptions:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>ValueError</code></td>
+        <td><p>When variable can not be renamed</p></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>_xr.Dataset</code></td>
+      <td><p>Original dataset</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>utils/dataset_utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rename_variable</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="p">:</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">variable_old</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">variable_new</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rename variable in dataset</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataset (_xr.Dataset): Dataset to remove variable from</span>
+<span class="sd">        variable_old (str): Variable to rename, old name</span>
+<span class="sd">        variable_new (str): Variable to rename, new name</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: When variable can not be renamed</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _xr.Dataset: Original dataset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mapping_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">variable_old</span><span class="p">:</span> <span class="n">variable_new</span><span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">output_dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">mapping_dict</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;ERROR: Cannot rename variable </span><span class="si">{</span><span class="n">variable_old</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">variable_new</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">return</span> <span class="n">output_dataset</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025 <a href="https://www.deltares.nl/en/"  target="_blank" rel="noopener">Deltares</a>
+
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/company/deltares/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top"], "search": "../../../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+        <script src="../../../../../js/print-site.js"></script>
+      
+        <script src="../../../../../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>
