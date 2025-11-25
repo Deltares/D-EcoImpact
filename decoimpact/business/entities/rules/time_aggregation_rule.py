@@ -96,7 +96,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         # create a new aggregated time dimension based on original time dimension
         if TimeOperationType.MONTHLY_AVERAGE == settings.operation_type:
-            result_time_dim_name = f"{time_dim_name}_month"
+            result_time_dim_name = f"{time_dim_name}_monthly"
             result = result.rename({"month": result_time_dim_name})
         else:
             result_time_dim_name = f"{time_dim_name}_{settings.time_scale}"
