@@ -200,6 +200,63 @@ result_time_months = [
     "2020-03-31",
 ]
 result_time_months = [np.datetime64(t) for t in result_time_months]
+time_multi_year = [
+    "2020-01-01",
+    "2020-02-02",
+    "2020-03-03",
+    "2020-04-04",
+    "2020-05-05",
+    "2020-06-06",
+    "2020-07-07",
+    "2020-08-08",
+    "2020-09-09",
+    "2020-10-10",
+    "2020-11-11",
+    "2020-12-12",
+    "2021-01-01",
+    "2021-02-02",
+    "2021-03-03",
+    "2021-04-04",
+    "2021-05-05",
+    "2021-06-06",
+    "2021-07-07",
+    "2021-08-08",
+    "2021-09-09",
+    "2021-10-10",
+    "2021-11-11",
+    "2021-12-12",
+]
+data_multi_year = [
+    0.1,
+    0.7,
+    0.2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    0.2,
+    0.2,
+    0.4,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+]
+result_time_multi_year_monthly = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+time_multi_year = [np.datetime64(t) for t in time_multi_year]
+value_array_multi_year_monthly = _xr.DataArray(
+    data_multi_year, coords=[time_multi_year], dims=["time"]
+)
 
 ####################################################################
 
@@ -373,6 +430,31 @@ def test_execute_value_array_aggregate_time_months_percentile():
     result_data = [0.1, 0.25, 0.21]
     result_array = _xr.DataArray(
         result_data, coords=[result_time_months], dims=["time_month"]
+    )
+
+    # Assert
+    assert (
+        _xr.testing.assert_allclose(time_aggregation, result_array, atol=1e-11) is None
+    )
+
+
+def test_execute_value_array_aggregate_time_multi_year_monthly_average():
+    """Aggregate input_variable_names of a TimeAggregationRule (average, months)"""
+
+    # create test set
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.MONTHLY_AVERAGE,
+    )
+    rule.settings.time_scale = "month"
+
+    time_aggregation = rule.execute(value_array_multi_year_monthly, logger)
+
+    result_data = [0.15, 0.45, 0.3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_multi_year_monthly], dims=["time_monthly"]
     )
 
     # Assert
