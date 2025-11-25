@@ -100,7 +100,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             result = result.rename({"month": result_time_dim_name})
         else:
             result_time_dim_name = f"{time_dim_name}_{settings.time_scale}"
-        # result = result.rename({time_dim_name: result_time_dim_name})
+            result = result.rename({time_dim_name: result_time_dim_name})
 
         for key, value in value_array[time_dim_name].attrs.items():
             if value:
