@@ -119,7 +119,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         self,
         grouped_values,
         operation_type: TimeOperationType,
-        time_dim_name: str = None,
+        time_dim_name: str,
     ) -> _xr.DataArray:
         """Returns the values based on the grouping operation type
 
@@ -137,7 +137,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         if operation_type is TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE:
             # Compute mean across years for each calendar month
             monthly = grouped_values.mean(skipna=True)
-            # Ensure all 12 months are present (1..12). reindex will insert NaNs where missing.
+            # Ensure all 12 months are present (1..12), insert NaNs using reindex
             months = _np.arange(1, 13)
             result = monthly.reindex({"month": months})
 
