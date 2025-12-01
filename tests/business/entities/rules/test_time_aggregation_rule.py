@@ -438,7 +438,7 @@ def test_execute_value_array_aggregate_time_months_percentile():
     )
 
 
-def test_execute_value_array_aggregate_time_multi_year_monthly_average():
+def test_execute_value_array_aggregate_time_multi_yearly_month_average():
     """Aggregate input_variable_names of a TimeAggregationRule (average, months)"""
 
     # create test set
@@ -446,7 +446,7 @@ def test_execute_value_array_aggregate_time_multi_year_monthly_average():
     rule = TimeAggregationRule(
         name="test",
         input_variable_names=["foo"],
-        operation_type=TimeOperationType.MONTHLY_AVERAGE,
+        operation_type=TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE,
     )
     rule.settings.time_scale = "month"
 

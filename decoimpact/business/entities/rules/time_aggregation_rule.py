@@ -11,12 +11,10 @@ Classes:
     TimeAggregationRule
 """
 
-from sqlite3 import Time
 from typing import List
 
 import numpy as _np
 import xarray as _xr
-from xarray.core.resample import DataArrayResample
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
@@ -82,23 +80,26 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         dim_name = get_dict_element(settings.time_scale, settings.time_scale_mapping)
 
+        # get the name of the time dimension
         time_dim_name = get_time_dimension_name(value_array, logger)
-        if TimeOperationType.MONTHLY_AVERAGE == settings.operation_type:
-            aggregated_values = value_array.groupby(f"{time_dim_name}.month")
+
+        result = _xr.DataArray(data=_np.empty(0), dims=("time",), coords={"time": []})
+        # perform aggregations in case of multi-year monthly average
+        if TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE == settings.operation_type:
+            grouped_values = value_array.groupby(f"{time_dim_name}.month")
+            result = self._perform_grouping_operation(
+                grouped_values, settings.operation_type, time_dim_name
+            )
+            # create a new aggregated time dimension based on original time dimension
+            result_time_dim_name = f"{time_dim_name}_monthly"
+            result = result.rename({"month": result_time_dim_name})
+        # perform the operation in case of other operation types
         else:
             aggregated_values = value_array.resample(
                 {time_dim_name: dim_name}, skipna=True
             )
-
-        result = self._perform_operation(
-            aggregated_values, settings.operation_type, time_dim_name
-        )
-
-        # create a new aggregated time dimension based on original time dimension
-        if TimeOperationType.MONTHLY_AVERAGE == settings.operation_type:
-            result_time_dim_name = f"{time_dim_name}_monthly"
-            result = result.rename({"month": result_time_dim_name})
-        else:
+            # create a new aggregated time dimension based on original time dimension
+            result = self._perform_operation(aggregated_values, settings.operation_type)
             result_time_dim_name = f"{time_dim_name}_{settings.time_scale}"
             result = result.rename({time_dim_name: result_time_dim_name})
 
@@ -114,11 +115,44 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         return result
 
+    def _perform_grouping_operation(
+        self,
+        grouped_values,
+        operation_type: TimeOperationType,
+        time_dim_name: str = None,
+    ) -> _xr.DataArray:
+        """Returns the values based on the grouping operation type
+
+        Args:
+            aggregated_values (DataArrayGroupBy): aggregate values
+            operation_type (TimeOperationType): the operation type
+            time_dim_name (str): name of the time dimension (for MONTHLY_AVERAGE)
+        Raises:
+            NotImplementedError: If operation type is not supported
+
+        Returns:
+            DataArray: Values of operation type
+        """
+
+        if operation_type is TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE:
+            # Compute mean across years for each calendar month
+            monthly = grouped_values.mean(skipna=True)
+            # Ensure all 12 months are present (1..12). reindex will insert NaNs where missing.
+            months = _np.arange(1, 13)
+            result = monthly.reindex({"month": months})
+
+        else:
+            raise NotImplementedError(
+                f"The grouping operation type '{operation_type}' "
+                "is currently not supported"
+            )
+
+        return _xr.DataArray(result)
+
     def _perform_operation(
         self,
         aggregated_values,
         operation_type: TimeOperationType,
-        time_dim_name: str = None,
     ) -> _xr.DataArray:
         """Returns the values based on the operation type
 
@@ -151,13 +185,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         elif operation_type is TimeOperationType.AVERAGE:
             result = aggregated_values.mean()
-
-        elif operation_type is TimeOperationType.MONTHLY_AVERAGE:
-            # Compute mean across years for each calendar month
-            monthly = aggregated_values.mean(skipna=True)
-            # Ensure all 12 months are present (1..12). reindex will insert NaNs where missing.
-            months = _np.arange(1, 13)
-            result = monthly.reindex({"month": months})
 
         elif operation_type is TimeOperationType.MEDIAN:
             result = aggregated_values.median()
