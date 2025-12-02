@@ -479,7 +479,6 @@ def test_multi_yearly_month_average_with_year_range():
 
     time_aggregation = rule.execute(value_array_multi_year_monthly, logger)
 
-    # result_data = [0.15, 0.45, 0.3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     result_data = [0.1, 0.7, 0.2, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     result_array = _xr.DataArray(
         result_data, coords=[result_time_multi_year_monthly], dims=["time_monthly"]

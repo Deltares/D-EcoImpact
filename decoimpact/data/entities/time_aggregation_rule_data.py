@@ -12,6 +12,8 @@ Classes:
 
 """
 
+from typing import Optional
+
 from decoimpact.data.api.i_time_aggregation_rule_data import ITimeAggregationRuleData
 from decoimpact.data.api.time_operation_type import TimeOperationType
 from decoimpact.data.entities.time_operation_rule_data import TimeOperationRuleData
@@ -20,9 +22,18 @@ from decoimpact.data.entities.time_operation_rule_data import TimeOperationRuleD
 class TimeAggregationRuleData(TimeOperationRuleData, ITimeAggregationRuleData):
     """Class for storing data related to time_aggregation rule"""
 
-    def __init__(self, name: str, operation: TimeOperationType, input_variable: str):
+    def __init__(
+        self,
+        name: str,
+        operation: TimeOperationType,
+        input_variable: str,
+        start_year: Optional[int] = None,
+        end_year: Optional[int] = None,
+    ):
         super().__init__(name, operation)
         self._input_variable = input_variable
+        self._start_year = start_year
+        self._end_year = end_year
 
     @property
     def input_variable(self) -> str:

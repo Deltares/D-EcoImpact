@@ -97,7 +97,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         # get the name of the time dimension
         time_dim_name = get_time_dimension_name(value_array, logger)
 
-        result = _xr.DataArray(data=_np.empty(0), dims=("time",), coords={"time": []})
         # perform aggregations in case of multi-year monthly average
         if TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE == settings.operation_type:
             start = str(self._start_year) if self._start_year is not None else None
@@ -189,8 +188,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             TimeOperationType.MAX_DURATION_PERIODS,
             TimeOperationType.AVG_DURATION_PERIODS,
         ]
-
-        operation_type = self.settings.operation_type
 
         if operation_type is TimeOperationType.ADD:
             result = aggregated_values.sum()
