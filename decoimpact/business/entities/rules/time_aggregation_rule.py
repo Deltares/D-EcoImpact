@@ -11,7 +11,7 @@ Classes:
     TimeAggregationRule
 """
 
-from typing import List
+from typing import List, Optional
 
 import numpy as _np
 import xarray as _xr
@@ -35,17 +35,31 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: TimeOperationType,
+        start_year: Optional[int] = None,
+        end_year: Optional[int] = None,
     ):
         super().__init__(name, input_variable_names)
         self._settings = TimeOperationSettings({"month": "ME", "year": "YE"})
         self._settings.percentile_value = 0
         self._settings.operation_type = operation_type
         self._settings.time_scale = "year"
+        self._start_year = start_year
+        self._end_year = end_year
 
     @property
     def settings(self):
         """Time operation settings"""
         return self._settings
+
+    @property
+    def start_year(self) -> Optional[int]:
+        """Start year for the aggregation (inclusive)"""
+        return self._start_year
+
+    @property
+    def end_year(self) -> Optional[int]:
+        """End year for the aggregation (inclusive)"""
+        return self._end_year
 
     def validate(self, logger: ILogger) -> bool:
         """Validates if the rule is valid
@@ -86,6 +100,10 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         result = _xr.DataArray(data=_np.empty(0), dims=("time",), coords={"time": []})
         # perform aggregations in case of multi-year monthly average
         if TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE == settings.operation_type:
+            start = str(self._start_year) if self._start_year is not None else None
+            end = str(self._end_year) if self._end_year is not None else None
+            slice_obj = slice(start, end)
+            value_array = value_array.sel({time_dim_name: slice_obj})
             grouped_values = value_array.groupby(f"{time_dim_name}.month")
             result = self._perform_grouping_operation(
                 grouped_values, settings.operation_type, time_dim_name

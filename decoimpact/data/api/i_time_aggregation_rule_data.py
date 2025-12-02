@@ -15,6 +15,8 @@ Interfaces:
 
 from abc import ABC, abstractmethod
 
+from pyparsing import Optional
+
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.api.time_operation_type import TimeOperationType
 
@@ -41,3 +43,13 @@ class ITimeAggregationRuleData(IRuleData, ABC):
     @abstractmethod
     def time_scale(self) -> str:
         """Time scale"""
+
+    @property
+    @abstractmethod
+    def start_year(self) -> Optional[int]:
+        """Start year for the aggregation (inclusive)"""
+
+    @property
+    @abstractmethod
+    def end_year(self) -> Optional[int]:
+        """End year for the aggregation (inclusive)"""
