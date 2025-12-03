@@ -105,7 +105,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             value_array = value_array.sel({time_dim_name: slice_obj})
             grouped_values = value_array.groupby(f"{time_dim_name}.month")
             result = self._perform_grouping_operation(
-                grouped_values, settings.operation_type, time_dim_name
+                grouped_values, settings.operation_type
             )
             # create a new aggregated time dimension based on original time dimension
             result_time_dim_name = f"{time_dim_name}_monthly"
@@ -136,7 +136,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         self,
         grouped_values,
         operation_type: TimeOperationType,
-        time_dim_name: str,
     ) -> _xr.DataArray:
         """Returns the values based on the grouping operation type
 

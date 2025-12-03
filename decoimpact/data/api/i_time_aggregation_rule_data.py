@@ -14,8 +14,7 @@ Interfaces:
 
 
 from abc import ABC, abstractmethod
-
-from pyparsing import Optional
+from typing import Optional
 
 from decoimpact.data.api.i_rule_data import IRuleData
 from decoimpact.data.api.time_operation_type import TimeOperationType

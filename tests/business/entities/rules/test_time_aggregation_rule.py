@@ -464,7 +464,7 @@ def test_multi_year_monthly_average():
 
 
 def test_multi_yearly_month_average_with_year_range():
-    """Aggregate input_variable_names of a TimeAggregationRule (average, months) with year range"""
+    """Aggregate multi-year monthly average of a TimeAggregationRule with year range"""
 
     # create test set
     logger = Mock(ILogger)
