@@ -69,6 +69,20 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         """
         return self.settings.validate(self.name, logger)
 
+    def filter_years(
+        self, time_dim_name: str, value_array: _xr.DataArray
+    ) -> _xr.DataArray:
+        """Filters the values for the specified start and end year
+
+        Args:
+            value_array (DataArray): value to filter
+        """
+        start = str(self._start_year) if self._start_year is not None else None
+        end = str(self._end_year) if self._end_year is not None else None
+        slice_obj = slice(start, end)
+        # filtered_array = value_array.sel({time_dim_name: slice_obj})
+        return value_array.sel({time_dim_name: slice_obj})
+
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
         """Aggregates the values for the specified start and end date
 
@@ -99,11 +113,8 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         # perform aggregations in case of multi-year monthly average
         if TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE == settings.operation_type:
-            start = str(self._start_year) if self._start_year is not None else None
-            end = str(self._end_year) if self._end_year is not None else None
-            slice_obj = slice(start, end)
-            value_array = value_array.sel({time_dim_name: slice_obj})
-            grouped_values = value_array.groupby(f"{time_dim_name}.month")
+            filtered_values = self.filter_years(time_dim_name, value_array)
+            grouped_values = filtered_values.groupby(f"{time_dim_name}.month")
             result = self._perform_grouping_operation(
                 grouped_values, settings.operation_type
             )

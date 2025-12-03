@@ -25,27 +25,29 @@ class TimeAggregationRuleData(TimeOperationRuleData, ITimeAggregationRuleData):
     def __init__(
         self,
         name: str,
-        operation: TimeOperationType,
         input_variable: str,
+        operation: TimeOperationType,
         start_year: Optional[int] = None,
         end_year: Optional[int] = None,
     ):
         super().__init__(name, operation)
+        self._name = name
+        self._operation = operation
         self._input_variable = input_variable
         self._start_year = start_year
         self._end_year = end_year
 
-    @property
-    def input_variable(self) -> str:
-        """Name of the input variable"""
-        return self._input_variable
+    # @property
+    # def input_variable(self) -> str:
+    #     """Name of the input variable"""
+    #     return self._input_variable
 
-    @property
-    def start_year(self) -> Optional[int]:
-        """Start year for aggregation"""
-        return self._start_year
+    # @property
+    # def start_year(self) -> Optional[int]:
+    #     """Start year for aggregation"""
+    #     return self._start_year
 
-    @property
-    def end_year(self) -> Optional[int]:
-        """End year for aggregation"""
-        return self._end_year
+    # @property
+    # def end_year(self) -> Optional[int]:
+    #     """End year for aggregation"""
+    #     return self._end_year
