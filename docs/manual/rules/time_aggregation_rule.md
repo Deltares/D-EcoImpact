@@ -31,6 +31,7 @@ The rule needs to be applied to an existing 2D/3D variable with time axis. A new
 
 To aggregate an average per month, use the combination of operation AVERAGE with time_scale MONTH.
 To aggregate a multi-year average over all months, use the combination of operation MULTI_YEAR_MONTHLY_AVERAGE with time_scale MONTH. Then, for each month, the average over the time frame is calculated. The output variable is related to an extra time dimension time_monthly with all 12 months (in numbers).
+In combination with the operation MULTI_YEAR_MONTHLY_AVERAGE it is possible do this is for a specific range of years by adding the optional parameters MULTI_YEAR_START and MULTI_YEAR_END.
 
 ![Result Time aggregation rule](../../assets/images/3_result_time_aggregation.png "Water level (in m NAP, left-hand side) with a timestep every 10 days has been summarized to the maximum for each year (right-hand side) while maintaining the face dimension (layer dimension is not present in this example, but would be maintained).")
 
