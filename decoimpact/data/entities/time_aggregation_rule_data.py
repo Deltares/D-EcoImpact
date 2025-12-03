@@ -30,10 +30,11 @@ class TimeAggregationRuleData(TimeOperationRuleData, ITimeAggregationRuleData):
         start_year: Optional[int] = None,
         end_year: Optional[int] = None,
     ):
+        # pylint: disable=too-many-arguments
         super().__init__(name, operation)
         self._name = name
-        self._operation = operation
         self._input_variable = input_variable
+        self._operation = operation
         self._start_year = start_year
         self._end_year = end_year
 
