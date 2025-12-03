@@ -37,17 +37,17 @@ class TimeAggregationRuleData(TimeOperationRuleData, ITimeAggregationRuleData):
         self._start_year = start_year
         self._end_year = end_year
 
-    # @property
-    # def input_variable(self) -> str:
-    #     """Name of the input variable"""
-    #     return self._input_variable
+    @property
+    def input_variable(self) -> str:
+        """Name of the input variable"""
+        return self._input_variable
 
-    # @property
-    # def start_year(self) -> Optional[int]:
-    #     """Start year for aggregation"""
-    #     return self._start_year
+    @property
+    def start_year(self) -> Optional[int]:
+        """Start year for aggregation"""
+        return self._start_year
 
-    # @property
-    # def end_year(self) -> Optional[int]:
-    #     """End year for aggregation"""
-    #     return self._end_year
+    @property
+    def end_year(self) -> Optional[int]:
+        """End year for aggregation"""
+        return self._end_year

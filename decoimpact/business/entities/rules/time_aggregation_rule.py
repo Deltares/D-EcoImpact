@@ -80,7 +80,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         start = str(self._start_year) if self._start_year is not None else None
         end = str(self._end_year) if self._end_year is not None else None
         slice_obj = slice(start, end)
-        # filtered_array = value_array.sel({time_dim_name: slice_obj})
         return value_array.sel({time_dim_name: slice_obj})
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
