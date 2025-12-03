@@ -27,16 +27,17 @@ class TimeAggregationRuleData(TimeOperationRuleData, ITimeAggregationRuleData):
         name: str,
         input_variable: str,
         operation: TimeOperationType,
-        start_year: Optional[int] = None,
-        end_year: Optional[int] = None,
+        multi_year_start: Optional[int] = None,
+        multi_year_end: Optional[int] = None,
     ):
         # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-parameters
         super().__init__(name, operation)
         self._name = name
         self._input_variable = input_variable
         self._operation = operation
-        self._start_year = start_year
-        self._end_year = end_year
+        self._multi_year_start = multi_year_start
+        self._multi_year_end = multi_year_end
 
     @property
     def input_variable(self) -> str:
@@ -44,11 +45,11 @@ class TimeAggregationRuleData(TimeOperationRuleData, ITimeAggregationRuleData):
         return self._input_variable
 
     @property
-    def start_year(self) -> Optional[int]:
+    def multi_year_start(self) -> Optional[int]:
         """Start year for aggregation"""
-        return self._start_year
+        return self._multi_year_start
 
     @property
-    def end_year(self) -> Optional[int]:
+    def multi_year_end(self) -> Optional[int]:
         """End year for aggregation"""
-        return self._end_year
+        return self._multi_year_end

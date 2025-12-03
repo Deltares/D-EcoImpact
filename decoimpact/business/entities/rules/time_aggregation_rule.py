@@ -35,16 +35,18 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: TimeOperationType,
-        start_year: Optional[int] = None,
-        end_year: Optional[int] = None,
+        multi_year_start: Optional[int] = None,
+        multi_year_end: Optional[int] = None,
     ):
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-parameters
         super().__init__(name, input_variable_names)
         self._settings = TimeOperationSettings({"month": "ME", "year": "YE"})
         self._settings.percentile_value = 0
         self._settings.operation_type = operation_type
         self._settings.time_scale = "year"
-        self._start_year = start_year
-        self._end_year = end_year
+        self._multi_year_start = multi_year_start
+        self._multi_year_end = multi_year_end
 
     @property
     def settings(self):
@@ -52,14 +54,14 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         return self._settings
 
     @property
-    def start_year(self) -> Optional[int]:
+    def multi_year_start(self) -> Optional[int]:
         """Start year for the aggregation (inclusive)"""
-        return self._start_year
+        return self._multi_year_start
 
     @property
-    def end_year(self) -> Optional[int]:
+    def multi_year_end(self) -> Optional[int]:
         """End year for the aggregation (inclusive)"""
-        return self._end_year
+        return self._multi_year_end
 
     def validate(self, logger: ILogger) -> bool:
         """Validates if the rule is valid
@@ -77,8 +79,10 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Args:
             value_array (DataArray): value to filter
         """
-        start = str(self._start_year) if self._start_year is not None else None
-        end = str(self._end_year) if self._end_year is not None else None
+        start = (
+            str(self._multi_year_start) if self._multi_year_start is not None else None
+        )
+        end = str(self._multi_year_end) if self._multi_year_end is not None else None
         slice_obj = slice(start, end)
         return value_array.sel({time_dim_name: slice_obj})
 

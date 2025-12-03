@@ -45,10 +45,10 @@ class ITimeAggregationRuleData(IRuleData, ABC):
 
     @property
     @abstractmethod
-    def start_year(self) -> Optional[int]:
+    def multi_year_start(self) -> Optional[int]:
         """Start year for the aggregation (inclusive)"""
 
     @property
     @abstractmethod
-    def end_year(self) -> Optional[int]:
+    def multi_year_end(self) -> Optional[int]:
         """End year for the aggregation (inclusive)"""

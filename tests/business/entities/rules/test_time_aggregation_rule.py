@@ -472,8 +472,8 @@ def test_multi_yearly_month_average_with_year_range():
         name="test",
         input_variable_names=["foo"],
         operation_type=TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE,
-        start_year=2020,
-        end_year=2020,
+        multi_year_start=2020,
+        multi_year_end=2020,
     )
     rule.settings.time_scale = "month"
 
