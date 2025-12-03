@@ -31,7 +31,7 @@ class TimeAggregationRuleData(TimeOperationRuleData, ITimeAggregationRuleData):
         multi_year_end: Optional[int] = None,
     ):
         # pylint: disable=too-many-arguments
-        # pylint: disable=too-many-parameters
+        # pylint: disable=too-many-positional-arguments
         super().__init__(name, operation)
         self._name = name
         self._input_variable = input_variable

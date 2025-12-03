@@ -39,7 +39,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         multi_year_end: Optional[int] = None,
     ):
         # pylint: disable=too-many-arguments
-        # pylint: disable=too-many-parameters
+        # pylint: disable=too-many-positional-arguments
         super().__init__(name, input_variable_names)
         self._settings = TimeOperationSettings({"month": "ME", "year": "YE"})
         self._settings.percentile_value = 0
