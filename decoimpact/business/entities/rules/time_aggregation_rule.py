@@ -116,21 +116,14 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         # perform aggregations in case of multi-year monthly average
         if TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE == settings.operation_type:
-            filtered_values = self.filter_years(time_dim_name, value_array)
-            grouped_values = filtered_values.groupby(f"{time_dim_name}.month")
-            result = self._perform_grouping_operation(grouped_values)
-            # create a new aggregated time dimension based on original time dimension
-            result_time_dim_name = f"{time_dim_name}_monthly"
-            result = result.rename({"month": result_time_dim_name})
+            result, result_time_dim_name = self._handle_grouping_operation(
+                time_dim_name, value_array
+            )
         # perform the operation in case of other operation types
         else:
-            aggregated_values = value_array.resample(
-                {time_dim_name: dim_name}, skipna=True
+            result, result_time_dim_name = self._handle_aggregation_operation(
+                settings, dim_name, time_dim_name, value_array
             )
-            # create a new aggregated time dimension based on original time dimension
-            result = self._perform_operation(aggregated_values, settings.operation_type)
-            result_time_dim_name = f"{time_dim_name}_{settings.time_scale}"
-            result = result.rename({time_dim_name: result_time_dim_name})
 
         for key, value in value_array[time_dim_name].attrs.items():
             if value:
@@ -143,6 +136,39 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         result[result_time_dim_name].attrs["standard_name"] = result_time_dim_name
 
         return result
+
+    def _handle_grouping_operation(
+        self,
+        time_dim_name: str,
+        value_array: _xr.DataArray,
+    ) -> tuple[_xr.DataArray, str]:
+        """Handles the grouping operation for multi-year monthly average"""
+        filtered_values = self.filter_years(time_dim_name, value_array)
+        grouped_values = filtered_values.groupby(f"{time_dim_name}.month")
+        grouping_result = self._perform_grouping_operation(grouped_values)
+        # create a new aggregated time dimension based on original time dimension
+        _result_time_dim_name = f"{time_dim_name}_monthly"
+        grouping_result = grouping_result.rename({"month": _result_time_dim_name})
+        return grouping_result, _result_time_dim_name
+
+    def _handle_aggregation_operation(
+        self,
+        settings: TimeOperationSettings,
+        dim_name: str,
+        time_dim_name: str,
+        value_array: _xr.DataArray,
+    ) -> tuple[_xr.DataArray, str]:
+        """Handles the aggregation operation for other operation types"""
+        aggregated_values = value_array.resample({time_dim_name: dim_name}, skipna=True)
+        # create a new aggregated time dimension based on original time dimension
+        aggregation_result = self._perform_operation(
+            aggregated_values, settings.operation_type
+        )
+        _result_time_dim_name = f"{time_dim_name}_{settings.time_scale}"
+        aggregation_result = aggregation_result.rename(
+            {time_dim_name: _result_time_dim_name}
+        )
+        return aggregation_result, _result_time_dim_name
 
     def _perform_grouping_operation(
         self,
