@@ -178,7 +178,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Args:
             aggregated_values (DataArrayResample): aggregate values
             operation_type (TimeOperationType): the operation type
-            time_dim_name (str): name of the time dimension (for MONTHLY_AVERAGE)
         Raises:
             NotImplementedError: If operation type is not supported
 
