@@ -118,9 +118,7 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         if TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE == settings.operation_type:
             filtered_values = self.filter_years(time_dim_name, value_array)
             grouped_values = filtered_values.groupby(f"{time_dim_name}.month")
-            result = self._perform_grouping_operation(
-                grouped_values, settings.operation_type
-            )
+            result = self._perform_grouping_operation(grouped_values)
             # create a new aggregated time dimension based on original time dimension
             result_time_dim_name = f"{time_dim_name}_monthly"
             result = result.rename({"month": result_time_dim_name})
@@ -149,7 +147,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
     def _perform_grouping_operation(
         self,
         grouped_values,
-        operation_type: TimeOperationType,
     ) -> _xr.DataArray:
         """Returns the values based on the grouping operation type
 
@@ -163,19 +160,11 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         Returns:
             DataArray: Values of operation type
         """
-
-        if operation_type is TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE:
-            # Compute mean across years for each calendar month
-            monthly = grouped_values.mean(skipna=True)
-            # Ensure all 12 months are present (1..12), insert NaNs using reindex
-            months = _np.arange(1, 13)
-            result = monthly.reindex({"month": months})
-
-        else:
-            raise NotImplementedError(
-                f"The grouping operation type '{operation_type}' "
-                "is currently not supported"
-            )
+        # Compute mean across years for each calendar month
+        monthly = grouped_values.mean(skipna=True)
+        # Ensure all 12 months are present (1..12), insert NaNs using reindex
+        months = _np.arange(1, 13)
+        result = monthly.reindex({"month": months})
 
         return _xr.DataArray(result)
 
