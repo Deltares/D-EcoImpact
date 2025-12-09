@@ -9,6 +9,8 @@ FORMAT
       time_scale : <time_aggregation_applied>
       input_variable: <one_input_variable_name>
       output_variable: <one_output_variable_name>
+      multi_year_start: <start_year>
+      multi_year_end: <end_year>
 ```
 
 The time aggregation rule allows for calculating a statistical summary over the time axes of 3D and 2D variables. This could be used for calculating the maximum value over a year (e.g., for water level) or the minimum value over a month (e.g., oxygen concentration). The rule operates both on 3D variables and 2D variables as long as they have a time axis and returns a 3D or 2D result depending on input with the statistic calculated for a new time axis (e.g., year or month).
