@@ -29,6 +29,8 @@ rules:
       time_scale:
       input_variable:
       output_variable:
+      multi_year_start:
+      multi_year_end:
 
     - step_function_rule:
       name:

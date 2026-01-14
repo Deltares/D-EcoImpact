@@ -47,7 +47,17 @@ class TimeAggregationRuleData(TimeOperationRuleData, ITimeAggregationRuleData):
         """Start year for aggregation"""
         return self._multi_year_start
 
+    @multi_year_start.setter
+    def multi_year_start(self, value: Optional[int]) -> None:
+        # optional validation here
+        self._multi_year_start = value
+
     @property
     def multi_year_end(self) -> Optional[int]:
         """End year for aggregation"""
         return self._multi_year_end
+
+    @multi_year_end.setter
+    def multi_year_end(self, value: Optional[int]) -> None:
+        # optional validation here
+        self._multi_year_end = value
