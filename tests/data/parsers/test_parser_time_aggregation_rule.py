@@ -33,6 +33,39 @@ def test_parser_time_aggregation_rule_creation_logic():
     assert data.rule_type_name == "time_aggregation_rule"
 
 
+def test_parser_time_aggregation_rule_parameters():
+    """The ParserTimeAggregationRule should parse the provided dictionary
+    and pass parameters correctly during creation"""
+
+    # Arrange
+    contents = {
+        "name": "testname",
+        "input_variable": "input_a",
+        "operation": "MULTI_YEAR_MONTHLY_AVERAGE",
+        "output_variable": "output_b",
+        "time_scale": "month",
+        "multi_year_start": 2015,
+        "multi_year_end": 2020,
+    }
+    logger = Mock(ILogger)
+
+    # Act
+    data = ParserTimeAggregationRule()
+    parsed_dict = data.parse_dict(contents, logger)
+
+    # Assert
+
+    assert isinstance(data, IParserRuleBase)
+    assert isinstance(parsed_dict, IRuleData)
+    assert parsed_dict.name == "testname"
+    assert parsed_dict.input_variable == "input_a"
+    assert parsed_dict.output_variable == "output_b"
+    assert parsed_dict.time_scale == "month"
+    assert parsed_dict.operation == TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE
+    assert parsed_dict.multi_year_start == 2015
+    assert parsed_dict.multi_year_end == 2020
+
+
 def test_parse_dict_to_rule_data_logic():
     """Test if a correct dictionary is parsed into a RuleData object"""
     # Arrange
