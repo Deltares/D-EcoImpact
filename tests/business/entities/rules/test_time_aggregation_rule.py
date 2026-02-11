@@ -183,28 +183,85 @@ def test_execute_value_array_aggregate_time_yearly_median():
 
 ################################################################
 
-data_monthly = [0.1, 0.7, 0.2, 0.2, 0.3]
-time_monthly = [
+data_months = [0.1, 0.7, 0.2, 0.2, 0.3]
+time_months = [
     "2020-01-01",
     "2020-02-02",
     "2020-02-03",
     "2020-03-04",
     "2020-03-10",
 ]
-time_monthly = [np.datetime64(t) for t in time_monthly]
-value_array_monthly = _xr.DataArray(data_monthly, coords=[time_monthly], dims=["time"])
+time_months = [np.datetime64(t) for t in time_months]
+value_array_months = _xr.DataArray(data_months, coords=[time_months], dims=["time"])
 
-result_time_monthly = [
+result_time_months = [
     "2020-01-31",
     "2020-02-29",
     "2020-03-31",
 ]
-result_time_monthly = [np.datetime64(t) for t in result_time_monthly]
+result_time_months = [np.datetime64(t) for t in result_time_months]
+time_multi_year = [
+    "2020-01-01",
+    "2020-02-02",
+    "2020-03-03",
+    "2020-04-04",
+    "2020-05-05",
+    "2020-06-06",
+    "2020-07-07",
+    "2020-08-08",
+    "2020-09-09",
+    "2020-10-10",
+    "2020-11-11",
+    "2020-12-12",
+    "2021-01-01",
+    "2021-02-02",
+    "2021-03-03",
+    "2021-04-04",
+    "2021-05-05",
+    "2021-06-06",
+    "2021-07-07",
+    "2021-08-08",
+    "2021-09-09",
+    "2021-10-10",
+    "2021-11-11",
+    "2021-12-12",
+]
+data_multi_year = [
+    0.1,
+    0.7,
+    0.2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    0.2,
+    0.2,
+    0.4,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+]
+result_time_multi_year_monthly = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+time_multi_year = [np.datetime64(t) for t in time_multi_year]
+value_array_multi_year_monthly = _xr.DataArray(
+    data_multi_year, coords=[time_multi_year], dims=["time"]
+)
 
 ####################################################################
 
 
-def test_execute_value_array_aggregate_time_monthly_add():
+def test_execute_value_array_aggregate_time_months_add():
     """Aggregate input_variable_names of a TimeAggregationRule (add, monthly)"""
 
     # create test set
@@ -215,11 +272,11 @@ def test_execute_value_array_aggregate_time_monthly_add():
 
     rule.settings.time_scale = "month"
 
-    time_aggregation = rule.execute(value_array_monthly, logger)
+    time_aggregation = rule.execute(value_array_months, logger)
 
     result_data = [0.1, 0.9, 0.5]
     result_array = _xr.DataArray(
-        result_data, coords=[result_time_monthly], dims=["time_month"]
+        result_data, coords=[result_time_months], dims=["time_month"]
     )
 
     # Assert
@@ -228,7 +285,7 @@ def test_execute_value_array_aggregate_time_monthly_add():
     )
 
 
-def test_execute_value_array_aggregate_time_monthly_min():
+def test_execute_value_array_aggregate_time_months_min():
     """Aggregate input_variable_names of a TimeAggregationRule (min, monthly)"""
 
     # create test set
@@ -240,19 +297,19 @@ def test_execute_value_array_aggregate_time_monthly_min():
     )
     rule.settings.time_scale = "month"
 
-    time_aggregation = rule.execute(value_array_monthly, logger)
+    time_aggregation = rule.execute(value_array_months, logger)
 
     result_data = [0.1, 0.2, 0.2]
     result_array = _xr.DataArray(
-        result_data, coords=[result_time_monthly], dims=["time_month"]
+        result_data, coords=[result_time_months], dims=["time_month"]
     )
 
     # Assert
     assert _xr.testing.assert_equal(time_aggregation, result_array) is None
 
 
-def test_execute_value_array_aggregate_time_monthly_max():
-    """Aggregate input_variable_names of a TimeAggregationRule (max, monthly)"""
+def test_execute_value_array_aggregate_time_months_max():
+    """Aggregate input_variable_names of a TimeAggregationRule (max, months)"""
 
     # create test set
     logger = Mock(ILogger)
@@ -263,11 +320,11 @@ def test_execute_value_array_aggregate_time_monthly_max():
     )
     rule.settings.time_scale = "month"
 
-    time_aggregation = rule.execute(value_array_monthly, logger)
+    time_aggregation = rule.execute(value_array_months, logger)
 
     result_data = [0.1, 0.7, 0.3]
     result_array = _xr.DataArray(
-        result_data, coords=[result_time_monthly], dims=["time_month"]
+        result_data, coords=[result_time_months], dims=["time_month"]
     )
 
     # Assert
@@ -280,8 +337,8 @@ def test_execute_value_array_aggregate_time_monthly_max():
     )
 
 
-def test_execute_value_array_aggregate_time_monthly_average():
-    """Aggregate input_variable_names of a TimeAggregationRule (average, monthly)"""
+def test_execute_value_array_aggregate_time_months_average():
+    """Aggregate input_variable_names of a TimeAggregationRule (average, months)"""
 
     # create test set
     logger = Mock(ILogger)
@@ -292,11 +349,11 @@ def test_execute_value_array_aggregate_time_monthly_average():
     )
     rule.settings.time_scale = "month"
 
-    time_aggregation = rule.execute(value_array_monthly, logger)
+    time_aggregation = rule.execute(value_array_months, logger)
 
     result_data = [0.1, 0.45, 0.25]
     result_array = _xr.DataArray(
-        result_data, coords=[result_time_monthly], dims=["time_month"]
+        result_data, coords=[result_time_months], dims=["time_month"]
     )
 
     # Assert
@@ -305,8 +362,8 @@ def test_execute_value_array_aggregate_time_monthly_average():
     )
 
 
-def test_execute_value_array_aggregate_time_monthly_median():
-    """Test aggregate input_variable_names of a TimeAggregationRule (median, monthly)"""
+def test_execute_value_array_aggregate_time_months_median():
+    """Test aggregate input_variable_names of a TimeAggregationRule (median, months)"""
 
     # create test set
     logger = Mock(ILogger)
@@ -317,11 +374,11 @@ def test_execute_value_array_aggregate_time_monthly_median():
     )
     rule.settings.time_scale = "month"
 
-    time_aggregation = rule.execute(value_array_monthly, logger)
+    time_aggregation = rule.execute(value_array_months, logger)
 
     result_data = [0.1, 0.45, 0.25]
     result_array = _xr.DataArray(
-        result_data, coords=[result_time_monthly], dims=["time_month"]
+        result_data, coords=[result_time_months], dims=["time_month"]
     )
 
     # Assert
@@ -330,9 +387,9 @@ def test_execute_value_array_aggregate_time_monthly_median():
     )
 
 
-def test_execute_value_array_aggregate_time_monthly_stdev():
+def test_execute_value_array_aggregate_time_months_stdev():
     """Test aggregate input_variable_names of a TimeAggregationRule
-    (STDEV, monthly)"""
+    (STDEV, months)"""
 
     # create test set
     logger = Mock(ILogger)
@@ -343,10 +400,10 @@ def test_execute_value_array_aggregate_time_monthly_stdev():
     )
     rule.settings.time_scale = "month"
 
-    time_aggregation = rule.execute(value_array_monthly, logger)
+    time_aggregation = rule.execute(value_array_months, logger)
     result_data = [0.0, 0.25, 0.05]
     result_array = _xr.DataArray(
-        result_data, coords=[result_time_monthly], dims=["time_month"]
+        result_data, coords=[result_time_months], dims=["time_month"]
     )
 
     # Assert
@@ -355,9 +412,9 @@ def test_execute_value_array_aggregate_time_monthly_stdev():
     )
 
 
-def test_execute_value_array_aggregate_time_monthly_percentile():
+def test_execute_value_array_aggregate_time_months_percentile():
     """Test aggregate input_variable_names of a TimeAggregationRule
-    (PERCENTILE, monthly)"""
+    (PERCENTILE, months)"""
 
     # create test set
     logger = Mock(ILogger)
@@ -369,10 +426,62 @@ def test_execute_value_array_aggregate_time_monthly_percentile():
     rule.settings.time_scale = "month"
     rule.settings.percentile_value = 10
 
-    time_aggregation = rule.execute(value_array_monthly, logger)
+    time_aggregation = rule.execute(value_array_months, logger)
     result_data = [0.1, 0.25, 0.21]
     result_array = _xr.DataArray(
-        result_data, coords=[result_time_monthly], dims=["time_month"]
+        result_data, coords=[result_time_months], dims=["time_month"]
+    )
+
+    # Assert
+    assert (
+        _xr.testing.assert_allclose(time_aggregation, result_array, atol=1e-11) is None
+    )
+
+
+def test_multi_year_monthly_average():
+    """Aggregate input_variable_names of a TimeAggregationRule (average, months)"""
+
+    # create test set
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE,
+    )
+    rule.settings.time_scale = "month"
+
+    time_aggregation = rule.execute(value_array_multi_year_monthly, logger)
+
+    result_data = [0.15, 0.45, 0.3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_multi_year_monthly], dims=["time_monthly"]
+    )
+
+    # Assert
+    assert (
+        _xr.testing.assert_allclose(time_aggregation, result_array, atol=1e-11) is None
+    )
+
+
+def test_multi_yearly_month_average_with_year_range():
+    """Aggregate multi-year monthly average of a TimeAggregationRule with year range"""
+
+    # create test set
+    logger = Mock(ILogger)
+    rule = TimeAggregationRule(
+        name="test",
+        input_variable_names=["foo"],
+        operation_type=TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE,
+        multi_year_start=2020,
+        multi_year_end=2020,
+    )
+    rule.settings.time_scale = "month"
+
+    time_aggregation = rule.execute(value_array_multi_year_monthly, logger)
+
+    result_data = [0.1, 0.7, 0.2, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    result_array = _xr.DataArray(
+        result_data, coords=[result_time_multi_year_monthly], dims=["time_monthly"]
     )
 
     # Assert
@@ -395,7 +504,7 @@ def test_operation_type_not_implemented():
     rule.settings.time_scale = "month"
 
     with pytest.raises(NotImplementedError) as exc_info:
-        rule.execute(value_array_monthly, logger)
+        rule.execute(value_array_months, logger)
 
     exception_raised = exc_info.value
 

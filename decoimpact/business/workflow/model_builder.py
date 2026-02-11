@@ -147,6 +147,8 @@ class ModelBuilder(IModelBuilder):
             )
             rule.settings.percentile_value = rule_data.percentile_value
             rule.settings.time_scale = rule_data.time_scale
+            rule.multi_year_start = rule_data.multi_year_start
+            rule.multi_year_end = rule_data.multi_year_end
         elif isinstance(rule_data, IRollingStatisticsRuleData):
             rule = RollingStatisticsRule(
                 rule_data.name, [rule_data.input_variable], rule_data.operation
@@ -159,7 +161,7 @@ class ModelBuilder(IModelBuilder):
                 rule_data.name,
                 rule_data.input_variable_names,
                 MultiArrayOperationType[rule_data.operation_type],
-                rule_data.ignore_nan
+                rule_data.ignore_nan,
             )
         elif isinstance(rule_data, IResponseCurveRuleData):
             rule = ResponseCurveRule(

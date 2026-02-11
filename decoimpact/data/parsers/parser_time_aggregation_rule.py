@@ -42,6 +42,8 @@ class ParserTimeAggregationRule(IParserRuleBase):
         input_variable_name: str = get_dict_element("input_variable", dictionary)
         operation: str = get_dict_element("operation", dictionary)
         time_scale: str = get_dict_element("time_scale", dictionary)
+        multi_year_start: int = get_dict_element("multi_year_start", dictionary, False)
+        multi_year_end: int = get_dict_element("multi_year_end", dictionary, False)
         output_variable_name: str = get_dict_element("output_variable", dictionary)
 
         operation_value, percentile_value = parse_operation_values(operation)
@@ -50,6 +52,8 @@ class ParserTimeAggregationRule(IParserRuleBase):
 
         rule_data.percentile_value = percentile_value
         rule_data.time_scale = time_scale
+        rule_data.multi_year_start = multi_year_start
+        rule_data.multi_year_end = multi_year_end
         rule_data.output_variable = output_variable_name
         rule_data.description = description
 

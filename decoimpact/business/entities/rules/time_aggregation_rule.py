@@ -11,11 +11,10 @@ Classes:
     TimeAggregationRule
 """
 
-from typing import List
+from typing import List, Optional
 
 import numpy as _np
 import xarray as _xr
-from xarray.core.resample import DataArrayResample
 
 from decoimpact.business.entities.rules.i_array_based_rule import IArrayBasedRule
 from decoimpact.business.entities.rules.rule_base import RuleBase
@@ -36,17 +35,43 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
         name: str,
         input_variable_names: List[str],
         operation_type: TimeOperationType,
+        multi_year_start: Optional[int] = None,
+        multi_year_end: Optional[int] = None,
     ):
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-positional-arguments
         super().__init__(name, input_variable_names)
         self._settings = TimeOperationSettings({"month": "ME", "year": "YE"})
         self._settings.percentile_value = 0
         self._settings.operation_type = operation_type
         self._settings.time_scale = "year"
+        self._multi_year_start = multi_year_start
+        self._multi_year_end = multi_year_end
 
     @property
     def settings(self):
         """Time operation settings"""
         return self._settings
+
+    @property
+    def multi_year_start(self) -> Optional[int]:
+        """Start year for the aggregation (inclusive)"""
+        return self._multi_year_start
+
+    @multi_year_start.setter
+    def multi_year_start(self, value: Optional[int]) -> None:
+        # optional validation here
+        self._multi_year_start = value
+
+    @property
+    def multi_year_end(self) -> Optional[int]:
+        """End year for the aggregation (inclusive)"""
+        return self._multi_year_end
+
+    @multi_year_end.setter
+    def multi_year_end(self, value: Optional[int]) -> None:
+        # optional validation here
+        self._multi_year_end = value
 
     def validate(self, logger: ILogger) -> bool:
         """Validates if the rule is valid
@@ -55,6 +80,21 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             bool: wether the rule is valid
         """
         return self.settings.validate(self.name, logger)
+
+    def filter_years(
+        self, time_dim_name: str, value_array: _xr.DataArray
+    ) -> _xr.DataArray:
+        """Filters the values for the specified start and end year
+
+        Args:
+            value_array (DataArray): value to filter
+        """
+        start = (
+            str(self._multi_year_start) if self._multi_year_start is not None else None
+        )
+        end = str(self._multi_year_end) if self._multi_year_end is not None else None
+        slice_obj = slice(start, end)
+        return value_array.sel({time_dim_name: slice_obj})
 
     def execute(self, value_array: _xr.DataArray, logger: ILogger) -> _xr.DataArray:
         """Aggregates the values for the specified start and end date
@@ -81,14 +121,19 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         dim_name = get_dict_element(settings.time_scale, settings.time_scale_mapping)
 
+        # get the name of the time dimension
         time_dim_name = get_time_dimension_name(value_array, logger)
-        aggregated_values = value_array.resample({time_dim_name: dim_name}, skipna=True)
 
-        result = self._perform_operation(aggregated_values)
-        # create a new aggregated time dimension based on original time dimension
-
-        result_time_dim_name = f"{time_dim_name}_{settings.time_scale}"
-        result = result.rename({time_dim_name: result_time_dim_name})
+        # perform aggregations in case of multi-year monthly average
+        if TimeOperationType.MULTI_YEAR_MONTHLY_AVERAGE == settings.operation_type:
+            result, result_time_dim_name = self._handle_grouping_operation(
+                time_dim_name, value_array
+            )
+        # perform the operation in case of other operation types
+        else:
+            result, result_time_dim_name = self._handle_aggregation_operation(
+                settings, dim_name, time_dim_name, value_array
+            )
 
         for key, value in value_array[time_dim_name].attrs.items():
             if value:
@@ -102,12 +147,73 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
 
         return result
 
-    def _perform_operation(self, aggregated_values: DataArrayResample) -> _xr.DataArray:
+    def _handle_grouping_operation(
+        self,
+        time_dim_name: str,
+        value_array: _xr.DataArray,
+    ) -> tuple[_xr.DataArray, str]:
+        """Handles the grouping operation for multi-year monthly average"""
+        filtered_values = self.filter_years(time_dim_name, value_array)
+        grouped_values = filtered_values.groupby(f"{time_dim_name}.month")
+        grouping_result = self._perform_grouping_operation(grouped_values)
+        # create a new aggregated time dimension based on original time dimension
+        _result_time_dim_name = f"{time_dim_name}_monthly"
+        grouping_result = grouping_result.rename({"month": _result_time_dim_name})
+        return grouping_result, _result_time_dim_name
+
+    def _handle_aggregation_operation(
+        self,
+        settings: TimeOperationSettings,
+        dim_name: str,
+        time_dim_name: str,
+        value_array: _xr.DataArray,
+    ) -> tuple[_xr.DataArray, str]:
+        """Handles the aggregation operation for other operation types"""
+        aggregated_values = value_array.resample({time_dim_name: dim_name}, skipna=True)
+        # create a new aggregated time dimension based on original time dimension
+        aggregation_result = self._perform_operation(
+            aggregated_values, settings.operation_type
+        )
+        _result_time_dim_name = f"{time_dim_name}_{settings.time_scale}"
+        aggregation_result = aggregation_result.rename(
+            {time_dim_name: _result_time_dim_name}
+        )
+        return aggregation_result, _result_time_dim_name
+
+    def _perform_grouping_operation(
+        self,
+        grouped_values,
+    ) -> _xr.DataArray:
+        """Returns the values based on the grouping operation type
+
+        Args:
+            aggregated_values (DataArrayGroupBy): aggregate values
+            operation_type (TimeOperationType): the operation type
+            time_dim_name (str): name of the time dimension (for MONTHLY_AVERAGE)
+        Raises:
+            NotImplementedError: If operation type is not supported
+
+        Returns:
+            DataArray: Values of operation type
+        """
+        # Compute mean across years for each calendar month
+        monthly = grouped_values.mean(skipna=True)
+        # Ensure all 12 months are present (1..12), insert NaNs using reindex
+        months = _np.arange(1, 13)
+        result = monthly.reindex({"month": months})
+
+        return _xr.DataArray(result)
+
+    def _perform_operation(
+        self,
+        aggregated_values,
+        operation_type: TimeOperationType,
+    ) -> _xr.DataArray:
         """Returns the values based on the operation type
 
         Args:
             aggregated_values (DataArrayResample): aggregate values
-
+            operation_type (TimeOperationType): the operation type
         Raises:
             NotImplementedError: If operation type is not supported
 
@@ -119,8 +225,6 @@ class TimeAggregationRule(RuleBase, IArrayBasedRule):
             TimeOperationType.MAX_DURATION_PERIODS,
             TimeOperationType.AVG_DURATION_PERIODS,
         ]
-
-        operation_type = self.settings.operation_type
 
         if operation_type is TimeOperationType.ADD:
             result = aggregated_values.sum()

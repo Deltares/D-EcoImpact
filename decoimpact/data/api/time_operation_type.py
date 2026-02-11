@@ -26,3 +26,4 @@ class TimeOperationType(IntEnum):
     AVG_DURATION_PERIODS = 8
     STDEV = 9
     PERCENTILE = 10
+    MULTI_YEAR_MONTHLY_AVERAGE = 11
