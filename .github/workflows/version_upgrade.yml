@@ -20,7 +20,8 @@ jobs:
   upgrade-version:
     runs-on: ubuntu-latest
     env:
-      RELEASE_TYPE: ${{ inputs.release_type == 'major' && 'major' || 'minor' }}
+      # check if the input is valid, if not set it to empty string, if valid it will be used in the poetry version command
+      RELEASE_TYPE: ${{ (inputs.release_type == 'major' || inputs.release_type == 'minor' || inputs.release_type == 'patch') && inputs.release_type || '' }}
     outputs:
       job_output_version: ${{ steps.get-version.outputs.PROJECT_VERSION}}
     steps:
