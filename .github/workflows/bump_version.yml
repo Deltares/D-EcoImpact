@@ -12,7 +12,8 @@ on:
 jobs:
   bump-up-version:
     if: github.event.pull_request.merged == true
-    secrets: inherit
+    secrets:
+      SECRET: ${{secrets.VERSION_DECOIMPACT}}
     uses: ./.github/workflows/version_upgrade.yml
     with:
       release_type: patch
