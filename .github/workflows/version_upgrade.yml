@@ -9,6 +9,7 @@ on:
     inputs:
       release_type:
         required: true
+        description: Choose type of release
         type: string
     outputs:
       project_version:
@@ -18,6 +19,8 @@ on:
 jobs:
   upgrade-version:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TYPE: ${{ inputs.release_type == 'major' && 'major' || 'minor' }}
     outputs:
       job_output_version: ${{ steps.get-version.outputs.PROJECT_VERSION}}
     steps:
@@ -39,7 +42,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          poetry version ${{ inputs.release_type }}
+          poetry version "$RELEASE_TYPE"
           PROJECT_VERSION=$(poetry version --short)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_OUTPUT
           sed -i "1 s/.*/version: $PROJECT_VERSION/" template_input.yaml
@@ -48,5 +51,5 @@ jobs:
           PROJECT_VERSION=$(poetry version --short)
           git add template_input.yaml
           git add pyproject.toml
-          git commit -m "bump ${{ inputs.release_type }} version: ${{ steps.get-version.outputs.PROJECT_VERSION }}"
+          git commit -m "bump "$RELEASE_TYPE" version: ${{ steps.get-version.outputs.PROJECT_VERSION }}"
           git push
