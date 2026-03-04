@@ -10,7 +10,6 @@ on:
 jobs:
   create-docs:
     runs-on: ubuntu-latest
-    env:
     if: ${{ lower(inputs.project_version) == upper(inputs.project_version) }}
     env:
       VERSION: ${{ inputs.project_version }}
