@@ -6,7 +6,7 @@ authors = ["Deltares"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.10, <=3.13"  # max 3.13 because of pyinstaller
+python = ">=3.13, <=3.15"  # max 3.13 because of pyinstaller
 numpy = ">=2.0"
 xarray = ">=2024.6.0"
 scipy = ">=1.13.0"
@@ -17,6 +17,7 @@ importlib = ">=1.0.4"
 pyyaml = ">=6.0.2"
 yaml-include = ">=1.0.0"
 mkdocs-autoapi = ">=0.3.2"
+certifi = ">=2026.10.18" # for security
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"
