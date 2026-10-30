@@ -15,7 +15,7 @@ Note: when using miniconda, make sure to update the defaults channel to conda-fo
 
 1.	Open a commandline tool (eg. cmd or powershell):
   ```sh
-  $ conda create -y -c pip --name <env_name> python=3.11
+  $ conda create -y -c pip --name <env_name> python=3.14
   ```
 
 2.	Activate the newly created environment
@@ -58,7 +58,7 @@ To execute use the following in the command prompt while your environment is act
 
 ## Installation D-Eco impact with Visual Studio Code and venv
 
-1.	Install [Python version 3.11.2] (https://www.python.org/downloads/)
+1.	Install [Python version 3.14] (https://www.python.org/downloads/)
 2.	Open Visual Studio Code.
 3.	Press CRTL + Shift + P and type “Python: Create Environment” followed by enter, select “Venv”.
 4.	Place the environment in the D-Eco Impact folder.

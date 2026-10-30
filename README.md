@@ -76,7 +76,7 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 
 - Create `conda` environment
   ```sh
-  $ conda create -y -c pip --name <env_name> python=3.11
+  $ conda create -y -c pip --name <env_name> python=3.14
   ```
 - Activate `conda` environment
   ```sh
