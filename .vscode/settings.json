@@ -22,6 +22,7 @@
     "python.analysis.exclude": [
         "tests/**/*"
     ],
+    "python.defaultInterpreterPath": ".venv\\Scripts\\python.exe",
     "autoSnippet.snippets": [
         {
             "language": "python",
