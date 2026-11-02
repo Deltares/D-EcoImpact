@@ -1,6 +1,6 @@
-# Bump a patch version with poetry when a pull requst is merged
+# Bump a patch version with uv when a pull requst is merged
 
-name: bump patch version using poetry
+name: bump patch version using uv
 
 on:
   pull_request_target:

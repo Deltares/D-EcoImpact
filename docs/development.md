@@ -105,7 +105,7 @@
  
 * For testing, we use the _pytest_ module.
 * For checking the style guide, we use _flake8_ and _pylint_.
-* For managing external dependencies, we use poetry (.toml file).
+* For managing external dependencies, we use uv (`pyproject.toml` and `uv.lock`).
  
 * We prefer to use VS Code for development (sharing settings using vscode folder) with the following plugins:
     * [autoDocstring](https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring)
