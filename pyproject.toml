@@ -5,6 +5,7 @@ description = "A Python based kernel to perform spatial (environmental) impact a
 authors = [{ name = "Deltares" }]
 requires-python = ">=3.13, <=3.15"
 readme = "README.md"
+license-files = ["LICENSE.md"]
 dependencies = [
     "numpy>=2.0",
     "xarray>=2024.6.0",
@@ -79,5 +80,9 @@ log_cli_level = "DEBUG"
 log_cli_format = "%(levelname)-8s %(message)s"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.13.6,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "decoimpact"
+module-root = ""
