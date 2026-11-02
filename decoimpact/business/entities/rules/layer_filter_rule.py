@@ -46,8 +46,7 @@ class LayerFilterRule(RuleBase, IArrayBasedRule):
         dim_name = value_array.dims[2]
 
         if not (
-            self._layer_number >= 0
-            and self._layer_number <= len(getattr(value_array, dim_name))
+            0 <= self._layer_number <= len(getattr(value_array, dim_name))
         ):
             message = f"""Layer number should be within range \
                 [0,{len(getattr(value_array, dim_name))}]"""
