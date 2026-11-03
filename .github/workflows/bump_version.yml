@@ -3,11 +3,10 @@
 name: bump patch version using uv
 
 on:
-  pull_request_target:
+  pull_request:
     types:
       - closed
     branches:
-      - main
       - test_action
 
 jobs:
