@@ -38,6 +38,11 @@ class IDatasetData(ABC):
 
     @property
     @abstractmethod
+    def reference_date(self) -> str:
+        """date corresponding to time 0 of the dataset (used for CGNS files)"""
+
+    @property
+    @abstractmethod
     def mapping(self) -> dict[str, str]:
         """Variable name mapping (source to target)"""
 

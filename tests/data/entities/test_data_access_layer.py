@@ -190,7 +190,7 @@ def test_dataset_data_get_input_dataset_should_check_if_extension_is_correct():
 
     # Assert
     assert exception_raised.args[0].endswith(
-        "Currently only UGrid (NetCDF) files are supported."
+        "Currently only UGrid (NetCDF) and CGNS files are supported."
     )
 
 

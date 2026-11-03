@@ -31,6 +31,9 @@ class DatasetData(IDatasetData):
         self._path = Path(get_dict_element("filename", dataset)).resolve()
         self._start_date = str(get_dict_element("start_date", dataset, False))
         self._end_date = str(get_dict_element("end_date", dataset, False))
+        self._reference_date = str(
+            get_dict_element("reference_date", dataset, False)
+        )
         self._get_mapping(dataset)
 
     @property
@@ -49,6 +52,11 @@ class DatasetData(IDatasetData):
         """optional end date to filter the dataset"""
         # end_date is passed as string (not datetime) because it is optional
         return self._end_date
+
+    @property
+    def reference_date(self) -> str:
+        """optional date corresponding to time 0 of the dataset (CGNS files)"""
+        return self._reference_date
 
     @property
     def mapping(self) -> dict[str, str]:

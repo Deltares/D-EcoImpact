@@ -26,6 +26,7 @@ from decoimpact.data.api.i_data_access_layer import IDataAccessLayer
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.output_file_settings import OutputFileSettings
+from decoimpact.data.entities.cgns_reader import CGNSReader
 from decoimpact.data.entities.model_data_builder import ModelDataBuilder
 
 
@@ -106,6 +107,20 @@ class DataAccessLayer(IDataAccessLayer):
         Returns:
             _xr.Dataset: Dataset based on provided dataset_data
         """
+        if dataset_data.path.suffix.lower() == ".cgns":
+            self._logger.log_info(
+                f"Input file {dataset_data.path} has the CGNS format (.cgns) "
+                "instead of UGrid (NetCDF). The CGNS reader is used."
+            )
+            mapping = dataset_data.mapping or {}
+            return CGNSReader(self._logger).read_file(
+                dataset_data.path,
+                list(mapping.keys()),
+                dataset_data.start_date,
+                dataset_data.end_date,
+                dataset_data.reference_date,
+            )
+
         # get start and end date from input file and convert to date format
         # if start or end date is not given, then use None to slice the data
         date_format = "%d-%m-%Y"
@@ -120,7 +135,7 @@ class DataAccessLayer(IDataAccessLayer):
 
         if dataset_data.path.suffix != ".nc":
             message = f"""The file {dataset_data.path} is not supported. \
-                          Currently only UGrid (NetCDF) files are supported."""
+                          Currently only UGrid (NetCDF) and CGNS files are supported."""
             raise NotImplementedError(message)
 
         # open input dataset (from .nc file)
