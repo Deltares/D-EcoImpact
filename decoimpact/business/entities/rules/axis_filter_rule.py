@@ -62,8 +62,7 @@ class AxisFilterRule(RuleBase, IArrayBasedRule):
             raise IndexError(message)
 
         if not (
-            self._element_index >= 0
-            and self._element_index <= len(getattr(value_array, self._axis_name))
+            0 <= self._element_index <= len(getattr(value_array, self._axis_name))
         ):
             message = f"""Layer number should be within range \
                 [0,{len(getattr(value_array, self._axis_name))}]"""

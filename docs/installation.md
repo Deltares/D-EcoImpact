@@ -1,79 +1,30 @@
-# Installation 
-D-Eco Impact is a command line operated model. To use D-Eco Impact (currently) an installation of Python and the used libraries is required. This is best achieved by installing D-Eco Impact in a virtual environment.
+# Installation
+D-Eco Impact is a command-line operated model that requires Python and its dependencies. Install [Python 3.14](https://www.python.org/downloads/) and [uv 0.13.6 or higher](https://docs.astral.sh/uv/getting-started/installation/).
 
+## Install with uv
 
-## Conda or Visual Studio Code
-Conda is a package and environment manager that can be used to install the poetry package and other packages needed to run D-Eco Impact. 
+1. Open a terminal and move to the D-Eco Impact source folder.
+2. Run:
+   ```sh
+   uv sync
+   ```
 
-- [Miniforge](https://github.com/conda-forge/miniforge)
-- [Miniconda](https://docs.conda.io/en/main/miniconda.html)
-- [Visual Studio code](https://code.visualstudio.com/download)
+`uv sync` reads `uv.lock` and `pyproject.toml`, creates the project environment in `.venv` if it does not exist, and installs the required dependencies. You do not need to create or activate a virtual environment manually; `uv run` executes commands in the project environment.
 
-## Installation of D-Eco Impact with conda (use Miniforge or Miniconda)
-
-Note: when using miniconda, make sure to update the defaults channel to conda-forge ([instructions for changing the channel](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-channels.html))!
-
-1.	Open a commandline tool (eg. cmd or powershell):
-  ```sh
-  $ conda create -y -c pip --name <env_name> python=3.14
-  ```
-
-2.	Activate the newly created environment
-  ```sh
-  $ conda activate <env_name>
-  ```
-
-3.	Move to the folder where you have placed the D-Eco Impact source code
-You can use cd ../ and cd <folder_name> to move to the location or use windows explorer and type “cmd” + enter in the path bar.
-
-4.	To install the required libraries Poetry is used. 
-Use poetry 1.3 or higher: ([installation instructions](https://python-poetry.org/docs/#installation))
-If you prefer to install poetry with conda then we recommed to install poetry only to the base environment.
-
-Activate base environment:
+To run D-Eco Impact with an input file:
 ```sh
-$ conda activate base
-```
-Install poetry using pip:
-```sh
-$ pip install poetry
-```
-Activate your created environment:
-```sh
-$ conda activate <env_name>
+uv run python main.py <your_input_file>.yaml
 ```
 
-5. Poetry makes use of the poetry.lock and pyproject.toml (present in the D-Eco Impact folder) to find these required libraries.
-Execute the following command:
-  ```
-  poetry install
-  ```
-NB. If errors occur while installing the libraries, this might have to do with your administrative rights. Either start the cmd prompt “As administrator” or discuss this with your IT support.
+## Use with Visual Studio Code
 
-6.	Now D-Eco Impact is ready to use. You can test this by executing one of the input yaml files.
-To execute use the following in the command prompt while your environment is active:
-  ```
-  python main.py <your_input_file>.yaml
-  ```
-
-## Installation D-Eco impact with Visual Studio Code and venv
-
-1.	Install [Python version 3.14] (https://www.python.org/downloads/)
-2.	Open Visual Studio Code.
-3.	Press CRTL + Shift + P and type “Python: Create Environment” followed by enter, select “Venv”.
-4.	Place the environment in the D-Eco Impact folder.
-5.	Press CTRL + Shift + P and type “Python: Select interpreter” and select the newly created environment.
-6.	In the terminal in Visual Studio Code execute the following command:
-  ```
-  pip install poetry
-  ```
-7.	In the terminal in Visual Studio Code execute the following command:
-poetry install
-6.	Now D-Eco Impact is setup for use. You can test this by executing one of the input yaml files.
-To execute use the following in the command prompt while your environment is active:
-  ```
-  python main.py <your_input_file>.yaml
-  ```
+1. Open the D-Eco Impact source folder in [Visual Studio Code](https://code.visualstudio.com/download).
+2. Open a terminal in the source folder and run `uv sync` to create and populate `.venv`.
+3. If you want VS Code to use this environment for features such as code completion, select `.venv` as the Python interpreter. In the Command Palette, choose **Python: Select Interpreter** and select the interpreter under `.venv`. There is no need to create another environment through VS Code.
+4. Run the model from the terminal with:
+   ```sh
+   uv run python main.py <your_input_file>.yaml
+   ```
 
 
 
