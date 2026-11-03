@@ -183,8 +183,3 @@ For pushing new images make sure that your token that has enough permissions and
 If you found D-Eco Impact useful for your study, please cite it as:
 
 Weeber, M., Elzinga, H., Schoonveld, W., Van de Vries, C., Klapwijk, M., Mischa, I., Rodriguez Aguilera, D., Farrag, M., Ye, Q., Markus, A., Van Oorschot, M., Saager, P., & Icke, J. (2024). D-Eco Impact (v0.3.0). Zenodo. https://doi.org/10.5281/zenodo.10941913
-
-
-
-
-
