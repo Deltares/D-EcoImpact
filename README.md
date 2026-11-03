@@ -5,7 +5,7 @@
 # D-EcoImpact
 
 A Python based kernel to perform spatial (environmental) impact assessment. Based on knowledge rules applied to model output and/or measurements.
-The dependencies of the D-EcoImpact are declared, managed and installed with [Poetry](https://python-poetry.org/).
+The dependencies of the D-EcoImpact are declared, managed and installed with [uv](https://docs.astral.sh/uv/).
 
 ## Copyright
 Copyright &copy; 2022-2025 Stichting Deltares
@@ -19,14 +19,14 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 
-A copy of the GNU General Public License can be found at  
-<https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md>  
-and at  
+A copy of the GNU General Public License can be found at
+<https://github.com/Deltares/D-EcoImpact/blob/main/LICENSE.md>
+and at
 <http://www.gnu.org/licenses/>
 
-Contact:  software@deltares.nl  
-Stichting Deltares  
-P.O. Box 177  
+Contact:  software@deltares.nl
+Stichting Deltares
+P.O. Box 177
 2600 MH Delft, The Netherlands
 
 All indications and logos of, and references to registered trademarks
@@ -35,19 +35,14 @@ rights reserved.
 
 ## Prerequisites
 
-- python 3.9 or higher
-- poetry 1.3 or higher we recommend: ([installation instructions](https://python-poetry.org/docs/#installation))
+- python 3.14 or higher
+- uv 0.13.6 or higher (installation instructions: https://docs.astral.sh/uv/getting-started/installation/)
 
-If you prefer to install poetry with conda then we recommed to install poetry only to the base environment:
-
-```sh
-$ conda install -y -c conda-forge poetry
-```
 
 ## Install
 
 To install the dependencies of the project create a virtual environment either with `venv` or `conda`.\
-Switch to this environment and use `poetry` to restore the package dependencies.
+Switch to this environment and use `uv` to restore the package dependencies.
 
 ### Create environment
 
@@ -76,7 +71,7 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 
 - Create `conda` environment
   ```sh
-  $ conda create -y -c pip --name <env_name> python=3.11
+  $ conda create -y -c pip --name <env_name> python=3.14
   ```
 - Activate `conda` environment
   ```sh
@@ -89,7 +84,7 @@ Switch to this environment and use `poetry` to restore the package dependencies.
 ### Add dependencies
 
 ```sh
-$ poetry install
+$ uv sync
 ```
 
 ## Run
@@ -102,22 +97,22 @@ $ python main.py input_file.yaml
 
 ## Development
 
-When adding a new dependency, do so using `poetry`
+When adding a new dependency, do so using `uv`
 
 - Add a new dependency
 
   ```sh
-  $ poetry add <package>
+  $ uv add <package>
   ```
 
 - Add a new dependency for development
   ```sh
-  $ poetry add <package> --dev
+  $ uv add <package> --dev
   ```
 
 ### Versioning
 The version looks like this: major.minor.patch
-- The repository depends on automatic versioning through github actions. For each commit, the patch version will be increased in the 
+- The repository depends on automatic versioning through github actions. For each commit, the patch version will be increased in the
   pyproject.toml.
 - The major and minor version will only be updated by a manual trigger through github actions (triggering the 'release.yaml') in which case a tag will be created.
 
@@ -138,7 +133,7 @@ INFO     -  [10:44:34] Serving on http://127.0.0.1:8000/
 
 In this case the docs are available on http://127.0.0.1:8000/ or http://localhost:8000
 
-For each release a version of documentation is available at: 
+For each release a version of documentation is available at:
 [deltares.github.io/D-EcoImpact/](https://deltares.github.io/D-EcoImpact/)
 
 ## Add acceptance tests
@@ -147,7 +142,7 @@ To add an acceptance test:
 
 - Create the [name].yaml file and store it in the tests_acceptance/input_yaml_files
 - Put the [name].nc at the tests_acceptance/reference_nc_files folder. \* Note that the .nc file should have the same name as the .yaml file.
-- To test if it is working correctly run: poetry run pytest tests_acceptance/test_main.py
+- To test if it is working correctly run: uv run pytest tests_acceptance/test_main.py
 
 
 
@@ -166,15 +161,15 @@ $ ./build-image.sh
 
 To pull the docker image from the docker hub, run the following command:
 
-```sh 
+```sh
 
 $ docker pull ghcr.io/deltares/d-ecoimpact:latest
 
 ```
 
 ### Authentication with GitHub Container Registry
-Before building your Docker image, ensure you're authenticated with GHCR to allow pulling private images. Use the 
-docker login command with your GitHub username and a Personal Access Token (PAT) that has the appropriate scopes 
+Before building your Docker image, ensure you're authenticated with GHCR to allow pulling private images. Use the
+docker login command with your GitHub username and a Personal Access Token (PAT) that has the appropriate scopes
 (read:packages at a minimum).
 
 ```bash

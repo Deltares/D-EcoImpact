@@ -20,7 +20,7 @@ PATH_TO_MAIN = str(HERE / "main.py")
 
 def install():
     """Function to create self-contained executable out of python files.
-    Function can be called from command line using a poetry function.
+    Function can be called from command line using a uv function.
     Contains settings for pyinstaller."""
 
     # MDK: this warning is disabled on purpose. Using PyInstaller.__main__
