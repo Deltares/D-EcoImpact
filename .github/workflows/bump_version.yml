@@ -8,6 +8,7 @@ on:
       - closed
     branches:
       - main
+      - test_action
 
 jobs:
   bump-up-version:
