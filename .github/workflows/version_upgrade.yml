@@ -6,9 +6,6 @@ name: Version upgrade with uv
 
 on:
   workflow_call:
-    secrets:
-      VERSION_DECOIMPACT:
-        required: true
     inputs:
       release_type:
         required: true
