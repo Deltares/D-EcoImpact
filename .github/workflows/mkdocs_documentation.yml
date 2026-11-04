@@ -2,6 +2,9 @@ name: Create Mkdocs documentation
 
 on:
   workflow_call:
+    secrets:
+      VERSION_DECOIMPACT:
+        required: true
     inputs:
       project_version:
         required: true
