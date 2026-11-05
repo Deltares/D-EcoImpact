@@ -145,8 +145,9 @@ def test_read_missing_variable_raises_error_with_available_names(cgns_path):
 
 
 def test_read_non_existing_file_raises_error(tmp_path):
+    reader = CGNSReader(Mock(ILogger))
     with pytest.raises(FileNotFoundError):
-        CGNSReader(Mock(ILogger)).read_file(tmp_path / "missing.cgns", ["Pressure"])
+        reader.read_file(tmp_path / "missing.cgns", ["Pressure"])
 
 
 def test_data_access_layer_uses_cgns_reader_with_mapping_keys(cgns_path):
