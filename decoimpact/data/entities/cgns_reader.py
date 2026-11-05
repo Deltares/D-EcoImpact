@@ -118,6 +118,7 @@ class CGNSReader:
             time_values = self._time_values(base)
 
         dataset = _xr.Dataset(data_vars)
+        dataset.attrs["source_format"] = "CGNS"
         dataset = self._add_time_coordinate(dataset, time_values, reference_date)
         return self._apply_time_filter(dataset, start_date, end_date)
 
@@ -318,4 +319,3 @@ class CGNSReader:
         """Converts a CGNS character array (C1) to a string"""
         raw = np.asarray(chars).astype(np.uint8).ravel().tobytes()
         return raw.decode("ascii", errors="ignore").strip("\x00 ")
-

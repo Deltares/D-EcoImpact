@@ -14,8 +14,12 @@ from unittest.mock import Mock
 import h5py
 import numpy as np
 import pytest
+import xarray as _xr
 
+from decoimpact.business.entities.rule_based_model import RuleBasedModel
+from decoimpact.business.entities.rules.step_function_rule import StepFunctionRule
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.api.output_file_settings import OutputFileSettings
 from decoimpact.data.entities.cgns_reader import CGNSReader
 from decoimpact.data.entities.data_access_layer import DataAccessLayer
 from decoimpact.data.entities.dataset_data import DatasetData
@@ -159,6 +163,47 @@ def test_data_access_layer_uses_cgns_reader_with_mapping_keys(cgns_path):
 
     assert list(dataset.data_vars) == ["Pressure"]
     assert dataset.sizes["time"] == 3
+    assert dataset.attrs["source_format"] == "CGNS"
+    rule = Mock()
+    rule.name = "pressure rule"
+    rule.input_variable_names = ["q_river"]
+    rule.output_variable_name = "pressure_level"
+    model = RuleBasedModel([dataset], [rule], {"Pressure": "q_river"})
+
+    assert set(model._make_output_variables_list()) == {"time", "Pressure", "q_river"}
+    model.initialize(Mock(ILogger))
+    assert set(model.output_dataset.data_vars) == {"q_river"}
+    assert "time" in model.output_dataset.coords
+
+
+def test_cgns_step_function_output_can_be_written_to_netcdf(cgns_path, tmp_path):
+    logger = Mock(ILogger)
+    data_access = DataAccessLayer(logger)
+    dataset = CGNSReader(logger).read_file(
+        cgns_path, ["Pressure"], reference_date="01-01-2010"
+    )
+    rule = StepFunctionRule(
+        "pressure levels", "pressure", [0.0, 2.0, 4.0, 6.0], [-5.0, 0.0, 0.5, 1.0]
+    )
+    rule.output_variable_name = "pressure_level"
+    model = RuleBasedModel([dataset], [rule], {"Pressure": "pressure"})
+
+    assert model.validate(logger)
+    model.initialize(logger)
+    model.execute(logger)
+    model.finalize(logger)
+
+    result = model.output_dataset["pressure_level"]
+    assert "location" not in result.attrs
+    assert "mesh" not in result.attrs
+    np.testing.assert_array_equal(result.values, [[-5.0, 0.0], [0.0, 0.5], [0.5, 1.0]])
+    output_path = tmp_path / "output.nc"
+    settings = OutputFileSettings("D-EcoImpact", "0.7.1")
+    data_access.write_output_file(model.output_dataset, output_path, settings)
+
+    with _xr.open_dataset(output_path) as written:
+        _xr.testing.assert_equal(written["pressure_level"], result)
+        _xr.testing.assert_equal(written["time"], dataset["time"])
 
 
 @pytest.mark.skipif(not EXAMPLE_CGNS.exists(), reason="example.cgns not available")

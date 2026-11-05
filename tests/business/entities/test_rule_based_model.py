@@ -232,3 +232,42 @@ def test_make_output_variables_list():
 
     var_list = model._make_output_variables_list()
     assert sorted(var_list) == sorted(["var1", "var2", "var4"])
+
+
+def test_make_output_variables_list_for_cgns_dataset():
+    # CGNS data has implicit spatial coordinates and no UGrid mesh variable.
+    dataset = _xr.Dataset(
+        data_vars={"Velocity_0": ("vertex", [1.0, 2.0])},
+        coords={"time": _xr.date_range("2010-01-01", periods=1)},
+        attrs={"source_format": "CGNS"},
+    )
+    rule = Mock(IRule)
+    rule.name = "velocity rule"
+    rule.input_variable_names = ["Velocity_0"]
+    rule.output_variable_name = "velocity_level"
+
+    model = RuleBasedModel([dataset], [rule])
+
+    assert set(model._make_output_variables_list()) == {"time", "Velocity_0"}
+
+
+def test_make_output_variables_list_collects_topology_from_all_datasets():
+    first_dataset = _xr.Dataset(
+        data_vars={"first_mesh": 0, "first_data": ("node", [1])}
+    )
+    first_dataset["first_mesh"].attrs = {"cf_role": "mesh_topology"}
+    first_dataset["first_mesh"].attrs["test_bounds"] = "first_data"
+    second_dataset = _xr.Dataset(
+        data_vars={"second_mesh": 0, "second_data": ("node", [1])}
+    )
+    second_dataset["second_mesh"].attrs = {"cf_role": "mesh_topology"}
+    second_dataset["second_mesh"].attrs["test_bounds"] = "second_data"
+
+    model = RuleBasedModel([first_dataset, second_dataset], [])
+
+    assert set(model._make_output_variables_list()) == {
+        "first_data",
+        "first_mesh",
+        "second_data",
+        "second_mesh",
+    }
