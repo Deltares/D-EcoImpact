@@ -122,43 +122,98 @@ class CGNSReader:
         """Checks all available timestep counts before treating data as static"""
         base_iterative = self._children(base, "BaseIterativeData_t")
         zone_iterative = self._children(zone, "ZoneIterativeData_t")
+
+        counts = []
+        counts.extend(self._extract_base_iterative_counts(base_iterative))
+        counts.extend(self._extract_zone_iterative_counts(zone_iterative))
+
+        self._validate_timestep_counts(counts, base, zone)
+        self._validate_time_dependent_structure(
+            counts, base, base_iterative, zone_iterative
+        )
+
+    def _extract_base_iterative_counts(
+        self, base_iterative: list[h5py.Group]
+    ) -> list[int]:
+        """Extracts timestep counts from BaseIterativeData_t nodes"""
         counts = []
         for iterative in base_iterative:
-            if _DATA in iterative:
-                values = np.asarray(iterative[_DATA][()])
-                if values.size != 1 or values.item() != 1:
-                    raise ValueError(
-                        f"ERROR: Invalid timestep count at '{iterative.name}'. "
-                        "Exactly one timestep is supported."
-                    )
-                counts.append(1)
-            for node in self._children(iterative, "DataArray_t"):
-                if self._name(node) in ("TimeValues", "IterationValues"):
-                    counts.append(node[_DATA].size)
+            counts.extend(self._extract_counts_from_data_node(iterative))
+            counts.extend(self._extract_counts_from_array_nodes(iterative))
+        return counts
 
+    def _extract_zone_iterative_counts(
+        self, zone_iterative: list[h5py.Group]
+    ) -> list[int]:
+        """Extracts timestep counts from ZoneIterativeData_t nodes"""
+        counts = []
         for iterative in zone_iterative:
-            for node in self._children(iterative, "DataArray_t"):
-                if self._name(node) == "FlowSolutionPointers":
-                    shape = node[_DATA].shape
-                    # HDF5 reverses the CGNS (32, NumberOfSteps) axes.
-                    if not shape or shape[-1] != 32:
-                        raise ValueError(
-                            f"ERROR: Invalid FlowSolutionPointers shape {shape} "
-                            f"at '{node.name}'. Expected 32 characters per pointer."
-                        )
-                    counts.append(node[_DATA].size // 32)
+            counts.extend(self._extract_zone_array_counts(iterative))
+        return counts
 
+    def _extract_counts_from_data_node(self, iterative: h5py.Group) -> list[int]:
+        """Validates and extracts count from iterative node's data"""
+        if _DATA not in iterative:
+            return []
+
+        values = np.asarray(iterative[_DATA][()])
+        if values.size != 1 or values.item() != 1:
+            raise ValueError(
+                f"ERROR: Invalid timestep count at '{iterative.name}'. "
+                "Exactly one timestep is supported."
+            )
+        return [1]
+
+    def _extract_counts_from_array_nodes(self, iterative: h5py.Group) -> list[int]:
+        """Extracts counts from TimeValues and IterationValues arrays"""
+        counts = []
+        for node in self._children(iterative, "DataArray_t"):
+            node_name = self._name(node)
+            if node_name in ("TimeValues", "IterationValues"):
+                counts.append(node[_DATA].size)
+        return counts
+
+    def _extract_zone_array_counts(self, iterative: h5py.Group) -> list[int]:
+        """Extracts counts from FlowSolutionPointers array"""
+        counts = []
+        for node in self._children(iterative, "DataArray_t"):
+            if self._name(node) == "FlowSolutionPointers":
+                shape = node[_DATA].shape
+                if not shape or shape[-1] != 32:
+                    raise ValueError(
+                        f"ERROR: Invalid FlowSolutionPointers shape {shape} "
+                        f"at '{node.name}'. Expected 32 characters per pointer."
+                    )
+                counts.append(node[_DATA].size // 32)
+        return counts
+
+    def _validate_timestep_counts(
+        self, counts: list[int], base: h5py.Group, zone: h5py.Group
+    ) -> None:
+        """Ensures all timestep counts equal 1"""
         if any(count != 1 for count in counts):
             raise ValueError(
                 f"ERROR: Invalid timestep counts {counts} in base "
                 f"'{self._name(base)}', zone '{self._name(zone)}'. "
                 "Exactly one timestep is supported."
             )
+
+    def _validate_time_dependent_structure(
+        self,
+        counts: list[int],
+        base: h5py.Group,
+        base_iterative: list[h5py.Group],
+        zone_iterative: list[h5py.Group],
+    ) -> None:
+        """Validates that time-dependent structures have determinable counts"""
+        if counts:
+            return
+
         time_accurate = any(
             self._read_string(node) == "TimeAccurate"
             for node in self._children(base, "SimulationType_t")
         )
-        if not counts and (base_iterative or zone_iterative or time_accurate):
+        if base_iterative or zone_iterative or time_accurate:
             raise ValueError(
                 f"ERROR: Cannot determine the timestep count in base "
                 f"'{self._name(base)}', zone '{self._name(zone)}'. "
