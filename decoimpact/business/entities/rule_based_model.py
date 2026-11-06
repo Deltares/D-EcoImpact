@@ -141,21 +141,19 @@ class RuleBasedModel(IModel):
 
     def _make_output_variables_list(self) -> list:
         """Make the list of variables to be contained in the output dataset.
-        A list of variables needed is obtained from the dummy variable and
-        the dependent variables are recursively looked up. This is done to
-        support XUgrid and to prevent invalid topologies.
-        This also allows QuickPlot to visualize the results.
+        Topology variables are retained for UGrid datasets, while coordinates
+        are retained for other formats such as CGNS.
 
         Args:
             -
 
         Returns:
-            list[str]: dummy, dependendent,  mapping and rule input variables
+            list[str]: topology, mapping and rule input variables
         """
 
+        var_list = []
         for dataset in self._input_datasets:
-            dummy_var_name = _du.get_dummy_variable_in_ugrid(dataset)
-            var_list = _du.get_dependent_var_list(dataset, dummy_var_name)
+            var_list.extend(_du.get_topology_variables(dataset))
 
         mapping_keys = list((self._mappings or {}).keys())
         rule_names = [rule.name for rule in self._rules]

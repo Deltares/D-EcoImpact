@@ -8,6 +8,8 @@
 Tests for DatasetData class
 """
 
+import pytest
+
 from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.entities.dataset_data import DatasetData
 
@@ -60,3 +62,11 @@ def test_dataset_data_time_filter():
     assert data.start_date == "01-01-2019"
     assert data.end_date == "None"
     # the result 'None' should result in not filtering the data set on end date
+
+
+@pytest.mark.parametrize("filename", ["test.nc", "test.cgns"])
+def test_dataset_data_dates_can_be_omitted(filename):
+    data = DatasetData({"filename": filename})
+
+    assert data.start_date == "None"
+    assert data.end_date == "None"

@@ -94,6 +94,31 @@ def test_creating_rule_processor_without_rules_should_throw_exception():
     assert exception_raised.args[0] == expected_message
 
 
+@pytest.mark.parametrize(
+    "source_attrs, expected_attrs",
+    [
+        ({}, {}),
+        ({"location": None, "mesh": None}, {}),
+        (
+            {"location": "face", "mesh": "mesh2d"},
+            {"location": "face", "mesh": "mesh2d"},
+        ),
+        ({"location": "face"}, {"location": "face"}),
+    ],
+)
+def test_copy_definition_attributes_only_copies_defined_metadata(
+    source_attrs, expected_attrs
+):
+    source = _xr.DataArray([1.0], attrs=source_attrs)
+    target = _xr.DataArray([2.0])
+    processor = RuleProcessor([Mock(IRule)], _xr.Dataset())
+
+    processor._copy_definition_attributes(source, target)
+
+    assert target.attrs == expected_attrs
+    assert source.attrs == source_attrs
+
+
 def test_creating_rule_processor_without_input_datasets_should_throw_exception():
     """
     Tests if input datasets are correctly checked during creation of the processor.
