@@ -16,19 +16,16 @@ Classes:
 
 """
 
-from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
 import h5py
 import numpy as np
-import pandas as pd
 import xarray as _xr
 
 from decoimpact.crosscutting.i_logger import ILogger
 
 _DATA = " data"
-_DATE_FORMAT = "%d-%m-%Y"
 _LOCATION_DIM_NAMES = {"Vertex": "vertex", "CellCenter": "cell"}
 
 
@@ -42,32 +39,28 @@ class CGNSReader:
         self,
         path: Path,
         variable_names: Optional[list[str]] = None,
-        start_date: str = "None",
-        end_date: str = "None",
-        reference_date: str = "None",
     ) -> _xr.Dataset:
         """Reads DataArray_t nodes from the first zone of a CGNS file.
 
-        Time dependent data is recognized via the FlowSolutionPointers
-        (ZoneIterativeData_t) and TimeValues (BaseIterativeData_t) nodes.
+        Reads the single FlowSolution_t node, or the zone's DataArray_t
+        nodes if no solution exists. Static files and time-dependent files
+        with exactly one timestep are read as spatial snapshots, without a
+        time dimension. No start or end date is required.
 
         Args:
             path (Path): path to the .cgns file
             variable_names (list[str], optional): names of the DataArray_t
                 nodes to read. If empty, all DataArray_t nodes in the
-                FlowSolution_t nodes are read.
-            start_date (str): optional start date filter ("DD-MM-YYYY")
-            end_date (str): optional end date filter ("DD-MM-YYYY")
-            reference_date (str): date ("DD-MM-YYYY") corresponding to time 0
-                of the TimeValues (in seconds). Required to create a date
-                based time axis.
+                selected solution (or zone if no solution exists) are read.
 
         Returns:
             _xr.Dataset: dataset with one variable per DataArray_t name
 
         Raises:
             FileNotFoundError: if the file does not exist
-            ValueError: if the file or the requested variables cannot be read
+            ValueError: if timestep metadata is invalid or indicates multiple
+                timesteps, the file contains multiple solutions, or the
+                requested variables cannot be read
         """
         if not path.exists():
             raise FileNotFoundError(f"ERROR: The CGNS file {path} does not exist.")
@@ -94,8 +87,16 @@ class CGNSReader:
                     f"'{zone_name}' of base '{self._name(base)}' is read."
                 )
 
-            data_arrays = self._find_data_arrays(zone)
-            names = variable_names or self._flow_solution_array_names(data_arrays)
+            solutions = self._children(zone, "FlowSolution_t")
+            if len(solutions) > 1:
+                raise ValueError(
+                    f"ERROR: Zone '{zone_name}' in CGNS file {path} contains "
+                    f"{len(solutions)} FlowSolution_t nodes. Only one solution "
+                    "is supported."
+                )
+            self._validate_single_timestep(base, zone)
+            data_arrays = self._find_data_arrays(solutions[0] if solutions else zone)
+            names = variable_names or sorted(data_arrays)
 
             missing = [name for name in names if name not in data_arrays]
             if len(missing) > 0:
@@ -105,99 +106,90 @@ class CGNSReader:
                     f"DataArray_t nodes: {sorted(data_arrays)}"
                 )
 
-            solution_order = self._flow_solution_order(zone)
             data_vars = {}
             for name in names:
-                data_vars[name] = self._read_variable(
-                    name, data_arrays[name], solution_order
-                )
+                data_vars[name] = self._read_variable(*data_arrays[name])
                 self._logger.log_info(
                     f"Read CGNS DataArray '{name}' with dimensions "
                     f"{data_vars[name].dims} and shape {data_vars[name].shape}"
                 )
-            time_values = self._time_values(base)
 
         dataset = _xr.Dataset(data_vars)
         dataset.attrs["source_format"] = "CGNS"
-        dataset = self._add_time_coordinate(dataset, time_values, reference_date)
-        return self._apply_time_filter(dataset, start_date, end_date)
+        return dataset
+
+    def _validate_single_timestep(self, base: h5py.Group, zone: h5py.Group) -> None:
+        """Checks all available timestep counts before treating data as static"""
+        base_iterative = self._children(base, "BaseIterativeData_t")
+        zone_iterative = self._children(zone, "ZoneIterativeData_t")
+        counts = []
+        for iterative in base_iterative:
+            if _DATA in iterative:
+                values = np.asarray(iterative[_DATA][()])
+                if values.size != 1 or values.item() != 1:
+                    raise ValueError(
+                        f"ERROR: Invalid timestep count at '{iterative.name}'. "
+                        "Exactly one timestep is supported."
+                    )
+                counts.append(1)
+            for node in self._children(iterative, "DataArray_t"):
+                if self._name(node) in ("TimeValues", "IterationValues"):
+                    counts.append(node[_DATA].size)
+
+        for iterative in zone_iterative:
+            for node in self._children(iterative, "DataArray_t"):
+                if self._name(node) == "FlowSolutionPointers":
+                    shape = node[_DATA].shape
+                    # HDF5 reverses the CGNS (32, NumberOfSteps) axes.
+                    if not shape or shape[-1] != 32:
+                        raise ValueError(
+                            f"ERROR: Invalid FlowSolutionPointers shape {shape} "
+                            f"at '{node.name}'. Expected 32 characters per pointer."
+                        )
+                    counts.append(node[_DATA].size // 32)
+
+        if any(count != 1 for count in counts):
+            raise ValueError(
+                f"ERROR: Invalid timestep counts {counts} in base "
+                f"'{self._name(base)}', zone '{self._name(zone)}'. "
+                "Exactly one timestep is supported."
+            )
+        time_accurate = any(
+            self._read_string(node) == "TimeAccurate"
+            for node in self._children(base, "SimulationType_t")
+        )
+        if not counts and (base_iterative or zone_iterative or time_accurate):
+            raise ValueError(
+                f"ERROR: Cannot determine the timestep count in base "
+                f"'{self._name(base)}', zone '{self._name(zone)}'. "
+                "Exactly one timestep is required for time-dependent CGNS input."
+            )
 
     def _find_data_arrays(
         self, group: h5py.Group
-    ) -> dict[str, list[tuple[h5py.Group, h5py.Group]]]:
-        """Finds all DataArray_t nodes (with their parent node) below a node"""
-        found: dict[str, list[tuple[h5py.Group, h5py.Group]]] = {}
+    ) -> dict[str, tuple[h5py.Group, h5py.Group]]:
+        """Finds unique DataArray_t nodes with their parent below a node"""
+        found: dict[str, tuple[h5py.Group, h5py.Group]] = {}
 
         def visit(parent: h5py.Group):
             for child in self._children(parent):
                 label = self._label(child)
                 if label == "DataArray_t":
-                    found.setdefault(self._name(child), []).append((parent, child))
+                    name = self._name(child)
+                    if name in found:
+                        raise ValueError(
+                            f"ERROR: DataArray '{name}' occurs multiple times "
+                            f"({found[name][1].name}, {child.name})."
+                        )
+                    found[name] = (parent, child)
                 elif label != "ZoneIterativeData_t":
                     visit(child)
 
         visit(group)
         return found
 
-    def _flow_solution_array_names(
-        self, data_arrays: dict[str, list[tuple[h5py.Group, h5py.Group]]]
-    ) -> list[str]:
-        return sorted(
-            name
-            for name, nodes in data_arrays.items()
-            if any(self._label(parent) == "FlowSolution_t" for parent, _ in nodes)
-        )
-
-    def _flow_solution_order(self, zone: h5py.Group) -> Optional[list[str]]:
-        """Names of the FlowSolution_t nodes per time step (FlowSolutionPointers)"""
-        for iterative_data in self._children(zone, "ZoneIterativeData_t"):
-            pointers = self._child(iterative_data, "FlowSolutionPointers")
-            if pointers is not None and _DATA in pointers:
-                rows = np.atleast_2d(pointers[_DATA][()])
-                return [self._to_string(row) for row in rows]
-        return None
-
-    def _time_values(self, base: h5py.Group) -> Optional[np.ndarray]:
-        for iterative_data in self._children(base, "BaseIterativeData_t"):
-            time_values = self._child(iterative_data, "TimeValues")
-            if time_values is not None and _DATA in time_values:
-                return np.asarray(time_values[_DATA][()], dtype=float).ravel()
-        return None
-
-    def _read_variable(
-        self,
-        name: str,
-        nodes: list[tuple[h5py.Group, h5py.Group]],
-        solution_order: Optional[list[str]],
-    ) -> _xr.Variable:
-        """Reads a DataArray_t, stacking the time steps if it is time dependent"""
-        by_solution = {self._name(parent): (parent, node) for parent, node in nodes}
-        steps = [s for s in (solution_order or []) if s in by_solution]
-
-        if len(steps) > 0:
-            if len(steps) != len(solution_order or []):
-                missing_steps = [s for s in solution_order or [] if s not in steps]
-                raise ValueError(
-                    f"ERROR: DataArray '{name}' is missing in FlowSolution(s) "
-                    f"{missing_steps} referenced by FlowSolutionPointers."
-                )
-            arrays = [by_solution[s][1][_DATA][()] for s in steps]
-            if len({array.shape for array in arrays}) > 1:
-                raise ValueError(
-                    f"ERROR: DataArray '{name}' has different shapes per time step."
-                )
-            parent, node = by_solution[steps[0]]
-            dims = ("time",) + self._dims(parent, arrays[0].ndim)
-            return _xr.Variable(dims, np.stack(arrays), {"cgns_path": parent.name})
-
-        if len(nodes) > 1:
-            paths = [node.name for _, node in nodes]
-            raise ValueError(
-                f"ERROR: DataArray '{name}' occurs multiple times ({paths}) and "
-                "the CGNS file has no FlowSolutionPointers to order them in time."
-            )
-
-        parent, node = nodes[0]
+    def _read_variable(self, parent: h5py.Group, node: h5py.Group) -> _xr.Variable:
+        """Reads a single DataArray_t"""
         data = node[_DATA][()]
         return _xr.Variable(
             self._dims(parent, data.ndim), data, {"cgns_path": node.name}
@@ -219,64 +211,6 @@ class CGNSReader:
         axes = ["i", "j", "k"][:ndim] if ndim <= 3 else [str(n) for n in range(ndim)]
         return tuple(f"{dim_name}_{axis}" for axis in reversed(axes))
 
-    def _add_time_coordinate(
-        self,
-        dataset: _xr.Dataset,
-        time_values: Optional[np.ndarray],
-        reference_date: str,
-    ) -> _xr.Dataset:
-        if "time" not in dataset.dims:
-            return dataset
-
-        n_steps = dataset.sizes["time"]
-        if time_values is None or len(time_values) < n_steps:
-            raise ValueError(
-                "ERROR: CGNS file has FlowSolutionPointers but no (or too few) "
-                "TimeValues in BaseIterativeData_t."
-            )
-        seconds = time_values[:n_steps]
-
-        if reference_date == "None":
-            self._logger.log_warning(
-                "No reference_date given for the CGNS dataset. The time "
-                "coordinate contains the TimeValues (seconds). Add "
-                "reference_date to the dataset in the input file to get dates "
-                "(needed for time filtering and time based rules)."
-            )
-            return dataset.assign_coords(time=("time", seconds))
-
-        start = pd.Timestamp(datetime.strptime(reference_date, _DATE_FORMAT))
-        times = start + pd.to_timedelta(seconds, unit="s")
-        return dataset.assign_coords(time=("time", times))
-
-    def _apply_time_filter(
-        self, dataset: _xr.Dataset, start_date: str, end_date: str
-    ) -> _xr.Dataset:
-        if start_date == "None" and end_date == "None":
-            return dataset
-
-        if "time" not in dataset.coords or not np.issubdtype(
-            dataset["time"].dtype, np.datetime64
-        ):
-            self._logger.log_warning(
-                "start_date/end_date are ignored: the CGNS dataset has no date "
-                "based time axis (requires time dependent data and reference_date)."
-            )
-            return dataset
-
-        filter_start = (
-            datetime.strptime(start_date, _DATE_FORMAT)
-            if start_date != "None"
-            else None
-        )
-        filter_end = (
-            datetime.strptime(end_date, _DATE_FORMAT) if end_date != "None" else None
-        )
-        self._logger.log_info(
-            f"Applying time filter ({filter_start}, {filter_end}) on dataset"
-        )
-        return dataset.sel(time=slice(filter_start, filter_end))
-
     def _children(
         self, group: h5py.Group, label: Optional[str] = None
     ) -> list[h5py.Group]:
@@ -286,12 +220,6 @@ class CGNSReader:
             if isinstance(child, h5py.Group)
             and (label is None or self._label(child) == label)
         ]
-
-    def _child(self, group: h5py.Group, name: str) -> Optional[h5py.Group]:
-        for child in self._children(group):
-            if self._name(child) == name:
-                return child
-        return None
 
     def _label(self, node: h5py.Group) -> str:
         return self._attribute(node, "label")

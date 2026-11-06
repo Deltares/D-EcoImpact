@@ -36,10 +36,6 @@ class IDatasetData(ABC):
         """end date to filter the dataset"""
         # end_date is passed as string (not datetime) because it is optional
 
-    @property
-    @abstractmethod
-    def reference_date(self) -> str:
-        """date corresponding to time 0 of the dataset (used for CGNS files)"""
 
     @property
     @abstractmethod

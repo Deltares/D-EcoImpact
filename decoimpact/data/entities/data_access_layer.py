@@ -116,9 +116,6 @@ class DataAccessLayer(IDataAccessLayer):
             return CGNSReader(self._logger).read_file(
                 dataset_data.path,
                 list(mapping.keys()),
-                dataset_data.start_date,
-                dataset_data.end_date,
-                dataset_data.reference_date,
             )
 
         # get start and end date from input file and convert to date format

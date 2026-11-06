@@ -72,66 +72,190 @@ def _create_cgns_file(path, time_dependent=True):
 @pytest.fixture(name="cgns_path")
 def fixture_cgns_path(tmp_path):
     path = tmp_path / "test.cgns"
-    _create_cgns_file(path)
+    _create_cgns_file(path, time_dependent=False)
     return path
-
-
-def test_read_time_dependent_data_array_with_reference_date(cgns_path):
-    """FlowSolutions referenced by FlowSolutionPointers form the time axis"""
-    reader = CGNSReader(Mock(ILogger))
-
-    dataset = reader.read_file(cgns_path, ["Pressure"], reference_date="01-01-2010")
-
-    assert list(dataset.data_vars) == ["Pressure"]
-    assert dataset["Pressure"].dims == ("time", "cell")
-    assert np.array_equal(dataset["Pressure"].values, PRESSURE)
-    assert str(dataset["time"].values[1])[:10] == "2010-01-02"
-
-
-def test_read_time_dependent_data_applies_time_filter(cgns_path):
-    reader = CGNSReader(Mock(ILogger))
-
-    dataset = reader.read_file(
-        cgns_path,
-        ["Pressure"],
-        start_date="02-01-2010",
-        reference_date="01-01-2010",
-    )
-
-    assert np.array_equal(dataset["Pressure"].values, PRESSURE[1:])
-
-
-def test_read_without_reference_date_keeps_time_values_and_warns(cgns_path):
-    logger = Mock(ILogger)
-    reader = CGNSReader(logger)
-
-    dataset = reader.read_file(cgns_path, ["Pressure"])
-
-    assert list(dataset["time"].values) == [0.0, 86400.0, 172800.0]
-    logger.log_warning.assert_called_once()
 
 
 def test_read_all_flow_solution_arrays_if_no_variables_given(cgns_path):
     reader = CGNSReader(Mock(ILogger))
 
-    dataset = reader.read_file(cgns_path, [], reference_date="01-01-2010")
+    dataset = reader.read_file(cgns_path, [])
 
     assert sorted(dataset.data_vars) == ["Density", "Pressure"]
 
 
 def test_read_static_data_array(tmp_path):
-    """Without FlowSolutionPointers a single DataArray has no time dimension"""
+    """Static CGNS data needs no dates and has no time dimension"""
     path = tmp_path / "static.cgns"
     _create_cgns_file(path, time_dependent=False)
     logger = Mock(ILogger)
 
-    dataset = CGNSReader(logger).read_file(
-        path, ["Pressure", "CoordinateX"], start_date="01-01-2010"
-    )
+    dataset = CGNSReader(logger).read_file(path, ["Pressure"])
 
     assert dataset["Pressure"].dims == ("cell",)
+    np.testing.assert_array_equal(dataset["Pressure"].values, PRESSURE[0])
+    assert dataset["Pressure"].attrs["cgns_path"] == "/Base/Zone/Sol1/Pressure"
+    logger.log_warning.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "label",
+    ["BaseIterativeData_t", "ZoneIterativeData_t", "both"],
+)
+@pytest.mark.parametrize("with_solution", [False, True])
+def test_single_timestep_is_read_as_static_snapshot(cgns_path, label, with_solution):
+    with h5py.File(cgns_path, "a") as cgns_file:
+        base = cgns_file["Base"]
+        zone = base["Zone"]
+        if not with_solution:
+            del zone["Sol1"]
+        _node(base, "SimulationType", "SimulationType_t", _chars("TimeAccurate"))
+        if label in ("BaseIterativeData_t", "both"):
+            iterative = _node(base, "BaseIterativeData", "BaseIterativeData_t", [1])
+            _node(iterative, "TimeValues", "DataArray_t", [0.0])
+        if label in ("ZoneIterativeData_t", "both"):
+            iterative = _node(zone, "ZoneIterativeData", "ZoneIterativeData_t")
+            pointer = "Sol1" if with_solution else ""
+            _node(
+                iterative,
+                "FlowSolutionPointers",
+                "DataArray_t",
+                _chars(pointer, 32).reshape(1, 32),
+            )
+
+    dataset = DataAccessLayer(Mock(ILogger)).read_input_dataset(
+        DatasetData({"filename": str(cgns_path)})
+    )
+
+    assert "time" not in dataset.dims
+    assert "FlowSolutionPointers" not in dataset
+    if with_solution:
+        assert sorted(dataset.data_vars) == ["Density", "Pressure"]
+        np.testing.assert_array_equal(dataset["Pressure"].values, PRESSURE[0])
+    else:
+        assert list(dataset.data_vars) == ["CoordinateX"]
+
+
+@pytest.mark.parametrize(
+    "source", ["step_count", "TimeValues", "IterationValues", "pointers"]
+)
+@pytest.mark.parametrize("count", [0, 2, 3])
+def test_invalid_timestep_counts_are_rejected(cgns_path, source, count):
+    with h5py.File(cgns_path, "a") as cgns_file:
+        base = cgns_file["Base"]
+        if source == "pointers":
+            iterative = _node(base["Zone"], "ZoneIterativeData", "ZoneIterativeData_t")
+            pointers = np.tile(_chars("Sol1", 32), (count, 1))
+            _node(iterative, "FlowSolutionPointers", "DataArray_t", pointers)
+        else:
+            iterative = _node(
+                base,
+                "BaseIterativeData",
+                "BaseIterativeData_t",
+                [count if source == "step_count" else 1],
+            )
+            if source != "step_count":
+                _node(iterative, source, "DataArray_t", np.arange(count))
+
+    with pytest.raises(ValueError, match="Exactly one timestep"):
+        CGNSReader(Mock(ILogger)).read_file(cgns_path)
+
+
+@pytest.mark.parametrize("metadata", ["simulation_type", "base", "zone"])
+def test_time_metadata_without_timestep_count_is_rejected(cgns_path, metadata):
+    with h5py.File(cgns_path, "a") as cgns_file:
+        base = cgns_file["Base"]
+        if metadata == "simulation_type":
+            _node(base, "SimulationType", "SimulationType_t", _chars("TimeAccurate"))
+        elif metadata == "base":
+            _node(base, "BaseIterativeData", "BaseIterativeData_t")
+        else:
+            _node(base["Zone"], "ZoneIterativeData", "ZoneIterativeData_t")
+
+    with pytest.raises(ValueError, match="Cannot determine the timestep count"):
+        CGNSReader(Mock(ILogger)).read_file(cgns_path)
+
+
+def test_single_time_value_without_declared_count_is_supported(cgns_path):
+    with h5py.File(cgns_path, "a") as cgns_file:
+        iterative = _node(cgns_file["Base"], "BaseIterativeData", "BaseIterativeData_t")
+        _node(iterative, "TimeValues", "DataArray_t", [42.0])
+
+    dataset = CGNSReader(Mock(ILogger)).read_file(cgns_path, ["Pressure"])
+
+    assert dataset["Pressure"].dims == ("cell",)
+
+
+def test_malformed_solution_pointers_are_rejected(cgns_path):
+    with h5py.File(cgns_path, "a") as cgns_file:
+        iterative = _node(
+            cgns_file["Base/Zone"], "ZoneIterativeData", "ZoneIterativeData_t"
+        )
+        _node(iterative, "FlowSolutionPointers", "DataArray_t", _chars("Sol1"))
+
+    with pytest.raises(ValueError, match="Invalid FlowSolutionPointers shape"):
+        CGNSReader(Mock(ILogger)).read_file(cgns_path)
+
+
+def test_explicitly_steady_file_is_supported(cgns_path):
+    with h5py.File(cgns_path, "a") as cgns_file:
+        _node(
+            cgns_file["Base"],
+            "SimulationType",
+            "SimulationType_t",
+            _chars("NonTimeAccurate"),
+        )
+
+    dataset = CGNSReader(Mock(ILogger)).read_file(cgns_path, ["Pressure"])
+
+    assert dataset["Pressure"].dims == ("cell",)
+    np.testing.assert_array_equal(dataset["Pressure"].values, PRESSURE[0])
+
+
+@pytest.mark.parametrize("variable_names", [None, [], ["CoordinateX"]])
+def test_read_zone_arrays_without_solution(tmp_path, variable_names):
+    path = tmp_path / "no_solution.cgns"
+    _create_cgns_file(path, time_dependent=False)
+    with h5py.File(path, "a") as cgns_file:
+        del cgns_file["Base/Zone/Sol1"]
+
+    dataset = CGNSReader(Mock(ILogger)).read_file(path, variable_names)
+
+    assert list(dataset.data_vars) == ["CoordinateX"]
     assert dataset["CoordinateX"].dims == ("vertex",)
-    logger.log_warning.assert_called_once()  # time filter is ignored
+    np.testing.assert_array_equal(dataset["CoordinateX"].values, np.arange(4.0))
+
+
+@pytest.mark.parametrize("with_pointers", [False, True])
+@pytest.mark.parametrize("variable_names", [None, ["Pressure"]])
+def test_multiple_solutions_raise_before_reading_variables(
+    tmp_path, with_pointers, variable_names
+):
+    path = tmp_path / "multiple_solutions.cgns"
+    _create_cgns_file(path)
+    with h5py.File(path, "a") as cgns_file:
+        zone = cgns_file["Base/Zone"]
+        del zone["Sol2/Pressure"]
+        del zone["Sol3/Pressure"]
+        if not with_pointers:
+            del zone["ZoneIterativeData"]
+
+    with pytest.raises(ValueError, match="3 FlowSolution_t nodes"):
+        CGNSReader(Mock(ILogger)).read_file(path, variable_names)
+
+
+def test_variable_outside_solution_is_not_available(cgns_path):
+    with pytest.raises(ValueError, match="CoordinateX.*not found"):
+        CGNSReader(Mock(ILogger)).read_file(cgns_path, ["CoordinateX"])
+
+
+def test_duplicate_arrays_raise_during_discovery(cgns_path):
+    with h5py.File(cgns_path, "a") as cgns_file:
+        extra = _node(cgns_file["Base/Zone/Sol1"], "Extra", "UserDefinedData_t")
+        _node(extra, "Pressure", "DataArray_t", np.zeros(2))
+
+    with pytest.raises(ValueError, match="DataArray 'Pressure' occurs multiple times"):
+        CGNSReader(Mock(ILogger)).read_file(cgns_path, ["Density"])
 
 
 def test_read_missing_variable_raises_error_with_available_names(cgns_path):
@@ -155,7 +279,6 @@ def test_data_access_layer_uses_cgns_reader_with_mapping_keys(cgns_path):
     data = DatasetData(
         {
             "filename": str(cgns_path),
-            "reference_date": "01-01-2010",
             "variable_mapping": {"Pressure": "q_river"},
         }
     )
@@ -163,7 +286,7 @@ def test_data_access_layer_uses_cgns_reader_with_mapping_keys(cgns_path):
     dataset = DataAccessLayer(Mock(ILogger)).read_input_dataset(data)
 
     assert list(dataset.data_vars) == ["Pressure"]
-    assert dataset.sizes["time"] == 3
+    assert dataset.sizes["cell"] == 2
     assert dataset.attrs["source_format"] == "CGNS"
     rule = Mock()
     rule.name = "pressure rule"
@@ -171,18 +294,16 @@ def test_data_access_layer_uses_cgns_reader_with_mapping_keys(cgns_path):
     rule.output_variable_name = "pressure_level"
     model = RuleBasedModel([dataset], [rule], {"Pressure": "q_river"})
 
-    assert set(model._make_output_variables_list()) == {"time", "Pressure", "q_river"}
+    assert set(model._make_output_variables_list()) == {"Pressure", "q_river"}
     model.initialize(Mock(ILogger))
     assert set(model.output_dataset.data_vars) == {"q_river"}
-    assert "time" in model.output_dataset.coords
+    assert "time" not in model.output_dataset.coords
 
 
 def test_cgns_step_function_output_can_be_written_to_netcdf(cgns_path, tmp_path):
     logger = Mock(ILogger)
     data_access = DataAccessLayer(logger)
-    dataset = CGNSReader(logger).read_file(
-        cgns_path, ["Pressure"], reference_date="01-01-2010"
-    )
+    dataset = CGNSReader(logger).read_file(cgns_path, ["Pressure"])
     rule = StepFunctionRule(
         "pressure levels", "pressure", [0.0, 2.0, 4.0, 6.0], [-5.0, 0.0, 0.5, 1.0]
     )
@@ -197,14 +318,13 @@ def test_cgns_step_function_output_can_be_written_to_netcdf(cgns_path, tmp_path)
     result = model.output_dataset["pressure_level"]
     assert "location" not in result.attrs
     assert "mesh" not in result.attrs
-    np.testing.assert_array_equal(result.values, [[-5.0, 0.0], [0.0, 0.5], [0.5, 1.0]])
+    np.testing.assert_array_equal(result.values, [-5.0, 0.0])
     output_path = tmp_path / "output.nc"
     settings = OutputFileSettings("D-EcoImpact", "0.7.1")
     data_access.write_output_file(model.output_dataset, output_path, settings)
 
     with _xr.open_dataset(output_path) as written:
         _xr.testing.assert_equal(written["pressure_level"], result)
-        _xr.testing.assert_equal(written["time"], dataset["time"])
 
 
 @pytest.mark.skipif(not EXAMPLE_CGNS.exists(), reason="example.cgns not available")

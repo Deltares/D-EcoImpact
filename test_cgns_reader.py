@@ -45,9 +45,6 @@ def test_cgns_reader():
         dataset = reader.read_file(
             cgns_file,
             variable_names,
-            start_date="01-01-2010",
-            end_date="31-12-2019",
-            reference_date="01-01-2010",
         )
         print("SUCCESS: Dataset loaded successfully")
         print(f"Dataset structure:\n{dataset}")
