@@ -157,8 +157,9 @@ def test_invalid_timestep_counts_are_rejected(cgns_path, source, count):
             if source != "step_count":
                 _node(iterative, source, "DataArray_t", np.arange(count))
 
+    mock_reader = CGNSReader(Mock(ILogger))
     with pytest.raises(ValueError, match="Exactly one timestep"):
-        CGNSReader(Mock(ILogger)).read_file(cgns_path)
+        mock_reader.read_file(cgns_path)
 
 
 @pytest.mark.parametrize("metadata", ["simulation_type", "base", "zone"])
@@ -172,8 +173,9 @@ def test_time_metadata_without_timestep_count_is_rejected(cgns_path, metadata):
         else:
             _node(base["Zone"], "ZoneIterativeData", "ZoneIterativeData_t")
 
+    mock_reader = CGNSReader(Mock(ILogger))
     with pytest.raises(ValueError, match="Cannot determine the timestep count"):
-        CGNSReader(Mock(ILogger)).read_file(cgns_path)
+        mock_reader.read_file(cgns_path)
 
 
 def test_single_time_value_without_declared_count_is_supported(cgns_path):
@@ -193,8 +195,9 @@ def test_malformed_solution_pointers_are_rejected(cgns_path):
         )
         _node(iterative, "FlowSolutionPointers", "DataArray_t", _chars("Sol1"))
 
+    mock_reader = CGNSReader(Mock(ILogger))
     with pytest.raises(ValueError, match="Invalid FlowSolutionPointers shape"):
-        CGNSReader(Mock(ILogger)).read_file(cgns_path)
+        mock_reader.read_file(cgns_path)
 
 
 def test_explicitly_steady_file_is_supported(cgns_path):
@@ -240,13 +243,15 @@ def test_multiple_solutions_raise_before_reading_variables(
         if not with_pointers:
             del zone["ZoneIterativeData"]
 
+    mock_reader = CGNSReader(Mock(ILogger))
     with pytest.raises(ValueError, match="3 FlowSolution_t nodes"):
-        CGNSReader(Mock(ILogger)).read_file(path, variable_names)
+        mock_reader.read_file(path, variable_names)
 
 
 def test_variable_outside_solution_is_not_available(cgns_path):
+    mock_reader = CGNSReader(Mock(ILogger))
     with pytest.raises(ValueError, match="CoordinateX.*not found"):
-        CGNSReader(Mock(ILogger)).read_file(cgns_path, ["CoordinateX"])
+        mock_reader.read_file(cgns_path, ["CoordinateX"])
 
 
 def test_duplicate_arrays_raise_during_discovery(cgns_path):
@@ -254,8 +259,9 @@ def test_duplicate_arrays_raise_during_discovery(cgns_path):
         extra = _node(cgns_file["Base/Zone/Sol1"], "Extra", "UserDefinedData_t")
         _node(extra, "Pressure", "DataArray_t", np.zeros(2))
 
+    mock_reader = CGNSReader(Mock(ILogger))
     with pytest.raises(ValueError, match="DataArray 'Pressure' occurs multiple times"):
-        CGNSReader(Mock(ILogger)).read_file(cgns_path, ["Density"])
+        mock_reader.read_file(cgns_path, ["Density"])
 
 
 def test_read_missing_variable_raises_error_with_available_names(cgns_path):
