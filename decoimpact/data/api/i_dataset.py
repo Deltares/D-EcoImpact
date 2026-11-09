@@ -36,7 +36,6 @@ class IDatasetData(ABC):
         """end date to filter the dataset"""
         # end_date is passed as string (not datetime) because it is optional
 
-
     @property
     @abstractmethod
     def mapping(self) -> dict[str, str]:

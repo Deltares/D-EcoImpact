@@ -129,7 +129,7 @@ class CGNSReader:
 
         self._validate_timestep_counts(counts, base, zone)
         self._validate_time_dependent_structure(
-            counts, base, base_iterative, zone_iterative
+            counts, base, zone, base_iterative, zone_iterative
         )
 
     def _extract_base_iterative_counts(
@@ -202,6 +202,7 @@ class CGNSReader:
         self,
         counts: list[int],
         base: h5py.Group,
+        zone: h5py.Group,
         base_iterative: list[h5py.Group],
         zone_iterative: list[h5py.Group],
     ) -> None:
