@@ -179,6 +179,21 @@ class DataAccessLayer(IDataAccessLayer):
         """
         self._logger.log_info(f"Writing model output data to {path}")
 
+        source, source_format = self._get_output_source(dataset, path, settings)
+        OutputFileSettings.validate_format(source or Path("input.nc"), path)
+
+        if source_format == "CGNS":
+            self._write_cgns_output(dataset, path, settings)
+            return
+        self._write_netcdf_output(dataset, path, settings)
+
+    def _get_output_source(
+        self,
+        dataset: _xr.Dataset,
+        path: Path,
+        settings: OutputFileSettings,
+    ) -> tuple[Path | None, str | None]:
+        """Resolve the source template and validate CGNS provenance."""
         source = settings.source_path
         source_format = dataset.attrs.get("source_format")
         if source_format == "CGNS":
@@ -193,22 +208,28 @@ class DataAccessLayer(IDataAccessLayer):
             source = recorded_source
         elif path.suffix.lower() == ".cgns":
             raise ValueError("CGNS output requires a dataset read from CGNS input.")
-        OutputFileSettings.validate_format(source or Path("input.nc"), path)
+        return source, source_format
 
-        if source_format == "CGNS":
-            try:
-                if settings.variables_to_save:
-                    dataset = reduce_dataset_for_writing(
-                        dataset, settings.variables_to_save, self._logger
-                    )
-                CGNSWriter(self._logger).write_file(dataset, path, settings)
-            except (OSError, ValueError) as exc:
-                self._logger.log_error(
-                    f"ERROR: Cannot write output .cgns file -- {path}: {exc}"
+    def _write_cgns_output(
+        self, dataset: _xr.Dataset, path: Path, settings: OutputFileSettings
+    ) -> None:
+        """Reduce and write a CGNS dataset, logging write failures."""
+        try:
+            if settings.variables_to_save:
+                dataset = reduce_dataset_for_writing(
+                    dataset, settings.variables_to_save, self._logger
                 )
-                raise
-            return
+            CGNSWriter(self._logger).write_file(dataset, path, settings)
+        except (OSError, ValueError) as exc:
+            self._logger.log_error(
+                f"ERROR: Cannot write output .cgns file -- {path}: {exc}"
+            )
+            raise
 
+    def _write_netcdf_output(
+        self, dataset: _xr.Dataset, path: Path, settings: OutputFileSettings
+    ) -> None:
+        """Prepare and write a NetCDF dataset."""
         if not Path.exists(path.parent):
             # try to make intermediate folders
             Path(path.parent).mkdir(parents=True, exist_ok=True)
