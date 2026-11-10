@@ -192,76 +192,118 @@ class CGNSWriter:
         timestep. Boolean, integer, and floating-point values are converted
         to the corresponding supported NumPy dtype.
         """
-        variables = {}
+        variables: dict[str, np.ndarray] = {}
         for name, variable in dataset.data_vars.items():
-            try:
-                encoded = name.encode("ascii")
-            except UnicodeEncodeError as exc:
-                raise ValueError(f"CGNS variable name must be ASCII: {name!r}") from exc
-            if (
-                not encoded
-                or len(encoded) > 32
-                or "/" in name
-                or name.startswith(" ")
-                or "\x00" in name
-                or name in (".", "..", "EcoImpactProvenance")
-            ):
-                raise ValueError(f"Invalid CGNS variable name: {name!r}")
-            if any(dim.startswith("time") and dim != "time" for dim in variable.dims):
-                raise ValueError(
-                    f"CGNS output does not support derived time axes: {name}"
-                )
-            if "time" in variable.dims:
-                if variable.sizes["time"] != 1:
-                    raise ValueError(
-                        "CGNS output supports exactly one timestep, not timeseries."
-                    )
-                if "time" not in variable.coords:
-                    raise ValueError(
-                        "Single-timestep CGNS output requires its original time value."
-                    )
-                base = template[dataset.attrs["cgns_base_path"]]
-                times = [
-                    child[DATA][()].ravel()
-                    for iterative in self._nodes._children(base, "BaseIterativeData_t")
-                    for child in self._nodes._children(iterative, "DataArray_t")
-                    if self._nodes._name(child) == "TimeValues"
-                ]
-                if not times or not np.array_equal(variable["time"].values, times[0]):
-                    raise ValueError(
-                        "CGNS output time must match the original TimeValues."
-                    )
-                variable = variable.isel(time=0, drop=True)
-            if (variable.dims, variable.shape) not in layouts:
-                raise ValueError(
-                    f"CGNS output variable {name!r} has incompatible mesh dimensions "
-                    f"{variable.dims} and shape {variable.shape}."
-                )
-            values = np.asarray(variable.values)
-            if values.dtype.kind == "b": # converting boolean to integer
-                values = values.astype(np.int32)
-            elif values.dtype.kind in "iu": # signed or unsigned integer
-                if values.size and (
-                    int(values.min()) < np.iinfo(np.int64).min
-                    or int(values.max()) > np.iinfo(np.int64).max
-                ):
-                    raise ValueError(f"CGNS integer values out of range: {name}")
-                use_int32 = values.dtype.itemsize <= 4 and (
-                    not values.size or values.max() <= np.iinfo(np.int32).max
-                )
-                values = values.astype(np.int32 if use_int32 else np.int64)
-            elif values.dtype.kind == "f" and values.dtype.itemsize <= 8: # floating-point numbers
-                values = values.astype(
-                    np.float32 if values.dtype.itemsize <= 4 else np.float64
-                )
-            else:
-                raise ValueError(
-                    f"Unsupported CGNS output dtype for {name}: {values.dtype}"
-                )
-            variables[name] = values
+            variables[name] = self._prepare_variable(
+                name, variable, dataset, layouts, template
+            )
         if not variables:
             raise ValueError("CGNS output requires at least one spatial variable.")
         return variables
+
+    def _prepare_variable(
+        self,
+        name: str,
+        variable: xr.DataArray,
+        dataset: xr.Dataset,
+        layouts: set[tuple[tuple[str, ...], tuple[int, ...]]],
+        template: h5py.File,
+    ) -> np.ndarray:
+        """Validate one variable's name and layout, then convert its values."""
+        self._validate_variable_name(name)
+        variable = self._prepare_time_axis(name, variable, dataset, template)
+        if (variable.dims, variable.shape) not in layouts:
+            raise ValueError(
+                f"CGNS output variable {name!r} has incompatible mesh dimensions "
+                f"{variable.dims} and shape {variable.shape}."
+            )
+        return self._convert_values(name, np.asarray(variable.values))
+
+    @staticmethod
+    def _validate_variable_name(name: str) -> None:
+        """Ensure a variable name is valid for a CGNS node."""
+        try:
+            encoded = name.encode("ascii")
+        except UnicodeEncodeError as exc:
+            raise ValueError(f"CGNS variable name must be ASCII: {name!r}") from exc
+        if (
+            not encoded
+            or len(encoded) > 32
+            or "/" in name
+            or name.startswith(" ")
+            or "\x00" in name
+            or name in (".", "..", "EcoImpactProvenance")
+        ):
+            raise ValueError(f"Invalid CGNS variable name: {name!r}")
+
+    def _prepare_time_axis(
+        self,
+        name: str,
+        variable: xr.DataArray,
+        dataset: xr.Dataset,
+        template: h5py.File,
+    ) -> xr.DataArray:
+        """Validate supported time dimensions and remove a matching singleton."""
+        if any(dim.startswith("time") and dim != "time" for dim in variable.dims):
+            raise ValueError(
+                f"CGNS output does not support derived time axes: {name}"
+            )
+        if "time" not in variable.dims:
+            return variable
+        return self._drop_matching_single_timestep(variable, dataset, template)
+
+    def _drop_matching_single_timestep(
+        self,
+        variable: xr.DataArray,
+        dataset: xr.Dataset,
+        template: h5py.File,
+    ) -> xr.DataArray:
+        """Require a single original time value and remove its dimension."""
+        if variable.sizes["time"] != 1:
+            raise ValueError(
+                "CGNS output supports exactly one timestep, not timeseries."
+            )
+        if "time" not in variable.coords:
+            raise ValueError(
+                "Single-timestep CGNS output requires its original time value."
+            )
+        base = template[dataset.attrs["cgns_base_path"]]
+        times = [
+            child[DATA][()].ravel()
+            for iterative in self._nodes._children(base, "BaseIterativeData_t")
+            for child in self._nodes._children(iterative, "DataArray_t")
+            if self._nodes._name(child) == "TimeValues"
+        ]
+        if not times or not np.array_equal(variable["time"].values, times[0]):
+            raise ValueError("CGNS output time must match the original TimeValues.")
+        return variable.isel(time=0, drop=True)
+
+    def _convert_values(self, name: str, values: np.ndarray) -> np.ndarray:
+        """Convert supported variable values to CGNS-compatible NumPy types."""
+        if values.dtype.kind == "b":
+            return values.astype(np.int32)
+        if values.dtype.kind in "iu":
+            return self._convert_integer_values(name, values)
+        if values.dtype.kind == "f" and values.dtype.itemsize <= 8:
+            return values.astype(
+                np.float32 if values.dtype.itemsize <= 4 else np.float64
+            )
+        raise ValueError(
+            f"Unsupported CGNS output dtype for {name}: {values.dtype}"
+        )
+
+    @staticmethod
+    def _convert_integer_values(name: str, values: np.ndarray) -> np.ndarray:
+        """Check integer range and select the narrowest supported CGNS type."""
+        if values.size and (
+            int(values.min()) < np.iinfo(np.int64).min
+            or int(values.max()) > np.iinfo(np.int64).max
+        ):
+            raise ValueError(f"CGNS integer values out of range: {name}")
+        use_int32 = values.dtype.itemsize <= 4 and (
+            not values.size or values.max() <= np.iinfo(np.int32).max
+        )
+        return values.astype(np.int32 if use_int32 else np.int64)
 
     @staticmethod
     def _node(parent, name, label, values=None):
