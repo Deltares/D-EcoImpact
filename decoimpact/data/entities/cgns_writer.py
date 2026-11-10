@@ -35,46 +35,91 @@ class CGNSWriter:
     ) -> None:
         """Write a validated source template atomically; never modify the source."""
         source = Path(dataset.attrs["cgns_source_path"])
+        self._validate_output_not_overwrites_input(source, path)
+
+        with h5py.File(source, "r") as template:
+            solution, variables = self._extract_template_data(dataset, template)
+
+        self._write_output_file(dataset, path, source, solution, variables, settings)
+
+    def _validate_output_not_overwrites_input(self, source: Path, path: Path) -> None:
+        """Ensure output path does not overwrite input file."""
         if source.resolve() == path.resolve() or (
             path.exists() and os.path.samefile(source, path)
         ):
             raise ValueError("CGNS output must not overwrite the input file.")
 
-        with h5py.File(source, "r") as template:
-            zone = template[dataset.attrs["cgns_zone_path"]]
-            solutions = self._nodes._children(zone, "FlowSolution_t")
-            solution = solutions[0] if solutions else None
-            parent = solution if solution is not None else zone
-            arrays = self._nodes._find_data_arrays(parent)
-            layouts = {
-                (self._nodes._dims(owner, node[" data"].ndim), node[" data"].shape)
-                for owner, node in arrays.values()
-                if self._nodes._dims(owner, node[" data"].ndim)
-                == self._nodes._dims(parent, node[" data"].ndim)
-                and (
-                    solution is not None
-                    or self._nodes._label(owner) == "GridCoordinates_t"
-                )
-            }
-            variables = self._prepare_variables(dataset, layouts, template)
-            solution_name = (
-                solution.name.rsplit("/", 1)[-1]
-                if solution is not None
-                else "EcoImpactSolution"
-            )
-            if solution is None and solution_name in zone:
-                raise ValueError(f"CGNS node {solution_name} already exists.")
-            if solution is not None:
-                retained_names = {
-                    child.name.rsplit("/", 1)[-1]
-                    for child in self._nodes._children(solution)
-                    if self._nodes._label(child) != "DataArray_t"
-                }
-                if retained_names.intersection(variables):
-                    raise ValueError(
-                        "Output variable conflicts with CGNS solution metadata."
-                    )
+    def _extract_template_data(
+        self, dataset: xr.Dataset, template: h5py.File
+    ) -> tuple:
+        """Extract solution node and validated variables from template.
+        
+        Returns:
+            (solution_node, variables_dict)
+        """
+        zone = template[dataset.attrs["cgns_zone_path"]]
+        solution = self._get_solution_node(zone)
+        parent = solution if solution is not None else zone
+        layouts = self._extract_valid_layouts(parent, solution)
+        variables = self._prepare_variables(dataset, layouts, template)
+        solution_name = self._get_solution_name(solution, zone)
+        self._validate_solution_state(zone, solution, solution_name, variables)
+        return solution_name, variables
 
+    def _get_solution_node(self, zone):
+        """Get the first FlowSolution_t node or None if none exists."""
+        solutions = self._nodes._children(zone, "FlowSolution_t")
+        return solutions[0] if solutions else None
+
+    def _extract_valid_layouts(self, parent, solution):
+        """Extract valid mesh layouts from parent node."""
+        arrays = self._nodes._find_data_arrays(parent)
+        return {
+            (self._nodes._dims(owner, node[" data"].ndim), node[" data"].shape)
+            for owner, node in arrays.values()
+            if self._nodes._dims(owner, node[" data"].ndim)
+            == self._nodes._dims(parent, node[" data"].ndim)
+            and (
+                solution is not None
+                or self._nodes._label(owner) == "GridCoordinates_t"
+            )
+        }
+
+    def _get_solution_name(self, solution, zone) -> str:
+        """Get the solution node name, using default if not present."""
+        if solution is not None:
+            return solution.name.rsplit("/", 1)[-1]
+        return "EcoImpactSolution"
+
+    def _validate_solution_state(self, zone, solution, solution_name, variables) -> None:
+        """Validate that solution state is compatible with output variables."""
+        if solution is None and solution_name in zone:
+            raise ValueError(f"CGNS node {solution_name} already exists.")
+        if solution is not None:
+            self._validate_no_metadata_conflicts(solution, variables)
+
+    def _validate_no_metadata_conflicts(self, solution, variables) -> None:
+        """Validate that output variables don't conflict with solution metadata."""
+        retained_names = {
+            child.name.rsplit("/", 1)[-1]
+            for child in self._nodes._children(solution)
+            if self._nodes._label(child) != "DataArray_t"
+        }
+        if retained_names.intersection(variables):
+            raise ValueError(
+                "Output variable conflicts with CGNS solution metadata."
+            )
+
+    def _write_output_file(
+        self,
+        dataset: xr.Dataset,
+        path: Path,
+        source: Path,
+        solution_name: str,
+        variables: dict,
+        settings: OutputFileSettings,
+    ) -> None:
+        """Write output file atomically using a temporary file."""
         path.parent.mkdir(parents=True, exist_ok=True)
         handle, temporary = tempfile.mkstemp(suffix=".cgns", dir=path.parent)
         os.close(handle)
@@ -82,28 +127,56 @@ class CGNSWriter:
         try:
             shutil.copyfile(source, temporary_path)
             with h5py.File(temporary_path, "r+") as output:
-                zone = output[dataset.attrs["cgns_zone_path"]]
-                if solution is None:
-                    target = self._node(zone, solution_name, "FlowSolution_t")
-                else:
-                    target = zone[solution_name]
-                for owner, child in self._nodes._find_data_arrays(target).values():
-                    del owner[child.name.rsplit("/", 1)[-1]]
-                for name, values in variables.items():
-                    node = self._node(target, name, "DataArray_t", values)
-                    attributes = dataset[name].attrs
-                    for key in ("units", "long_name", "description"):
-                        if key in attributes:
-                            self._descriptor(node, key, str(attributes[key]))
-                self._descriptor(
-                    target,
-                    "EcoImpactProvenance",
-                    f"Generated by {settings.application_name} "
-                    f"{settings.application_version}",
-                )
+                self._update_output_file(output, dataset, solution_name, variables, settings)
             os.replace(temporary_path, path)
         finally:
             temporary_path.unlink(missing_ok=True)
+
+    def _update_output_file(
+        self,
+        output: h5py.File,
+        dataset: xr.Dataset,
+        solution_name: str,
+        variables: dict,
+        settings: OutputFileSettings,
+    ) -> None:
+        """Update variables and metadata in output file."""
+        zone = output[dataset.attrs["cgns_zone_path"]]
+        target = self._get_or_create_solution_node(zone, solution_name, output)
+        self._delete_existing_arrays(target)
+        self._write_variables_and_metadata(target, dataset, variables)
+        self._write_provenance(target, settings)
+
+    def _get_or_create_solution_node(self, zone, solution_name, output):
+        """Get existing solution node or create new one."""
+        if solution_name in zone:
+            return zone[solution_name]
+        return self._node(zone, solution_name, "FlowSolution_t")
+
+    def _delete_existing_arrays(self, target) -> None:
+        """Delete all existing data arrays from target node."""
+        for owner, child in self._nodes._find_data_arrays(target).values():
+            del owner[child.name.rsplit("/", 1)[-1]]
+
+    def _write_variables_and_metadata(
+        self, target, dataset: xr.Dataset, variables: dict
+    ) -> None:
+        """Write output variables with their attributes."""
+        for name, values in variables.items():
+            node = self._node(target, name, "DataArray_t", values)
+            attributes = dataset[name].attrs
+            for key in ("units", "long_name", "description"):
+                if key in attributes:
+                    self._descriptor(node, key, str(attributes[key]))
+
+    def _write_provenance(self, target, settings: OutputFileSettings) -> None:
+        """Write provenance metadata to target node."""
+        self._descriptor(
+            target,
+            "EcoImpactProvenance",
+            f"Generated by {settings.application_name} "
+            f"{settings.application_version}",
+        )
 
     def _prepare_variables(
         self,
