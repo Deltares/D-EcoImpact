@@ -220,6 +220,16 @@ def merge_list_of_datasets(list_datasets: list[_xr.Dataset]) -> _xr.Dataset:
     Returns:
         _xr.Dataset: Original dataset
     """
+    cgns_datasets = [
+        ds for ds in list_datasets if ds.attrs.get("source_format") == "CGNS"
+    ]
+    if cgns_datasets and (
+        len(cgns_datasets) != len(list_datasets)
+        or len({ds.attrs.get("cgns_source_path") for ds in cgns_datasets}) > 1
+    ):
+        raise ValueError(
+            "CGNS output cannot combine different source templates/formats."
+        )
     try:
         output_dataset = _xr.merge(list_datasets, compat="identical")
     except ValueError as exc:

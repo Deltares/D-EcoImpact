@@ -113,9 +113,13 @@ class CGNSReader:
                     f"Read CGNS DataArray '{name}' with dimensions "
                     f"{data_vars[name].dims} and shape {data_vars[name].shape}"
                 )
+            base_path, zone_path = base.name, zone.name
 
         dataset = _xr.Dataset(data_vars)
         dataset.attrs["source_format"] = "CGNS"
+        dataset.attrs["cgns_source_path"] = str(path.resolve())
+        dataset.attrs["cgns_base_path"] = base_path
+        dataset.attrs["cgns_zone_path"] = zone_path
         return dataset
 
     def _validate_single_timestep(self, base: h5py.Group, zone: h5py.Group) -> None:
