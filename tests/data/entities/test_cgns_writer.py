@@ -149,8 +149,9 @@ def test_rejects_incompatible_results_before_creating_output(
     dataset = xr.Dataset(attrs=dataset.attrs)
     dataset["bad"] = xr.DataArray(np.zeros(shape), dims=dimensions)
     output_path = tmp_path / "not_created" / "output.cgns"
+    layer = DataAccessLayer(Mock(ILogger))
     with pytest.raises(ValueError, match=match):
-        DataAccessLayer(Mock(ILogger)).write_output_file(
+        layer.write_output_file(
             dataset, output_path, OutputFileSettings("app", "1")
         )
     assert not output_path.parent.exists()
@@ -174,8 +175,9 @@ def test_unused_time_coordinate_does_not_turn_static_results_into_timeseries(
 def test_invalid_generated_names_are_rejected(source_path, tmp_path, name):
     dataset = CGNSReader(Mock(ILogger)).read_file(source_path)
     dataset[name] = dataset["Pressure"]
+    layer = DataAccessLayer(Mock(ILogger))
     with pytest.raises(ValueError, match="name"):
-        DataAccessLayer(Mock(ILogger)).write_output_file(
+        layer.write_output_file(
             dataset, tmp_path / "out.cgns", OutputFileSettings("app", "1")
         )
 
@@ -205,8 +207,9 @@ def test_writes_numeric_types_without_overflow(source_path, tmp_path, values, co
 def test_rejects_unsupported_dtype(source_path, tmp_path):
     dataset = CGNSReader(Mock(ILogger)).read_file(source_path)
     dataset["result"] = ("cell", ["a", "b"])
+    layer = DataAccessLayer(Mock(ILogger))
     with pytest.raises(ValueError, match="dtype"):
-        DataAccessLayer(Mock(ILogger)).write_output_file(
+        layer.write_output_file(
             dataset, tmp_path / "output.cgns", OutputFileSettings("app", "1")
         )
 
@@ -214,8 +217,9 @@ def test_rejects_unsupported_dtype(source_path, tmp_path):
 def test_input_cannot_be_overwritten(source_path):
     original = source_path.read_bytes()
     dataset = CGNSReader(Mock(ILogger)).read_file(source_path)
+    layer = DataAccessLayer(Mock(ILogger))
     with pytest.raises(ValueError, match="overwrite"):
-        DataAccessLayer(Mock(ILogger)).write_output_file(
+        layer.write_output_file(
             dataset, source_path, OutputFileSettings("app", "1")
         )
     assert source_path.read_bytes() == original
@@ -231,8 +235,9 @@ def test_failed_write_preserves_existing_destination_and_cleans_temporary_file(
         "decoimpact.data.entities.cgns_writer.os.replace",
         side_effect=OSError("write failed"),
     ):
+        layer = DataAccessLayer(Mock(ILogger))
         with pytest.raises(OSError, match="write failed"):
-            DataAccessLayer(Mock(ILogger)).write_output_file(
+            layer.write_output_file(
                 dataset, output_path, OutputFileSettings("app", "1")
             )
     assert output_path.read_bytes() == b"existing destination"
@@ -264,8 +269,9 @@ def test_cannot_convert_formats(source_path, tmp_path, cgns_input):
 
 def test_missing_source_provenance_is_rejected(tmp_path):
     dataset = xr.Dataset(attrs={"source_format": "CGNS"})
+    layer = DataAccessLayer(Mock(ILogger))
     with pytest.raises(ValueError, match="provenance"):
-        DataAccessLayer(Mock(ILogger)).write_output_file(
+        layer.write_output_file(
             dataset, tmp_path / "out.cgns", OutputFileSettings("app", "1")
         )
 
@@ -320,8 +326,9 @@ def test_single_explicit_timestep_must_match_original_time(
             CGNSReader(Mock(ILogger)).read_file(output_path)["result"], [1.0, 2.0]
         )
     else:
+        layer = DataAccessLayer(Mock(ILogger))
         with pytest.raises(ValueError, match="TimeValues"):
-            DataAccessLayer(Mock(ILogger)).write_output_file(
+            layer.write_output_file(
                 dataset, output_path, settings
             )
         assert not output_path.exists()
@@ -331,8 +338,9 @@ def test_output_source_must_match_provenance(source_path, tmp_path):
     dataset = CGNSReader(Mock(ILogger)).read_file(source_path)
     settings = OutputFileSettings("app", "1")
     settings.source_path = tmp_path / "different.cgns"
+    layer = DataAccessLayer(Mock(ILogger))
     with pytest.raises(ValueError, match="provenance"):
-        DataAccessLayer(Mock(ILogger)).write_output_file(
+        layer.write_output_file(
             dataset, tmp_path / "out.cgns", settings
         )
 
@@ -341,8 +349,9 @@ def test_missing_selected_variable_is_reported(source_path, tmp_path):
     dataset = CGNSReader(Mock(ILogger)).read_file(source_path)
     settings = OutputFileSettings("app", "1")
     settings.variables_to_save = ["missing"]
+    layer = DataAccessLayer(Mock(ILogger))
     with pytest.raises(OSError, match="missing"):
-        DataAccessLayer(Mock(ILogger)).write_output_file(
+        layer.write_output_file(
             dataset, tmp_path / "out.cgns", settings
         )
 
@@ -350,8 +359,9 @@ def test_missing_selected_variable_is_reported(source_path, tmp_path):
 def test_missing_source_file_is_reported(source_path, tmp_path):
     dataset = CGNSReader(Mock(ILogger)).read_file(source_path)
     source_path.unlink()
+    layer = DataAccessLayer(Mock(ILogger))
     with pytest.raises(OSError):
-        DataAccessLayer(Mock(ILogger)).write_output_file(
+        layer.write_output_file(
             dataset, tmp_path / "out.cgns", OutputFileSettings("app", "1")
         )
 
@@ -359,8 +369,9 @@ def test_missing_source_file_is_reported(source_path, tmp_path):
 def test_uint64_overflow_is_rejected(source_path, tmp_path):
     dataset = CGNSReader(Mock(ILogger)).read_file(source_path)
     dataset["overflow"] = ("cell", np.array([2**64 - 1, 0], dtype=np.uint64))
+    layer = DataAccessLayer(Mock(ILogger))
     with pytest.raises(ValueError, match="out of range"):
-        DataAccessLayer(Mock(ILogger)).write_output_file(
+        layer.write_output_file(
             dataset, tmp_path / "out.cgns", OutputFileSettings("app", "1")
         )
 
