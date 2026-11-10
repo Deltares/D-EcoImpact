@@ -23,6 +23,7 @@ from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.output_file_settings import OutputFileSettings
 from decoimpact.data.entities.cgns_reader import CGNSReader
 
+DATA = " data"
 
 class CGNSWriter:
     """Replace solution variables while leaving the input mesh and time intact."""
@@ -75,10 +76,10 @@ class CGNSWriter:
         """Extract valid mesh layouts from parent node."""
         arrays = self._nodes._find_data_arrays(parent)
         return {
-            (self._nodes._dims(owner, node[" data"].ndim), node[" data"].shape)
+            (self._nodes._dims(owner, node[DATA].ndim), node[DATA].shape)
             for owner, node in arrays.values()
-            if self._nodes._dims(owner, node[" data"].ndim)
-            == self._nodes._dims(parent, node[" data"].ndim)
+            if self._nodes._dims(owner, node[DATA].ndim)
+            == self._nodes._dims(parent, node[DATA].ndim)
             and (
                 solution is not None
                 or self._nodes._label(owner) == "GridCoordinates_t"
@@ -221,7 +222,7 @@ class CGNSWriter:
                     )
                 base = template[dataset.attrs["cgns_base_path"]]
                 times = [
-                    child[" data"][()].ravel()
+                    child[DATA][()].ravel()
                     for iterative in self._nodes._children(base, "BaseIterativeData_t")
                     for child in self._nodes._children(iterative, "DataArray_t")
                     if self._nodes._name(child) == "TimeValues"
@@ -282,7 +283,7 @@ class CGNSWriter:
                 ("f", 4): "R4",
                 ("f", 8): "R8",
             }[(values.dtype.kind, values.dtype.itemsize)]
-            node.create_dataset(" data", data=values)
+            node.create_dataset(DATA, data=values)
         CGNSWriter._string_attribute(node, "type", type_code, 3)
         return node
 
