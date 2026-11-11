@@ -246,8 +246,9 @@ def test_failed_write_preserves_existing_destination_and_cleans_temporary_file(
 
 def test_mixed_or_conflicting_source_templates_are_rejected(source_path):
     dataset = CGNSReader(Mock(ILogger)).read_file(source_path)
+    empty_dataset = xr.Dataset()
     with pytest.raises(ValueError, match="templates/formats"):
-        merge_list_of_datasets([dataset, xr.Dataset()])
+        merge_list_of_datasets([dataset, empty_dataset])
     other = dataset.copy()
     other.attrs["cgns_source_path"] = "different.cgns"
     with pytest.raises(ValueError, match="templates/formats"):
@@ -260,8 +261,9 @@ def test_cannot_convert_formats(source_path, tmp_path, cgns_input):
         CGNSReader(Mock(ILogger)).read_file(source_path) if cgns_input else xr.Dataset()
     )
     output_path = tmp_path / "new" / ("output.nc" if cgns_input else "output.cgns")
+    layer = DataAccessLayer(Mock(ILogger))
     with pytest.raises(ValueError):
-        DataAccessLayer(Mock(ILogger)).write_output_file(
+        layer.write_output_file(
             dataset, output_path, OutputFileSettings("app", "1")
         )
     assert not output_path.parent.exists()
