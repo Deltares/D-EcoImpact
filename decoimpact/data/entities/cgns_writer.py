@@ -21,9 +21,15 @@ import xarray as xr
 
 from decoimpact.crosscutting.i_logger import ILogger
 from decoimpact.data.api.output_file_settings import OutputFileSettings
+from decoimpact.data.entities.cgns_constants import (
+    BASE_ITERATIVE_DATA_T,
+    DATA,
+    DATA_ARRAY_T,
+    DESCRIPTOR_T,
+    FLOW_SOLUTION_T,
+    GRID_COORDINATES_T,
+)
 from decoimpact.data.entities.cgns_reader import CGNSReader
-
-DATA = " data"
 
 
 class CGNSWriter:
@@ -70,7 +76,7 @@ class CGNSWriter:
 
     def _get_solution_node(self, zone):
         """Get the first FlowSolution_t node or None if none exists."""
-        solutions = self._nodes._children(zone, "FlowSolution_t")
+        solutions = self._nodes._children(zone, FLOW_SOLUTION_T)
         return solutions[0] if solutions else None
 
     def _extract_valid_layouts(self, parent, solution):
@@ -83,7 +89,7 @@ class CGNSWriter:
             == self._nodes._dims(parent, node[DATA].ndim)
             and (
                 solution is not None
-                or self._nodes._label(owner) == "GridCoordinates_t"
+                or self._nodes._label(owner) == GRID_COORDINATES_T
             )
         }
 
@@ -106,7 +112,7 @@ class CGNSWriter:
         retained_names = {
             child.name.rsplit("/", 1)[-1]
             for child in self._nodes._children(solution)
-            if self._nodes._label(child) != "DataArray_t"
+            if self._nodes._label(child) != DATA_ARRAY_T
         }
         if retained_names.intersection(variables):
             raise ValueError(
@@ -155,7 +161,7 @@ class CGNSWriter:
         """Get existing solution node or create new one."""
         if solution_name in zone:
             return zone[solution_name]
-        return self._node(zone, solution_name, "FlowSolution_t")
+        return self._node(zone, solution_name, FLOW_SOLUTION_T)
 
     def _delete_existing_arrays(self, target) -> None:
         """Delete all existing data arrays from target node."""
@@ -167,7 +173,7 @@ class CGNSWriter:
     ) -> None:
         """Write output variables with their attributes."""
         for name, values in variables.items():
-            node = self._node(target, name, "DataArray_t", values)
+            node = self._node(target, name, DATA_ARRAY_T, values)
             attributes = dataset[name].attrs
             for key in ("units", "long_name", "description"):
                 if key in attributes:
@@ -214,7 +220,7 @@ class CGNSWriter:
     ) -> np.ndarray:
         """Validate one variable's name and layout, then convert its values."""
         self._validate_variable_name(name)
-        variable = self._prepare_time_axis(name, variable, dataset, template)
+        variable = self._check_time_axis(name, variable, dataset, template)
         if (variable.dims, variable.shape) not in layouts:
             raise ValueError(
                 f"CGNS output variable {name!r} has incompatible mesh dimensions "
@@ -239,7 +245,7 @@ class CGNSWriter:
         ):
             raise ValueError(f"Invalid CGNS variable name: {name!r}")
 
-    def _prepare_time_axis(
+    def _check_time_axis(
         self,
         name: str,
         variable: xr.DataArray,
@@ -273,8 +279,8 @@ class CGNSWriter:
         base = template[dataset.attrs["cgns_base_path"]]
         times = [
             child[DATA][()].ravel()
-            for iterative in self._nodes._children(base, "BaseIterativeData_t")
-            for child in self._nodes._children(iterative, "DataArray_t")
+            for iterative in self._nodes._children(base, BASE_ITERATIVE_DATA_T)
+            for child in self._nodes._children(iterative, DATA_ARRAY_T)
             if self._nodes._name(child) == "TimeValues"
         ]
         if not times or not np.array_equal(variable["time"].values, times[0]):
@@ -283,10 +289,13 @@ class CGNSWriter:
 
     def _convert_values(self, name: str, values: np.ndarray) -> np.ndarray:
         """Convert supported variable values to CGNS-compatible NumPy types."""
+        # Boolean values are converted to int32 for CGNS compatibility
         if values.dtype.kind == "b":
             return values.astype(np.int32)
+        # Integer values are converted to the narrowest supported CGNS type
         if values.dtype.kind in "iu":
             return self._convert_integer_values(name, values)
+        # Floating-point values are converted to float32 or float64
         if values.dtype.kind == "f" and values.dtype.itemsize <= 8:
             return values.astype(
                 np.float32 if values.dtype.itemsize <= 4 else np.float64
@@ -321,6 +330,7 @@ class CGNSWriter:
         node.attrs["flags"] = np.array([1], dtype=np.int32)
         type_code = "MT"
         if values is not None:
+            # Mapping of acceptable (dtype kind, itemsize) to CGNS type codes
             type_code = {
                 ("i", 1): "C1",
                 ("i", 4): "I4",
@@ -360,6 +370,6 @@ class CGNSWriter:
         self._node(
             parent,
             name,
-            "Descriptor_t",
+            DESCRIPTOR_T,
             np.frombuffer(text.encode("utf-8"), dtype=np.int8),
         )
