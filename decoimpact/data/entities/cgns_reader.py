@@ -24,8 +24,14 @@ import numpy as np
 import xarray as _xr
 
 from decoimpact.crosscutting.i_logger import ILogger
+from decoimpact.data.entities.cgns_constants import (
+    BASE_ITERATIVE_DATA_T,
+    DATA,
+    DATA_ARRAY_T,
+    FLOW_SOLUTION_T,
+    ZONE_ITERATIVE_DATA_T,
+)
 
-_DATA = " data"
 _LOCATION_DIM_NAMES = {"Vertex": "vertex", "CellCenter": "cell"}
 
 
@@ -87,7 +93,7 @@ class CGNSReader:
                     f"'{zone_name}' of base '{self._name(base)}' is read."
                 )
 
-            solutions = self._children(zone, "FlowSolution_t")
+            solutions = self._children(zone, FLOW_SOLUTION_T)
             if len(solutions) > 1:
                 raise ValueError(
                     f"ERROR: Zone '{zone_name}' in CGNS file {path} contains "
@@ -113,15 +119,21 @@ class CGNSReader:
                     f"Read CGNS DataArray '{name}' with dimensions "
                     f"{data_vars[name].dims} and shape {data_vars[name].shape}"
                 )
+            base_path, zone_path = base.name, zone.name
 
         dataset = _xr.Dataset(data_vars)
         dataset.attrs["source_format"] = "CGNS"
+        dataset.attrs["cgns_source_path"] = str(path.resolve())
+        # Path to the base node in the CGNS file
+        dataset.attrs["cgns_base_path"] = base_path
+        # Path to the zone node in the CGNS file
+        dataset.attrs["cgns_zone_path"] = zone_path
         return dataset
 
     def _validate_single_timestep(self, base: h5py.Group, zone: h5py.Group) -> None:
         """Checks all available timestep counts before treating data as static"""
-        base_iterative = self._children(base, "BaseIterativeData_t")
-        zone_iterative = self._children(zone, "ZoneIterativeData_t")
+        base_iterative = self._children(base, BASE_ITERATIVE_DATA_T)
+        zone_iterative = self._children(zone, ZONE_ITERATIVE_DATA_T)
 
         counts = []
         counts.extend(self._extract_base_iterative_counts(base_iterative))
@@ -153,10 +165,10 @@ class CGNSReader:
 
     def _extract_counts_from_data_node(self, iterative: h5py.Group) -> list[int]:
         """Validates and extracts count from iterative node's data"""
-        if _DATA not in iterative:
+        if DATA not in iterative:
             return []
 
-        values = np.asarray(iterative[_DATA][()])
+        values = np.asarray(iterative[DATA][()])
         if values.size != 1 or values.item() != 1:
             raise ValueError(
                 f"ERROR: Invalid timestep count at '{iterative.name}'. "
@@ -167,24 +179,24 @@ class CGNSReader:
     def _extract_counts_from_array_nodes(self, iterative: h5py.Group) -> list[int]:
         """Extracts counts from TimeValues and IterationValues arrays"""
         counts = []
-        for node in self._children(iterative, "DataArray_t"):
+        for node in self._children(iterative, DATA_ARRAY_T):
             node_name = self._name(node)
             if node_name in ("TimeValues", "IterationValues"):
-                counts.append(node[_DATA].size)
+                counts.append(node[DATA].size)
         return counts
 
     def _extract_zone_array_counts(self, iterative: h5py.Group) -> list[int]:
         """Extracts counts from FlowSolutionPointers array"""
         counts = []
-        for node in self._children(iterative, "DataArray_t"):
+        for node in self._children(iterative, DATA_ARRAY_T):
             if self._name(node) == "FlowSolutionPointers":
-                shape = node[_DATA].shape
+                shape = node[DATA].shape
                 if not shape or shape[-1] != 32:
                     raise ValueError(
                         f"ERROR: Invalid FlowSolutionPointers shape {shape} "
                         f"at '{node.name}'. Expected 32 characters per pointer."
                     )
-                counts.append(node[_DATA].size // 32)
+                counts.append(node[DATA].size // 32)
         return counts
 
     def _validate_timestep_counts(
@@ -230,7 +242,7 @@ class CGNSReader:
         def visit(parent: h5py.Group):
             for child in self._children(parent):
                 label = self._label(child)
-                if label == "DataArray_t":
+                if label == DATA_ARRAY_T:
                     name = self._name(child)
                     if name in found:
                         raise ValueError(
@@ -238,7 +250,7 @@ class CGNSReader:
                             f"({found[name][1].name}, {child.name})."
                         )
                     found[name] = (parent, child)
-                elif label != "ZoneIterativeData_t":
+                elif label != ZONE_ITERATIVE_DATA_T:
                     visit(child)
 
         visit(group)
@@ -246,7 +258,7 @@ class CGNSReader:
 
     def _read_variable(self, parent: h5py.Group, node: h5py.Group) -> _xr.Variable:
         """Reads a single DataArray_t"""
-        data = node[_DATA][()]
+        data = node[DATA][()]
         return _xr.Variable(
             self._dims(parent, data.ndim), data, {"cgns_path": node.name}
         )
@@ -294,9 +306,9 @@ class CGNSReader:
         return str(value).strip("\x00 ")
 
     def _read_string(self, node: h5py.Group) -> str:
-        if _DATA not in node:
+        if DATA not in node:
             return ""
-        return self._to_string(node[_DATA][()])
+        return self._to_string(node[DATA][()])
 
     @staticmethod
     def _to_string(chars: np.ndarray) -> str:

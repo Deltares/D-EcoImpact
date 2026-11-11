@@ -27,6 +27,7 @@ from decoimpact.data.api.i_dataset import IDatasetData
 from decoimpact.data.api.i_model_data import IModelData
 from decoimpact.data.api.output_file_settings import OutputFileSettings
 from decoimpact.data.entities.cgns_reader import CGNSReader
+from decoimpact.data.entities.cgns_writer import CGNSWriter
 from decoimpact.data.entities.model_data_builder import ModelDataBuilder
 
 
@@ -130,7 +131,7 @@ class DataAccessLayer(IDataAccessLayer):
         if ds_end_date != "None":
             filter_end_date = datetime.strptime(ds_end_date, date_format)
 
-        if dataset_data.path.suffix != ".nc":
+        if dataset_data.path.suffix.lower() != ".nc":
             message = f"""The file {dataset_data.path} is not supported. \
                           Currently only UGrid (NetCDF) and CGNS files are supported."""
             raise NotImplementedError(message)
@@ -156,6 +157,7 @@ class DataAccessLayer(IDataAccessLayer):
         except ValueError as exc:
             msg = "ERROR: error applying time filter on dataset"
             raise ValueError(msg) from exc
+        dataset.attrs["source_format"] = "NetCDF"
         return dataset
 
     def write_output_file(
@@ -177,6 +179,57 @@ class DataAccessLayer(IDataAccessLayer):
         """
         self._logger.log_info(f"Writing model output data to {path}")
 
+        source, source_format = self._get_output_source(dataset, path, settings)
+        OutputFileSettings.validate_format(source or Path("input.nc"), path)
+
+        if source_format == "CGNS":
+            self._write_cgns_output(dataset, path, settings)
+            return
+        self._write_netcdf_output(dataset, path, settings)
+
+    def _get_output_source(
+        self,
+        dataset: _xr.Dataset,
+        path: Path,
+        settings: OutputFileSettings,
+    ) -> tuple[Path | None, str | None]:
+        """Resolve the source template and validate CGNS provenance."""
+        source = settings.source_path
+        source_format = dataset.attrs.get("source_format")
+        if source_format == "CGNS":
+            recorded_source = dataset.attrs.get("cgns_source_path")
+            if not recorded_source:
+                raise ValueError("CGNS output requires source template provenance.")
+            recorded_source = Path(recorded_source)
+            if source is not None and source.resolve() != recorded_source.resolve():
+                raise ValueError(
+                    "CGNS output source does not match dataset provenance."
+                )
+            source = recorded_source
+        elif path.suffix.lower() == ".cgns":
+            raise ValueError("CGNS output requires a dataset read from CGNS input.")
+        return source, source_format
+
+    def _write_cgns_output(
+        self, dataset: _xr.Dataset, path: Path, settings: OutputFileSettings
+    ) -> None:
+        """Reduce and write a CGNS dataset, logging write failures."""
+        try:
+            if settings.variables_to_save:
+                dataset = reduce_dataset_for_writing(
+                    dataset, settings.variables_to_save, self._logger
+                )
+            CGNSWriter(self._logger).write_file(dataset, path, settings)
+        except (OSError, ValueError) as exc:
+            self._logger.log_error(
+                f"ERROR: Cannot write output .cgns file -- {path}: {exc}"
+            )
+            raise
+
+    def _write_netcdf_output(
+        self, dataset: _xr.Dataset, path: Path, settings: OutputFileSettings
+    ) -> None:
+        """Prepare and write a NetCDF dataset."""
         if not Path.exists(path.parent):
             # try to make intermediate folders
             Path(path.parent).mkdir(parents=True, exist_ok=True)
@@ -185,11 +238,6 @@ class DataAccessLayer(IDataAccessLayer):
                 message = f"""The path {path.parent} is not found. \
                             Make sure the output file location is valid."""
                 raise FileExistsError(message)
-
-        if Path(path).suffix != ".nc":
-            message = f"""The file {path} is not supported. \
-                          Currently only UGrid (NetCDF) files are supported."""
-            raise NotImplementedError(message)
 
         try:
             dataset.attrs["Version"] = settings.application_version

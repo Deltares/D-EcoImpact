@@ -12,6 +12,7 @@ Classes:
 
 """
 
+from pathlib import Path
 from typing import List, Optional
 
 
@@ -29,6 +30,26 @@ class OutputFileSettings:
         self._application_name: str = application_name
         self._application_version: str = application_version
         self._variables_to_save: Optional[List[str]] = None
+        self.source_path: Optional[Path] = None
+
+    @staticmethod
+    def validate_format(source_path: Path, output_path: Path) -> None:
+        """Require supported, matching input and output formats."""
+        source_suffix = source_path.suffix.lower()
+        output_suffix = output_path.suffix.lower()
+        if source_suffix not in (".nc", ".cgns") or output_suffix not in (
+            ".nc",
+            ".cgns",
+        ):
+            raise NotImplementedError(
+                f"Unsupported input/output format: {source_path} -> {output_path}. "
+                "Currently only UGrid (NetCDF) and CGNS files are supported."
+            )
+        if source_suffix != output_suffix:
+            raise ValueError(
+                f"Input {source_path} requires a {source_suffix} output file, "
+                f"not {output_path}. Format conversion is not supported."
+            )
 
     @property
     def application_name(self) -> str:

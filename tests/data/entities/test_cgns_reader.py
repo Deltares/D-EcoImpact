@@ -14,7 +14,6 @@ from unittest.mock import Mock
 import h5py
 import numpy as np
 import pytest
-import xarray as _xr
 
 from decoimpact.business.entities.rule_based_model import RuleBasedModel
 from decoimpact.business.entities.rules.step_function_rule import StepFunctionRule
@@ -35,7 +34,18 @@ def _node(parent, name, label, data=None):
     group = parent.create_group(name)
     group.attrs["name"] = np.bytes_(name)
     group.attrs["label"] = np.bytes_(label)
-    group.attrs["type"] = np.bytes_("MT" if data is None else "R8")
+    if data is None:
+        type_code = "MT"
+    else:
+        data = np.asarray(data)
+        type_code = {
+            ("i", 1): "C1",
+            ("i", 4): "I4",
+            ("i", 8): "I8",
+            ("f", 4): "R4",
+            ("f", 8): "R8",
+        }[(data.dtype.kind, data.dtype.itemsize)]
+    group.attrs["type"] = np.bytes_(type_code)
     if data is not None:
         group.create_dataset(" data", data=data)
     return group
@@ -306,7 +316,7 @@ def test_data_access_layer_uses_cgns_reader_with_mapping_keys(cgns_path):
     assert "time" not in model.output_dataset.coords
 
 
-def test_cgns_step_function_output_can_be_written_to_netcdf(cgns_path, tmp_path):
+def test_cgns_step_function_output_can_be_written_to_cgns(cgns_path, tmp_path):
     logger = Mock(ILogger)
     data_access = DataAccessLayer(logger)
     dataset = CGNSReader(logger).read_file(cgns_path, ["Pressure"])
@@ -325,12 +335,13 @@ def test_cgns_step_function_output_can_be_written_to_netcdf(cgns_path, tmp_path)
     assert "location" not in result.attrs
     assert "mesh" not in result.attrs
     np.testing.assert_array_equal(result.values, [-5.0, 0.0])
-    output_path = tmp_path / "output.nc"
+    output_path = tmp_path / "output.cgns"
     settings = OutputFileSettings("D-EcoImpact", "0.7.1")
     data_access.write_output_file(model.output_dataset, output_path, settings)
 
-    with _xr.open_dataset(output_path) as written:
-        _xr.testing.assert_equal(written["pressure_level"], result)
+    written = CGNSReader(logger).read_file(output_path)
+    np.testing.assert_array_equal(written["pressure_level"].values, result.values)
+    assert set(written.data_vars) == {"pressure", "pressure_level"}
 
 
 @pytest.mark.skipif(not EXAMPLE_CGNS.exists(), reason="example.cgns not available")
