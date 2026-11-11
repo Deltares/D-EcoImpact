@@ -25,6 +25,7 @@ from decoimpact.data.entities.cgns_reader import CGNSReader
 
 DATA = " data"
 
+
 class CGNSWriter:
     """Replace solution variables while leaving the input mesh and time intact."""
 
@@ -54,7 +55,7 @@ class CGNSWriter:
         self, dataset: xr.Dataset, template: h5py.File
     ) -> tuple:
         """Extract solution node and validated variables from template.
-        
+
         Returns:
             (solution_node, variables_dict)
         """
@@ -92,7 +93,8 @@ class CGNSWriter:
             return solution.name.rsplit("/", 1)[-1]
         return "EcoImpactSolution"
 
-    def _validate_solution_state(self, zone, solution, solution_name, variables) -> None:
+    def _validate_solution_state(
+            self, zone, solution, solution_name, variables) -> None:
         """Validate that solution state is compatible with output variables."""
         if solution is None and solution_name in zone:
             raise ValueError(f"CGNS node {solution_name} already exists.")
@@ -128,7 +130,8 @@ class CGNSWriter:
         try:
             shutil.copyfile(source, temporary_path)
             with h5py.File(temporary_path, "r+") as output:
-                self._update_output_file(output, dataset, solution_name, variables, settings)
+                self._update_output_file(output, dataset, solution_name,
+                                         variables, settings)
             os.replace(temporary_path, path)
         finally:
             temporary_path.unlink(missing_ok=True)
