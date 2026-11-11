@@ -82,10 +82,23 @@ class Application:
             elif self.APPLICATION_VERSION_PARTS[1] < model_data.version[1]:
                 self._logger.log_warning(message)
 
+            output_path_base = Path(model_data.output_path)
+            dataset_files = [
+                (dataset, self._da_layer.retrieve_file_names(dataset.path))
+                for dataset in model_data.datasets
+            ]
+            for _, input_files in dataset_files:
+                for file_name in input_files.values():
+                    OutputFileSettings.validate_format(
+                        Path(file_name), output_path_base
+                    )
+            if output_path_base.suffix.lower() == ".cgns" and len(dataset_files) != 1:
+                raise ValueError(
+                    "CGNS output requires one input dataset per output template."
+                )
+
             # build model
-            for dataset in model_data.datasets:
-                input_files = self._da_layer.retrieve_file_names(dataset.path)
-                output_path_base = Path(model_data.output_path)
+            for dataset, input_files in dataset_files:
                 for key, file_name in input_files.items():
                     dataset.path = file_name
                     output_path = self._generate_output_path(output_path_base, key)
@@ -102,6 +115,7 @@ class Application:
                             self.APPLICATION_NAME, self.APPLICATION_VERSION
                         )
                         settings.variables_to_save = model_data.output_variables
+                        settings.source_path = Path(file_name)
 
                         self._da_layer.write_output_file(
                             model.output_dataset, output_path, settings

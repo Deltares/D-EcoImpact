@@ -74,14 +74,15 @@ def remove_all_variables_except(
     Returns:
         _xr.Dataset: reduced dataset (containing selected variables)
     """
-    dummy_var = get_dummy_variable_in_ugrid(dataset)
-    dependent_var_list = get_dependent_var_list(dataset, dummy_var)
-    variables_to_keep += dummy_var + dependent_var_list
+    topology_vars = get_topology_variables(dataset)
+    variables_to_keep_final = _lu.remove_duplicates_from_list(
+        list(variables_to_keep) + topology_vars
+    )
 
     all_variables = list_vars(dataset)
 
     variables_to_remove = [
-        item for item in all_variables if item not in list(variables_to_keep)
+        item for item in all_variables if item not in variables_to_keep_final
     ]
     cleaned_dataset = remove_variables(dataset, variables_to_remove)
 
@@ -110,6 +111,35 @@ def list_coords(dataset: _xr.Dataset) -> list[str]:
         list_variables
     """
     return list((dataset.coords or {}).keys())
+
+
+def is_ugrid_compliant(dataset: _xr.Dataset) -> bool:
+    """Check whether a dataset contains a UGrid mesh topology variable."""
+    return any(
+        dataset[name].attrs.get("cf_role") == "mesh_topology"
+        for name in dataset.data_vars
+    )
+
+
+def get_topology_variables(dataset: _xr.Dataset) -> list[str]:
+    """Get variables needed to preserve mesh topology and coordinates.
+
+    UGrid datasets declare topology dependencies on their mesh variable.
+    Other formats may expose coordinates without UGrid metadata. CGNS
+    datasets with implicit coordinates have no extra topology variables.
+    """
+    if is_ugrid_compliant(dataset):
+        dummy_vars = get_dummy_variable_in_ugrid(dataset)
+        return get_dependent_var_list(dataset, dummy_vars)
+
+    coordinates = list_coords(dataset)
+    if coordinates or dataset.attrs.get("source_format") == "CGNS":
+        return coordinates
+
+    raise ValueError(
+        "Could not identify topology variables. Dataset is neither UGrid-compliant "
+        "nor does it contain coordinate variables."
+    )
 
 
 def copy_dataset(dataset: _xr.Dataset) -> _xr.Dataset:
@@ -190,6 +220,16 @@ def merge_list_of_datasets(list_datasets: list[_xr.Dataset]) -> _xr.Dataset:
     Returns:
         _xr.Dataset: Original dataset
     """
+    cgns_datasets = [
+        ds for ds in list_datasets if ds.attrs.get("source_format") == "CGNS"
+    ]
+    if cgns_datasets and (
+        len(cgns_datasets) != len(list_datasets)
+        or len({ds.attrs.get("cgns_source_path") for ds in cgns_datasets}) > 1
+    ):
+        raise ValueError(
+            "CGNS output cannot combine different source templates/formats."
+        )
     try:
         output_dataset = _xr.merge(list_datasets, compat="identical")
     except ValueError as exc:

@@ -3,7 +3,7 @@ name = "decoimpact"
 version = "0.9.1"
 description = "A Python based kernel to perform spatial (environmental) impact assessment. Based on knowledge rules applied to model output and/or measurements."
 authors = [{ name = "Deltares" }]
-requires-python = ">=3.14, <=3.15"
+requires-python = ">=3.14, <3.15"
 readme = "README.md"
 license-files = ["LICENSE.md"]
 dependencies = [
@@ -18,6 +18,7 @@ dependencies = [
     "yaml-include>=1.0.0",
     "mkdocs-autoapi>=0.3.2",
     "certifi>=2026.10.18",
+    "h5py>=3.8.0",
 ]
 
 [project.scripts]

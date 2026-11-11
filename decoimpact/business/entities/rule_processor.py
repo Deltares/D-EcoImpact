@@ -29,7 +29,6 @@ from decoimpact.business.entities.rules.i_multi_cell_based_rule import (
 )
 from decoimpact.business.entities.rules.i_rule import IRule
 from decoimpact.crosscutting.i_logger import ILogger
-from decoimpact.data.dictionary_utils import get_dict_element
 
 
 class RuleProcessor:
@@ -229,9 +228,9 @@ class RuleProcessor:
         attributes_to_copy = ["location", "mesh"]
 
         for attribute_name in attributes_to_copy:
-            target_array.attrs[attribute_name] = get_dict_element(
-                attribute_name, source_array.attrs, False
-            )
+            value = source_array.attrs.get(attribute_name)
+            if value is not None:
+                target_array.attrs[attribute_name] = value
 
     def _process_by_cell(
         self, rule: ICellBasedRule, input_variable: _xr.DataArray, logger: ILogger

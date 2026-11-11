@@ -366,6 +366,54 @@ class TestGetDummyVariableInUgrid:
         assert dummy_var_name == ["mesh2d"]
 
 
+def test_is_ugrid_compliant():
+    dataset = _xr.Dataset(data_vars={"mesh": 0})
+    dataset["mesh"].attrs["cf_role"] = "mesh_topology"
+
+    assert "mesh" in dataset.data_vars
+    assert utilities.is_ugrid_compliant(dataset)
+    assert not utilities.is_ugrid_compliant(
+        _xr.Dataset(data_vars={"value": ("node", [1])})
+    )
+
+
+def test_get_topology_variables_uses_coordinates_for_non_ugrid_dataset():
+    dataset = _xr.Dataset(
+        data_vars={"value": ("x", [1, 2])},
+        coords={"x": [0, 1], "time": _xr.date_range("2000-01-01", periods=1)},
+    )
+
+    assert utilities.get_topology_variables(dataset) == ["x", "time"]
+
+
+def test_get_topology_variables_allows_implicit_coordinates():
+    dataset = _xr.Dataset(data_vars={"value": ("x", [1, 2])})
+    dataset.attrs["source_format"] = "CGNS"
+
+    assert utilities.get_topology_variables(dataset) == []
+
+
+def test_get_topology_variables_rejects_unknown_dataset_without_coordinates():
+    dataset = _xr.Dataset(data_vars={"value": ("x", [1, 2])})
+
+    with pytest.raises(ValueError, match="Could not identify topology variables"):
+        utilities.get_topology_variables(dataset)
+
+
+def test_remove_all_variables_except_preserves_non_ugrid_coordinates():
+    dataset = _xr.Dataset(
+        data_vars={"value": ("x", [1, 2]), "unused": ("x", [3, 4])},
+        coords={"time": _xr.date_range("2000-01-01", periods=1)},
+    )
+    variables_to_keep = ["value"]
+
+    result = utilities.remove_all_variables_except(dataset, variables_to_keep)
+
+    assert list(result.data_vars) == ["value"]
+    assert "time" in result.coords
+    assert variables_to_keep == ["value"]
+
+
 class TestGetDependentVarsByVarName:
     def test_get_dummy_variable(self):
         """Test if you receive the name of the dummy variable in a ugrid dataset"""
