@@ -63,7 +63,7 @@ class CGNSWriter:
         parent = solution if solution is not None else zone
         layouts = self._extract_valid_layouts(parent, solution)
         variables = self._prepare_variables(dataset, layouts, template)
-        solution_name = self._get_solution_name(solution, zone)
+        solution_name = self._get_solution_name(solution)
         self._validate_solution_state(zone, solution, solution_name, variables)
         return solution_name, variables
 
@@ -86,7 +86,7 @@ class CGNSWriter:
             )
         }
 
-    def _get_solution_name(self, solution, zone) -> str:
+    def _get_solution_name(self, solution) -> str:
         """Get the solution node name, using default if not present."""
         if solution is not None:
             return solution.name.rsplit("/", 1)[-1]
@@ -143,12 +143,12 @@ class CGNSWriter:
     ) -> None:
         """Update variables and metadata in output file."""
         zone = output[dataset.attrs["cgns_zone_path"]]
-        target = self._get_or_create_solution_node(zone, solution_name, output)
+        target = self._get_or_create_solution_node(zone, solution_name)
         self._delete_existing_arrays(target)
         self._write_variables_and_metadata(target, dataset, variables)
         self._write_provenance(target, settings)
 
-    def _get_or_create_solution_node(self, zone, solution_name, output):
+    def _get_or_create_solution_node(self, zone, solution_name):
         """Get existing solution node or create new one."""
         if solution_name in zone:
             return zone[solution_name]
